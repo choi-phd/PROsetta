@@ -1,0 +1,18 @@
+Package: PROsetta
+Title: PROsetta Linking Analysis
+Version: 0.0.1
+Authors@R: as.person(c(
+    "Seung Choi <schoi@austin.utexas.edu> [aut, cre]",
+    "Benjamin Schalet <b-schalet@northwewstern.edu> [ctb]",
+    "Aaron Kaat <aaron.kaat@northwestern.edu> [ctb]",
+    "Ryne Eastbrook <reastbrook@northwestern.edu> [ctb]",
+    "Sangdon Lim <sangdonlim@utexas.edu> [ctb]"
+  ))
+Description: Performs scale linking to establish relationships between instruments
+    that measure similar constructs according to the PROsetta Stone methodology.
+URL: http://www.prosettastone.org
+Imports: equate, lavaan, mirt, plink, psych, methods
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1
