@@ -4,7 +4,6 @@
 #' @import plink
 #' @importFrom methods new
 #' @importFrom utils read.csv
-
 NULL
 
 #' An S4 class to represent configurations for reading datasets and writing outputs.
@@ -77,6 +76,44 @@ setClass("PROsetta.Config",
            return (TRUE)
          }
 )
+
+#' Creates a config object for PROsetta
+#'
+#' Creates a config object for PROsetta
+#'
+#' @param studyName Character. A user-specified name of the study.
+#' @param inputDirectory Character. The path of the input directory for reading dataset. Defaults to \code{getwd()}.
+#' @param outputDirectory Character. The path of the output directory for writing outputs. Defaults to \code{getwd()}. A new folder is created at the path if it does not exist.
+#' @param itemID Character. The name of the variable representing item IDs in \code{anchorFile} and \code{itemmapFile}.
+#' @param personID Character. The name of the variable representing person IDs in \code{responseFile}.
+#' @param scaleID Character. The name of the variable representing scale IDs in \code{itemmapFile}.
+#' @param responseFile Character. The filename of a dataset containing IDs and the responses of the items.
+#' @param itemmapFile Character. The filename for an item map.
+#' @param anchorFile Character. The filename of a dataset containing the parameters of the items.
+#' @param linkingMethod Character. The linking method to use. Accepts "\code{MM}", "\code{MS}", "\code{HB}", "\code{SL}", "\code{FIXEDPAR}", or "\code{NONE}".
+#'
+#' @return A \code{\linkS4class{PROsetta.Config}} object.
+#'
+#' @export
+
+new.config = function(studyName = "Study",
+                      inputDirectory = getwd(), outputDirectory = getwd(),
+                      itemID, personID, scaleID,
+                      responseFile, itemmapFile, anchorFile,
+                      linkingMethod = "FIXEDPAR") {
+  new.Config = new("PROsetta.Config",
+                   inputDirectory = inputDirectory,
+                   outputDirectory = outputDirectory,
+                   responseFile = responseFile,
+                   itemmapFile = itemmapFile,
+                   anchorFile = anchorFile,
+                   linkingMethod = toupper(linkingMethod)
+                   )
+  new.Config@itemID = itemID
+  new.Config@personID = personID
+  new.Config@scaleID = scaleID
+  return(new.Config)
+}
 
 #' An S4 class to represent \code{PROsetta} datasets.
 #'
