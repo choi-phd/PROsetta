@@ -1,19 +1,23 @@
 
 if(FALSE){
 
-new.Config = new("PROsetta.Config", inputDirectory = getwd(),
-                 anchorFile = "data-raw\\anchor_AxMASQ.csv",
-                 responseFile = "data-raw\\dat_axmasq_v2.csv",
-                 itemmapFile = "data-raw\\imap_AxMASQ.csv",
-                 linkingMethod = "FIXEDPAR")
-new.Config@itemID = "item_id"
-new.Config@personID = "prosettaid"
-new.Config@scaleID = "instrument"
+new.Config = new.config(anchorFile = "data-raw/anchor_AxMASQ.csv",
+                        responseFile = "data-raw/dat_axmasq_v2.csv",
+                        itemmapFile = "data-raw/imap_AxMASQ.csv",
+                        linkingMethod = "FIXEDPAR",
+                        itemID = "item_id",
+                        personID = "prosettaid",
+                        scaleID = "instrument")
 
 inputData = LoadData(new.Config)
 freqTable = RunFrequency(new.Config, inputData)
 descTable = RunDescriptive(new.Config, inputData)
-classicalTable = RunClassical(new.Config, inputData)
+classicalTable = capture.output(RunClassical(new.Config, inputData))
+cat(classicalTable, sep = "\n")
+names(classicalTable)
+
+classicalTable$item.stat
+
 classicalTable2 = RunClassical(new.Config, inputData, omega = TRUE)
 outCFA = RunCFA(new.Config, inputData)
 summary(outCFA$all, fit.measures = TRUE, standardized = TRUE)
