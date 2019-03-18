@@ -87,7 +87,7 @@ label, .form-group, .progress {
       ),
 
       checkboxGroupButtons(
-        inputId = "runsolver",
+        inputId = "rundescriptive",
         choices = c("Run descriptive"),
         checkIcon = list(yes = icon("drafting-compass"), no = icon("drafting-compass")),
         status = "primary",
@@ -189,12 +189,12 @@ label, .form-group, .progress {
 
 switch_main_buttons = function(enable){
   if (enable){
-    shinyjs::enable("runsolver")
+    shinyjs::enable("rundescriptive")
     shinyjs::enable("runcalibration")
     shinyjs::enable("runlinking")
     shinyjs::enable("runequating")
   } else {
-    shinyjs::disable("runsolver")
+    shinyjs::disable("rundescriptive")
     shinyjs::disable("runcalibration")
     shinyjs::disable("runlinking")
     shinyjs::disable("runequating")
@@ -224,7 +224,7 @@ switch_tabs = function(id){
 
 get_data_status = function(ok){
   if (ok){
-    tmp = "Files OK. Press the button to run solver."
+    tmp = "Files OK. Press the button to run analysis."
   } else {
     tmp = "Error: files are not in the correct format."
   }
@@ -346,7 +346,7 @@ server <- function(input, output, session) {
     }
   })
 
-  observeEvent(input$runsolver, {
+  observeEvent(input$rundescriptive, {
 
     switch_main_buttons(F)
 
@@ -380,7 +380,7 @@ server <- function(input, output, session) {
 
     updateCheckboxGroupButtons(
       session = session,
-      inputId = "runsolver",
+      inputId = "rundescriptive",
       selected = character(0)
     )
 
@@ -392,6 +392,11 @@ server <- function(input, output, session) {
   observeEvent(input$runcalibration, {
 
     switch_main_buttons(F)
+
+    progress <- Progress$new(session)
+    on.exit(progress$close())
+    progress$set(message = 'Computing..',
+                 detail = 'This may take a while.')
 
     v$text = "Running.."
     v$time = Sys.time()
@@ -435,6 +440,11 @@ server <- function(input, output, session) {
   observeEvent(input$runlinking, {
 
     switch_main_buttons(F)
+
+    progress <- Progress$new(session)
+    on.exit(progress$close())
+    progress$set(message = 'Computing..',
+                 detail = 'This may take a while.')
 
     v$text = "Running.."
     v$time = Sys.time()
