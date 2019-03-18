@@ -71,6 +71,22 @@ label, .form-group, .progress {
         label = "Column names"
       ),
 
+      dropdownButton(
+        inputId = "tabvisibility_dropdown",
+
+        checkboxGroupButtons(
+          inputId = "tabvisibility",
+          choiceNames = c("Raw data", "Basic stats", "Calibration", "Linking", "Equating"),
+          choiceValues = 1:5,
+          justified = TRUE,
+          selected = c(1,2)
+        ),
+
+        circle = FALSE,
+        icon = icon("thumbtack"), width = "100%",
+        label = "Tab visibility"
+      ),
+
       checkboxGroupButtons(
         inputId = "runsolver",
         choices = c("Run analysis"),
@@ -91,7 +107,9 @@ label, .form-group, .progress {
         checkIcon = list(yes = icon("drafting-compass"), no = icon("drafting-compass")),
         status = "primary",
         justified = TRUE
-      )
+      ),
+
+      downloadButton("exportData", "Export visible tabs")
     ),
 
 
@@ -189,8 +207,10 @@ switch_tabs = function(id){
     hideTab("tabs", target = as.character(i))
   }
 
-  for (i in do.call(c, is[id])){
-    showTab("tabs", target = as.character(i))
+  if (!is.null(id)){
+    for (i in do.call(c, is[id])){
+      showTab("tabs", target = as.character(i))
+    }
   }
 
 }
@@ -207,10 +227,17 @@ get_data_status = function(ok){
 
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
-  v = reactiveValues(data.exists = F, active_tabset = 1)
+  v = reactiveValues(data.exists = F, active_tabset = c(1,2))
 
   switch_main_buttons(F)
-  switch_tabs(1)
+  switch_tabs(c(1,2))
+
+  observeEvent(input$tabvisibility, {
+    v$active_tabset = as.numeric(input$tabvisibility)
+    switch_tabs(v$active_tabset)
+  },
+  ignoreNULL = F
+  )
 
   observeEvent(input$anchor_file, {
     if (!is.null(input$anchor_file)){
@@ -230,6 +257,18 @@ server <- function(input, output, session) {
       v$inputdata = try(LoadData(new.Config))
       v$data.exists = class(v$inputdata) == "PROsetta.Data"
       v$text = get_data_status(v$data.exists)
+
+      if (v$data.exists){
+        v$active_tabset = unique(c(v$active_tabset, 1))
+        switch_tabs(v$active_tabset)
+
+        updateCheckboxGroupButtons(
+          session = session,
+          inputId = "tabvisibility",
+          selected = as.character(v$active_tabset)
+        )
+      }
+
       switch_main_buttons(v$data.exists)
     }
   })
@@ -251,6 +290,18 @@ server <- function(input, output, session) {
       v$inputdata = try(LoadData(new.Config))
       v$data.exists = class(v$inputdata) == "PROsetta.Data"
       v$text = get_data_status(v$data.exists)
+
+      if (v$data.exists){
+        v$active_tabset = unique(c(v$active_tabset, 1))
+        switch_tabs(v$active_tabset)
+
+        updateCheckboxGroupButtons(
+          session = session,
+          inputId = "tabvisibility",
+          selected = as.character(v$active_tabset)
+        )
+      }
+
       switch_main_buttons(v$data.exists)
     }
   })
@@ -272,6 +323,18 @@ server <- function(input, output, session) {
       v$inputdata = try(LoadData(new.Config))
       v$data.exists = class(v$inputdata) == "PROsetta.Data"
       v$text = get_data_status(v$data.exists)
+
+      if (v$data.exists){
+        v$active_tabset = unique(c(v$active_tabset, 1))
+        switch_tabs(v$active_tabset)
+
+        updateCheckboxGroupButtons(
+          session = session,
+          inputId = "tabvisibility",
+          selected = as.character(v$active_tabset)
+        )
+      }
+
       switch_main_buttons(v$data.exists)
     }
   })
@@ -293,14 +356,20 @@ server <- function(input, output, session) {
     v$inputdata = LoadData(new.Config)
     v$freqtable = RunFrequency(new.Config, v$inputdata)
     v$desctable = RunDescriptive(new.Config, v$inputdata)
-    v$classical = capture.output(RunClassical(new.Config, v$inputdata))
-    v$classical2 = capture.output(RunClassical(new.Config, v$inputdata, omega = T))
+    v$classical = RunClassical(new.Config, v$inputdata)
+    v$classical2 = RunClassical(new.Config, v$inputdata, omega = T)
 
     v$time = Sys.time() - v$time
     v$text = paste0("Done in ", sprintf("%3.3f", v$time), "s")
 
     v$active_tabset = unique(c(v$active_tabset, 2))
     switch_tabs(v$active_tabset)
+
+    updateCheckboxGroupButtons(
+      session = session,
+      inputId = "tabvisibility",
+      selected = as.character(v$active_tabset)
+    )
 
     updateCheckboxGroupButtons(
       session = session,
@@ -329,6 +398,7 @@ server <- function(input, output, session) {
                             scaleID = input$scale_id)
     v$inputdata = LoadData(new.Config)
     v$outCalib = RunCalibration(new.Config, v$inputdata)
+    v$calib_params = mirt::coef(v$outCalib, IRTpars = TRUE, simplify = TRUE)$items
     v$table_itemfit = mirt::itemfit(v$outCalib, "S_X2", na.rm = TRUE)
 
     v$time = Sys.time() - v$time
@@ -336,6 +406,12 @@ server <- function(input, output, session) {
 
     v$active_tabset = unique(c(v$active_tabset, 3))
     switch_tabs(v$active_tabset)
+
+    updateCheckboxGroupButtons(
+      session = session,
+      inputId = "tabvisibility",
+      selected = as.character(v$active_tabset)
+    )
 
     updateCheckboxGroupButtons(
       session = session,
@@ -374,6 +450,12 @@ server <- function(input, output, session) {
 
     updateCheckboxGroupButtons(
       session = session,
+      inputId = "tabvisibility",
+      selected = as.character(v$active_tabset)
+    )
+
+    updateCheckboxGroupButtons(
+      session = session,
       inputId = "runlinking",
       selected = character(0)
     )
@@ -382,6 +464,47 @@ server <- function(input, output, session) {
 
   })
 
+
+
+
+  observeEvent(input$runlinking, {
+
+    switch_main_buttons(F)
+
+    v$text = "Running.."
+    v$time = Sys.time()
+
+    new.Config = new.config(anchorFile = input$anchor_file$datapath,
+                            responseFile = input$response_file$datapath,
+                            itemmapFile = input$itemmap_file$datapath,
+                            linkingMethod = input$linking_type,
+                            itemID = input$item_id,
+                            personID = input$person_id,
+                            scaleID = input$scale_id)
+    v$inputdata = LoadData(new.Config)
+    v$outequateequipercentile = RunEquateObserved(new.Config, v$inputdata, scaleTo = 1, scaleFrom = 2, type = "equipercentile", smooth = "loglinear")
+
+    v$time = Sys.time() - v$time
+    v$text = paste0("Done in ", sprintf("%3.3f", v$time), "s")
+
+    v$active_tabset = unique(c(v$active_tabset, 5))
+    switch_tabs(v$active_tabset)
+
+    updateCheckboxGroupButtons(
+      session = session,
+      inputId = "tabvisibility",
+      selected = as.character(v$active_tabset)
+    )
+
+    updateCheckboxGroupButtons(
+      session = session,
+      inputId = "runlinking",
+      selected = character(0)
+    )
+
+    switch_main_buttons(T)
+
+  })
 
 
   output$textoutput <- renderText({
@@ -416,25 +539,27 @@ server <- function(input, output, session) {
     v$desctable},
     options = list(pageLength = 100)
   )
-  output$classical <- renderText({
+  output$classical <- renderPrint({
     if (is.null(v$classical)) return()
-    paste0(v$classical, collapse = "\n")
+    v$classical
   })
-  output$classical2 <- renderText({
+  output$classical2 <- renderPrint({
     if (is.null(v$classical2)) return()
-    paste0(v$classical2, collapse = "\n")
+    v$classical2
   })
 
   output$calib_params <- renderDT({
-    if (is.null(v$outCalib)) return()
-    mirt::coef(v$outCalib, IRTpars = TRUE, simplify = TRUE)$items
+    if (is.null(v$calib_params)) return()
+    v$calib_params
     },
     options = list(pageLength = 100)
   )
+
   output$plot_itemfit <- renderPlot({
     if (is.null(v$outCalib)) return()
     mirt::itemfit(v$outCalib, empirical.plot = 1)
   })
+
   output$plot_iteminfo <- renderPlot({
     if (is.null(v$outCalib)) return()
     mirt::itemplot(v$outCalib, item = 1, type = "info")
@@ -450,6 +575,96 @@ server <- function(input, output, session) {
     if (is.null(v$outequate)) return()
     v$outequate$link@constants$SL
   })
+
+  output$equating_constants <- renderPrint({
+    if (is.null(v$outequateequipercentile)) return()
+    v$outequateequipercentile
+  })
+
+  output$exportData <- downloadHandler(
+    filename = function() {
+      paste("data-", Sys.Date(), ".zip", sep="")
+    },
+    content = function(fname) {
+      fs <- c()
+      tmpdir <- tempdir()
+      setwd(tempdir())
+      for (i in v$active_tabset) {
+        if (i == 1){
+          path = paste0("raw_data_anchor.csv")
+          fs <- c(fs, path)
+          write.csv(v$anchor_data, path)
+          path = paste0("raw_data_response.csv")
+          fs <- c(fs, path)
+          write.csv(v$response_data, path)
+          path = paste0("raw_data_itemmap.csv")
+          fs <- c(fs, path)
+          write.csv(v$itemmap_data, path)
+        }
+        if (i == 2){
+          path = paste0("basic_frequency.csv")
+          fs <- c(fs, path)
+          write.csv(v$freqtable, path)
+          path = paste0("basic_descriptive.csv")
+          fs <- c(fs, path)
+          write.csv(v$desctable, path)
+          path = paste0("basic_reliability_alpha.txt")
+          fs <- c(fs, path)
+          tmp = paste0(capture.output(v$classical), collapse = "\n")
+          write(tmp, path)
+          path = paste0("basic_reliability_omega.txt")
+          fs <- c(fs, path)
+          tmp = paste0(capture.output(v$classical2), collapse = "\n")
+          write(tmp, path)
+        }
+        if (i == 3){
+          path = paste0("calib_params.csv")
+          fs <- c(fs, path)
+          write.csv(v$calib_params, path)
+
+          n.items = dim(outCalib@Data$data)[2]
+
+          path = paste0("calib_itemfit.pdf")
+          fs <- c(fs, path)
+          pdf(path)
+          for (id in 1:n.items){
+            p = mirt::itemfit(v$outCalib, empirical.plot = id)
+            print(p)
+          }
+          dev.off()
+
+          path = paste0("calib_iteminfo.pdf")
+          fs <- c(fs, path)
+          pdf(path)
+          for (id in 1:n.items){
+            p = mirt::itemplot(v$outCalib, item = id, type = "info")
+            print(p)
+          }
+          dev.off()
+
+          path = paste0("calib_fit.csv")
+          fs <- c(fs, path)
+          write.csv(v$table_itemfit, path)
+        }
+
+        if (i == 4){
+          path = paste0("linking_constants.csv")
+          fs <- c(fs, path)
+          write.csv(v$outequate$link@constants$SL, path)
+        }
+
+        if (i == 5){
+          path = paste0("equating_constants.txt")
+          fs <- c(fs, path)
+          tmp = paste0(capture.output(v$outequateequipercentile), collapse = "\n")
+          write(tmp, path)
+        }
+
+      }
+      zip(zipfile = fname, files = fs, flags = "-j")
+    },
+    contentType = "application/zip"
+  )
 
 }
 
