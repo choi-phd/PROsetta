@@ -4,7 +4,6 @@ library(shinyWidgets)
 library(shinyjs)
 library(PROsetta)
 library(DT)
-library(readxl)
 
 ui <- fluidPage(
   theme = shinytheme("lumen"),
@@ -89,7 +88,7 @@ label, .form-group, .progress {
 
       checkboxGroupButtons(
         inputId = "runsolver",
-        choices = c("Run analysis"),
+        choices = c("Run descriptive"),
         checkIcon = list(yes = icon("drafting-compass"), no = icon("drafting-compass")),
         status = "primary",
         justified = TRUE
@@ -108,7 +107,13 @@ label, .form-group, .progress {
         status = "primary",
         justified = TRUE
       ),
-
+      checkboxGroupButtons(
+        inputId = "runequating",
+        choices = c("Run equating"),
+        checkIcon = list(yes = icon("drafting-compass"), no = icon("drafting-compass")),
+        status = "primary",
+        justified = TRUE
+      ),
       downloadButton("exportData", "Export visible tabs")
     ),
 
@@ -187,10 +192,12 @@ switch_main_buttons = function(enable){
     shinyjs::enable("runsolver")
     shinyjs::enable("runcalibration")
     shinyjs::enable("runlinking")
+    shinyjs::enable("runequating")
   } else {
     shinyjs::disable("runsolver")
     shinyjs::disable("runcalibration")
     shinyjs::disable("runlinking")
+    shinyjs::disable("runequating")
   }
 }
 
@@ -467,7 +474,7 @@ server <- function(input, output, session) {
 
 
 
-  observeEvent(input$runlinking, {
+  observeEvent(input$runequating, {
 
     switch_main_buttons(F)
 
@@ -498,7 +505,7 @@ server <- function(input, output, session) {
 
     updateCheckboxGroupButtons(
       session = session,
-      inputId = "runlinking",
+      inputId = "runequating",
       selected = character(0)
     )
 
@@ -591,73 +598,98 @@ server <- function(input, output, session) {
       setwd(tempdir())
       for (i in v$active_tabset) {
         if (i == 1){
-          path = paste0("raw_data_anchor.csv")
-          fs <- c(fs, path)
-          write.csv(v$anchor_data, path)
-          path = paste0("raw_data_response.csv")
-          fs <- c(fs, path)
-          write.csv(v$response_data, path)
-          path = paste0("raw_data_itemmap.csv")
-          fs <- c(fs, path)
-          write.csv(v$itemmap_data, path)
+          if (!is.null(v$anchor_data)){
+            path = "raw_data_anchor.csv"
+            fs <- c(fs, path)
+            write.csv(v$anchor_data, path)
+          }
+          if (!is.null(v$response_data)){
+            path = "raw_data_response.csv"
+            fs <- c(fs, path)
+            write.csv(v$response_data, path)
+          }
+          if (!is.null(v$itemmap_data)){
+            path = "raw_data_itemmap.csv"
+            fs <- c(fs, path)
+            write.csv(v$itemmap_data, path)
+          }
         }
         if (i == 2){
-          path = paste0("basic_frequency.csv")
-          fs <- c(fs, path)
-          write.csv(v$freqtable, path)
-          path = paste0("basic_descriptive.csv")
-          fs <- c(fs, path)
-          write.csv(v$desctable, path)
-          path = paste0("basic_reliability_alpha.txt")
-          fs <- c(fs, path)
-          tmp = paste0(capture.output(v$classical), collapse = "\n")
-          write(tmp, path)
-          path = paste0("basic_reliability_omega.txt")
-          fs <- c(fs, path)
-          tmp = paste0(capture.output(v$classical2), collapse = "\n")
-          write(tmp, path)
+          if (!is.null(v$freqtable)){
+            path = "basic_frequency.csv"
+            fs <- c(fs, path)
+            write.csv(v$freqtable, path)
+          }
+          if (!is.null(v$desctable)){
+            path = "basic_descriptive.csv"
+            fs <- c(fs, path)
+            write.csv(v$desctable, path)
+          }
+          if (!is.null(v$classical)){
+            path = "basic_reliability_alpha.txt"
+            fs <- c(fs, path)
+            tmp = paste0(capture.output(v$classical), collapse = "\n")
+            write(tmp, path)
+          }
+          if (!is.null(v$classical2)){
+            path = "basic_reliability_omega.txt"
+            fs <- c(fs, path)
+            tmp = paste0(capture.output(v$classical2), collapse = "\n")
+            write(tmp, path)
+          }
         }
         if (i == 3){
-          path = paste0("calib_params.csv")
-          fs <- c(fs, path)
-          write.csv(v$calib_params, path)
+
+          if (!is.null(v$calib_params)){
+            path = "calib_params.csv"
+            fs <- c(fs, path)
+            write.csv(v$calib_params, path)
+          }
 
           n.items = dim(outCalib@Data$data)[2]
 
-          path = paste0("calib_itemfit.pdf")
-          fs <- c(fs, path)
-          pdf(path)
-          for (id in 1:n.items){
-            p = mirt::itemfit(v$outCalib, empirical.plot = id)
-            print(p)
-          }
-          dev.off()
+          if (!is.null(v$outCalib)){
+            path = "calib_itemfit.pdf"
+            fs <- c(fs, path)
+            pdf(path)
+            for (id in 1:n.items){
+              p = mirt::itemfit(v$outCalib, empirical.plot = id)
+              print(p)
+            }
+            dev.off()
 
-          path = paste0("calib_iteminfo.pdf")
-          fs <- c(fs, path)
-          pdf(path)
-          for (id in 1:n.items){
-            p = mirt::itemplot(v$outCalib, item = id, type = "info")
-            print(p)
+            path = "calib_iteminfo.pdf"
+            fs <- c(fs, path)
+            pdf(path)
+            for (id in 1:n.items){
+              p = mirt::itemplot(v$outCalib, item = id, type = "info")
+              print(p)
+            }
+            dev.off()
           }
-          dev.off()
 
-          path = paste0("calib_fit.csv")
-          fs <- c(fs, path)
-          write.csv(v$table_itemfit, path)
+          if (!is.null(v$table_itemfit)){
+            path = "calib_fit.csv"
+            fs <- c(fs, path)
+            write.csv(v$table_itemfit, path)
+          }
         }
 
         if (i == 4){
-          path = paste0("linking_constants.csv")
-          fs <- c(fs, path)
-          write.csv(v$outequate$link@constants$SL, path)
+          if (!is.null(v$outequate)){
+            path = "linking_constants.csv"
+            fs <- c(fs, path)
+            write.csv(v$outequate$link@constants$SL, path)
+          }
         }
 
         if (i == 5){
-          path = paste0("equating_constants.txt")
-          fs <- c(fs, path)
-          tmp = paste0(capture.output(v$outequateequipercentile), collapse = "\n")
-          write(tmp, path)
+          if (!is.null(v$outequateequipercentile)){
+            path = "equating_constants.txt"
+            fs <- c(fs, path)
+            tmp = paste0(capture.output(v$outequateequipercentile), collapse = "\n")
+            write(tmp, path)
+          }
         }
 
       }
