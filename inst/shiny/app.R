@@ -439,45 +439,50 @@ server <- function(input, output, session) {
 
   observeEvent(input$runlinking, {
 
-    switch_main_buttons(F)
+    if(input$linking_type %in% c("MM", "MS", "HB", "SL", "LS")){
+      switch_main_buttons(F)
 
-    progress <- Progress$new(session)
-    on.exit(progress$close())
-    progress$set(message = 'Computing..',
-                 detail = 'This may take a while.')
+      progress <- Progress$new(session)
+      on.exit(progress$close())
+      progress$set(message = 'Computing..',
+                   detail = 'This may take a while.')
 
-    v$text = "Running.."
-    v$time = Sys.time()
+      v$text = "Running.."
+      v$time = Sys.time()
 
-    new.Config = new.config(anchorFile = input$anchor_file$datapath,
-                            responseFile = input$response_file$datapath,
-                            itemmapFile = input$itemmap_file$datapath,
-                            linkingMethod = input$linking_type,
-                            itemID = input$item_id,
-                            personID = input$person_id,
-                            scaleID = input$scale_id)
-    v$inputdata = LoadData(new.Config)
-    v$outequate = RunLinking(new.Config, v$inputdata, technical = list(NCYCLES = 1000))
+      new.Config = new.config(anchorFile = input$anchor_file$datapath,
+                              responseFile = input$response_file$datapath,
+                              itemmapFile = input$itemmap_file$datapath,
+                              linkingMethod = input$linking_type,
+                              itemID = input$item_id,
+                              personID = input$person_id,
+                              scaleID = input$scale_id)
+      v$inputdata = LoadData(new.Config)
+      v$outequate = RunLinking(new.Config, v$inputdata, technical = list(NCYCLES = 1000))
 
-    v$time = Sys.time() - v$time
-    v$text = paste0("Done in ", sprintf("%3.3f", v$time), "s")
+      v$time = Sys.time() - v$time
+      v$text = paste0("Done in ", sprintf("%3.3f", v$time), "s")
 
-    v$active_tabset = unique(c(v$active_tabset, 4))
-    switch_tabs(v$active_tabset)
+      v$active_tabset = unique(c(v$active_tabset, 4))
+      switch_tabs(v$active_tabset)
 
-    updateCheckboxGroupButtons(
-      session = session,
-      inputId = "tabvisibility",
-      selected = as.character(v$active_tabset)
-    )
+      updateCheckboxGroupButtons(
+        session = session,
+        inputId = "tabvisibility",
+        selected = as.character(v$active_tabset)
+      )
 
-    updateCheckboxGroupButtons(
-      session = session,
-      inputId = "runlinking",
-      selected = character(0)
-    )
+      updateCheckboxGroupButtons(
+        session = session,
+        inputId = "runlinking",
+        selected = character(0)
+      )
 
-    switch_main_buttons(T)
+      switch_main_buttons(T)
+    } else {
+      v$text = 'Linking method must be one of the following: "MM", "MS", "HB", "SL", "LS".'
+    }
+
 
   })
 
@@ -656,7 +661,7 @@ server <- function(input, output, session) {
             write.csv(v$calib_params, path)
           }
 
-          n.items = dim(outCalib@Data$data)[2]
+          n.items = dim(v$outCalib@Data$data)[2]
 
           if (!is.null(v$outCalib)){
             path = "calib_itemfit.pdf"
