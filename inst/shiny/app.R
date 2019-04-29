@@ -558,7 +558,7 @@ server <- function(input, output, session) {
   )
   output$desctable <- renderDT({
     if (is.null(v$desctable)) return()
-    v$desctable},
+    v$desctable %>% round(3)},
     options = list(pageLength = 100)
   )
   output$classical <- renderPrint({
@@ -572,7 +572,7 @@ server <- function(input, output, session) {
 
   output$calib_params <- renderDT({
     if (is.null(v$calib_params)) return()
-    v$calib_params
+    v$calib_params %>% round(3)
     },
     options = list(pageLength = 100)
   )
