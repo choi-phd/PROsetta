@@ -1,7 +1,7 @@
 ---
 title: "Tutorial: how to use the Shiny application of PROsetta package"
 author: "Sangdon Lim"
-date: "4/29/2019"
+date: "5/23/2019"
 output:  
   html_document: 
     number_sections: no
@@ -94,6 +94,14 @@ and the parameters.
 knitr::include_graphics("img/7.png")
 ```
 
+To display the plots for another item, click on the **Tab Visibility** button to open a dropdown menu like this:
+
+```{r echo=FALSE, out.width = '75%', fig.align = 'center'}
+knitr::include_graphics("img/11.png")
+```
+
+The slider can be used to display item fit plot and item info plots for a different item.
+
 ### Linking
 
 Click the **Run Linking** button to perform scale linking. This will populate *Linking constants* tab with the constants.
@@ -115,7 +123,7 @@ knitr::include_graphics("img/10.png")
 Performing the four analysis would populate a number of tabs on the main panel. Click on the **Tab Visibility** button to open a dropdown menu like this:
 
 ```{r echo=FALSE, out.width = '75%', fig.align = 'center'}
-knitr::include_graphics("img/5.png")
+knitr::include_graphics("img/11.png")
 ```
 
 Each button can be toggled to change the visibility of the tabs. The buttons correspond to the displaying of imported data and the respective analyses.
