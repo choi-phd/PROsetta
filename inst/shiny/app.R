@@ -81,6 +81,13 @@ label, .form-group, .progress {
           selected = c(1,2)
         ),
 
+        sliderTextInput(
+          inputId = "item_id_to_plot",
+          label = "Item ID to plot",
+          choices = c(1)
+        ),
+
+
         circle = FALSE,
         icon = icon("thumbtack"), width = "100%",
         label = "Tab visibility"
@@ -187,6 +194,11 @@ label, .form-group, .progress {
   )
 )
 
+is_text_parsable = function(arg.text){
+  txt = gsub("[^0-9\\., \\-]", "", arg.text) # Limits eval to only accept legit inputs
+  return(txt == arg.text)
+}
+
 switch_main_buttons = function(enable){
   if (enable){
     shinyjs::enable("rundescriptive")
@@ -231,6 +243,10 @@ get_data_status = function(ok){
   return(tmp)
 }
 
+return_object_or_null = function(arg.object){
+  if (is.null(arg.object)) return(NULL)
+  return(arg.object)
+}
 
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
@@ -242,9 +258,7 @@ server <- function(input, output, session) {
   observeEvent(input$tabvisibility, {
     v$active_tabset = as.numeric(input$tabvisibility)
     switch_tabs(v$active_tabset)
-  },
-  ignoreNULL = F
-  )
+  }, ignoreNULL = F)
 
   observeEvent(input$anchor_file, {
     if (!is.null(input$anchor_file)){
@@ -316,6 +330,7 @@ server <- function(input, output, session) {
   observeEvent(input$itemmap_file, {
     if (!is.null(input$itemmap_file)){
       v$itemmap_data = read.csv(input$itemmap_file$datapath)
+      v$n_items = dim(v$itemmap_data)[1]
     }
     if (!is.null(input$anchor_file) &
         !is.null(input$response_file) &
@@ -364,7 +379,7 @@ server <- function(input, output, session) {
     v$freqtable = RunFrequency(new.Config, v$inputdata)
     v$desctable = RunDescriptive(new.Config, v$inputdata)
     v$classical = RunClassical(new.Config, v$inputdata)
-    v$classical2 = RunClassical(new.Config, v$inputdata, omega = T)
+    v$classical2 = RunClassical(new.Config, v$inputdata, omega = T)[["Omega"]]
 
     v$time = Sys.time() - v$time
     v$text = paste0("Done in ", sprintf("%3.3f", v$time), "s")
@@ -409,8 +424,18 @@ server <- function(input, output, session) {
                             personID = input$person_id,
                             scaleID = input$scale_id)
     v$inputdata = LoadData(new.Config)
+
+    updateSliderTextInput(
+      session = session,
+      inputId = "item_id_to_plot",
+      choices = seq(1, v$n_items),
+      selected = min(v$item_id_to_plot, v$n_items)
+    )
+
     v$outCalib = RunCalibration(new.Config, v$inputdata)
     v$calib_params = mirt::coef(v$outCalib, IRTpars = TRUE, simplify = TRUE)$items
+    v$plot_itemfit  = mirt::itemfit(v$outCalib, empirical.plot = v$item_id_to_plot)
+    v$plot_iteminfo = mirt::itemplot(v$outCalib, item = v$item_id_to_plot, type = "info")
     v$table_itemfit = mirt::itemfit(v$outCalib, "S_X2", na.rm = TRUE)
 
     v$time = Sys.time() - v$time
@@ -482,8 +507,6 @@ server <- function(input, output, session) {
     } else {
       v$text = 'Linking method must be one of the following: "MM", "MS", "HB", "SL", "LS".'
     }
-
-
   })
 
 
@@ -528,6 +551,17 @@ server <- function(input, output, session) {
 
   })
 
+  observeEvent(input$item_id_to_plot, {
+    if (is_text_parsable(input$item_id_to_plot)){
+      eval(parse(text = paste0("item_id_to_plot = c(", input$item_id_to_plot, ")[1]")))
+      item_id_to_plot = min(item_id_to_plot, v$n_items)
+      item_id_to_plot = max(1, item_id_to_plot)
+      v$item_id_to_plot = item_id_to_plot
+      if (is.null(v$outCalib)) return()
+      v$plot_itemfit  = mirt::itemfit(v$outCalib, empirical.plot = v$item_id_to_plot)
+      v$plot_iteminfo = mirt::itemplot(v$outCalib, item = v$item_id_to_plot, type = "info")
+    }
+  })
 
   output$textoutput <- renderText({
     if (is.null(v$text)) return()
@@ -577,15 +611,10 @@ server <- function(input, output, session) {
     options = list(pageLength = 100)
   )
 
-  output$plot_itemfit <- renderPlot({
-    if (is.null(v$outCalib)) return()
-    mirt::itemfit(v$outCalib, empirical.plot = 1)
-  })
 
-  output$plot_iteminfo <- renderPlot({
-    if (is.null(v$outCalib)) return()
-    mirt::itemplot(v$outCalib, item = 1, type = "info")
-  })
+  output$plot_itemfit  <- renderPlot(return_object_or_null(v$plot_itemfit))
+  output$plot_iteminfo <- renderPlot(return_object_or_null(v$plot_iteminfo))
+
   output$table_itemfit <- renderDT({
     if (is.null(v$table_itemfit)) return()
     v$table_itemfit
