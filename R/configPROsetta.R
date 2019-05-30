@@ -62,16 +62,16 @@ setClass("PROsetta.Config",
              if (!dir.exists(object@outputDirectory)) dir.create(object@outputDirectory, recursive = TRUE)
            }
            if (object@responseFile != "") {
-             f = file.path(object@inputDirectory, object@responseFile)
-             if (!file.exists(f)) stop(paste("responseFile does not exist :", f))
+             p = check.file.path(object@inputDirectory, object@responseFile)
+             if (!p$exists) stop(paste("responseFile does not exist :", p$path))
            }
            if (object@itemmapFile != "") {
-             f = file.path(object@inputDirectory, object@itemmapFile)
-             if (!file.exists(f)) stop(paste("itemmapFile does not exist :", f))
+             p = check.file.path(object@inputDirectory, object@itemmapFile)
+             if (!p$exists) stop(paste("itemmapFile does not exist :", p$path))
            }
            if (object@linkingMethod != "NONE" && object@anchorFile != "") {
-             f = file.path(object@inputDirectory, object@anchorFile)
-             if (!file.exists(f)) stop(paste("anchorFile does not exist :", f))
+             p = check.file.path(object@inputDirectory, object@anchorFile)
+             if (!p$exists) stop(paste("anchorFile does not exist :", p$path))
            }
            if (!object@linkingMethod %in% c("MM", "MS", "HB", "SL", "FIXEDPAR", "NONE")){
              stop("invalid option for linkingMethod")
@@ -94,7 +94,7 @@ setClass("PROsetta.Config",
 #' @param itemmapFile Character. The filename for an item map.
 #' @param anchorFile Character. The filename of a dataset containing the parameters of the items.
 #' @param linkingMethod Character. The linking method to use. Accepts "\code{MM}", "\code{MS}", "\code{HB}", "\code{SL}", "\code{FIXEDPAR}", or "\code{NONE}".
-#'
+#' @param guessID Logical. If \code{TRUE}, attempts to guess \code{itemID, personID, scaleID}.
 #' @return A \code{\linkS4class{PROsetta.Config}} object.
 #'
 #' @export
@@ -111,19 +111,19 @@ new.config = function(studyName = "Study",
                    responseFile = responseFile,
                    itemmapFile = itemmapFile,
                    anchorFile = anchorFile,
-                   linkingMethod = toupper(linkingMethod)
-                   )
+                   linkingMethod = toupper(linkingMethod))
   if (guessID){
-    p = file.path(inputDirectory, responseFile)
-    if (file.exists(p)) d = read.csv(p, as.is = TRUE)
+    p = check.file.path(inputDirectory, responseFile)
+    if (p$exists) d = read.csv(p$path, as.is = TRUE)
     ids_response = colnames(d)
-    p = file.path(inputDirectory, itemmapFile)
-    if (file.exists(p)) d = read.csv(p, as.is = TRUE)
+
+    p = check.file.path(inputDirectory, itemmapFile)
+    if (p$exists) d = read.csv(p$path, as.is = TRUE)
     ids_itemmap = colnames(d)
 
     n_match = rep(NA, dim(d)[2])
     for (j in 1:dim(d)[2]){ n_match[j] = sum(ids_response %in% d[,j]) }
-    idx = which(n_match == max(n_match))
+    idx = which(n_match == max(n_match))[1]
     new.Config@itemID = ids_itemmap[idx]
     cat("ItemID guessed as  : ", new.Config@itemID, "\n")
 
@@ -164,6 +164,25 @@ setClass("PROsetta.Data",
          }
 )
 
+#' Check file path
+#'
+#' Check file path to see if it exists.
+#'
+#' @param abspath Absolute path of an input directory.
+#' @param path Absolute or relative path of a file.
+#'
+#' @return a list containing normalized file path and whether it exists.
+#'
+#' @export
+check.file.path = function(abspath, path){
+  p = path
+  if (file.exists(p)) return(list(path = normalizePath(p), exists = T))
+  p = file.path(abspath, path)
+  if (file.exists(p)) return(list(path = normalizePath(p), exists = T))
+  return(list(path = NULL, exists = F))
+}
+
+
 #' Load data from supplied config
 #'
 #' Loads data from the supplied configuration.
@@ -177,23 +196,25 @@ setClass("PROsetta.Data",
 LoadData = function(Config) {
   if (class(Config) != "PROsetta.Config") stop("Config must be a class of PROsetta.Config")
   Data = new("PROsetta.Data")
-  p = file.path(Config@inputDirectory, Config@responseFile)
-  if (file.exists(p)) {
-    Data@response = read.csv(p, as.is = TRUE)
+
+  p = check.file.path(Config@inputDirectory, Config@responseFile)
+  if (p$exists){
+    Data@response = read.csv(p$path, as.is = TRUE)
     if (!(Config@personID %in% names(Data@response))) {
       warning(sprintf("%s is not included in responseFile", Config@personID))
     }
   }
-  p = file.path(Config@inputDirectory, Config@itemmapFile)
-  if (file.exists(p)) {
-    Data@itemmap = read.csv(p, as.is = TRUE)
+
+  p = check.file.path(Config@inputDirectory, Config@itemmapFile)
+  if (p$exists) {
+    Data@itemmap = read.csv(p$path, as.is = TRUE)
     if (!(Config@itemID %in% names(Data@itemmap))) {
       warning(sprintf("%s is not included in itemmapFile", Config@itemID))
     }
   }
-  p = file.path(Config@inputDirectory, Config@anchorFile)
-  if (file.exists(p)) {
-    Data@anchor = read.csv(p, as.is = TRUE)
+  p = check.file.path(Config@inputDirectory, Config@anchorFile)
+  if (p$exists) {
+    Data@anchor = read.csv(p$path, as.is = TRUE)
     if (!(Config@itemID %in% names(Data@anchor))) {
       warning(sprintf("%s is not included in anchorFile", Config@itemID))
     }

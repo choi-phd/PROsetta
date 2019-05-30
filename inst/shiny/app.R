@@ -379,7 +379,7 @@ server <- function(input, output, session) {
     v$freqtable = RunFrequency(new.Config, v$inputdata)
     v$desctable = RunDescriptive(new.Config, v$inputdata)
     v$classical = RunClassical(new.Config, v$inputdata)
-    v$classical2 = RunClassical(new.Config, v$inputdata, omega = T)[["Omega"]]
+    v$classical2 = RunClassical(new.Config, v$inputdata, omega = T, fm = "ml")[["Omega"]]
 
     v$time = Sys.time() - v$time
     v$text = paste0("Done in ", sprintf("%3.3f", v$time), "s")
@@ -436,7 +436,13 @@ server <- function(input, output, session) {
     v$calib_params = mirt::coef(v$outCalib, IRTpars = TRUE, simplify = TRUE)$items
     v$plot_itemfit  = mirt::itemfit(v$outCalib, empirical.plot = v$item_id_to_plot)
     v$plot_iteminfo = mirt::itemplot(v$outCalib, item = v$item_id_to_plot, type = "info")
-    v$table_itemfit = mirt::itemfit(v$outCalib, "S_X2", na.rm = TRUE)
+
+    tmp = try(mirt::itemfit(v$outCalib, "S_X2", na.rm = TRUE))
+    if (class(tmp) == "try-error"){
+      tmp = try(mirt::itemfit(v$outCalib, "S_X2"))
+    }
+
+    v$table_itemfit = tmp
 
     v$time = Sys.time() - v$time
     v$text = paste0("Done in ", sprintf("%3.3f", v$time), "s")
