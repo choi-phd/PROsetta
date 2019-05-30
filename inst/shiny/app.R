@@ -185,6 +185,11 @@ label, .form-group, .progress {
                  style = "overflow-y:scroll; max-height: 700px",
                  verbatimTextOutput("linking_constants"),
                  value = 41),
+        tabPanel("Transformed parameters",
+                 style = "overflow-y:scroll; max-height: 700px",
+                 DTOutput("table_transformed_params"),
+                 value = 42),
+
         tabPanel("Equating",
                  style = "overflow-y:scroll; max-height: 700px",
                  verbatimTextOutput("equating_constants"),
@@ -218,7 +223,7 @@ switch_tabs = function(id){
   i1 = 11:13
   i2 = 21:24
   i3 = 31:34
-  i4 = 41
+  i4 = 41:42
   i5 = 51
   is = list(i1, i2, i3, i4, i5)
 
@@ -243,8 +248,9 @@ get_data_status = function(ok){
   return(tmp)
 }
 
-return_object_or_null = function(arg.object){
+return_object_or_null = function(arg.object, digits = NULL){
   if (is.null(arg.object)) return(NULL)
+  if (!is.null(digits)) return(round(arg.object, digits))
   return(arg.object)
 }
 
@@ -379,7 +385,7 @@ server <- function(input, output, session) {
     v$freqtable = RunFrequency(new.Config, v$inputdata)
     v$desctable = RunDescriptive(new.Config, v$inputdata)
     v$classical = RunClassical(new.Config, v$inputdata)
-    v$classical2 = RunClassical(new.Config, v$inputdata, omega = T)[["Omega"]]
+    v$classical2 = RunClassical(new.Config, v$inputdata, omega = T, fm = "ml")[["Omega"]]
 
     v$time = Sys.time() - v$time
     v$text = paste0("Done in ", sprintf("%3.3f", v$time), "s")
@@ -436,7 +442,13 @@ server <- function(input, output, session) {
     v$calib_params = mirt::coef(v$outCalib, IRTpars = TRUE, simplify = TRUE)$items
     v$plot_itemfit  = mirt::itemfit(v$outCalib, empirical.plot = v$item_id_to_plot)
     v$plot_iteminfo = mirt::itemplot(v$outCalib, item = v$item_id_to_plot, type = "info")
-    v$table_itemfit = mirt::itemfit(v$outCalib, "S_X2", na.rm = TRUE)
+
+    tmp = try(mirt::itemfit(v$outCalib, "S_X2", na.rm = TRUE))
+    if (class(tmp) == "try-error"){
+      tmp = try(mirt::itemfit(v$outCalib, "S_X2"))
+    }
+
+    v$table_itemfit = tmp
 
     v$time = Sys.time() - v$time
     v$text = paste0("Done in ", sprintf("%3.3f", v$time), "s")
@@ -484,6 +496,8 @@ server <- function(input, output, session) {
                               scaleID = input$scale_id)
       v$inputdata = LoadData(new.Config)
       v$outequate = RunLinking(new.Config, v$inputdata, technical = list(NCYCLES = 1000))
+      v$linking_constants = v$outequate$link@constants$SL
+      v$transformed_params = v$outequate$pars@pars$From
 
       v$time = Sys.time() - v$time
       v$text = paste0("Done in ", sprintf("%3.3f", v$time), "s")
@@ -563,74 +577,26 @@ server <- function(input, output, session) {
     }
   })
 
-  output$textoutput <- renderText({
-    if (is.null(v$text)) return()
-    v$text
-  })
+  output$textoutput    = renderText(return_object_or_null(v$text))
 
-  output$anchor_data <- renderDT({
-    if (is.null(v$anchor_data)) return()
-    v$anchor_data},
-    options = list(pageLength = 100)
-  )
-  output$response_data <- renderDT({
-    if (is.null(v$response_data)) return()
-    v$response_data},
-    options = list(pageLength = 100)
-  )
-  output$itemmap_data <- renderDT({
-    if (is.null(v$itemmap_data)) return()
-    v$itemmap_data},
-    options = list(pageLength = 100)
-  )
+  output$anchor_data   = renderDT(return_object_or_null(v$anchor_data), options = list(pageLength = 100))
+  output$response_data = renderDT(return_object_or_null(v$response_data), options = list(pageLength = 100))
+  output$itemmap_data  = renderDT(return_object_or_null(v$itemmap_data), options = list(pageLength = 100))
 
+  output$freqtable     = renderDT(return_object_or_null(v$freqtable), options = list(pageLength = 100))
+  output$desctable     = renderDT(return_object_or_null(v$desctable, 3), options = list(pageLength = 100))
+  output$classical     = renderPrint(return_object_or_null(v$classical))
+  output$classical2    = renderPrint(return_object_or_null(v$classical2))
 
-  output$freqtable <- renderDT({
-    if (is.null(v$freqtable)) return()
-    v$freqtable},
-    options = list(pageLength = 100)
-  )
-  output$desctable <- renderDT({
-    if (is.null(v$desctable)) return()
-    v$desctable %>% round(3)},
-    options = list(pageLength = 100)
-  )
-  output$classical <- renderPrint({
-    if (is.null(v$classical)) return()
-    v$classical
-  })
-  output$classical2 <- renderPrint({
-    if (is.null(v$classical2)) return()
-    v$classical2
-  })
+  output$calib_params  = renderDT(return_object_or_null(v$calib_params, 3), options = list(pageLength = 100))
+  output$plot_itemfit  = renderPlot(return_object_or_null(v$plot_itemfit))
+  output$plot_iteminfo = renderPlot(return_object_or_null(v$plot_iteminfo))
+  output$table_itemfit = renderDT(return_object_or_null(v$table_itemfit), options = list(pageLength = 100))
 
-  output$calib_params <- renderDT({
-    if (is.null(v$calib_params)) return()
-    v$calib_params %>% round(3)
-    },
-    options = list(pageLength = 100)
-  )
+  output$linking_constants = renderPrint(return_object_or_null(v$linking_constants))
+  output$table_transformed_params = renderDT(return_object_or_null(v$transformed_params, 3), options = list(pageLength = 100))
 
-
-  output$plot_itemfit  <- renderPlot(return_object_or_null(v$plot_itemfit))
-  output$plot_iteminfo <- renderPlot(return_object_or_null(v$plot_iteminfo))
-
-  output$table_itemfit <- renderDT({
-    if (is.null(v$table_itemfit)) return()
-    v$table_itemfit
-    },
-    options = list(pageLength = 100)
-  )
-
-  output$linking_constants <- renderPrint({
-    if (is.null(v$outequate)) return()
-    v$outequate$link@constants$SL
-  })
-
-  output$equating_constants <- renderPrint({
-    if (is.null(v$outequateequipercentile)) return()
-    v$outequateequipercentile
-  })
+  output$equating_constants <- renderPrint(return_object_or_null(v$outequateequipercentile))
 
   output$exportData <- downloadHandler(
     filename = function() {
@@ -720,10 +686,15 @@ server <- function(input, output, session) {
         }
 
         if (i == 4){
-          if (!is.null(v$outequate)){
+          if (!is.null(v$linking_constants)){
             path = "linking_constants.csv"
             fs <- c(fs, path)
-            write.csv(v$outequate$link@constants$SL, path)
+            write.csv(v$linking_constants, path)
+          }
+          if (!is.null(v$transformed_params)){
+            path = "transformed_params.csv"
+            fs <- c(fs, path)
+            write.csv(v$transformed_params, path)
           }
         }
 
