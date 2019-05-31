@@ -443,7 +443,7 @@ server <- function(input, output, session) {
     v$plot_itemfit  = mirt::itemfit(v$outCalib, empirical.plot = v$item_id_to_plot)
     v$plot_iteminfo = mirt::itemplot(v$outCalib, item = v$item_id_to_plot, type = "info")
 
-    tmp = try(mirt::itemfit(v$outCalib, "S_X2", na.rm = TRUE))
+    tmp = try(mirt::itemfit(v$outCalib, "S_X2", na.rm = TRUE), silent = T)
     if (class(tmp) == "try-error"){
       tmp = try(mirt::itemfit(v$outCalib, "S_X2"))
     }
