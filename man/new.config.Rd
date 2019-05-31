@@ -29,6 +29,8 @@ new.config(studyName = "Study", inputDirectory = getwd(),
 \item{anchorFile}{Character. The filename of a dataset containing the parameters of the items.}
 
 \item{linkingMethod}{Character. The linking method to use. Accepts "\code{MM}", "\code{MS}", "\code{HB}", "\code{SL}", "\code{FIXEDPAR}", or "\code{NONE}".}
+
+\item{guessID}{Logical. If \code{TRUE}, attempts to guess \code{itemID, personID, scaleID}.}
 }
 \value{
 A \code{\linkS4class{PROsetta.Config}} object.
