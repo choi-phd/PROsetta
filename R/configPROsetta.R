@@ -258,7 +258,16 @@ LoadData = function(Config) {
 RunFrequency = function(Config, Data) {
   if (class(Config) != "PROsetta.Config") stop("Config must be a class of PROsetta.Config")
   if (class(Data) != "PROsetta.Data") stop("Data must be a class of PROsetta.Data")
-  Freq = as.data.frame(t(apply(Data@response[Data@itemmap[[Config@itemID]]], 2, table)))
+  tmp = Data@response[Data@itemmap[[Config@itemID]]]
+  tmp = apply(tmp, 2, table)
+  catnames = unique(do.call(c, lapply(tmp, names)))
+  Freq = as.data.frame(matrix(NA, length(tmp), length(catnames)))
+  colnames(Freq) = catnames
+  rownames(Freq) = names(tmp)
+  for (i in 1:length(tmp)){
+    cats = names(tmp[[i]])
+    Freq[i,cats] = tmp[[i]]
+  }
   return(Freq)
 }
 
