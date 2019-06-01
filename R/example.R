@@ -1,13 +1,12 @@
 
 if(FALSE){
 
-new.Config = new.config(anchorFile = "data-raw/anchor_AxMASQ.csv",
-                        responseFile = "data-raw/dat_axmasq_v2.csv",
-                        itemmapFile = "data-raw/imap_AxMASQ.csv",
+new.Config = new.config(inputDirectory = "/Users/sl47276/Downloads/",
+                        anchorFile = "RADAR_promisanchor.csv",
+                        responseFile = "RADAR_promis_asr.csv",
+                        itemmapFile = "promis_asr_imap.csv",
                         linkingMethod = "FIXEDPAR",
-                        itemID = "item_id",
-                        personID = "prosettaid",
-                        scaleID = "instrument")
+                        guessID = T)
 
 inputData = LoadData(new.Config)
 freqTable = RunFrequency(new.Config, inputData)
