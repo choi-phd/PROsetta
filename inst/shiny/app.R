@@ -464,14 +464,14 @@ server = function(input, output, session) {
     assign_object("shiny.itemfit", v$plot_itemfit, "Item fit plot tab")
     v$plot_iteminfo = mirt::itemplot(v$outCalib, item = v$item_id_to_plot, type = "info")
     assign_object("shiny.iteminfo", v$plot_iteminfo, "Item info tab")
-
+    
     tmp = try(mirt::itemfit(v$outCalib, "S_X2", na.rm = TRUE), silent = T)
     if (class(tmp)[1] == "try-error"){
       tmp = try(mirt::itemfit(v$outCalib, "S_X2"))
     }
 
     v$table_itemfit = tmp
-    assign_object("shiny.itemfit", v$table_itemfit, "Item fit table tab")
+    assign_object("shiny.itemfittable", v$table_itemfit, "Item fit table tab")
 
     v$time = Sys.time() - v$time
     v$text = paste0("Done in ", sprintf("%3.3f", v$time), "s")
@@ -600,7 +600,9 @@ server = function(input, output, session) {
       v$item_id_to_plot = item_id_to_plot
       if (is.null(v$outCalib)) return()
       v$plot_itemfit  = mirt::itemfit(v$outCalib, empirical.plot = v$item_id_to_plot)
+      assign_object("shiny.itemfit", v$plot_itemfit, "Item fit plot tab")
       v$plot_iteminfo = mirt::itemplot(v$outCalib, item = v$item_id_to_plot, type = "info")
+      assign_object("shiny.iteminfo", v$plot_iteminfo, "Item info tab")
     }
   })
 
