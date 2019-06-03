@@ -5,7 +5,7 @@ library(shinyjs)
 library(PROsetta)
 library(DT)
 
-ui <- fluidPage(
+ui = fluidPage(
   theme = shinytheme("lumen"),
   shinyjs::useShinyjs(),
   tags$head(tags$style(HTML("
@@ -254,8 +254,21 @@ return_object_or_null = function(arg.object, digits = NULL){
   return(arg.object)
 }
 
+assign_object_first = TRUE
+
+assign_object = function(objname, obj, desc){
+  if (assign_object_first){
+    assign_object_first <<- FALSE
+    message("\nRefresh the environment tab to see the objects in the list.")
+  }
+  assign(objname, obj, envir = .GlobalEnv)
+  pad = paste0(rep(" ", 48 - nchar(desc)), collapse = "")
+  tmp = paste0(desc, pad, "assigned to : ", objname)
+  message(tmp)
+}
+
 # Define server logic required to draw a histogram
-server <- function(input, output, session) {
+server = function(input, output, session) {
   v = reactiveValues(data.exists = F, active_tabset = c(1,2))
 
   switch_main_buttons(F)
@@ -382,10 +395,15 @@ server <- function(input, output, session) {
                             personID = input$person_id,
                             scaleID = input$scale_id)
     v$inputdata = LoadData(new.Config)
+
     v$freqtable = RunFrequency(new.Config, v$inputdata)
+    assign_object("shiny.freq", v$freqtable, "Frequency table tab")
     v$desctable = RunDescriptive(new.Config, v$inputdata)
+    assign_object("shiny.desc", v$desctable, "Descriptives tab")
     v$classical = RunClassical(new.Config, v$inputdata)
+    assign_object("shiny.alpha", v$classical, "Classical tab")
     v$classical2 = RunClassical(new.Config, v$inputdata, omega = T, fm = "ml")[["Omega"]]
+    assign_object("shiny.omega", v$classical, "Classical (omega) tab")
 
     v$time = Sys.time() - v$time
     v$text = paste0("Done in ", sprintf("%3.3f", v$time), "s")
@@ -414,7 +432,7 @@ server <- function(input, output, session) {
 
     switch_main_buttons(F)
 
-    progress <- Progress$new(session)
+    progress = Progress$new(session)
     on.exit(progress$close())
     progress$set(message = 'Computing..',
                  detail = 'This may take a while.')
@@ -439,16 +457,21 @@ server <- function(input, output, session) {
     )
 
     v$outCalib = RunCalibration(new.Config, v$inputdata)
+    assign_object("shiny.calib", v$outCalib, "Calibration result (full object)")
     v$calib_params = mirt::coef(v$outCalib, IRTpars = TRUE, simplify = TRUE)$items
+    assign_object("shiny.params", v$calib_params, "Calibration result tab")
     v$plot_itemfit  = mirt::itemfit(v$outCalib, empirical.plot = v$item_id_to_plot)
+    assign_object("shiny.itemfit", v$plot_itemfit, "Item fit plot tab")
     v$plot_iteminfo = mirt::itemplot(v$outCalib, item = v$item_id_to_plot, type = "info")
+    assign_object("shiny.iteminfo", v$plot_iteminfo, "Item info tab")
 
     tmp = try(mirt::itemfit(v$outCalib, "S_X2", na.rm = TRUE), silent = T)
-    if (class(tmp) == "try-error"){
+    if (class(tmp)[1] == "try-error"){
       tmp = try(mirt::itemfit(v$outCalib, "S_X2"))
     }
 
     v$table_itemfit = tmp
+    assign_object("shiny.itemfit", v$table_itemfit, "Item fit table tab")
 
     v$time = Sys.time() - v$time
     v$text = paste0("Done in ", sprintf("%3.3f", v$time), "s")
@@ -479,7 +502,7 @@ server <- function(input, output, session) {
     if(input$linking_type %in% c("MM", "MS", "HB", "SL", "LS")){
       switch_main_buttons(F)
 
-      progress <- Progress$new(session)
+      progress = Progress$new(session)
       on.exit(progress$close())
       progress$set(message = 'Computing..',
                    detail = 'This may take a while.')
@@ -496,8 +519,11 @@ server <- function(input, output, session) {
                               scaleID = input$scale_id)
       v$inputdata = LoadData(new.Config)
       v$outequate = RunLinking(new.Config, v$inputdata, technical = list(NCYCLES = 1000))
+      assign_object("shiny.link", v$outequate, "Linking result (full object)")
       v$linking_constants = v$outequate$link@constants$SL
+      assign_object("shiny.link.ab", v$linking_constants, "Linking constants tab")
       v$transformed_params = v$outequate$pars@pars$From
+      assign_object("shiny.transformed.params", v$transformed_params, "Transformed parameters tab")
 
       v$time = Sys.time() - v$time
       v$text = paste0("Done in ", sprintf("%3.3f", v$time), "s")
@@ -542,6 +568,7 @@ server <- function(input, output, session) {
                             scaleID = input$scale_id)
     v$inputdata = LoadData(new.Config)
     v$outequateequipercentile = RunEquateObserved(new.Config, v$inputdata, scaleTo = 1, scaleFrom = 2, type = "equipercentile", smooth = "loglinear")
+    assign_object("shiny.eq", v$outequateequipercentile, "Equating tab")
 
     v$time = Sys.time() - v$time
     v$text = paste0("Done in ", sprintf("%3.3f", v$time), "s")
@@ -577,73 +604,73 @@ server <- function(input, output, session) {
     }
   })
 
-  output$textoutput    = renderText(return_object_or_null(v$text))
+  output$textoutput               = renderText(return_object_or_null(v$text))
 
-  output$anchor_data   = renderDT(return_object_or_null(v$anchor_data), options = list(pageLength = 100))
-  output$response_data = renderDT(return_object_or_null(v$response_data), options = list(pageLength = 100))
-  output$itemmap_data  = renderDT(return_object_or_null(v$itemmap_data), options = list(pageLength = 100))
+  output$anchor_data              = renderDT(return_object_or_null(v$anchor_data), options = list(pageLength = 100))
+  output$response_data            = renderDT(return_object_or_null(v$response_data), options = list(pageLength = 100))
+  output$itemmap_data             = renderDT(return_object_or_null(v$itemmap_data), options = list(pageLength = 100))
 
-  output$freqtable     = renderDT(return_object_or_null(v$freqtable), options = list(pageLength = 100))
-  output$desctable     = renderDT(return_object_or_null(v$desctable, 3), options = list(pageLength = 100))
-  output$classical     = renderPrint(return_object_or_null(v$classical))
-  output$classical2    = renderPrint(return_object_or_null(v$classical2))
+  output$freqtable                = renderDT(return_object_or_null(v$freqtable), options = list(pageLength = 100))
+  output$desctable                = renderDT(return_object_or_null(v$desctable, 3), options = list(pageLength = 100))
+  output$classical                = renderPrint(return_object_or_null(v$classical))
+  output$classical2               = renderPrint(return_object_or_null(v$classical2))
 
-  output$calib_params  = renderDT(return_object_or_null(v$calib_params, 3), options = list(pageLength = 100))
-  output$plot_itemfit  = renderPlot(return_object_or_null(v$plot_itemfit))
-  output$plot_iteminfo = renderPlot(return_object_or_null(v$plot_iteminfo))
-  output$table_itemfit = renderDT(return_object_or_null(v$table_itemfit), options = list(pageLength = 100))
+  output$calib_params             = renderDT(return_object_or_null(v$calib_params, 3), options = list(pageLength = 100))
+  output$plot_itemfit             = renderPlot(return_object_or_null(v$plot_itemfit))
+  output$plot_iteminfo            = renderPlot(return_object_or_null(v$plot_iteminfo))
+  output$table_itemfit            = renderDT(return_object_or_null(v$table_itemfit), options = list(pageLength = 100))
 
-  output$linking_constants = renderPrint(return_object_or_null(v$linking_constants))
+  output$linking_constants        = renderPrint(return_object_or_null(v$linking_constants))
   output$table_transformed_params = renderDT(return_object_or_null(v$transformed_params, 3), options = list(pageLength = 100))
 
-  output$equating_constants <- renderPrint(return_object_or_null(v$outequateequipercentile))
+  output$equating_constants       = renderPrint(return_object_or_null(v$outequateequipercentile))
 
-  output$exportData <- downloadHandler(
+  output$exportData = downloadHandler(
     filename = function() {
       paste("data-", Sys.Date(), ".zip", sep="")
     },
     content = function(fname) {
-      fs <- c()
-      tmpdir <- tempdir()
+      fs = c()
+      tmpdir = tempdir()
       setwd(tempdir())
       for (i in v$active_tabset) {
         if (i == 1){
           if (!is.null(v$anchor_data)){
             path = "raw_data_anchor.csv"
-            fs <- c(fs, path)
+            fs = c(fs, path)
             write.csv(v$anchor_data, path)
           }
           if (!is.null(v$response_data)){
             path = "raw_data_response.csv"
-            fs <- c(fs, path)
+            fs = c(fs, path)
             write.csv(v$response_data, path)
           }
           if (!is.null(v$itemmap_data)){
             path = "raw_data_itemmap.csv"
-            fs <- c(fs, path)
+            fs = c(fs, path)
             write.csv(v$itemmap_data, path)
           }
         }
         if (i == 2){
           if (!is.null(v$freqtable)){
             path = "basic_frequency.csv"
-            fs <- c(fs, path)
+            fs = c(fs, path)
             write.csv(v$freqtable, path)
           }
           if (!is.null(v$desctable)){
             path = "basic_descriptive.csv"
-            fs <- c(fs, path)
+            fs = c(fs, path)
             write.csv(v$desctable, path)
           }
           if (!is.null(v$classical)){
             path = "basic_reliability_alpha.txt"
-            fs <- c(fs, path)
+            fs = c(fs, path)
             tmp = paste0(capture.output(v$classical), collapse = "\n")
             write(tmp, path)
           }
           if (!is.null(v$classical2)){
             path = "basic_reliability_omega.txt"
-            fs <- c(fs, path)
+            fs = c(fs, path)
             tmp = paste0(capture.output(v$classical2), collapse = "\n")
             write(tmp, path)
           }
@@ -652,7 +679,7 @@ server <- function(input, output, session) {
 
           if (!is.null(v$calib_params)){
             path = "calib_params.csv"
-            fs <- c(fs, path)
+            fs = c(fs, path)
             write.csv(v$calib_params, path)
           }
 
@@ -660,7 +687,7 @@ server <- function(input, output, session) {
 
           if (!is.null(v$outCalib)){
             path = "calib_itemfit.pdf"
-            fs <- c(fs, path)
+            fs = c(fs, path)
             pdf(path)
             for (id in 1:n.items){
               p = mirt::itemfit(v$outCalib, empirical.plot = id)
@@ -669,7 +696,7 @@ server <- function(input, output, session) {
             dev.off()
 
             path = "calib_iteminfo.pdf"
-            fs <- c(fs, path)
+            fs = c(fs, path)
             pdf(path)
             for (id in 1:n.items){
               p = mirt::itemplot(v$outCalib, item = id, type = "info")
@@ -680,7 +707,7 @@ server <- function(input, output, session) {
 
           if (!is.null(v$table_itemfit)){
             path = "calib_fit.csv"
-            fs <- c(fs, path)
+            fs = c(fs, path)
             write.csv(v$table_itemfit, path)
           }
         }
@@ -688,12 +715,12 @@ server <- function(input, output, session) {
         if (i == 4){
           if (!is.null(v$linking_constants)){
             path = "linking_constants.csv"
-            fs <- c(fs, path)
+            fs = c(fs, path)
             write.csv(v$linking_constants, path)
           }
           if (!is.null(v$transformed_params)){
             path = "transformed_params.csv"
-            fs <- c(fs, path)
+            fs = c(fs, path)
             write.csv(v$transformed_params, path)
           }
         }
@@ -701,7 +728,7 @@ server <- function(input, output, session) {
         if (i == 5){
           if (!is.null(v$outequateequipercentile)){
             path = "equating_constants.txt"
-            fs <- c(fs, path)
+            fs = c(fs, path)
             tmp = paste0(capture.output(v$outequateequipercentile), collapse = "\n")
             write(tmp, path)
           }
