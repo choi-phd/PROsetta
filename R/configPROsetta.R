@@ -506,3 +506,120 @@ RunEquateObserved = function(Config, Data, scaleTo = 1, scaleFrom = 2, type = "e
   out = equate::equate(freqFrom, freqTo, type = type, boot = boot, reps = reps, ...)
   return(out)
 }
+
+#' Run Scoring Table Generation
+#'
+#' Generates raw-score to scale-score crosswalk tables.
+#'
+#' @param Config A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.
+#' @param Data A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.
+#' @param Calibration An object returned from \code{\link{RunCalibration} or \code{\link{RunLinking}}}
+#' @param priorMean Prior mean.
+#' @param priorSD Prior standard deviation.
+#' @param minTheta LL of theta grid.
+#' @param maxTheta UL of theta grid.
+#' @param inc Increment of theta grid.
+#' @param minScore Minimum item score (0 or 1).
+#' @param Tscore TRUE to convert theta to Tscore.
+#'
+#' @return A list containing crosswalk tables.
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' inputData = LoadData(new.Config)
+#' outCalib = RunCalibration(new.Config, inputData)
+#' scoreTable = RunRSSS(outCalib)
+#' outEquate = RunLinking(new.Config, inputData, technical = list(NCYCLES = 1000))
+#' scoreTableLinking = RunRSSS(outEquate)
+#' }
+
+RunRSSS = function(Config, Data, Calibration, priorMean = 0.0, priorSD = 1.0, minTheta = -4.0, maxTheta = 4.0, inc = 0.01, minScore = 1, Tscore = TRUE) {
+  if (class(Config) != "PROsetta.Config") stop("Config must be a class of PROsetta.Config")
+  if (class(Data) != "PROsetta.Data") stop("Data must be a class of PROsetta.Data")
+  if (is.null(attr(class(Calibration), "package"))) {
+    item.par = Calibration$pars@pars$From
+  } else if (class(Calibration) == "S4" && attr(class(Calibration), "package") == "mirt") {
+    item.par = mirt::coef(Calibration, IRTpars = TRUE, simplify = TRUE)$items
+  }
+  item.par.by.scale = split(data.frame(item.par), Data@itemmap[[Config@scaleID]])
+  n.scale = length(item.par.by.scale)
+  rsss = function(ipar) {
+    theta = seq(minTheta, maxTheta, by = inc)
+    nq = length(theta)
+    NCAT = rowSums(!is.na(ipar))
+    maxCat = max(NCAT)
+    DISC = ipar[, 1]
+    CB = ipar[, 2:maxCat]
+    ni = dim(ipar)[1]
+    pp = array(0, c(nq, ni, maxCat))
+    for (i in 1:ni) {
+      ps = matrix(0, nq, NCAT[i] + 1)
+      ps[, 1] = 1
+      ps[, NCAT[i] + 1] = 0
+      for (k in 1:(NCAT[i] - 1)) {
+        ps[, k + 1] = 1/(1 + exp(-DISC[i] * (theta - CB[i, k])))
+      }
+      for (k in 1:NCAT[i]) {
+        pp[, i, k] = ps[, k] - ps[, k + 1]
+      }
+    }
+    min.Raw.Score = 0 #minimum obtainable raw score
+    max.Raw.Score = sum(NCAT) - ni #maximum obtainable raw score
+    nScore = max.Raw.Score - min.Raw.Score + 1 #number of score points
+    TCCinv = numeric(nScore) #initialize TCC scoring table
+    Raw.Score = min.Raw.Score:max.Raw.Score #raw scores
+    LH = matrix(0, nq, nScore) #initializing distribution of summed scores
+    ncat = NCAT[1]
+    maxScore = 0
+    LH[, 1:ncat] = pp[, 1, 1:ncat]
+    idx<-ncat
+    for (i in 2:ni) {
+      ncat = NCAT[i]  #number of categories for item i
+      maxScore = ncat - 1 #maximum score for item i
+      score = 0:maxScore #score values for item i
+      prob = pp[, i, 1:ncat] #category probabilities for item i
+      pLH = matrix(0, nq, nScore) #place holder for LH
+      for (k in 1:ncat) {
+        for (h in 1:idx) {
+          sco = Raw.Score[h] + score[k]
+          position = which(Raw.Score == sco)
+          pLH[, position] = pLH[, position] + LH[, h] * prob[, k]
+        }
+      }
+      idx = idx + maxScore
+      LH = pLH
+    }
+    Scale.Score = numeric(nScore) #score table for EAP
+    SE = numeric(nScore) #SE for EAP
+    prior = dnorm((theta - priorMean) / priorSD)
+    posterior = LH * prior #posterior distribution
+    den = colSums(posterior)
+    den = matrix(rep(den, rep(nq, nScore)), nq, nScore)
+    posterior = posterior / den
+    for (j in 1:nScore) {
+      Scale.Score[j] = sum(posterior[, j] * theta) / sum(posterior[, j]) #EAP
+      SE[j] = sqrt(sum(posterior[, j] * (theta - Scale.Score[j])^2) / sum(posterior[, j])) #EAP
+    }
+    if (minScore==1) Raw.Score<-Raw.Score+ni
+    if (Tscore) {
+      Scale.Score = round(Scale.Score * 10 + 50, 1)
+      SE = round(SE * 10, 1)
+    }
+    rsss.table = data.frame(Raw = Raw.Score, Scale = Scale.Score, SE)
+    return(rsss.table)
+  }
+  if (n.scale == 1) {
+    score.table = rsss(item.par)
+    return(score.table)
+  } else if (n.scale > 1) {
+    score.table = vector(mode = "list", length = length(item.par.by.scale) + 1)
+    for (s in 1:n.scale) {
+      score.table[[s]] = rsss(item.par.by.scale[[s]])
+    }
+    score.table[[n.scale + 1]] = rsss(item.par)
+    names(score.table) = c(names(item.par.by.scale), "combined")
+    return(score.table)
+  }
+}
