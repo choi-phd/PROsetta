@@ -5,6 +5,9 @@ library(shinyjs)
 library(PROsetta)
 library(DT)
 
+css.y = "overflow-y:scroll; max-height: 65vh"
+solver.icon = list(yes = icon("drafting-compass"), no = icon("drafting-compass"))
+
 ui = fluidPage(
   theme = shinytheme("lumen"),
   shinyjs::useShinyjs(),
@@ -39,9 +42,9 @@ label, .form-group, .progress {
 
         h3(""),
 
-        fileInput("anchor_file", buttonLabel = "Anchor data", label = NULL),
-        fileInput("response_file", buttonLabel = "Response data", label = NULL),
-        fileInput("itemmap_file", buttonLabel = "Item map", label = NULL),
+        fileInput("anchor.file", buttonLabel = "Anchor data", label = NULL),
+        fileInput("response.file", buttonLabel = "Response data", label = NULL),
+        fileInput("itemmap.file", buttonLabel = "Item map", label = NULL),
 
         circle = FALSE, status = "primary",
         icon = icon("file-import"), width = "100%",
@@ -52,18 +55,18 @@ label, .form-group, .progress {
       h3(""),
 
       radioGroupButtons(
-        inputId = "linking_type",
+        inputId = "linking.type",
         choices = c("MM", "MS", "HB", "SL", "FIXEDPAR", "NONE"),
         justified = TRUE
       ),
 
 
       dropdownButton(
-        inputId = "simulation_dropdown",
+        inputId = "simulation.dropdown",
 
-        textInput("item_id", label = "Item ID", value = "item_id"),
-        textInput("person_id", label = "Person ID", value = "prosettaid"),
-        textInput("scale_id", label = "Scale ID", value = "instrument"),
+        textInput(label = "Item ID", inputId = "item.id", value = "item_id"),
+        textInput(label = "Person ID", inputId = "person.id", value = "prosettaid"),
+        textInput(label = "Scale ID", inputId = "scale.id", value = "instrument"),
 
         circle = FALSE,
         icon = icon("database"), width = "100%",
@@ -71,8 +74,8 @@ label, .form-group, .progress {
       ),
 
       dropdownButton(
-        inputId = "tabvisibility_dropdown",
-
+        label = "Tab visibility", inputId = "tabvisibility.dropdown",
+        circle = FALSE, width = "100%", icon = icon("thumbtack"),
         checkboxGroupButtons(
           inputId = "tabvisibility",
           choiceNames = c("Raw data", "Basic stats", "Calibration", "Linking", "Equating"),
@@ -80,47 +83,13 @@ label, .form-group, .progress {
           justified = TRUE,
           selected = c(1,2)
         ),
-
-        sliderTextInput(
-          inputId = "item_id_to_plot",
-          label = "Item ID to plot",
-          choices = c(1)
-        ),
-
-
-        circle = FALSE,
-        icon = icon("thumbtack"), width = "100%",
-        label = "Tab visibility"
+        sliderTextInput(label = "Item ID to plot", inputId = "item.id.to.plot", choices = c(1))
       ),
 
-      checkboxGroupButtons(
-        inputId = "rundescriptive",
-        choices = c("Run descriptive"),
-        checkIcon = list(yes = icon("drafting-compass"), no = icon("drafting-compass")),
-        status = "primary",
-        justified = TRUE
-      ),
-      checkboxGroupButtons(
-        inputId = "runcalibration",
-        choices = c("Run calibration"),
-        checkIcon = list(yes = icon("drafting-compass"), no = icon("drafting-compass")),
-        status = "primary",
-        justified = TRUE
-      ),
-      checkboxGroupButtons(
-        inputId = "runlinking",
-        choices = c("Run linking"),
-        checkIcon = list(yes = icon("drafting-compass"), no = icon("drafting-compass")),
-        status = "primary",
-        justified = TRUE
-      ),
-      checkboxGroupButtons(
-        inputId = "runequating",
-        choices = c("Run equating"),
-        checkIcon = list(yes = icon("drafting-compass"), no = icon("drafting-compass")),
-        status = "primary",
-        justified = TRUE
-      ),
+      checkboxGroupButtons(choices = c("Run descriptive"), inputId = "rundescriptive", status = "primary", justified = T, checkIcon = solver.icon),
+      checkboxGroupButtons(choices = c("Run calibration"), inputId = "runcalibration", status = "primary", justified = T, checkIcon = solver.icon),
+      checkboxGroupButtons(choices = c("Run linking"),     inputId = "runlinking",     status = "primary", justified = T, checkIcon = solver.icon),
+      checkboxGroupButtons(choices = c("Run equating"),    inputId = "runequating",    status = "primary", justified = T, checkIcon = solver.icon),
       downloadButton("exportData", "Export visible tabs")
     ),
 
@@ -134,112 +103,58 @@ label, .form-group, .progress {
       hr(),
       tabsetPanel(id = "tabs",
 
-        tabPanel("Anchor data",
-                 style = "overflow-y:scroll; max-height: 700px",
-                 DTOutput("anchor_data"),
-                 value = 11),
-        tabPanel("Response data",
-                 style = "overflow-y:scroll; max-height: 700px",
-                 DTOutput("response_data"),
-                 value = 12),
-        tabPanel("Item map data",
-                 style = "overflow-y:scroll; max-height: 700px",
-                 DTOutput("itemmap_data"),
-                 value = 13),
-
-        tabPanel("Frequency table",
-                 style = "overflow-y:scroll; max-height: 700px",
-                 DTOutput("freqtable"),
-                 value = 21),
-        tabPanel("Descriptives",
-                 style = "overflow-y:scroll; max-height: 700px",
-                 DTOutput("desctable"),
-                 value = 22),
-        tabPanel("Classical",
-                 style = "overflow-y:scroll; max-height: 700px",
-                 verbatimTextOutput("classical"),
-                 value = 23),
-        tabPanel("Classical (omega)",
-                 style = "overflow-y:scroll; max-height: 700px",
-                 verbatimTextOutput("classical2"),
-                 value = 24),
-
-        tabPanel("Calibration result",
-                 style = "overflow-y:scroll; max-height: 700px",
-                 DTOutput("calib_params"),
-                 value = 31),
-        tabPanel("Item fit plot",
-                 style = "overflow-y:scroll; max-height: 700px",
-                 plotOutput("plot_itemfit", width = "100%", height = "700px"),
-                 value = 32),
-        tabPanel("Item info",
-                 style = "overflow-y:scroll; max-height: 700px",
-                 plotOutput("plot_iteminfo", width = "100%", height = "700px"),
-                 value = 33),
-        tabPanel("Item fit table",
-                 style = "overflow-y:scroll; max-height: 700px",
-                 DTOutput("table_itemfit"),
-                 value = 34),
-
-        tabPanel("Linking constants",
-                 style = "overflow-y:scroll; max-height: 700px",
-                 verbatimTextOutput("linking_constants"),
-                 value = 41),
-        tabPanel("Transformed parameters",
-                 style = "overflow-y:scroll; max-height: 700px",
-                 DTOutput("table_transformed_params"),
-                 value = 42),
-
-        tabPanel("Equating",
-                 style = "overflow-y:scroll; max-height: 700px",
-                 verbatimTextOutput("equating_constants"),
-                 value = 51)
+        tabPanel("Anchor data",            value = 11, DTOutput("anchor.data"),                  style = css.y),
+        tabPanel("Response data",          value = 12, DTOutput("response.data"),                style = css.y),
+        tabPanel("Item map data",          value = 13, DTOutput("itemmap.data"),                 style = css.y),
+        tabPanel("Frequency table",        value = 21, DTOutput("freqtable"),                    style = css.y),
+        tabPanel("Descriptives",           value = 22, DTOutput("desctable"),                    style = css.y),
+        tabPanel("Classical",              value = 23, verbatimTextOutput("classical"),          style = css.y),
+        tabPanel("Classical (omega)",      value = 24, verbatimTextOutput("classical2"),         style = css.y),
+        tabPanel("Calibration result",     value = 31, DTOutput("calib.params"),                 style = css.y),
+        tabPanel("Item fit plot",          value = 32, plotOutput("plot.itemfit", width = "100%", height = "65vh"),  style = css.y),
+        tabPanel("Item info",              value = 33, plotOutput("plot.iteminfo", width = "100%", height = "65vh"), style = css.y),
+        tabPanel("Item fit table",         value = 34, DTOutput("table.itemfit"),                style = css.y),
+        tabPanel("Crosswalk table (from calibration)", value = 35,
+                 verbatimTextOutput("crosswalk.calibration"), style = css.y),
+        tabPanel("Linking constants",      value = 41, verbatimTextOutput("linking.constants"),  style = css.y),
+        tabPanel("Transformed parameters", value = 42, DTOutput("table.transformed.params"),     style = css.y),
+        tabPanel("Crosswalk table (from linking)", value = 43,
+                 verbatimTextOutput("crosswalk.linking"), style = css.y),
+        tabPanel("Equating",               value = 51, verbatimTextOutput("equating.constants"), style = css.y)
       )
     )
   )
 )
 
-is_text_parsable = function(arg.text){
+is.text.parsable = function(arg.text){
   txt = gsub("[^0-9\\., \\-]", "", arg.text) # Limits eval to only accept legit inputs
   return(txt == arg.text)
 }
 
-switch_main_buttons = function(enable){
-  if (enable){
-    shinyjs::enable("rundescriptive")
-    shinyjs::enable("runcalibration")
-    shinyjs::enable("runlinking")
-    shinyjs::enable("runequating")
-  } else {
-    shinyjs::disable("rundescriptive")
-    shinyjs::disable("runcalibration")
-    shinyjs::disable("runlinking")
-    shinyjs::disable("runequating")
-  }
+switch.main.buttons = function(enable){
+  shinyjs::toggleState("rundescriptive", enable)
+  shinyjs::toggleState("runcalibration", enable)
+  shinyjs::toggleState("runlinking", enable)
+  shinyjs::toggleState("runequating", enable)
 }
 
-switch_tabs = function(id){
+switch.tabs = function(id){
 
   i1 = 11:13
   i2 = 21:24
-  i3 = 31:34
-  i4 = 41:42
+  i3 = 31:35
+  i4 = 41:43
   i5 = 51
   is = list(i1, i2, i3, i4, i5)
 
-  for (i in do.call(c, is)){
-    hideTab("tabs", target = as.character(i))
-  }
+  for (i in do.call(c, is)){ hideTab("tabs", target = as.character(i)) }
 
   if (!is.null(id)){
-    for (i in do.call(c, is[id])){
-      showTab("tabs", target = as.character(i))
-    }
+    for (i in do.call(c, is[id])){ showTab("tabs", target = as.character(i)) }
   }
-
 }
 
-get_data_status = function(ok){
+get.data.status = function(ok){
   if (ok){
     tmp = "Files OK. Press the button to run analysis."
   } else {
@@ -248,17 +163,17 @@ get_data_status = function(ok){
   return(tmp)
 }
 
-return_object_or_null = function(arg.object, digits = NULL){
+return.object.or.null = function(arg.object, digits = NULL){
   if (is.null(arg.object)) return(NULL)
   if (!is.null(digits)) return(round(arg.object, digits))
   return(arg.object)
 }
 
-assign_object_first = TRUE
+assign.object.first = TRUE
 
-assign_object = function(objname, obj, desc){
-  if (assign_object_first){
-    assign_object_first <<- FALSE
+assign.object = function(objname, obj, desc){
+  if (assign.object.first){
+    assign.object.first <<- FALSE
     message("\nRefresh the environment tab to see the objects in the list.")
   }
   assign(objname, obj, envir = .GlobalEnv)
@@ -267,154 +182,134 @@ assign_object = function(objname, obj, desc){
   message(tmp)
 }
 
-# Define server logic required to draw a histogram
-server = function(input, output, session) {
-  v = reactiveValues(data.exists = F, active_tabset = c(1,2))
+shiny.new.config = function(input){
+  config = new.config(anchorFile = input$anchor.file$datapath,
+                      responseFile = input$response.file$datapath,
+                      itemmapFile = input$itemmap.file$datapath,
+                      linkingMethod = input$linking.type,
+                      itemID = input$item.id,
+                      personID = input$person.id,
+                      scaleID = input$scale.id)
+  return(config)
+}
 
-  switch_main_buttons(F)
-  switch_tabs(c(1,2))
+server = function(input, output, session) {
+  v = reactiveValues(data.exists = F, active.tabset = c(1,2))
+
+  switch.main.buttons(F)
+  switch.tabs(c(1,2))
 
   observeEvent(input$tabvisibility, {
-    v$active_tabset = as.numeric(input$tabvisibility)
-    switch_tabs(v$active_tabset)
+    v$active.tabset = as.numeric(input$tabvisibility)
+    switch.tabs(v$active.tabset)
   }, ignoreNULL = F)
 
-  observeEvent(input$anchor_file, {
-    if (!is.null(input$anchor_file)){
-      v$anchor_data = read.csv(input$anchor_file$datapath)
+  observeEvent(input$anchor.file, {
+    if (!is.null(input$anchor.file)){
+      v$anchor.data = read.csv(input$anchor.file$datapath)
     }
-    if (!is.null(input$anchor_file) &
-        !is.null(input$response_file) &
-        !is.null(input$itemmap_file)){
-
-      new.Config = new.config(anchorFile = input$anchor_file$datapath,
-                              responseFile = input$response_file$datapath,
-                              itemmapFile = input$itemmap_file$datapath,
-                              linkingMethod = input$linking_type,
-                              itemID = input$item_id,
-                              personID = input$person_id,
-                              scaleID = input$scale_id)
+    if (!is.null(input$anchor.file) & !is.null(input$response.file) & !is.null(input$itemmap.file)){
+      new.Config = shiny.new.config(input)
       v$inputdata = try(LoadData(new.Config))
       v$data.exists = class(v$inputdata) == "PROsetta.Data"
-      v$text = get_data_status(v$data.exists)
+      v$text = get.data.status(v$data.exists)
 
       if (v$data.exists){
-        v$active_tabset = unique(c(v$active_tabset, 1))
-        switch_tabs(v$active_tabset)
+        v$active.tabset = unique(c(v$active.tabset, 1))
+        switch.tabs(v$active.tabset)
 
         updateCheckboxGroupButtons(
           session = session,
           inputId = "tabvisibility",
-          selected = as.character(v$active_tabset)
+          selected = as.character(v$active.tabset)
         )
       }
 
-      switch_main_buttons(v$data.exists)
+      switch.main.buttons(v$data.exists)
     }
   })
 
-  observeEvent(input$response_file, {
-    if (!is.null(input$response_file)){
-      v$response_data = read.csv(input$response_file$datapath)
+  observeEvent(input$response.file, {
+    if (!is.null(input$response.file)){
+      v$response.data = read.csv(input$response.file$datapath)
     }
-    if (!is.null(input$anchor_file) &
-        !is.null(input$response_file) &
-        !is.null(input$itemmap_file)){
-      new.Config = new.config(anchorFile = input$anchor_file$datapath,
-                              responseFile = input$response_file$datapath,
-                              itemmapFile = input$itemmap_file$datapath,
-                              linkingMethod = input$linking_type,
-                              itemID = input$item_id,
-                              personID = input$person_id,
-                              scaleID = input$scale_id)
+    if (!is.null(input$anchor.file) & !is.null(input$response.file) & !is.null(input$itemmap.file)){
+      new.Config = shiny.new.config(input)
       v$inputdata = try(LoadData(new.Config))
       v$data.exists = class(v$inputdata) == "PROsetta.Data"
-      v$text = get_data_status(v$data.exists)
+      v$text = get.data.status(v$data.exists)
 
       if (v$data.exists){
-        v$active_tabset = unique(c(v$active_tabset, 1))
-        switch_tabs(v$active_tabset)
+        v$active.tabset = unique(c(v$active.tabset, 1))
+        switch.tabs(v$active.tabset)
 
         updateCheckboxGroupButtons(
           session = session,
           inputId = "tabvisibility",
-          selected = as.character(v$active_tabset)
+          selected = as.character(v$active.tabset)
         )
       }
 
-      switch_main_buttons(v$data.exists)
+      switch.main.buttons(v$data.exists)
     }
   })
 
-  observeEvent(input$itemmap_file, {
-    if (!is.null(input$itemmap_file)){
-      v$itemmap_data = read.csv(input$itemmap_file$datapath)
-      v$n_items = dim(v$itemmap_data)[1]
+  observeEvent(input$itemmap.file, {
+    if (!is.null(input$itemmap.file)){
+      v$itemmap.data = read.csv(input$itemmap.file$datapath)
+      v$n.items = dim(v$itemmap.data)[1]
     }
-    if (!is.null(input$anchor_file) &
-        !is.null(input$response_file) &
-        !is.null(input$itemmap_file)){
-      new.Config = new.config(anchorFile = input$anchor_file$datapath,
-                              responseFile = input$response_file$datapath,
-                              itemmapFile = input$itemmap_file$datapath,
-                              linkingMethod = input$linking_type,
-                              itemID = input$item_id,
-                              personID = input$person_id,
-                              scaleID = input$scale_id)
+    if (!is.null(input$anchor.file) & !is.null(input$response.file) & !is.null(input$itemmap.file)){
+      new.Config = shiny.new.config(input)
       v$inputdata = try(LoadData(new.Config))
       v$data.exists = class(v$inputdata) == "PROsetta.Data"
-      v$text = get_data_status(v$data.exists)
+      v$text = get.data.status(v$data.exists)
 
       if (v$data.exists){
-        v$active_tabset = unique(c(v$active_tabset, 1))
-        switch_tabs(v$active_tabset)
+        v$active.tabset = unique(c(v$active.tabset, 1))
+        switch.tabs(v$active.tabset)
 
         updateCheckboxGroupButtons(
           session = session,
           inputId = "tabvisibility",
-          selected = as.character(v$active_tabset)
+          selected = as.character(v$active.tabset)
         )
       }
 
-      switch_main_buttons(v$data.exists)
+      switch.main.buttons(v$data.exists)
     }
   })
 
   observeEvent(input$rundescriptive, {
 
-    switch_main_buttons(F)
+    switch.main.buttons(F)
 
     v$text = "Running.."
     v$time = Sys.time()
 
-    new.Config = new.config(anchorFile = input$anchor_file$datapath,
-                            responseFile = input$response_file$datapath,
-                            itemmapFile = input$itemmap_file$datapath,
-                            linkingMethod = input$linking_type,
-                            itemID = input$item_id,
-                            personID = input$person_id,
-                            scaleID = input$scale_id)
+    new.Config = shiny.new.config(input)
+    assign.object("shiny.config", new.Config, "PROsetta.Config object")
     v$inputdata = LoadData(new.Config)
-
+    assign.object("shiny.data", v$inputdata, "PROsetta.Data object")
     v$freqtable = RunFrequency(new.Config, v$inputdata)
-    assign_object("shiny.freq", v$freqtable, "Frequency table tab")
+    assign.object("shiny.freq", v$freqtable, "Frequency table tab")
     v$desctable = RunDescriptive(new.Config, v$inputdata)
-    assign_object("shiny.desc", v$desctable, "Descriptives tab")
+    assign.object("shiny.desc", v$desctable, "Descriptives tab")
     v$classical = RunClassical(new.Config, v$inputdata)
-    assign_object("shiny.alpha", v$classical, "Classical tab")
+    assign.object("shiny.alpha", v$classical, "Classical tab")
     v$classical2 = RunClassical(new.Config, v$inputdata, omega = T, fm = "ml")[["Omega"]]
-    assign_object("shiny.omega", v$classical, "Classical (omega) tab")
+    assign.object("shiny.omega", v$classical2, "Classical (omega) tab")
 
     v$time = Sys.time() - v$time
     v$text = paste0("Done in ", sprintf("%3.3f", v$time), "s")
 
-    v$active_tabset = unique(c(v$active_tabset, 2))
-    switch_tabs(v$active_tabset)
+    v$active.tabset = unique(c(v$active.tabset, 2))
+    switch.tabs(v$active.tabset)
 
     updateCheckboxGroupButtons(
       session = session,
       inputId = "tabvisibility",
-      selected = as.character(v$active_tabset)
+      selected = as.character(v$active.tabset)
     )
 
     updateCheckboxGroupButtons(
@@ -423,14 +318,14 @@ server = function(input, output, session) {
       selected = character(0)
     )
 
-    switch_main_buttons(T)
+    switch.main.buttons(T)
 
   })
 
 
   observeEvent(input$runcalibration, {
 
-    switch_main_buttons(F)
+    switch.main.buttons(F)
 
     progress = Progress$new(session)
     on.exit(progress$close())
@@ -440,49 +335,49 @@ server = function(input, output, session) {
     v$text = "Running.."
     v$time = Sys.time()
 
-    new.Config = new.config(anchorFile = input$anchor_file$datapath,
-                            responseFile = input$response_file$datapath,
-                            itemmapFile = input$itemmap_file$datapath,
-                            linkingMethod = input$linking_type,
-                            itemID = input$item_id,
-                            personID = input$person_id,
-                            scaleID = input$scale_id)
+    new.Config = shiny.new.config(input)
+    assign.object("shiny.config", new.Config, "PROsetta.Config object")
+
     v$inputdata = LoadData(new.Config)
+    assign.object("shiny.data", v$inputdata, "PROsetta.Data object")
 
     updateSliderTextInput(
       session = session,
-      inputId = "item_id_to_plot",
-      choices = seq(1, v$n_items),
-      selected = min(v$item_id_to_plot, v$n_items)
+      inputId = "item.id.to.plot",
+      choices = seq(1, v$n.items),
+      selected = min(v$item.id.to.plot, v$n.items)
     )
 
     v$outCalib = RunCalibration(new.Config, v$inputdata)
-    assign_object("shiny.calib", v$outCalib, "Calibration result (full object)")
-    v$calib_params = mirt::coef(v$outCalib, IRTpars = TRUE, simplify = TRUE)$items
-    assign_object("shiny.params", v$calib_params, "Calibration result tab")
-    v$plot_itemfit  = mirt::itemfit(v$outCalib, empirical.plot = v$item_id_to_plot)
-    assign_object("shiny.itemfit", v$plot_itemfit, "Item fit plot tab")
-    v$plot_iteminfo = mirt::itemplot(v$outCalib, item = v$item_id_to_plot, type = "info")
-    assign_object("shiny.iteminfo", v$plot_iteminfo, "Item info tab")
-    
+    assign.object("shiny.calib", v$outCalib, "Calibration result (full object)")
+    v$calib.params = mirt::coef(v$outCalib, IRTpars = TRUE, simplify = TRUE)$items
+    assign.object("shiny.params", v$calib.params, "Calibration result tab")
+    v$plot.itemfit  = mirt::itemfit(v$outCalib, empirical.plot = v$item.id.to.plot)
+    assign.object("shiny.itemfit", v$plot.itemfit, "Item fit plot tab")
+    v$plot.iteminfo = mirt::itemplot(v$outCalib, item = v$item.id.to.plot, type = "info")
+    assign.object("shiny.iteminfo", v$plot.iteminfo, "Item info tab")
+
     tmp = try(mirt::itemfit(v$outCalib, "S_X2", na.rm = TRUE), silent = T)
     if (class(tmp)[1] == "try-error"){
       tmp = try(mirt::itemfit(v$outCalib, "S_X2"))
     }
 
-    v$table_itemfit = tmp
-    assign_object("shiny.itemfittable", v$table_itemfit, "Item fit table tab")
+    v$table.itemfit = tmp
+    assign.object("shiny.itemfittable", v$table.itemfit, "Item fit table tab")
+
+    v$crosswalk.calibration = RunRSSS(new.Config, v$inputdata, v$outCalib)
+    assign.object("shiny.crosswalk.calibration", v$crosswalk.calibration, "Crosswalk (calibration) tab")
 
     v$time = Sys.time() - v$time
     v$text = paste0("Done in ", sprintf("%3.3f", v$time), "s")
 
-    v$active_tabset = unique(c(v$active_tabset, 3))
-    switch_tabs(v$active_tabset)
+    v$active.tabset = unique(c(v$active.tabset, 3))
+    switch.tabs(v$active.tabset)
 
     updateCheckboxGroupButtons(
       session = session,
       inputId = "tabvisibility",
-      selected = as.character(v$active_tabset)
+      selected = as.character(v$active.tabset)
     )
 
     updateCheckboxGroupButtons(
@@ -491,17 +386,17 @@ server = function(input, output, session) {
       selected = character(0)
     )
 
-    switch_main_buttons(T)
+    switch.main.buttons(T)
 
   })
 
 
 
   observeEvent(input$runlinking, {
-
-    if(input$linking_type %in% c("MM", "MS", "HB", "SL", "LS")){
-      switch_main_buttons(F)
-
+    switch.main.buttons(F)
+    if (!(input$linking.type %in% c("MM", "MS", "HB", "SL", "LS"))){
+      v$text = 'Linking method must be one of the following: "MM", "MS", "HB", "SL", "LS".'
+    } else {
       progress = Progress$new(session)
       on.exit(progress$close())
       progress$set(message = 'Computing..',
@@ -510,31 +405,32 @@ server = function(input, output, session) {
       v$text = "Running.."
       v$time = Sys.time()
 
-      new.Config = new.config(anchorFile = input$anchor_file$datapath,
-                              responseFile = input$response_file$datapath,
-                              itemmapFile = input$itemmap_file$datapath,
-                              linkingMethod = input$linking_type,
-                              itemID = input$item_id,
-                              personID = input$person_id,
-                              scaleID = input$scale_id)
+      new.Config = shiny.new.config(input)
+      assign.object("shiny.config", new.Config, "PROsetta.Config object")
+
       v$inputdata = LoadData(new.Config)
+      assign.object("shiny.data", v$inputdata, "PROsetta.Data object")
+
       v$outequate = RunLinking(new.Config, v$inputdata, technical = list(NCYCLES = 1000))
-      assign_object("shiny.link", v$outequate, "Linking result (full object)")
-      v$linking_constants = v$outequate$link@constants$SL
-      assign_object("shiny.link.ab", v$linking_constants, "Linking constants tab")
-      v$transformed_params = v$outequate$pars@pars$From
-      assign_object("shiny.transformed.params", v$transformed_params, "Transformed parameters tab")
+      assign.object("shiny.link", v$outequate, "Linking result (full object)")
+      v$linking.constants = v$outequate$link@constants$SL
+      assign.object("shiny.link.ab", v$linking.constants, "Linking constants tab")
+      v$transformed.params = v$outequate$pars@pars$From
+      assign.object("shiny.transformed.params", v$transformed.params, "Transformed parameters tab")
+
+      v$crosswalk.linking = RunRSSS(new.Config, v$inputdata, v$outequate)
+      assign.object("shiny.crosswalk.linking", v$crosswalk.linking, "Crosswalk (linking) tab")
 
       v$time = Sys.time() - v$time
       v$text = paste0("Done in ", sprintf("%3.3f", v$time), "s")
 
-      v$active_tabset = unique(c(v$active_tabset, 4))
-      switch_tabs(v$active_tabset)
+      v$active.tabset = unique(c(v$active.tabset, 4))
+      switch.tabs(v$active.tabset)
 
       updateCheckboxGroupButtons(
         session = session,
         inputId = "tabvisibility",
-        selected = as.character(v$active_tabset)
+        selected = as.character(v$active.tabset)
       )
 
       updateCheckboxGroupButtons(
@@ -542,11 +438,8 @@ server = function(input, output, session) {
         inputId = "runlinking",
         selected = character(0)
       )
-
-      switch_main_buttons(T)
-    } else {
-      v$text = 'Linking method must be one of the following: "MM", "MS", "HB", "SL", "LS".'
     }
+    switch.main.buttons(T)
   })
 
 
@@ -554,32 +447,30 @@ server = function(input, output, session) {
 
   observeEvent(input$runequating, {
 
-    switch_main_buttons(F)
+    switch.main.buttons(F)
 
     v$text = "Running.."
     v$time = Sys.time()
 
-    new.Config = new.config(anchorFile = input$anchor_file$datapath,
-                            responseFile = input$response_file$datapath,
-                            itemmapFile = input$itemmap_file$datapath,
-                            linkingMethod = input$linking_type,
-                            itemID = input$item_id,
-                            personID = input$person_id,
-                            scaleID = input$scale_id)
+    new.Config = shiny.new.config(input)
+    assign.object("shiny.config", new.Config, "PROsetta.Config object")
+
     v$inputdata = LoadData(new.Config)
+    assign.object("shiny.data", v$inputdata, "PROsetta.Data object")
+
     v$outequateequipercentile = RunEquateObserved(new.Config, v$inputdata, scaleTo = 1, scaleFrom = 2, type = "equipercentile", smooth = "loglinear")
-    assign_object("shiny.eq", v$outequateequipercentile, "Equating tab")
+    assign.object("shiny.eq", v$outequateequipercentile, "Equating tab")
 
     v$time = Sys.time() - v$time
     v$text = paste0("Done in ", sprintf("%3.3f", v$time), "s")
 
-    v$active_tabset = unique(c(v$active_tabset, 5))
-    switch_tabs(v$active_tabset)
+    v$active.tabset = unique(c(v$active.tabset, 5))
+    switch.tabs(v$active.tabset)
 
     updateCheckboxGroupButtons(
       session = session,
       inputId = "tabvisibility",
-      selected = as.character(v$active_tabset)
+      selected = as.character(v$active.tabset)
     )
 
     updateCheckboxGroupButtons(
@@ -588,44 +479,46 @@ server = function(input, output, session) {
       selected = character(0)
     )
 
-    switch_main_buttons(T)
+    switch.main.buttons(T)
 
   })
 
-  observeEvent(input$item_id_to_plot, {
-    if (is_text_parsable(input$item_id_to_plot)){
-      eval(parse(text = paste0("item_id_to_plot = c(", input$item_id_to_plot, ")[1]")))
-      item_id_to_plot = min(item_id_to_plot, v$n_items)
-      item_id_to_plot = max(1, item_id_to_plot)
-      v$item_id_to_plot = item_id_to_plot
+  observeEvent(input$item.id.to.plot, {
+    if (is.text.parsable(input$item.id.to.plot)){
+      eval(parse(text = paste0("item.id.to.plot = c(", input$item.id.to.plot, ")[1]")))
+      item.id.to.plot = min(item.id.to.plot, v$n.items)
+      item.id.to.plot = max(1, item.id.to.plot)
+      v$item.id.to.plot = item.id.to.plot
       if (is.null(v$outCalib)) return()
-      v$plot_itemfit  = mirt::itemfit(v$outCalib, empirical.plot = v$item_id_to_plot)
-      assign_object("shiny.itemfit", v$plot_itemfit, "Item fit plot tab")
-      v$plot_iteminfo = mirt::itemplot(v$outCalib, item = v$item_id_to_plot, type = "info")
-      assign_object("shiny.iteminfo", v$plot_iteminfo, "Item info tab")
+      v$plot.itemfit  = mirt::itemfit(v$outCalib, empirical.plot = v$item.id.to.plot)
+      assign.object("shiny.itemfit", v$plot.itemfit, "Item fit plot tab")
+      v$plot.iteminfo = mirt::itemplot(v$outCalib, item = v$item.id.to.plot, type = "info")
+      assign.object("shiny.iteminfo", v$plot.iteminfo, "Item info tab")
     }
   })
 
-  output$textoutput               = renderText(return_object_or_null(v$text))
+  output$textoutput               = renderText(return.object.or.null(v$text))
 
-  output$anchor_data              = renderDT(return_object_or_null(v$anchor_data), options = list(pageLength = 100))
-  output$response_data            = renderDT(return_object_or_null(v$response_data), options = list(pageLength = 100))
-  output$itemmap_data             = renderDT(return_object_or_null(v$itemmap_data), options = list(pageLength = 100))
+  output$anchor.data              = renderDT(return.object.or.null(v$anchor.data),           options = list(pageLength = 100))
+  output$response.data            = renderDT(return.object.or.null(v$response.data),         options = list(pageLength = 100))
+  output$itemmap.data             = renderDT(return.object.or.null(v$itemmap.data),          options = list(pageLength = 100))
 
-  output$freqtable                = renderDT(return_object_or_null(v$freqtable), options = list(pageLength = 100))
-  output$desctable                = renderDT(return_object_or_null(v$desctable, 3), options = list(pageLength = 100))
-  output$classical                = renderPrint(return_object_or_null(v$classical))
-  output$classical2               = renderPrint(return_object_or_null(v$classical2))
+  output$freqtable                = renderDT(return.object.or.null(v$freqtable),             options = list(pageLength = 100))
+  output$desctable                = renderDT(return.object.or.null(v$desctable, 3),          options = list(pageLength = 100))
+  output$classical                = renderPrint(return.object.or.null(v$classical))
+  output$classical2               = renderPrint(return.object.or.null(v$classical2))
 
-  output$calib_params             = renderDT(return_object_or_null(v$calib_params, 3), options = list(pageLength = 100))
-  output$plot_itemfit             = renderPlot(return_object_or_null(v$plot_itemfit))
-  output$plot_iteminfo            = renderPlot(return_object_or_null(v$plot_iteminfo))
-  output$table_itemfit            = renderDT(return_object_or_null(v$table_itemfit), options = list(pageLength = 100))
+  output$calib.params             = renderDT(return.object.or.null(v$calib.params, 3),       options = list(pageLength = 100))
+  output$plot.itemfit             = renderPlot(return.object.or.null(v$plot.itemfit))
+  output$plot.iteminfo            = renderPlot(return.object.or.null(v$plot.iteminfo))
+  output$table.itemfit            = renderDT(return.object.or.null(v$table.itemfit),         options = list(pageLength = 100))
+  output$crosswalk.calibration    = renderPrint(return.object.or.null(v$crosswalk.calibration))
 
-  output$linking_constants        = renderPrint(return_object_or_null(v$linking_constants))
-  output$table_transformed_params = renderDT(return_object_or_null(v$transformed_params, 3), options = list(pageLength = 100))
+  output$linking.constants        = renderPrint(return.object.or.null(v$linking.constants))
+  output$table.transformed.params = renderDT(return.object.or.null(v$transformed.params, 3), options = list(pageLength = 100))
+  output$crosswalk.linking        = renderPrint(return.object.or.null(v$crosswalk.linking))
 
-  output$equating_constants       = renderPrint(return_object_or_null(v$outequateequipercentile))
+  output$equating.constants       = renderPrint(return.object.or.null(v$outequateequipercentile))
 
   output$exportData = downloadHandler(
     filename = function() {
@@ -635,43 +528,43 @@ server = function(input, output, session) {
       fs = c()
       tmpdir = tempdir()
       setwd(tempdir())
-      for (i in v$active_tabset) {
+      for (i in v$active.tabset) {
         if (i == 1){
-          if (!is.null(v$anchor_data)){
-            path = "raw_data_anchor.csv"
+          if (!is.null(v$anchor.data)){
+            path = "raw.data.anchor.csv"
             fs = c(fs, path)
-            write.csv(v$anchor_data, path)
+            write.csv(v$anchor.data, path, row.names = F)
           }
-          if (!is.null(v$response_data)){
-            path = "raw_data_response.csv"
+          if (!is.null(v$response.data)){
+            path = "raw.data.response.csv"
             fs = c(fs, path)
-            write.csv(v$response_data, path)
+            write.csv(v$response.data, path, row.names = F)
           }
-          if (!is.null(v$itemmap_data)){
-            path = "raw_data_itemmap.csv"
+          if (!is.null(v$itemmap.data)){
+            path = "raw.data.itemmap.csv"
             fs = c(fs, path)
-            write.csv(v$itemmap_data, path)
+            write.csv(v$itemmap.data, path, row.names = F)
           }
         }
         if (i == 2){
           if (!is.null(v$freqtable)){
-            path = "basic_frequency.csv"
+            path = "basic.frequency.csv"
             fs = c(fs, path)
             write.csv(v$freqtable, path)
           }
           if (!is.null(v$desctable)){
-            path = "basic_descriptive.csv"
+            path = "basic.descriptive.csv"
             fs = c(fs, path)
             write.csv(v$desctable, path)
           }
           if (!is.null(v$classical)){
-            path = "basic_reliability_alpha.txt"
+            path = "basic.reliability.alpha.txt"
             fs = c(fs, path)
             tmp = paste0(capture.output(v$classical), collapse = "\n")
             write(tmp, path)
           }
           if (!is.null(v$classical2)){
-            path = "basic_reliability_omega.txt"
+            path = "basic.reliability.omega.txt"
             fs = c(fs, path)
             tmp = paste0(capture.output(v$classical2), collapse = "\n")
             write(tmp, path)
@@ -679,16 +572,16 @@ server = function(input, output, session) {
         }
         if (i == 3){
 
-          if (!is.null(v$calib_params)){
-            path = "calib_params.csv"
+          if (!is.null(v$calib.params)){
+            path = "calib.params.csv"
             fs = c(fs, path)
-            write.csv(v$calib_params, path)
+            write.csv(v$calib.params, path)
           }
 
           n.items = dim(v$outCalib@Data$data)[2]
 
           if (!is.null(v$outCalib)){
-            path = "calib_itemfit.pdf"
+            path = "calib.itemfit.pdf"
             fs = c(fs, path)
             pdf(path)
             for (id in 1:n.items){
@@ -697,7 +590,7 @@ server = function(input, output, session) {
             }
             dev.off()
 
-            path = "calib_iteminfo.pdf"
+            path = "calib.iteminfo.pdf"
             fs = c(fs, path)
             pdf(path)
             for (id in 1:n.items){
@@ -707,43 +600,51 @@ server = function(input, output, session) {
             dev.off()
           }
 
-          if (!is.null(v$table_itemfit)){
-            path = "calib_fit.csv"
+          if (!is.null(v$table.itemfit)){
+            path = "calib.fit.csv"
             fs = c(fs, path)
-            write.csv(v$table_itemfit, path)
+            write.csv(v$table.itemfit, path, row.names = F)
+          }
+          if (!is.null(v$crosswalk.calibration)){
+            path = "crosswalk.calibration.txt"
+            fs = c(fs, path)
+            tmp = paste0(capture.output(v$crosswalk.calibration), collapse = "\n")
+            write(tmp, path)
           }
         }
 
         if (i == 4){
-          if (!is.null(v$linking_constants)){
-            path = "linking_constants.csv"
+          if (!is.null(v$linking.constants)){
+            path = "linking.constants.csv"
             fs = c(fs, path)
-            write.csv(v$linking_constants, path)
+            write.csv(v$linking.constants, path)
           }
-          if (!is.null(v$transformed_params)){
-            path = "transformed_params.csv"
+          if (!is.null(v$transformed.params)){
+            path = "transformed.params.csv"
             fs = c(fs, path)
-            write.csv(v$transformed_params, path)
+            write.csv(v$transformed.params, path)
+          }
+          if (!is.null(v$crosswalk.linking)){
+            path = "crosswalk.linking.txt"
+            fs = c(fs, path)
+            tmp = paste0(capture.output(v$crosswalk.linking), collapse = "\n")
+            write(tmp, path)
           }
         }
 
         if (i == 5){
           if (!is.null(v$outequateequipercentile)){
-            path = "equating_constants.txt"
+            path = "equating.constants.txt"
             fs = c(fs, path)
             tmp = paste0(capture.output(v$outequateequipercentile), collapse = "\n")
             write(tmp, path)
           }
         }
-
       }
       zip(zipfile = fname, files = fs, flags = "-j")
     },
     contentType = "application/zip"
   )
-
 }
 
-# Run the application
 shinyApp(ui = ui, server = server)
-
