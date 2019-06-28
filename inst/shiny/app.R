@@ -234,13 +234,7 @@ server = function(input, output, session) {
       v$response.data = read.csv(input$response.file$datapath)
     }
     if (!is.null(input$anchor.file) & !is.null(input$response.file) & !is.null(input$itemmap.file)){
-      new.Config = new.config(anchorFile = input$anchor.file$datapath,
-                              responseFile = input$response.file$datapath,
-                              itemmapFile = input$itemmap.file$datapath,
-                              linkingMethod = input$linking.type,
-                              itemID = input$item.id,
-                              personID = input$person.id,
-                              scaleID = input$scale.id)
+      new.Config = shiny.new.config(input)
       v$inputdata = try(LoadData(new.Config))
       v$data.exists = class(v$inputdata) == "PROsetta.Data"
       v$text = get.data.status(v$data.exists)
@@ -266,13 +260,7 @@ server = function(input, output, session) {
       v$n.items = dim(v$itemmap.data)[1]
     }
     if (!is.null(input$anchor.file) & !is.null(input$response.file) & !is.null(input$itemmap.file)){
-      new.Config = new.config(anchorFile = input$anchor.file$datapath,
-                              responseFile = input$response.file$datapath,
-                              itemmapFile = input$itemmap.file$datapath,
-                              linkingMethod = input$linking.type,
-                              itemID = input$item.id,
-                              personID = input$person.id,
-                              scaleID = input$scale.id)
+      new.Config = shiny.new.config(input)
       v$inputdata = try(LoadData(new.Config))
       v$data.exists = class(v$inputdata) == "PROsetta.Data"
       v$text = get.data.status(v$data.exists)
@@ -299,13 +287,7 @@ server = function(input, output, session) {
     v$text = "Running.."
     v$time = Sys.time()
 
-    new.Config = new.config(anchorFile = input$anchor.file$datapath,
-                            responseFile = input$response.file$datapath,
-                            itemmapFile = input$itemmap.file$datapath,
-                            linkingMethod = input$linking.type,
-                            itemID = input$item.id,
-                            personID = input$person.id,
-                            scaleID = input$scale.id)
+    new.Config = shiny.new.config(input)
     assign.object("shiny.config", new.Config, "PROsetta.Config object")
     v$inputdata = LoadData(new.Config)
     assign.object("shiny.data", v$inputdata, "PROsetta.Data object")
@@ -353,13 +335,7 @@ server = function(input, output, session) {
     v$text = "Running.."
     v$time = Sys.time()
 
-    new.Config = new.config(anchorFile = input$anchor.file$datapath,
-                            responseFile = input$response.file$datapath,
-                            itemmapFile = input$itemmap.file$datapath,
-                            linkingMethod = input$linking.type,
-                            itemID = input$item.id,
-                            personID = input$person.id,
-                            scaleID = input$scale.id)
+    new.Config = shiny.new.config(input)
     assign.object("shiny.config", new.Config, "PROsetta.Config object")
 
     v$inputdata = LoadData(new.Config)
@@ -429,13 +405,7 @@ server = function(input, output, session) {
       v$text = "Running.."
       v$time = Sys.time()
 
-      new.Config = new.config(anchorFile = input$anchor.file$datapath,
-                              responseFile = input$response.file$datapath,
-                              itemmapFile = input$itemmap.file$datapath,
-                              linkingMethod = input$linking.type,
-                              itemID = input$item.id,
-                              personID = input$person.id,
-                              scaleID = input$scale.id)
+      new.Config = shiny.new.config(input)
       assign.object("shiny.config", new.Config, "PROsetta.Config object")
 
       v$inputdata = LoadData(new.Config)
@@ -482,13 +452,7 @@ server = function(input, output, session) {
     v$text = "Running.."
     v$time = Sys.time()
 
-    new.Config = new.config(anchorFile = input$anchor.file$datapath,
-                            responseFile = input$response.file$datapath,
-                            itemmapFile = input$itemmap.file$datapath,
-                            linkingMethod = input$linking.type,
-                            itemID = input$item.id,
-                            personID = input$person.id,
-                            scaleID = input$scale.id)
+    new.Config = shiny.new.config(input)
     assign.object("shiny.config", new.Config, "PROsetta.Config object")
 
     v$inputdata = LoadData(new.Config)
