@@ -4,6 +4,7 @@
 #' @import plink
 #' @importFrom methods new
 #' @importFrom utils read.csv
+#' @importFrom stats dnorm
 NULL
 
 #' An S4 class to represent configurations for reading datasets and writing outputs.
@@ -260,13 +261,18 @@ RunFrequency = function(Config, Data) {
   if (class(Data) != "PROsetta.Data") stop("Data must be a class of PROsetta.Data")
   tmp = Data@response[Data@itemmap[[Config@itemID]]]
   tmp = apply(tmp, 2, table)
-  catnames = unique(do.call(c, lapply(tmp, names)))
-  Freq = as.data.frame(matrix(NA, length(tmp), length(catnames)))
-  colnames(Freq) = catnames
-  rownames(Freq) = names(tmp)
-  for (i in 1:length(tmp)){
-    cats = names(tmp[[i]])
-    Freq[i,cats] = tmp[[i]]
+  if (class(tmp) == "list"){
+    catnames = unique(do.call(c, lapply(tmp, names)))
+    Freq = as.data.frame(matrix(NA, length(tmp), length(catnames)))
+    colnames(Freq) = catnames
+    rownames(Freq) = names(tmp)
+    for (i in 1:length(tmp)){
+      cats = names(tmp[[i]])
+      Freq[i,cats] = tmp[[i]]
+    }
+  }
+  if (class(tmp) == "matrix"){
+    Freq = t(tmp)
   }
   return(Freq)
 }
@@ -513,7 +519,7 @@ RunEquateObserved = function(Config, Data, scaleTo = 1, scaleFrom = 2, type = "e
 #'
 #' @param Config A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.
 #' @param Data A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.
-#' @param Calibration An object returned from \code{\link{RunCalibration} or \code{\link{RunLinking}}}
+#' @param Calibration An object returned from \code{\link{RunCalibration}} or \code{\link{RunLinking}}
 #' @param priorMean Prior mean.
 #' @param priorSD Prior standard deviation.
 #' @param minTheta LL of theta grid.
@@ -540,7 +546,7 @@ RunRSSS = function(Config, Data, Calibration, priorMean = 0.0, priorSD = 1.0, mi
   if (class(Data) != "PROsetta.Data") stop("Data must be a class of PROsetta.Data")
   if (is.null(attr(class(Calibration), "package"))) {
     item.par = Calibration$pars@pars$From
-  } else if (class(Calibration) == "S4" && attr(class(Calibration), "package") == "mirt") {
+  } else if (isS4(Calibration) && attr(class(Calibration), "package") == "mirt") {
     item.par = mirt::coef(Calibration, IRTpars = TRUE, simplify = TRUE)$items
   }
   item.par.by.scale = split(data.frame(item.par), Data@itemmap[[Config@scaleID]])
