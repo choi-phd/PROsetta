@@ -13,7 +13,7 @@ RunRSSS(Config, Data, Calibration, priorMean = 0, priorSD = 1,
 
 \item{Data}{A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.}
 
-\item{Calibration}{An object returned from \code{\link{RunCalibration} or \code{\link{RunLinking}}}}
+\item{Calibration}{An object returned from \code{\link{RunCalibration}} or \code{\link{RunLinking}}}
 
 \item{priorMean}{Prior mean.}
 
