@@ -462,6 +462,8 @@ RunLinking = function(Config, Data, ...) {
   pm.anchor = as.poly.mod(ni.anchor, "grm", 1:ni.anchor)
   ncat = list(Data@itemmap$NCAT, Data@anchor$NCAT)
   out = plink::plink(as.irt.pars(pars, common, cat = ncat, list(pm.all, pm.anchor), grp.names=c("From","To")), rescale = Config@linkingMethod, base.grp = 2)
+  rownames(out$pars@pars$From) = ID.new$ID
+  rownames(out$pars@pars$To)   = ID.old$ID
   return(out)
 }
 
