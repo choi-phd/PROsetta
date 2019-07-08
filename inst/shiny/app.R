@@ -193,6 +193,12 @@ shiny.new.config = function(input){
   return(config)
 }
 
+get.path = function(tmpdir, fn){
+  tmp = file.path(tmpdir, fn)
+  tmp = normalizePath(tmp, mustWork = F)
+  return(tmp)
+}
+
 server = function(input, output, session) {
   v = reactiveValues(data.exists = F, active.tabset = c(1,2))
 
@@ -297,7 +303,7 @@ server = function(input, output, session) {
     assign.object("shiny.desc", v$desctable, "Descriptives tab")
     v$classical = RunClassical(new.Config, v$inputdata)
     assign.object("shiny.alpha", v$classical, "Classical tab")
-    v$classical2 = RunClassical(new.Config, v$inputdata, omega = T, fm = "ml")[["Omega"]]
+    v$classical2 = try(RunClassical(new.Config, v$inputdata, omega = T, fm = "ml")[["Omega"]])
     assign.object("shiny.omega", v$classical2, "Classical (omega) tab")
 
     v$time = Sys.time() - v$time
@@ -527,44 +533,43 @@ server = function(input, output, session) {
     content = function(fname) {
       fs = c()
       tmpdir = tempdir()
-      setwd(tempdir())
       for (i in v$active.tabset) {
         if (i == 1){
           if (!is.null(v$anchor.data)){
-            path = "raw.data.anchor.csv"
+            path = get.path(tmpdir, "raw.data.anchor.csv")
             fs = c(fs, path)
             write.csv(v$anchor.data, path, row.names = F)
           }
           if (!is.null(v$response.data)){
-            path = "raw.data.response.csv"
+            path = get.path(tmpdir, "raw.data.response.csv")
             fs = c(fs, path)
             write.csv(v$response.data, path, row.names = F)
           }
           if (!is.null(v$itemmap.data)){
-            path = "raw.data.itemmap.csv"
+            path = get.path(tmpdir, "raw.data.itemmap.csv")
             fs = c(fs, path)
             write.csv(v$itemmap.data, path, row.names = F)
           }
         }
         if (i == 2){
           if (!is.null(v$freqtable)){
-            path = "basic.frequency.csv"
+            path = get.path(tmpdir, "basic.frequency.csv")
             fs = c(fs, path)
             write.csv(v$freqtable, path)
           }
           if (!is.null(v$desctable)){
-            path = "basic.descriptive.csv"
+            path = get.path(tmpdir, "basic.descriptive.csv")
             fs = c(fs, path)
             write.csv(v$desctable, path)
           }
           if (!is.null(v$classical)){
-            path = "basic.reliability.alpha.txt"
+            path = get.path(tmpdir, "basic.reliability.alpha.txt")
             fs = c(fs, path)
             tmp = paste0(capture.output(v$classical), collapse = "\n")
             write(tmp, path)
           }
           if (!is.null(v$classical2)){
-            path = "basic.reliability.omega.txt"
+            path = get.path(tmpdir, "basic.reliability.omega.txt")
             fs = c(fs, path)
             tmp = paste0(capture.output(v$classical2), collapse = "\n")
             write(tmp, path)
@@ -573,7 +578,7 @@ server = function(input, output, session) {
         if (i == 3){
 
           if (!is.null(v$calib.params)){
-            path = "calib.params.csv"
+            path = get.path(tmpdir, "calib.params.csv")
             fs = c(fs, path)
             write.csv(v$calib.params, path)
           }
@@ -581,7 +586,7 @@ server = function(input, output, session) {
           n.items = dim(v$outCalib@Data$data)[2]
 
           if (!is.null(v$outCalib)){
-            path = "calib.itemfit.pdf"
+            path = get.path(tmpdir, "calib.itemfit.pdf")
             fs = c(fs, path)
             pdf(path)
             for (id in 1:n.items){
@@ -590,7 +595,7 @@ server = function(input, output, session) {
             }
             dev.off()
 
-            path = "calib.iteminfo.pdf"
+            path = get.path(tmpdir, "calib.iteminfo.pdf")
             fs = c(fs, path)
             pdf(path)
             for (id in 1:n.items){
@@ -601,12 +606,12 @@ server = function(input, output, session) {
           }
 
           if (!is.null(v$table.itemfit)){
-            path = "calib.fit.csv"
+            path = get.path(tmpdir, "calib.fit.csv")
             fs = c(fs, path)
             write.csv(v$table.itemfit, path, row.names = F)
           }
           if (!is.null(v$crosswalk.calibration)){
-            path = "crosswalk.calibration.txt"
+            path = get.path(tmpdir, "crosswalk.calibration.txt")
             fs = c(fs, path)
             tmp = paste0(capture.output(v$crosswalk.calibration), collapse = "\n")
             write(tmp, path)
@@ -615,17 +620,17 @@ server = function(input, output, session) {
 
         if (i == 4){
           if (!is.null(v$linking.constants)){
-            path = "linking.constants.csv"
+            path = get.path(tmpdir, "linking.constants.csv")
             fs = c(fs, path)
             write.csv(v$linking.constants, path)
           }
           if (!is.null(v$transformed.params)){
-            path = "transformed.params.csv"
+            path = get.path(tmpdir, "transformed.params.csv")
             fs = c(fs, path)
             write.csv(v$transformed.params, path)
           }
           if (!is.null(v$crosswalk.linking)){
-            path = "crosswalk.linking.txt"
+            path = get.path(tmpdir, "crosswalk.linking.txt")
             fs = c(fs, path)
             tmp = paste0(capture.output(v$crosswalk.linking), collapse = "\n")
             write(tmp, path)
@@ -634,7 +639,7 @@ server = function(input, output, session) {
 
         if (i == 5){
           if (!is.null(v$outequateequipercentile)){
-            path = "equating.constants.txt"
+            path = get.path(tmpdir, "equating.constants.txt")
             fs = c(fs, path)
             tmp = paste0(capture.output(v$outequateequipercentile), collapse = "\n")
             write(tmp, path)
