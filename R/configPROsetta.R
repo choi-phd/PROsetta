@@ -246,7 +246,7 @@ LoadData = function(Config) {
 #'
 #' @export
 CheckFrequency = function(Config, Data){
-  tmp = RunFrequency(Config, Data)
+  tmp = RunFrequency(Config, Data, checkFrequency = F)
   ni = dim(tmp)[1]
   nc = dim(tmp)[2]
   msg = c()
@@ -284,7 +284,7 @@ CheckFrequency = function(Config, Data){
 #'
 #' @param Config A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.
 #' @param Data A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.
-#'
+#' @param checkFrequency Logical. If \code{TRUE}, check the frequency table for missing response categories, and display warning message if any is missing.
 #' @return A \code{data.frame} containing the frequency table of the dataset.
 #'
 #' @export
@@ -298,7 +298,7 @@ CheckFrequency = function(Config, Data){
 #' freqTable = RunFrequency(new.Config, inputData)
 #' }
 
-RunFrequency = function(Config, Data) {
+RunFrequency = function(Config, Data, checkFrequency = T) {
   if (class(Config) != "PROsetta.Config") stop("Config must be a class of PROsetta.Config")
   if (class(Data) != "PROsetta.Data") stop("Data must be a class of PROsetta.Data")
   tmp = Data@response[Data@itemmap[[Config@itemID]]]
@@ -316,6 +316,7 @@ RunFrequency = function(Config, Data) {
   if (class(tmp) == "matrix"){
     Freq = t(tmp)
   }
+  if (checkFrequency) CheckFrequency(Config, Data)
   return(Freq)
 }
 
