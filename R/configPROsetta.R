@@ -270,6 +270,7 @@ CheckFrequency = function(Config, Data){
   }
   if (length(msg) > 0){
     msg = c("The following items have one or more unobserved response categories:", msg)
+    msg = c(msg, "Proceeding to RunCFA or RunCalibration can cause problems.")
     msg = paste0(msg, collapse = "\n")
     warning(msg)
     return(FALSE)
