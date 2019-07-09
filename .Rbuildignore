@@ -2,3 +2,4 @@
 ^\.Rproj\.user$
 ^data-raw$
 ^tutorial$
+^R/test\.R$
