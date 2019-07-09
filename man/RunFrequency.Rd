@@ -4,7 +4,7 @@
 \alias{RunFrequency}
 \title{Obtain a frequency table}
 \usage{
-RunFrequency(Config, Data)
+RunFrequency(Config, Data, checkFrequency = T)
 }
 \arguments{
 \item{Config}{A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.}
