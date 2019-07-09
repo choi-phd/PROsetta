@@ -245,22 +245,31 @@ LoadData = function(Config) {
 #' @return Logical. \code{TRUE} if all categories are present. \code{FALSE} otherwise.
 #'
 #' @export
-
 CheckFrequency = function(Config, Data){
   tmp = RunFrequency(Config, Data)
   ni = dim(tmp)[1]
+  nc = dim(tmp)[2]
+  msg = c()
   if (sum(is.na(tmp)) > 0){
-    msg = "The following items have one or more unobserved response categories:"
     for (i in 1:ni){
+      nm = sum(is.na(tmp[i,]))
+      ncats.observed = nc - nm
       if (sum(is.na(tmp[i,])) > 0){
         item.id = rownames(tmp[i,])
-        cats = colnames(tmp[i,])
-        missingcats = which(is.na(tmp[i,]))
-        cats[missingcats] = "missing"
-        cats = paste0(cats, collapse = ", ")
-        msg = c(msg, paste0("    ", item.id, " (", cats, ")"))
+        idx = which(Data@itemmap[[Config@itemID]] == item.id)
+        ncats.expected = Data@itemmap[idx,][['NCAT']]
+        if (ncats.expected != ncats.observed){
+          cats = colnames(tmp[i,])
+          missingcats = which(is.na(tmp[i,]))
+          cats[missingcats] = "missing"
+          cats = paste0(cats, collapse = ", ")
+          msg = c(msg, paste0("    ", item.id, " (", cats, ")"))
+        }
       }
     }
+  }
+  if (length(msg) > 0){
+    msg = c("The following items have one or more unobserved response categories:", msg)
     msg = paste0(msg, collapse = "\n")
     warning(msg)
     return(FALSE)
