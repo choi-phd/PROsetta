@@ -235,6 +235,48 @@ LoadData = function(Config) {
   return(Data)
 }
 
+#' Check frequency table for unobserved response categories
+#'
+#' Checks frequency table for unobserved response categories.
+#'
+#' @param Config A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.
+#' @param Data A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.
+#'
+#' @return Logical. \code{TRUE} if all categories are present. \code{FALSE} otherwise.
+#'
+#' @export
+CheckFrequency = function(Config, Data){
+  tmp = RunFrequency(Config, Data)
+  ni = dim(tmp)[1]
+  nc = dim(tmp)[2]
+  msg = c()
+  if (sum(is.na(tmp)) > 0){
+    for (i in 1:ni){
+      nm = sum(is.na(tmp[i,]))
+      ncats.observed = nc - nm
+      if (sum(is.na(tmp[i,])) > 0){
+        item.id = rownames(tmp[i,])
+        idx = which(Data@itemmap[[Config@itemID]] == item.id)
+        ncats.expected = Data@itemmap[idx,][['NCAT']]
+        if (ncats.expected != ncats.observed){
+          cats = colnames(tmp[i,])
+          missingcats = which(is.na(tmp[i,]))
+          cats[missingcats] = "missing"
+          cats = paste0(cats, collapse = ", ")
+          msg = c(msg, paste0("    ", item.id, " (", cats, ")"))
+        }
+      }
+    }
+  }
+  if (length(msg) > 0){
+    msg = c("The following items have one or more unobserved response categories:", msg)
+    msg = paste0(msg, collapse = "\n")
+    warning(msg)
+    return(FALSE)
+  } else {
+    return(TRUE)
+  }
+}
 
 #' Obtain a frequency table
 #'
