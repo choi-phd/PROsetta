@@ -4,12 +4,14 @@
 \alias{RunFrequency}
 \title{Obtain a frequency table}
 \usage{
-RunFrequency(Config, Data, checkFrequency = T)
+RunFrequency(config, data = NULL, checkFrequency = TRUE)
 }
 \arguments{
-\item{Config}{A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.}
+\item{config}{A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.}
 
-\item{Data}{A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.}
+\item{data}{A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.}
+
+\item{checkFrequency}{Logical. If \code{TRUE}, check the frequency table for missing response categories, and display warning message if any is missing.}
 }
 \value{
 A \code{data.frame} containing the frequency table of the dataset.
@@ -18,11 +20,5 @@ A \code{data.frame} containing the frequency table of the dataset.
 Obtains a frequency table from the supplied configuration and the dataset.
 }
 \examples{
-\dontrun{
-inputData = new("PROsetta.Data")
-inputData@anchor = anchor_asq
-inputData@response = response_asq
-inputData@itemmap = itemmap_asq
-freqTable = RunFrequency(new.Config, inputData)
-}
+freqTable <- RunFrequency(cfg_asq)
 }

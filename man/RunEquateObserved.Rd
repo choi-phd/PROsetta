@@ -4,16 +4,16 @@
 \alias{RunEquateObserved}
 \title{Run Test Equating}
 \usage{
-RunEquateObserved(Config, Data, scaleTo = 1, scaleFrom = 2,
+RunEquateObserved(config, data = NULL, scaleTo = 1, scaleFrom = 2,
   type = "equipercentile", smooth = "loglinear", degrees = list(3,
   1), boot = TRUE, reps = 100, ...)
 }
 \arguments{
-\item{Config}{A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.}
+\item{config}{A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.}
 
-\item{Data}{A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.}
+\item{data}{A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.}
 
-\item{scaleTo}{Numeric. The index of the target scale to equate to. This and \code{scaleFrom} below both reference to the information stored in the \code{itemmap} slot of \code{Data} argument. The \code{scaleID} slot of \code{Config} argument needs to be specified as the name of the varible containing the scale IDs in the \code{itemmap} slot.}
+\item{scaleTo}{Numeric. The index of the target scale to equate to. This and \code{scaleFrom} below both reference to the information stored in the \code{itemmap} slot of \code{Data} argument. The \code{scaleID} slot of \code{config} argument needs to be specified as the name of the varible containing the scale IDs in the \code{itemmap} slot.}
 
 \item{scaleFrom}{Numeric. The index of the scale in need of test equating.}
 
@@ -37,8 +37,7 @@ Performs equipercentile test equating between two scales.
 }
 \examples{
 \dontrun{
-inputData = LoadData(new.Config)
-outEquateEquipercentile = RunEquateObserved(new.Config, inputData, scaleTo = 1, scaleFrom = 2,
+solution <- RunEquateObserved(cfg_asq, scaleTo = 1, scaleFrom = 2,
             type = "equipercentile", smooth = "loglinear")
 }
 }

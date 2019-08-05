@@ -4,12 +4,12 @@
 \alias{RunCFA}
 \title{Run a confirmatory factor analysis}
 \usage{
-RunCFA(Config, Data, estimator = "WLSMV", std.lv = TRUE, ...)
+RunCFA(config, data = NULL, estimator = "WLSMV", std.lv = TRUE, ...)
 }
 \arguments{
-\item{Config}{A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.}
+\item{config}{A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.}
 
-\item{Data}{A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.}
+\item{data}{(Optional) A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.}
 
 \item{estimator}{The estimator to be used. Passed onto \code{\link[lavaan]{cfa}} in \href{https://CRAN.R-project.org/package=lavaan}{\code{lavaan}} package.}
 
@@ -19,17 +19,16 @@ RunCFA(Config, Data, estimator = "WLSMV", std.lv = TRUE, ...)
 }
 \value{
 A list containing the CFA results. The models are as follows:
-\item{all}{A one-factor model where all items in the \code{itemmap} slot of \code{Data} are loaded onto the factor.}
-\item{anchor}{A one-factor model where the items in the \code{anchor} slot of \code{Data} are loaded onto the factor.}
+\item{all}{A one-factor model where all items in the \code{itemmap} slot of \code{data} are loaded onto the factor.}
+\item{anchor}{A one-factor model where the items in the \code{anchor} slot of \code{data} are loaded onto the factor.}
 }
 \description{
 Performs a one-factor confirmatory factor analysis (CFA) to test unidimensionality.
 }
 \examples{
 \dontrun{
-inputData = LoadData(new.Config)
-outCFA = RunCFA(new.Config, inputData)
-summary(outCFA$all, fit.measures = TRUE, standardized = TRUE)
-summary(outCFA$anchor, fit.measures = TRUE, standardized = TRUE)
+solution <- RunCFA(cfg_asq)
+summary(solution$all, fit.measures = TRUE, standardized = TRUE)
+summary(solution$anchor, fit.measures = TRUE, standardized = TRUE)
 }
 }

@@ -12,7 +12,13 @@ Description: Performs scale linking to establish relationships between instrumen
     that measure similar constructs according to the PROsetta Stone methodology.
 URL: http://www.prosettastone.org
 Imports: equate, lavaan, mirt, plink, psych, methods
-Suggests: shiny, shinythemes, shinyWidgets, shinyjs, DT
+Suggests: 
+    shiny,
+    shinythemes,
+    shinyWidgets,
+    shinyjs,
+    DT,
+    testthat (>= 2.1.0)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
