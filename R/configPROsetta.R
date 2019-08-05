@@ -476,7 +476,7 @@ RunCFA = function(Config, Data = NULL, estimator = "WLSMV", std.lv = TRUE, ...) 
 #' outCalib.Free = RunCalibration(new.Config, inputData, technical = list(NCYCLES = 1000))
 #' mirt::coef(outCalib.Free, IRTpars = TRUE, simplify = TRUE)
 #' }
-RunCalibration = function(Config, Data, ...) {
+RunCalibration = function(Config, Data = NULL, ...) {
   if (class(Config) != "PROsetta.Config") {
     stop("Config must be a class of PROsetta.Config")
   }
@@ -659,7 +659,20 @@ RunRSSS = function(Config, Data = NULL, Calibration, priorMean = 0.0, priorSD = 
   }
   item.par.by.scale = split(data.frame(item.par), Data@itemmap[[Config@scaleID]])
   n.scale = length(item.par.by.scale)
-  rsss = function(ipar) {
+
+  if (!all(minScore %in% c(0, 1))) {
+    stop("minScore must contain only 0 or 1")
+  }
+
+  if (length(minScore) == 1) {
+    if (n.scale > 1) {
+      minScore = rep(minScore, n.scale + 1)
+    }
+  } else if (length(minScore) != n.scale + 1) {
+    stop(sprintf("length of minScore must be either 1 or %i"), n.scale + 1)
+  }
+  
+  rsss = function(ipar, base0) {
     theta = seq(minTheta, maxTheta, by = inc)
     nq = length(theta)
     NCAT = rowSums(!is.na(ipar))
@@ -688,7 +701,7 @@ RunRSSS = function(Config, Data = NULL, Calibration, priorMean = 0.0, priorSD = 
     ncat = NCAT[1]
     maxScore = 0
     LH[, 1:ncat] = pp[, 1, 1:ncat]
-    idx<-ncat
+    idx = ncat
     for (i in 2:ni) {
       ncat = NCAT[i]  #number of categories for item i
       maxScore = ncat - 1 #maximum score for item i
@@ -716,7 +729,9 @@ RunRSSS = function(Config, Data = NULL, Calibration, priorMean = 0.0, priorSD = 
       Scale.Score[j] = sum(posterior[, j] * theta) / sum(posterior[, j]) #EAP
       SE[j] = sqrt(sum(posterior[, j] * (theta - Scale.Score[j])^2) / sum(posterior[, j])) #EAP
     }
-    if (minScore==1) Raw.Score<-Raw.Score+ni
+    if (!base0) {
+      Raw.Score = Raw.Score + ni
+    }
     if (Tscore) {
       Scale.Score = round(Scale.Score * 10 + 50, 1)
       SE = round(SE * 10, 1)
@@ -725,14 +740,14 @@ RunRSSS = function(Config, Data = NULL, Calibration, priorMean = 0.0, priorSD = 
     return(rsss.table)
   }
   if (n.scale == 1) {
-    score.table = rsss(item.par)
+    score.table = rsss(item.par, minScore == 0)
     return(score.table)
   } else if (n.scale > 1) {
-    score.table = vector(mode = "list", length = length(item.par.by.scale) + 1)
+    score.table = vector(mode = "list", length = n.scale + 1)
     for (s in 1:n.scale) {
-      score.table[[s]] = rsss(item.par.by.scale[[s]])
+      score.table[[s]] = rsss(item.par.by.scale[[s]], minScore[s] == 0)
     }
-    score.table[[n.scale + 1]] = rsss(item.par)
+    score.table[[n.scale + 1]] = rsss(item.par, minScore[n.scale + 1] == 0)
     names(score.table) = c(names(item.par.by.scale), "combined")
     return(score.table)
   }
