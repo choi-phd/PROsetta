@@ -4,14 +4,14 @@
 \alias{RunCalibration}
 \title{Run Calibration}
 \usage{
-RunCalibration(Config, Data = NULL, ...)
+RunCalibration(config, data = NULL, ...)
 }
 \arguments{
-\item{Config}{A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.}
-
-\item{Data}{A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.}
+\item{config}{A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.}
 
 \item{...}{Additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{\code{mirt}} package.}
+
+\item{Data}{A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.}
 }
 \value{
 An object containing item calibration results. This object can be used in \code{\link[mirt:coef-method]{coef}}, \code{\link[mirt]{itemfit}}, \code{\link[mirt]{itemplot}} in \href{https://CRAN.R-project.org/package=mirt}{\code{mirt}} package to extract wanted information.
@@ -21,16 +21,16 @@ Performs item calibration for the response data based on the supplied anchor inf
 }
 \examples{
 \dontrun{
-inputData = LoadData(new.Config)
-outCalib = RunCalibration(new.Config, inputData)
-mirt::coef(outCalib, IRTpars = TRUE, simplify = TRUE)
-mirt::itemfit(outCalib, empirical.plot = 1)
-mirt::itemplot(outCalib, item = 1, type = "info")
-mirt::itemfit(outCalib, "S_X2", na.rm = TRUE)
+solution <- RunCalibration(cfg_asq)
+mirt::coef(solution, IRTpars = TRUE, simplify = TRUE)
+mirt::itemfit(solution, empirical.plot = 1)
+mirt::itemplot(solution, item = 1, type = "info")
+mirt::itemfit(solution, "S_X2", na.rm = TRUE)
 
-new.Config@linkingMethod = "SL"
-outCalib.Free = RunCalibration(new.Config, inputData)
-outCalib.Free = RunCalibration(new.Config, inputData, technical = list(NCYCLES = 1000))
-mirt::coef(outCalib.Free, IRTpars = TRUE, simplify = TRUE)
+cfg_asq2 <- cfg_asq
+cfg_asq2@linkingMethod = "SL"
+solution2 <- RunCalibration(cfg_asq2)
+solution2 <- RunCalibration(cfg_asq2, technical = list(NCYCLES = 1000))
+mirt::coef(solution2, IRTpars = TRUE, simplify = TRUE)
 }
 }

@@ -4,10 +4,19 @@
 \alias{new.config}
 \title{Creates a config object for PROsetta}
 \usage{
-new.config(studyName = "Study", inputDirectory = getwd(),
-  outputDirectory = getwd(), itemID = "", personID = "",
-  scaleID = "", responseFile, itemmapFile, anchorFile,
-  linkingMethod = "FIXEDPAR", guessID = F)
+new.config(
+  studyName = "Study",
+  inputDirectory = getwd(),
+  outputDirectory = getwd(),
+  itemID = "",
+  personID = "",
+  scaleID = "",
+  responseFile,
+  itemmapFile,
+  anchorFile,
+  linkingMethod = "FIXEDPAR",
+  guessID = F
+)
 }
 \arguments{
 \item{studyName}{Character. A user-specified name of the study.}

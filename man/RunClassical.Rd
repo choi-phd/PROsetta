@@ -4,12 +4,12 @@
 \alias{RunClassical}
 \title{Run a CTT-based reliability analysis}
 \usage{
-RunClassical(Config, Data = NULL, omega = FALSE, ...)
+RunClassical(config, data = NULL, omega = FALSE, ...)
 }
 \arguments{
-\item{Config}{A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.}
+\item{config}{A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.}
 
-\item{Data}{A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.}
+\item{data}{(Optional) A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.}
 
 \item{omega}{If TRUE, also obtains McDonald's omega using \code{\link[psych]{omega}} in \href{https://CRAN.R-project.org/package=psych}{\code{psych}} package.}
 
@@ -22,9 +22,6 @@ The results of reliability analysis.
 Performs a Classial Test Theory (CTT) reliability analysis.
 }
 \examples{
-\dontrun{
-inputData = LoadData(new.Config)
-classicalTable = RunClassical(new.Config, inputData)
-classicalTable2 = RunClassical(new.Config, inputData, omega = TRUE)  # also obtains omega
-}
+classicalTable  <- RunClassical(cfg_asq)
+classicalTable2 <- RunClassical(cfg_asq, omega = TRUE)  # also obtains omega
 }

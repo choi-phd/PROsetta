@@ -4,16 +4,25 @@
 \alias{RunRSSS}
 \title{Run Scoring Table Generation}
 \usage{
-RunRSSS(Config, Data = NULL, Calibration, priorMean = 0, priorSD = 1,
-  minTheta = -4, maxTheta = 4, inc = 0.01, minScore = 1,
-  Tscore = TRUE)
+RunRSSS(
+  config,
+  data = NULL,
+  calibration,
+  priorMean = 0,
+  priorSD = 1,
+  minTheta = -4,
+  maxTheta = 4,
+  inc = 0.01,
+  minScore = 1,
+  Tscore = TRUE
+)
 }
 \arguments{
-\item{Config}{A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.}
+\item{config}{A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.}
 
-\item{Data}{A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.}
+\item{data}{(Optional) A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.}
 
-\item{Calibration}{An object returned from \code{\link{RunCalibration}} or \code{\link{RunLinking}}}
+\item{calibration}{An object returned from \code{\link{RunCalibration}} or \code{\link{RunLinking}}}
 
 \item{priorMean}{Prior mean.}
 
@@ -36,11 +45,8 @@ A list containing crosswalk tables.
 Generates raw-score to scale-score crosswalk tables.
 }
 \examples{
-\dontrun{
-inputData = LoadData(new.Config)
-outCalib = RunCalibration(new.Config, inputData)
+solution <- RunCalibration(cfg_asq, inputData)
 scoreTable = RunRSSS(outCalib)
 outEquate = RunLinking(new.Config, inputData, technical = list(NCYCLES = 1000))
 scoreTableLinking = RunRSSS(outEquate)
-}
 }

@@ -4,10 +4,10 @@
 \alias{LoadData}
 \title{Load data from supplied config}
 \usage{
-LoadData(Config)
+LoadData(config)
 }
 \arguments{
-\item{Config}{A PROsetta.Config object. See \linkS4class{PROsetta.Config}.}
+\item{config}{A PROsetta.Config object. See \linkS4class{PROsetta.Config}.}
 }
 \value{
 An S4-class object containing the loaded data.
