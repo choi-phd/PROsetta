@@ -195,7 +195,9 @@ check.file.path = function(abspath, path){
 #' @export
 
 LoadData = function(Config) {
-  if (class(Config) != "PROsetta.Config") stop("Config must be a class of PROsetta.Config")
+  if (class(Config) != "PROsetta.Config") {
+    stop("Config must be a class of PROsetta.Config")
+  }
   Data = new("PROsetta.Data")
 
   p = check.file.path(Config@inputDirectory, Config@responseFile)
@@ -245,7 +247,15 @@ LoadData = function(Config) {
 #' @return Logical. \code{TRUE} if all categories are present. \code{FALSE} otherwise.
 #'
 #' @export
-CheckFrequency = function(Config, Data){
+CheckFrequency = function(Config, Data = NULL){
+  if (class(Config) != "PROsetta.Config") {
+    stop("Config must be a class of PROsetta.Config")
+  }
+  if (is.null(Data)) {
+    Data = LoadData(Config)
+  } else if (class(Data) != "PROsetta.Data") {
+    stop("Data must be a class of PROsetta.Data")
+  }
   tmp = RunFrequency(Config, Data, checkFrequency = F)
   ni = dim(tmp)[1]
   nc = dim(tmp)[2]
@@ -299,9 +309,15 @@ CheckFrequency = function(Config, Data){
 #' freqTable = RunFrequency(new.Config, inputData)
 #' }
 
-RunFrequency = function(Config, Data, checkFrequency = T) {
-  if (class(Config) != "PROsetta.Config") stop("Config must be a class of PROsetta.Config")
-  if (class(Data) != "PROsetta.Data") stop("Data must be a class of PROsetta.Data")
+RunFrequency = function(Config, Data = NULL, checkFrequency = T) {
+  if (class(Config) != "PROsetta.Config") {
+    stop("Config must be a class of PROsetta.Config")
+  }
+  if (is.null(Data)) {
+    Data = LoadData(Config)
+  } else if (class(Data) != "PROsetta.Data") {
+    stop("Data must be a class of PROsetta.Data")
+  }
   tmp = Data@response[Data@itemmap[[Config@itemID]]]
   tmp = apply(tmp, 2, table)
   if (class(tmp) == "list"){
@@ -338,9 +354,15 @@ RunFrequency = function(Config, Data, checkFrequency = T) {
 #' descTable = RunDescriptive(new.Config, inputData)
 #' }
 
-RunDescriptive = function(Config, Data) {
-  if (class(Config) != "PROsetta.Config") stop("Config must be a class of PROsetta.Config")
-  if (class(Data) != "PROsetta.Data") stop("Data must be a class of PROsetta.Data")
+RunDescriptive = function(Config, Data = NULL) {
+  if (class(Config) != "PROsetta.Config") {
+    stop("Config must be a class of PROsetta.Config")
+  }
+  if (is.null(Data)) {
+    Data = LoadData(Config)
+  } else if (class(Data) != "PROsetta.Data") {
+    stop("Data must be a class of PROsetta.Data")
+  }
   Descriptive = psych::describe(Data@response[Data@itemmap[[Config@itemID]]])[-1]
   return(Descriptive)
 }
@@ -365,9 +387,15 @@ RunDescriptive = function(Config, Data) {
 #' classicalTable2 = RunClassical(new.Config, inputData, omega = TRUE)  # also obtains omega
 #' }
 
-RunClassical = function(Config, Data, omega = FALSE, ...) {
-  if (class(Config) != "PROsetta.Config") stop("Config must be a class of PROsetta.Config")
-  if (class(Data) != "PROsetta.Data") stop("Data must be a class of PROsetta.Data")
+RunClassical = function(Config, Data = NULL, omega = FALSE, ...) {
+  if (class(Config) != "PROsetta.Config") {
+    stop("Config must be a class of PROsetta.Config")
+  }
+  if (is.null(Data)) {
+    Data = LoadData(Config)
+  } else if (class(Data) != "PROsetta.Data") {
+    stop("Data must be a class of PROsetta.Data")
+  }
   CIA = psych::alpha(Data@response[Data@itemmap[[Config@itemID]]])
   if (omega) {
     CIA[["Omega"]] = psych::omega(Data@response[Data@itemmap[[Config@itemID]]], ...)
@@ -400,9 +428,15 @@ RunClassical = function(Config, Data, omega = FALSE, ...) {
 #' summary(outCFA$anchor, fit.measures = TRUE, standardized = TRUE)
 #' }
 
-RunCFA = function(Config, Data, estimator = "WLSMV", std.lv = TRUE, ...) {
-  if (class(Config) != "PROsetta.Config") stop("Config must be a class of PROsetta.Config")
-  if (class(Data) != "PROsetta.Data") stop("Data must be a class of PROsetta.Data")
+RunCFA = function(Config, Data = NULL, estimator = "WLSMV", std.lv = TRUE, ...) {
+  if (class(Config) != "PROsetta.Config") {
+    stop("Config must be a class of PROsetta.Config")
+  }
+  if (is.null(Data)) {
+    Data = LoadData(Config)
+  } else if (class(Data) != "PROsetta.Data") {
+    stop("Data must be a class of PROsetta.Data")
+  }
   all.items = Data@itemmap[[Config@itemID]]
   model.all = paste("Factor =~", paste0(all.items, collapse = " + "))
   model.all.fit = lavaan::cfa(model.all, Data@response, estimator = estimator, ordered = all.items, std.lv = std.lv, ...)
@@ -443,8 +477,14 @@ RunCFA = function(Config, Data, estimator = "WLSMV", std.lv = TRUE, ...) {
 #' mirt::coef(outCalib.Free, IRTpars = TRUE, simplify = TRUE)
 #' }
 RunCalibration = function(Config, Data, ...) {
-  if (class(Config) != "PROsetta.Config") stop("Config must be a class of PROsetta.Config")
-  if (class(Data) != "PROsetta.Data") stop("Data must be a class of PROsetta.Data")
+  if (class(Config) != "PROsetta.Config") {
+    stop("Config must be a class of PROsetta.Config")
+  }
+  if (is.null(Data)) {
+    Data = LoadData(Config)
+  } else if (class(Data) != "PROsetta.Data") {
+    stop("Data must be a class of PROsetta.Data")
+  }
   if (Config@linkingMethod == "FIXEDPAR") {
     parLayout = mirt::mirt(Data@response[Data@itemmap[[Config@itemID]]], 1, itemtype = "graded", pars = "values")
     fixed = which(parLayout$item %in% Data@anchor[[Config@itemID]])
@@ -486,11 +526,21 @@ RunCalibration = function(Config, Data, ...) {
 #' outEquate$link@constants$SL
 #' }
 
-RunLinking = function(Config, Data, ...) {
-  if (class(Config) != "PROsetta.Config") stop("Config must be a class of PROsetta.Config")
-  if (class(Data) != "PROsetta.Data") stop("Data must be a class of PROsetta.Data")
-  if (is.null(Data@anchor)) stop("anchor cannot be NULL")
-  if (!Config@linkingMethod %in% c("MM","MS","HB","SL","LS")) stop("Config@linkingMethod must be one of the following: \"MM\", \"MS\", \"HB\", \"SL\", \"LS\".")
+RunLinking = function(Config, Data = NULL, ...) {
+  if (class(Config) != "PROsetta.Config") {
+    stop("Config must be a class of PROsetta.Config")
+  }
+  if (is.null(Data)) {
+    Data = LoadData(Config)
+  } else if (class(Data) != "PROsetta.Data") {
+    stop("Data must be a class of PROsetta.Data")
+  }
+  if (is.null(Data@anchor)) {
+    stop("anchor cannot be NULL")
+  }
+  if (!Config@linkingMethod %in% c("MM","MS","HB","SL","LS")) {
+    stop("Config@linkingMethod must be one of the following: \"MM\", \"MS\", \"HB\", \"SL\", \"LS\".")
+  }
   Calibration = RunCalibration(Config, Data, ...)
   ipar = mirt::coef(Calibration, IRTpars = TRUE, simplify = TRUE)$items
   ni.all = nrow(ipar)
@@ -537,9 +587,15 @@ RunLinking = function(Config, Data, ...) {
 #'             type = "equipercentile", smooth = "loglinear")
 #' }
 
-RunEquateObserved = function(Config, Data, scaleTo = 1, scaleFrom = 2, type = "equipercentile", smooth = "loglinear", degrees = list(3, 1), boot = TRUE, reps = 100, ...) {
-  if (class(Config) != "PROsetta.Config") stop("Config must be a class of PROsetta.Config")
-  if (class(Data) != "PROsetta.Data") stop("Data must be a class of PROsetta.Data")
+RunEquateObserved = function(Config, Data = NULL, scaleTo = 1, scaleFrom = 2, type = "equipercentile", smooth = "loglinear", degrees = list(3, 1), boot = TRUE, reps = 100, ...) {
+  if (class(Config) != "PROsetta.Config") {
+    stop("Config must be a class of PROsetta.Config")
+  }
+  if (is.null(Data)) {
+    Data = LoadData(Config)
+  } else if (class(Data) != "PROsetta.Data") {
+    stop("Data must be a class of PROsetta.Data")
+  }
   scaleID    = Data@itemmap[[Config@scaleID]]
   scaleCode  = unique(scaleID)
   itemsTo    = which(scaleID %in% scaleTo)
@@ -587,9 +643,15 @@ RunEquateObserved = function(Config, Data, scaleTo = 1, scaleFrom = 2, type = "e
 #' scoreTableLinking = RunRSSS(outEquate)
 #' }
 
-RunRSSS = function(Config, Data, Calibration, priorMean = 0.0, priorSD = 1.0, minTheta = -4.0, maxTheta = 4.0, inc = 0.01, minScore = 1, Tscore = TRUE) {
-  if (class(Config) != "PROsetta.Config") stop("Config must be a class of PROsetta.Config")
-  if (class(Data) != "PROsetta.Data") stop("Data must be a class of PROsetta.Data")
+RunRSSS = function(Config, Data = NULL, Calibration, priorMean = 0.0, priorSD = 1.0, minTheta = -4.0, maxTheta = 4.0, inc = 0.01, minScore = 1, Tscore = TRUE) {
+  if (class(Config) != "PROsetta.Config") {
+    stop("Config must be a class of PROsetta.Config")
+  }
+  if (is.null(Data)) {
+    Data = LoadData(Config)
+  } else if (class(Data) != "PROsetta.Data") {
+    stop("Data must be a class of PROsetta.Data")
+  }
   if (is.null(attr(class(Calibration), "package"))) {
     item.par = Calibration$pars@pars$From
   } else if (isS4(Calibration) && attr(class(Calibration), "package") == "mirt") {
