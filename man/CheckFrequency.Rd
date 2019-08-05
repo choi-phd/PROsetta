@@ -4,12 +4,12 @@
 \alias{CheckFrequency}
 \title{Check frequency table for unobserved response categories}
 \usage{
-CheckFrequency(Config, Data = NULL)
+CheckFrequency(config, data)
 }
 \arguments{
-\item{Config}{A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.}
+\item{config}{A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.}
 
-\item{Data}{A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.}
+\item{data}{A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.}
 }
 \value{
 Logical. \code{TRUE} if all categories are present. \code{FALSE} otherwise.

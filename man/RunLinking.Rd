@@ -4,12 +4,12 @@
 \alias{RunLinking}
 \title{Run Scale Linking}
 \usage{
-RunLinking(Config, Data = NULL, ...)
+RunLinking(config, data = NULL, ...)
 }
 \arguments{
-\item{Config}{A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.}
+\item{config}{A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.}
 
-\item{Data}{A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.}
+\item{data}{(Optional) A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.}
 
 \item{...}{Additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{\code{mirt}} package.}
 }
@@ -21,8 +21,9 @@ Performs scale linking and obtains a set of transformation coefficients.
 }
 \examples{
 \dontrun{
-inputData = LoadData(new.Config)
-outEquate = RunLinking(new.Config, inputData, technical = list(NCYCLES = 1000))
-outEquate$link@constants$SL
+cfg_asq2 <- cfg_asq
+cfg_asq2@linkingMethod = "SL"
+solution <- RunLinking(cfg_asq2, technical = list(NCYCLES = 1000))
+solution$link@constants$SL
 }
 }

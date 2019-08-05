@@ -32,15 +32,14 @@ An S4 class to represent configurations for reading datasets and writing outputs
 }}
 
 \examples{
+
 \dontrun{
-new.Config = new("PROsetta.Config",
-                 inputDirectory = getwd(),
-                 anchorFile = "data-raw\\\\anchor_axmasq.csv",
-                 responseFile = "data-raw\\\\dat_axmasq_v2.csv",
-                 itemmapFile = "data-raw\\\\imap_axmasq.csv",
-                 linkingMethod = "FIXEDPAR")
-new.Config@itemID = "item_id"
-new.Config@personID = "prosettaid"
-new.Config@scaleID = "instrument"
+cfg <- new.config(
+  responseFile = "data-raw/dat_axmasq_v2.csv",
+  anchorFile = "data-raw/anchor_axmasq.csv",
+  itemmapFile = "data-raw/imap_axmasq.csv",
+  linkingMethod = "FIXEDPAR",
+  guessID = TRUE
+)
 }
 }

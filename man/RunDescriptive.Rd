@@ -4,12 +4,12 @@
 \alias{RunDescriptive}
 \title{Obtain a descriptive statistics table}
 \usage{
-RunDescriptive(Config, Data = NULL)
+RunDescriptive(config, data = NULL)
 }
 \arguments{
-\item{Config}{A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.}
+\item{config}{A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.}
 
-\item{Data}{A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.}
+\item{data}{(Optional) A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.}
 }
 \value{
 A \code{data.frame} containing the descriptive statistics (mean, standard deviation, median, ...) of the variables in the dataset. These are calculated with \code{\link[psych]{describe}} in \href{https://CRAN.R-project.org/package=psych}{\code{psych}} package.
@@ -18,8 +18,5 @@ A \code{data.frame} containing the descriptive statistics (mean, standard deviat
 Obtains a table with descriptive statistics for each variable, from the supplied configuration and the dataset.
 }
 \examples{
-\dontrun{
-inputData = LoadData(new.Config)
-descTable = RunDescriptive(new.Config, inputData)
-}
+descTable <- RunDescriptive(cfg_asq)
 }
