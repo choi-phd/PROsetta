@@ -4,7 +4,7 @@
 \alias{RunRSSS}
 \title{Run Scoring Table Generation}
 \usage{
-RunRSSS(Config, Data, Calibration, priorMean = 0, priorSD = 1,
+RunRSSS(Config, Data = NULL, Calibration, priorMean = 0, priorSD = 1,
   minTheta = -4, maxTheta = 4, inc = 0.01, minScore = 1,
   Tscore = TRUE)
 }
