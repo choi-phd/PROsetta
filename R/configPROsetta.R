@@ -278,7 +278,16 @@ LoadData <- function(config) {
 #'
 #' @export
 
-CheckFrequency <- function(config, data){
+CheckFrequency <- function(config, data = NULL){
+
+  if (class(config) != "PROsetta.Config") {
+    stop("config must be a class of PROsetta.Config")
+  }
+  if (is.null(data)) {
+    data = LoadData(config)
+  } else if (class(data) != "PROsetta.Data") {
+    stop("data must be a class of PROsetta.Data")
+  }
 
   tmp <- RunFrequency(config, data, checkFrequency = F)
   ni  <- dim(tmp)[1]
@@ -346,8 +355,7 @@ RunFrequency <- function(config, data = NULL, checkFrequency = TRUE) {
   }
   if (is.null(data)) {
     data <- LoadData(config)
-  }
-  if (class(data) != "PROsetta.Data") {
+  } else if (class(data) != "PROsetta.Data") {
     stop("data must be a class of PROsetta.Data")
   }
 
@@ -360,8 +368,8 @@ RunFrequency <- function(config, data = NULL, checkFrequency = TRUE) {
     colnames(freq) <- catnames
     rownames(freq) <- names(tmp)
     for (i in 1:length(tmp)) {
-      cats         <- names(tmp[[i]])
-      freq[i,cats] <- tmp[[i]]
+      cats          <- names(tmp[[i]])
+      freq[i, cats] <- tmp[[i]]
     }
   }
 
@@ -392,13 +400,12 @@ RunFrequency <- function(config, data = NULL, checkFrequency = TRUE) {
 
 RunDescriptive <- function(config, data = NULL) {
 
-    if (class(config) != "PROsetta.Config") {
+  if (class(config) != "PROsetta.Config") {
     stop("config must be a class of PROsetta.Config")
   }
   if (is.null(data)) {
     data <- LoadData(config)
-  }
-  if (class(data) != "PROsetta.Data") {
+  } else if (class(data) != "PROsetta.Data") {
     stop("data must be a class of PROsetta.Data")
   }
 
@@ -430,8 +437,7 @@ RunClassical <- function(config, data = NULL, omega = FALSE, ...) {
   }
   if (is.null(data)) {
     data <- LoadData(config)
-  }
-  if (class(data) != "PROsetta.Data") {
+  } else if (class(data) != "PROsetta.Data") {
     stop("data must be a class of PROsetta.Data")
   }
 
@@ -474,9 +480,8 @@ RunCFA <- function(config, data = NULL, estimator = "WLSMV", std.lv = TRUE, ...)
   }
   if (is.null(data)) {
     data <- LoadData(config)
-  }
-  if (class(data) != "PROsetta.Data") {
-    stop("data must be a class of PROsetta.Data")
+  } else if (class(Data) != "PROsetta.Data") {
+    stop("Data must be a class of PROsetta.Data")
   }
 
   all_items     <- data@itemmap[[config@itemID]]
@@ -520,15 +525,14 @@ RunCFA <- function(config, data = NULL, estimator = "WLSMV", std.lv = TRUE, ...)
 #' solution2 <- RunCalibration(cfg_asq2, technical = list(NCYCLES = 1000))
 #' mirt::coef(solution2, IRTpars = TRUE, simplify = TRUE)
 #' }
-RunCalibration = function(config, data = NULL, ...) {
+RunCalibration <- function(config, data = NULL, ...) {
 
   if (class(config) != "PROsetta.Config") {
     stop("config must be a class of PROsetta.Config")
   }
   if (is.null(data)) {
     data <- LoadData(config)
-  }
-  if (class(data) != "PROsetta.Data") {
+  } else if (class(data) != "PROsetta.Data") {
     stop("data must be a class of PROsetta.Data")
   }
 
@@ -590,34 +594,33 @@ RunLinking <- function(config, data = NULL, ...) {
   }
   if (is.null(data)) {
     data <- LoadData(config)
-  }
-  if (class(data) != "PROsetta.Data") {
+  } else if (class(data) != "PROsetta.Data") {
     stop("data must be a class of PROsetta.Data")
   }
   if (is.null(data@anchor)) {
     stop("anchor cannot be NULL")
   }
-  if (!config@linkingMethod %in% c("MM","MS","HB","SL","LS")) {
-    stop("config@linkingMethod must be one of the following: \"MM\", \"MS\", \"HB\", \"SL\", \"LS\".")
+  if (!config@linkingMethod %in% c("MM", "MS", "HB", "SL", "LS")) {
+    stop("config@linkingMethod must be one of the following: 'MM', 'MS', 'HB', 'SL', 'LS'.")
   }
 
-  calibration = RunCalibration(config, data, ...)
-  ipar      = mirt::coef(calibration, IRTpars = TRUE, simplify = TRUE)$items
-  ni_all    = nrow(ipar)
-  ni_anchor = nrow(data@anchor)
-  maxCat    = max(data@anchor$NCAT)
-  id_new    = data.frame(New = 1:ni_all, ID = data@itemmap[[config@itemID]])
-  id_old    = data.frame(Old = 1:ni_anchor, ID = data@anchor[[config@itemID]])
-  common    = merge(id_new, id_old, by = "ID", sort = FALSE)[c("New", "Old")]
-  pars      = vector("list", 2)
+  calibration <- RunCalibration(config, data, ...)
+  ipar        <- mirt::coef(calibration, IRTpars = TRUE, simplify = TRUE)$items
+  ni_all      <- nrow(ipar)
+  ni_anchor   <- nrow(data@anchor)
+  maxCat      <- max(data@anchor$NCAT)
+  id_new      <- data.frame(New = 1:ni_all, ID = data@itemmap[[config@itemID]])
+  id_old      <- data.frame(Old = 1:ni_anchor, ID = data@anchor[[config@itemID]])
+  common      <- merge(id_new, id_old, by = "ID", sort = FALSE)[c("New", "Old")]
+  pars        <- vector("list", 2)
 
-  pars[[1]] = ipar
-  pars[[2]] = data@anchor[c("a", paste0("cb", 1:(maxCat - 1)))]
+  pars[[1]] <- ipar
+  pars[[2]] <- data@anchor[c("a", paste0("cb", 1:(maxCat - 1)))]
 
-  pm_all = as.poly.mod(ni_all, "grm", 1:ni_all)
-  pm_anchor = as.poly.mod(ni_anchor, "grm", 1:ni_anchor)
-  ncat = list(data@itemmap$NCAT, data@anchor$NCAT)
-  out = plink::plink(as.irt.pars(pars, common, cat = ncat, list(pm_all, pm_anchor), grp.names=c("From","To")), rescale = config@linkingMethod, base.grp = 2)
+  pm_all    <- as.poly.mod(ni_all, "grm", 1:ni_all)
+  pm_anchor <- as.poly.mod(ni_anchor, "grm", 1:ni_anchor)
+  ncat <- list(data@itemmap$NCAT, data@anchor$NCAT)
+  out  <- plink::plink(as.irt.pars(pars, common, cat = ncat, list(pm_all, pm_anchor), grp.names=c("From","To")), rescale = config@linkingMethod, base.grp = 2)
 
   rownames(out$pars@pars$From) = id_new$ID
   rownames(out$pars@pars$To)   = id_old$ID
@@ -657,8 +660,7 @@ RunEquateObserved = function(config, data = NULL, scaleTo = 1, scaleFrom = 2, ty
   }
   if (is.null(data)) {
     data <- LoadData(config)
-  }
-  if (class(data) != "PROsetta.Data") {
+  } else if (class(data) != "PROsetta.Data") {
     stop("data must be a class of PROsetta.Data")
   }
 
@@ -716,8 +718,7 @@ RunRSSS <- function(config, data = NULL, calibration, priorMean = 0.0, priorSD =
   }
   if (is.null(data)) {
     data <- LoadData(config)
-  }
-  if (class(data) != "PROsetta.Data") {
+  } else if (class(data) != "PROsetta.Data") {
     stop("data must be a class of PROsetta.Data")
   }
   if (is.null(attr(class(calibration), "package"))) {
@@ -729,7 +730,18 @@ RunRSSS <- function(config, data = NULL, calibration, priorMean = 0.0, priorSD =
   item_par_by_scale <- split(data.frame(item_par), data@itemmap[[config@scaleID]])
   n_scale <- length(item_par_by_scale)
 
-  rsss <- function(ipar) {
+  if (!all(minScore %in% c(0, 1))) {
+    stop("minScore must contain only 0 or 1")
+  }
+  if (length(minScore) == 1) {
+    if (n_scale > 1) {
+      minScore = rep(minScore, n_scale + 1)
+    }
+  } else if (length(minScore) != n_scale + 1) {
+    stop(sprintf("length of minScore must be either 1 or %i", n_scale + 1))
+  }
+
+  rsss <- function(ipar, base0) {
 
     theta  <- seq(minTheta, maxTheta, by = inc)
     nq     <- length(theta)
@@ -805,7 +817,9 @@ RunRSSS <- function(config, data = NULL, calibration, priorMean = 0.0, priorSD =
     if (minScore == 1) {
       raw_score <- raw_score + ni
     }
-
+    if (!base0) {
+      raw_score <- raw_score + ni
+    }
     if (Tscore) {
       scale_score <- round(scale_score * 10 + 50, 1)
       SE          <- round(SE * 10, 1)
@@ -818,18 +832,18 @@ RunRSSS <- function(config, data = NULL, calibration, priorMean = 0.0, priorSD =
 
   if (n_scale == 1) {
 
-    score_table <- rsss(item_par)
+    score_table <- rsss(item_par, minScore == 0)
     return(score_table)
 
   } else if (n_scale > 1) {
 
-    score_table <- vector(mode = "list", length = length(item_par_by_scale) + 1)
+    score_table <- vector(mode = "list", length = n_scale + 1)
 
     for (s in 1:n_scale) {
-      score_table[[s]] <- rsss(item_par_by_scale[[s]])
+      score_table[[s]] <- rsss(item_par_by_scale[[s]], minScore[s] == 0)
     }
 
-    score_table[[n_scale + 1]] <- rsss(item_par)
+    score_table[[n_scale + 1]] <- rsss(item_par, minScore[n_scale + 1] == 0)
     names(score_table) <- c(names(item_par_by_scale), "combined")
 
     return(score_table)
