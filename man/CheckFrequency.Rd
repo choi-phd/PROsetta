@@ -4,7 +4,7 @@
 \alias{CheckFrequency}
 \title{Check frequency table for unobserved response categories}
 \usage{
-CheckFrequency(Config, Data)
+CheckFrequency(Config, Data = NULL)
 }
 \arguments{
 \item{Config}{A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.}

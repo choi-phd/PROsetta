@@ -4,7 +4,7 @@
 \alias{RunLinking}
 \title{Run Scale Linking}
 \usage{
-RunLinking(Config, Data, ...)
+RunLinking(Config, Data = NULL, ...)
 }
 \arguments{
 \item{Config}{A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.}

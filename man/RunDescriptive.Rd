@@ -4,7 +4,7 @@
 \alias{RunDescriptive}
 \title{Obtain a descriptive statistics table}
 \usage{
-RunDescriptive(Config, Data)
+RunDescriptive(Config, Data = NULL)
 }
 \arguments{
 \item{Config}{A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.}

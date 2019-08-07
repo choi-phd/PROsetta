@@ -4,7 +4,7 @@
 \alias{RunCFA}
 \title{Run a confirmatory factor analysis}
 \usage{
-RunCFA(Config, Data, estimator = "WLSMV", std.lv = TRUE, ...)
+RunCFA(Config, Data = NULL, estimator = "WLSMV", std.lv = TRUE, ...)
 }
 \arguments{
 \item{Config}{A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.}

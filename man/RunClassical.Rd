@@ -4,7 +4,7 @@
 \alias{RunClassical}
 \title{Run a CTT-based reliability analysis}
 \usage{
-RunClassical(Config, Data, omega = FALSE, ...)
+RunClassical(Config, Data = NULL, omega = FALSE, ...)
 }
 \arguments{
 \item{Config}{A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.}
