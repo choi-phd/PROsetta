@@ -4,7 +4,7 @@
 \alias{RunEquateObserved}
 \title{Run Test Equating}
 \usage{
-RunEquateObserved(Config, Data, scaleTo = 1, scaleFrom = 2,
+RunEquateObserved(Config, Data = NULL, scaleTo = 1, scaleFrom = 2,
   type = "equipercentile", smooth = "loglinear", degrees = list(3,
   1), boot = TRUE, reps = 100, ...)
 }

@@ -669,9 +669,9 @@ RunRSSS = function(Config, Data = NULL, Calibration, priorMean = 0.0, priorSD = 
       minScore = rep(minScore, n.scale + 1)
     }
   } else if (length(minScore) != n.scale + 1) {
-    stop(sprintf("length of minScore must be either 1 or %i"), n.scale + 1)
+    stop(sprintf("length of minScore must be either 1 or %i", n.scale + 1))
   }
-  
+
   rsss = function(ipar, base0) {
     theta = seq(minTheta, maxTheta, by = inc)
     nq = length(theta)

@@ -4,7 +4,7 @@
 \alias{RunCalibration}
 \title{Run Calibration}
 \usage{
-RunCalibration(Config, Data, ...)
+RunCalibration(Config, Data = NULL, ...)
 }
 \arguments{
 \item{Config}{A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.}
