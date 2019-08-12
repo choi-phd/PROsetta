@@ -31,13 +31,15 @@
 #'     \item \code{scores} A vector representing all possible score values from an item.
 #'     \item \code{NCATc} (placeholder)
 #'   }
+#'
+#'   \item \code{cfg_asq}
 #' }
 #'
 #' @docType data
 #' @keywords datasets
 #' @rdname dataset_asq
 #' @name dataset_asq
-#' @aliases response_asq anchor_asq itemmap_asq
+#' @aliases response_asq anchor_asq itemmap_asq cfg_asq
 #' @examples
 #' \dontrun{
 #' data(response_asq)

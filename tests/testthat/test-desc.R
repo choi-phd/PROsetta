@@ -1,12 +1,10 @@
-test_that("RunRSSS", {
-
-  solution   <- RunCalibration(cfg_asq)
-  scoreTable <- RunRSSS(solution)
+test_that("runRSSS", {
+  solution    <- runCalibration(cfg_asq)
+  score_table <- runRSSS(cfg_asq, calibration = solution)
 
   cfg_asq2   <- cfg_asq
-  cfg_asq2@linkingMethod <- "SL"
+  cfg_asq2@linking_method <- "SL"
 
-  solution   <- RunLinking(cfg_asq2, technical = list(NCYCLES = 1000))
-  scoreTable <- RunRSSS(cfg_asq2, calibration = solution)
-
+  solution    <- runLinking(cfg_asq2, technical = list(NCYCLES = 1000))
+  score_table <- runRSSS(cfg_asq2, calibration = solution)
 })
