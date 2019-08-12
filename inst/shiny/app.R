@@ -34,7 +34,10 @@ label, .form-group, .progress {
       tags$head(
         tags$style(type="text/css", "select { min-width: 100%; max-width: 100%; }"),
         tags$style(type="text/css", ".span4 { min-width: 100%; max-width: 100%; }"),
-        tags$style(type="text/css", ".well { min-width: 100%; max-width: 100%; }")
+        tags$style(type="text/css", ".well { min-width: 100%; max-width: 100%; }"),
+        tags$style(type="text/css", "#textoutput { background-color: rgba(64,64,64,1); color: cyan; overflow-y:auto; height: 64px; display: flex; flex-direction: column-reverse; }"),
+        tags$style(type="text/css", ".shiny-notification { font-size: 20px; background-color: #404040; color: #fff; }"),
+        tags$style(type="text/css", "#shiny-notification-panel { width: 500px; }")
       ),
       helpText("This is a demo of PROsetta Linking Analysis. (UI work in progress)"),
 
@@ -93,16 +96,11 @@ label, .form-group, .progress {
       downloadButton("export_data", "Export visible tabs")
     ),
 
-
     mainPanel(
-      tags$head(
-        tags$style(type='text/css', '#textoutput {background-color: rgba(64,64,64,1); color: cyan;}')
-      ),
-      verbatimTextOutput("textoutput", placeholder = T),
+      verbatimTextOutput("textoutput", placeholder = TRUE),
       progressBar(id = "pb", value = 0, total = 1, display_pct = TRUE),
       hr(),
       tabsetPanel(id = "tabs",
-
         tabPanel("Anchor data",            value = 11, DTOutput("anchor_data"),                  style = css_y),
         tabPanel("Response data",          value = 12, DTOutput("response_data"),                style = css_y),
         tabPanel("Item map data",          value = 13, DTOutput("itemmap_data"),                 style = css_y),
@@ -146,7 +144,7 @@ toggleSolverButtons <- function(enable, session) {
 }
 
 updateTabSet <- function(tabset, id, session) {
-  
+
   tabset <- unique(c(tabset, id))
 
   i1 <- 11:13
@@ -175,7 +173,7 @@ updateTabSet <- function(tabset, id, session) {
   return(tabset)
 }
 
-checkDataStatus <- function(ok) {
+getDataStatus <- function(ok) {
   if (ok) {
     tmp <- "Files OK. Press the button to run analysis."
   } else {
@@ -214,32 +212,40 @@ createConfigFromShiny <- function(input){
   return(cfg)
 }
 
-getPath <- function(tmpdir, fn){
+getPath <- function(tmpdir, fn) {
   tmp <- file.path(tmpdir, fn)
   tmp <- normalizePath(tmp, mustWork = FALSE)
   return(tmp)
 }
 
+updateLogs <- function(v, newlog) {
+  v$logs <- c(v$logs, newlog)
+  v$logstext <- paste0(v$logs, collapse = "\n")
+  return(v)
+}
+
 server <- function(input, output, session) {
-  v <- reactiveValues(data_exists = FALSE, active_tabset = c(1,2))
+  v <- reactiveValues(
+    data_exists = FALSE,
+    active_tabset = c(1,2))
 
   toggleSolverButtons(FALSE, session)
-  switchTabs(c(1,2))
 
   observeEvent(input$tabvisibility, {
     v$active_tabset = as.numeric(input$tabvisibility)
-    switchTabs(v$active_tabset)
+    updateTabSet(v$active_tabset, v$active_tabset, session)
   }, ignoreNULL = FALSE)
 
   observeEvent(input$anchor_file, {
     if (!is.null(input$anchor_file)){
       v$anchor_data <- read.csv(input$anchor_file$datapath)
+      v <- updateLogs(v, sprintf("Anchor data imported: %i items", dim(v$anchor_data)[1]))
     }
     if (!is.null(input$anchor_file) & !is.null(input$response_file) & !is.null(input$itemmap_file)) {
       cfg <- createConfigFromShiny(input)
       v$inputdata <- try(loadData(cfg))
       v$data_exists <- class(v$inputdata) == "PROsetta_data"
-      v$text <- checkDataStatus(v$data_exists)
+      v <- updateLogs(v, getDataStatus(v$data_exists))
 
       if (v$data_exists) {
         v$active_tabset <- updateTabSet(v$active_tabset, 1, session)
@@ -251,13 +257,14 @@ server <- function(input, output, session) {
 
   observeEvent(input$response_file, {
     if (!is.null(input$response_file)){
-      v$response_data = read.csv(input$response_file$datapath)
+      v$response_data <- read.csv(input$response_file$datapath)
+      v <- updateLogs(v, sprintf("Response data imported: %i cases * %i items", dim(v$response_data)[1], dim(v$response_data)[2] - 1))
     }
     if (!is.null(input$anchor_file) & !is.null(input$response_file) & !is.null(input$itemmap_file)){
       cfg <- createConfigFromShiny(input)
       v$inputdata <- try(loadData(cfg))
       v$data_exists <- class(v$inputdata) == "PROsetta_data"
-      v$text <- checkDataStatus(v$data_exists)
+      v <- updateLogs(v, getDataStatus(v$data_exists))
 
       if (v$data_exists) {
         v$active_tabset <- updateTabSet(v$active_tabset, 1, session)
@@ -268,14 +275,15 @@ server <- function(input, output, session) {
 
   observeEvent(input$itemmap_file, {
     if (!is.null(input$itemmap_file)){
-      v$itemmap_data = read.csv(input$itemmap_file$datapath)
-      v$n.items = dim(v$itemmap_data)[1]
+      v$itemmap_data <- read.csv(input$itemmap_file$datapath)
+      v$n.items <- dim(v$itemmap_data)[1]
+      v <- updateLogs(v, sprintf("Item map imported: %i items", v$n.items))
     }
     if (!is.null(input$anchor_file) & !is.null(input$response_file) & !is.null(input$itemmap_file)){
       cfg <- createConfigFromShiny(input)
       v$inputdata <- try(loadData(cfg))
       v$data_exists <- class(v$inputdata) == "PROsetta_data"
-      v$text <- checkDataStatus(v$data_exists)
+      v <- updateLogs(v, getDataStatus(v$data_exists))
 
       if (v$data_exists) {
         v$active_tabset = updateTabSet(v$active_tabset, 1, session)
@@ -301,13 +309,13 @@ server <- function(input, output, session) {
     assignObject("shiny_desc", v$desctable, "Descriptives tab")
     v$classical <- runClassical(cfg, v$inputdata)
     assignObject("shiny_alpha", v$classical, "Classical tab")
-    v$classical2 <- try(RunClassical(cfg, v$inputdata, omega = T, fm = "ml")[["Omega"]])
+    v$classical2 <- try(runClassical(cfg, v$inputdata, omega = T, fm = "ml")[["Omega"]])
     assignObject("shiny_omega", v$classical2, "Classical (omega) tab")
 
     v$time <- Sys.time() - v$time
-    v$text <- sprintf("Done in %3.3fs", v$time)
+    v <- updateLogs(v, sprintf("Done in %7.3fs : run descriptive", v$time))
 
-    updateTabset(v$active_tabset, 2, session)
+    updateTabSet(v$active_tabset, 2, session)
     toggleSolverButtons(TRUE, session)
 
   })
@@ -322,7 +330,6 @@ server <- function(input, output, session) {
     progress$set(message = 'Computing..',
                  detail = 'This may take a while.')
 
-    v$text <- "Running.."
     v$time <- Sys.time()
 
     cfg <- createConfigFromShiny(input)
@@ -338,7 +345,7 @@ server <- function(input, output, session) {
       selected = min(v$item_id_to_plot, v$n.items)
     )
 
-    v$calib = RunCalibration(cfg, v$inputdata)
+    v$calib <- runCalibration(cfg, v$inputdata)
     assignObject("shiny_calib", v$calib, "Calibration result (full object)")
     v$calib_params = mirt::coef(v$calib, IRTpars = TRUE, simplify = TRUE)$items
     assignObject("shiny_params", v$calib_params, "Calibration result tab")
@@ -347,9 +354,9 @@ server <- function(input, output, session) {
     v$plot_iteminfo = mirt::itemplot(v$calib, item = v$item_id_to_plot, type = "info")
     assignObject("shiny_iteminfo", v$plot_iteminfo, "Item info tab")
 
-    tmp = try(mirt::itemfit(v$calib, "S_X2", na.rm = TRUE), silent = T)
+    tmp <- try(mirt::itemfit(v$calib, "S_X2", na.rm = TRUE), silent = T)
     if (class(tmp)[1] == "try-error"){
-      tmp = try(mirt::itemfit(v$calib, "S_X2"))
+      tmp <- try(mirt::itemfit(v$calib, "S_X2"))
     }
 
     v$table_itemfit = tmp
@@ -359,7 +366,7 @@ server <- function(input, output, session) {
     assignObject("shiny_crosswalk_calibration", v$crosswalk_calibration, "Crosswalk (calibration) tab")
 
     v$time <- Sys.time() - v$time
-    v$text <- sprintf("Done in %3.3fs", v$time)
+    v <- updateLogs(v, sprintf("Done in %7.3fs : run calibration", v$time))
 
     v$active_tabset <- updateTabSet(v$active_tabset, 3, session)
     toggleSolverButtons(TRUE, session)
@@ -369,9 +376,9 @@ server <- function(input, output, session) {
 
 
   observeEvent(input$runlinking, {
-    
+
     toggleSolverButtons(FALSE, session)
-    
+
     if (!(input$linking_type %in% c("MM", "MS", "HB", "SL", "LS"))) {
       v$text = "Linking method must be one of the following: 'MM', 'MS', 'HB', 'SL', 'LS'."
       break
@@ -389,7 +396,7 @@ server <- function(input, output, session) {
     assignObject("shiny_config", cfg, "PROsetta_config object")
 
     v$inputdata <- loadData(cfg)
-    assignObject("shiny.data", v$inputdata, "PROsetta_data object")
+    assignObject("shiny_data", v$inputdata, "PROsetta_data object")
 
     v$linking <- runLinking(cfg, v$inputdata, technical = list(NCYCLES = 1000))
     assignObject("shiny_link", v$linking, "Linking result (full object)")
@@ -402,7 +409,7 @@ server <- function(input, output, session) {
     assignObject("shiny_crosswalk_linking", v$crosswalk_linking, "Crosswalk (linking) tab")
 
     v$time <- Sys.time() - v$time
-    v$text <- sprintf("Done in %3.3fs", v$time)
+    v <- updateLogs(v, sprintf("Done in %7.3fs : run linking", v$time))
 
     v$active_tabset <- updateTabSet(v$active_tabset, 4, session)
     toggleSolverButtons(TRUE, session)
@@ -428,7 +435,7 @@ server <- function(input, output, session) {
     assignObject("shiny_eq", v$outequateequipercentile, "Equating tab")
 
     v$time <- Sys.time() - v$time
-    v$text <- sprintf("Done in %3.3fs", v$time)
+    v <- updateLogs(v, sprintf("Done in %7.3fs : run equating", v$time))
 
     v$active_tabset <- updateTabSet(v$active_tabset, 5, session)
     toggleSolverButtons(TRUE, session)
@@ -443,13 +450,13 @@ server <- function(input, output, session) {
       v$item_id_to_plot = item_id_to_plot
       if (is.null(v$calib)) return()
       v$plot_itemfit  = mirt::itemfit(v$calib, empirical.plot = v$item_id_to_plot)
-      assignObject("shiny.itemfit", v$plot_itemfit, "Item fit plot tab")
+      assignObject("shiny_itemfit", v$plot_itemfit, "Item fit plot tab")
       v$plot_iteminfo = mirt::itemplot(v$calib, item = v$item_id_to_plot, type = "info")
-      assignObject("shiny.iteminfo", v$plot_iteminfo, "Item info tab")
+      assignObject("shiny_iteminfo", v$plot_iteminfo, "Item info tab")
     }
   })
 
-  output$textoutput               <- renderText(parseObject(v$text))
+  output$textoutput               <- renderText(parseObject(v$logstext))
 
   output$anchor_data              <- renderDT(parseObject(v$anchor_data),           options = list(pageLength = 100))
   output$response_data            <- renderDT(parseObject(v$response_data),         options = list(pageLength = 100))
@@ -477,7 +484,7 @@ server <- function(input, output, session) {
       paste("data-", Sys.Date(), ".zip", sep="")
     },
     content = function(fname) {
-      
+
       fs     <- c()
       tmpdir <- tempdir()
 
