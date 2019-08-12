@@ -6,6 +6,7 @@
 \alias{response_asq}
 \alias{anchor_asq}
 \alias{itemmap_asq}
+\alias{cfg_asq}
 \title{ASQ dataset}
 \description{
 This dataset is associated with the following objects:
@@ -40,6 +41,8 @@ This dataset is associated with the following objects:
     \item \code{scores} A vector representing all possible score values from an item.
     \item \code{NCATc} (placeholder)
   }
+
+\item \code{cfg_asq}
 }
 }
 \examples{

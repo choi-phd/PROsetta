@@ -12,6 +12,7 @@ Description: Performs scale linking to establish relationships between instrumen
     that measure similar constructs according to the PROsetta Stone methodology.
 URL: http://www.prosettastone.org
 Imports: equate, lavaan, mirt, plink, psych, methods
+Depends: R (>= 2.10.0)
 Suggests: 
     shiny,
     shinythemes,
