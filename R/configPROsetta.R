@@ -23,17 +23,32 @@ NULL
 #'
 #' @rdname PROsetta_config
 #' @examples
-#'
-#' \dontrun{
+#' \dontshow{
+#' f1 <- tempfile()
+#' f2 <- tempfile()
+#' f3 <- tempfile()
+#' write.csv(response_asq, f1, row.names = FALSE)
+#' write.csv(itemmap_asq, f2, row.names = FALSE)
+#' write.csv(anchor_asq, f3, row.names = FALSE)
+#' cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3,
+#'   linking_method = "FIXEDPAR")
+#' }
+#' \donttest{
+#' write.csv(response_asq, "response.csv", row.names = FALSE)
+#' write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
+#' write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
 #' cfg <- createConfig(
-#'   response_file = "data-raw/dat_axmasq_v2.csv",
-#'   anchor_file = "data-raw/anchor_axmasq.csv",
-#'   itemmap_file = "data-raw/imap_axmasq.csv",
-#'   linking_method = "FIXEDPAR",
-#'   guess_id = TRUE
+#'   response_file = "response.csv",
+#'   itemmap_file = "itemmap.csv",
+#'   anchor_file = "anchor.csv",
+#'   linking_method = "FIXEDPAR"
 #' )
 #' }
-#'
+#' \dontshow{
+#'   file.remove(f1)
+#'   file.remove(f2)
+#'   file.remove(f3)
+#' }
 #' @export
 
 setClass("PROsetta_config",
@@ -125,7 +140,7 @@ createConfig <- function(study_name = "Study",
 
   if (n_ids < 3) {
 
-    if (n_ids < 2) {
+    if (n_ids > 0) {
       warning("specify item_id, person_id, scale_id all three to override guessing.")
     }
 
@@ -176,6 +191,7 @@ createConfig <- function(study_name = "Study",
 #' @slot response A list containing IDs and the responses of the items.
 #' @slot itemmap A list containing an item map.
 #' @slot anchor A list containing the parameters of the items.
+#'
 #' @export
 
 setClass("PROsetta_data",
@@ -343,10 +359,33 @@ checkFrequency <- function(config, data = NULL) {
 #' @param check_frequency Logical. If \code{TRUE}, check the frequency table for missing response categories, and display warning message if any is missing.
 #' @return A \code{data.frame} containing the frequency table of the dataset.
 #'
-#' @export
-#'
 #' @examples
-#' freqTable <- runFrequency(cfg_asq)
+#' \dontshow{
+#' f1 <- tempfile()
+#' f2 <- tempfile()
+#' f3 <- tempfile()
+#' write.csv(response_asq, f1, row.names = FALSE)
+#' write.csv(itemmap_asq, f2, row.names = FALSE)
+#' write.csv(anchor_asq, f3, row.names = FALSE)
+#' cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
+#' }
+#' \donttest{
+#' write.csv(response_asq, "response.csv", row.names = FALSE)
+#' write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
+#' write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
+#' cfg <- createConfig(
+#'   response_file = "response.csv",
+#'   itemmap_file = "itemmap.csv",
+#'   anchor_file = "anchor.csv")
+#' }
+#' freqTable <- runFrequency(cfg)
+#' \dontshow{
+#'   file.remove(f1)
+#'   file.remove(f2)
+#'   file.remove(f3)
+#' }
+#' @export
+
 runFrequency <- function(config, data = NULL, check_frequency = TRUE) {
   if (class(config) != "PROsetta_config") {
     stop("config must be a class of PROsetta_config")
@@ -391,10 +430,33 @@ runFrequency <- function(config, data = NULL, check_frequency = TRUE) {
 #'
 #' @return A \code{data.frame} containing the descriptive statistics (mean, standard deviation, median, ...) of the variables in the dataset. These are calculated with \code{\link[psych]{describe}} in \href{https://CRAN.R-project.org/package=psych}{\code{psych}} package.
 #'
-#' @export
-#'
 #' @examples
-#' descTable <- runDescriptive(cfg_asq)
+#' \dontshow{
+#' f1 <- tempfile()
+#' f2 <- tempfile()
+#' f3 <- tempfile()
+#' write.csv(response_asq, f1, row.names = FALSE)
+#' write.csv(itemmap_asq, f2, row.names = FALSE)
+#' write.csv(anchor_asq, f3, row.names = FALSE)
+#' cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
+#' }
+#' \donttest{
+#' write.csv(response_asq, "response.csv", row.names = FALSE)
+#' write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
+#' write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
+#' cfg <- createConfig(
+#'   response_file = "response.csv",
+#'   itemmap_file = "itemmap.csv",
+#'   anchor_file = "anchor.csv")
+#' }
+#' descTable <- runDescriptive(cfg)
+#' \dontshow{
+#'   file.remove(f1)
+#'   file.remove(f2)
+#'   file.remove(f3)
+#' }
+#' @export
+
 runDescriptive <- function(config, data = NULL) {
   if (class(config) != "PROsetta_config") {
     stop("config must be a class of PROsetta_config")
@@ -420,11 +482,34 @@ runDescriptive <- function(config, data = NULL) {
 #'
 #' @return The results of reliability analysis.
 #'
-#' @export
-#'
 #' @examples
-#' classicalTable <- runClassical(cfg_asq)
-#' classicalTable2 <- runClassical(cfg_asq, omega = TRUE) # also obtains omega
+#' \dontshow{
+#' f1 <- tempfile()
+#' f2 <- tempfile()
+#' f3 <- tempfile()
+#' write.csv(response_asq, f1, row.names = FALSE)
+#' write.csv(itemmap_asq, f2, row.names = FALSE)
+#' write.csv(anchor_asq, f3, row.names = FALSE)
+#' cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
+#' }
+#' \donttest{
+#' write.csv(response_asq, "response.csv", row.names = FALSE)
+#' write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
+#' write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
+#' cfg <- createConfig(
+#'   response_file = "response.csv",
+#'   itemmap_file = "itemmap.csv",
+#'   anchor_file = "anchor.csv")
+#' }
+#' classicalTable <- runClassical(cfg)
+#' classicalTable2 <- runClassical(cfg, omega = TRUE) # also obtains omega
+#' \dontshow{
+#'   file.remove(f1)
+#'   file.remove(f2)
+#'   file.remove(f3)
+#' }
+#' @export
+
 runClassical <- function(config, data = NULL, omega = FALSE, ...) {
   if (class(config) != "PROsetta_config") {
     stop("config must be a class of PROsetta_config")
@@ -458,15 +543,35 @@ runClassical <- function(config, data = NULL, omega = FALSE, ...) {
 #' \item{all}{A one-factor model where all items in the \code{itemmap} slot of \code{data} are loaded onto the factor.}
 #' \item{anchor}{A one-factor model where the items in the \code{anchor} slot of \code{data} are loaded onto the factor.}
 #'
-#' @export
-#'
 #' @examples
-#' \dontrun{
-#' solution <- runCFA(cfg_asq)
+#' \dontshow{
+#' f1 <- tempfile()
+#' f2 <- tempfile()
+#' f3 <- tempfile()
+#' write.csv(response_asq, f1, row.names = FALSE)
+#' write.csv(itemmap_asq, f2, row.names = FALSE)
+#' write.csv(anchor_asq, f3, row.names = FALSE)
+#' cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
+#' }
+#' \donttest{
+#' write.csv(response_asq, "response.csv", row.names = FALSE)
+#' write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
+#' write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
+#' cfg <- createConfig(
+#'   response_file = "response.csv",
+#'   itemmap_file = "itemmap.csv",
+#'   anchor_file = "anchor.csv")
+#' }
+#' solution <- runCFA(cfg)
 #' summary(solution$all, fit.measures = TRUE, standardized = TRUE)
 #' summary(solution$anchor, fit.measures = TRUE, standardized = TRUE)
+#' \dontshow{
+#'   file.remove(f1)
+#'   file.remove(f2)
+#'   file.remove(f3)
 #' }
-#'
+#' @export
+
 runCFA <- function(config, data = NULL, estimator = "WLSMV", std.lv = TRUE, ...) {
   if (class(config) != "PROsetta_config") {
     stop("config must be a class of PROsetta_config")
@@ -502,22 +607,43 @@ runCFA <- function(config, data = NULL, estimator = "WLSMV", std.lv = TRUE, ...)
 #'
 #' @return An object containing item calibration results. This object can be used in \code{\link[mirt:coef-method]{coef}}, \code{\link[mirt]{itemfit}}, \code{\link[mirt]{itemplot}} in \href{https://CRAN.R-project.org/package=mirt}{\code{mirt}} package to extract wanted information.
 #'
-#' @export
-#'
 #' @examples
-#' \dontrun{
-#' solution <- runCalibration(cfg_asq)
+#' \dontshow{
+#' f1 <- tempfile()
+#' f2 <- tempfile()
+#' f3 <- tempfile()
+#' write.csv(response_asq, f1, row.names = FALSE)
+#' write.csv(itemmap_asq, f2, row.names = FALSE)
+#' write.csv(anchor_asq, f3, row.names = FALSE)
+#' cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
+#' }
+#' \donttest{
+#' write.csv(response_asq, "response.csv", row.names = FALSE)
+#' write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
+#' write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
+#' cfg <- createConfig(
+#'   response_file = "response.csv",
+#'   itemmap_file = "itemmap.csv",
+#'   anchor_file = "anchor.csv")
+#' }
+#' solution <- runCalibration(cfg)
 #' mirt::coef(solution, IRTpars = TRUE, simplify = TRUE)
 #' mirt::itemfit(solution, empirical.plot = 1)
 #' mirt::itemplot(solution, item = 1, type = "info")
 #' mirt::itemfit(solution, "S_X2", na.rm = TRUE)
 #'
-#' cfg_asq2 <- cfg_asq
-#' cfg_asq2@linking_method <- "SL"
-#' solution2 <- runCalibration(cfg_asq2)
-#' solution2 <- runCalibration(cfg_asq2, technical = list(NCYCLES = 1000))
+#' cfg2 <- cfg
+#' cfg2@linking_method <- "SL"
+#' solution2 <- runCalibration(cfg2)
+#' solution2 <- runCalibration(cfg2, technical = list(NCYCLES = 1000))
 #' mirt::coef(solution2, IRTpars = TRUE, simplify = TRUE)
+#' \dontshow{
+#'   file.remove(f1)
+#'   file.remove(f2)
+#'   file.remove(f3)
 #' }
+#' @export
+
 runCalibration <- function(config, data = NULL, ...) {
   if (class(config) != "PROsetta_config") {
     stop("config must be a class of PROsetta_config")
@@ -563,16 +689,36 @@ runCalibration <- function(config, data = NULL, ...) {
 #'
 #' @return A list containing the scale linking results. These are obtained with \code{\link[plink]{plink-methods}} in \href{https://CRAN.R-project.org/package=plink}{\code{plink}} package.
 #'
-#' @export
-#'
 #' @examples
-#' \dontrun{
-#' cfg_asq2 <- cfg_asq
-#' cfg_asq2@linking_method <- "SL"
-#' solution <- runLinking(cfg_asq2, technical = list(NCYCLES = 1000))
-#' solution$link@constants$SL
+#' \dontshow{
+#' f1 <- tempfile()
+#' f2 <- tempfile()
+#' f3 <- tempfile()
+#' write.csv(response_asq, f1, row.names = FALSE)
+#' write.csv(itemmap_asq, f2, row.names = FALSE)
+#' write.csv(anchor_asq, f3, row.names = FALSE)
+#' cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3,
+#'   linking_method = "SL")
 #' }
-#'
+#' \donttest{
+#' write.csv(response_asq, "response.csv", row.names = FALSE)
+#' write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
+#' write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
+#' cfg <- createConfig(
+#'   response_file = "response.csv",
+#'   itemmap_file = "itemmap.csv",
+#'   anchor_file = "anchor.csv",
+#'   linking_method = "SL")
+#' }
+#' solution <- runLinking(cfg, technical = list(NCYCLES = 1000))
+#' solution$link@constants$SL
+#' \dontshow{
+#'   file.remove(f1)
+#'   file.remove(f2)
+#'   file.remove(f3)
+#' }
+#' @export
+
 runLinking <- function(config, data = NULL, ...) {
   if (class(config) != "PROsetta_config") {
     stop("config must be a class of PROsetta_config")
@@ -630,16 +776,36 @@ runLinking <- function(config, data = NULL, ...) {
 #'
 #' @return An \code{equate} object containing the test equating result. The printed summary statistics indicate the distributional properties of the two supplied scales and the equated scale. The rows titled \code{x} and \code{y} correspond to the scales specified in \code{scaleFrom} and \code{scaleTo} respectively. The row titled \code{yx} corresponds to the \code{scaleFrom} scale transformed to \code{scaleTo}. See \code{\link[equate]{equate}} for details.
 #'
-#' @export
-#'
 #' @examples
-#' \dontrun{
-#' solution <- runEquateObserved(cfg_asq,
+#' \dontshow{
+#' f1 <- tempfile()
+#' f2 <- tempfile()
+#' f3 <- tempfile()
+#' write.csv(response_asq, f1, row.names = FALSE)
+#' write.csv(itemmap_asq, f2, row.names = FALSE)
+#' write.csv(anchor_asq, f3, row.names = FALSE)
+#' cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
+#' }
+#' \donttest{
+#' write.csv(response_asq, "response.csv", row.names = FALSE)
+#' write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
+#' write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
+#' cfg <- createConfig(
+#'   response_file = "response.csv",
+#'   itemmap_file = "itemmap.csv",
+#'   anchor_file = "anchor.csv")
+#' }
+#' solution <- runEquateObserved(cfg,
 #'   scaleTo = 1, scaleFrom = 2,
 #'   type = "equipercentile", smooth = "loglinear"
 #' )
+#' \dontshow{
+#'   file.remove(f1)
+#'   file.remove(f2)
+#'   file.remove(f3)
 #' }
-#'
+#' @export
+
 runEquateObserved <- function(config, data = NULL, scaleTo = 1, scaleFrom = 2, type = "equipercentile", smooth = "loglinear", degrees = list(3, 1), boot = TRUE, reps = 100, ...) {
   if (class(config) != "PROsetta_config") {
     stop("config must be a class of PROsetta_config")
@@ -689,16 +855,39 @@ runEquateObserved <- function(config, data = NULL, scaleTo = 1, scaleFrom = 2, t
 #'
 #' @return A list containing crosswalk tables.
 #'
-#' @export
-#'
 #' @examples
-#' solution    <- runCalibration(cfg_asq)
-#' score_table <- runRSSS(cfg_asq, calibration = solution)
-#' 
-#' cfg_asq2                <- cfg_asq
-#' cfg_asq2@linking_method <- "SL"
-#' solution                <- runLinking(cfg_asq2, technical = list(NCYCLES = 1000))
-#' score_table_linking     <- runRSSS(cfg_asq2, calibration = solution)
+#' \dontshow{
+#' f1 <- tempfile()
+#' f2 <- tempfile()
+#' f3 <- tempfile()
+#' write.csv(response_asq, f1, row.names = FALSE)
+#' write.csv(itemmap_asq, f2, row.names = FALSE)
+#' write.csv(anchor_asq, f3, row.names = FALSE)
+#' cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
+#' }
+#' \donttest{
+#' write.csv(response_asq, "response.csv", row.names = FALSE)
+#' write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
+#' write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
+#' cfg <- createConfig(
+#'   response_file = "response.csv",
+#'   itemmap_file = "itemmap.csv",
+#'   anchor_file = "anchor.csv")
+#' }
+#' solution    <- runCalibration(cfg)
+#' score_table <- runRSSS(cfg, calibration = solution)
+#'
+#' cfg2                    <- cfg
+#' cfg2@linking_method     <- "SL"
+#' solution                <- runLinking(cfg2, technical = list(NCYCLES = 1000))
+#' score_table_linking     <- runRSSS(cfg2, calibration = solution)
+#' \dontshow{
+#'   file.remove(f1)
+#'   file.remove(f2)
+#'   file.remove(f3)
+#' }
+#' @export
+
 runRSSS <- function(config, data = NULL, calibration, priorMean = 0.0, priorSD = 1.0, minTheta = -4.0, maxTheta = 4.0, inc = 0.01, minScore = 1, Tscore = TRUE) {
   if (class(config) != "PROsetta_config") {
     stop("config must be a class of PROsetta_config")
@@ -751,12 +940,12 @@ runRSSS <- function(config, data = NULL, calibration, priorMean = 0.0, priorSD =
       }
     }
 
-    min_raw_score <- 0 # minimum obtainable raw score
-    max_raw_score <- sum(NCAT) - ni # maximum obtainable raw score
-    n_score <- max_raw_score - min_raw_score + 1 # number of score points
-    inv_TCC <- numeric(n_score) # initialize TCC scoring table
-    raw_score <- min_raw_score:max_raw_score # raw scores
-    LH <- matrix(0, nq, n_score) # initialize distribution of summed scores
+    min_raw_score <- 0                                 # minimum obtainable raw score
+    max_raw_score <- sum(NCAT) - ni                    # maximum obtainable raw score
+    n_score       <- max_raw_score - min_raw_score + 1 # number of score points
+    inv_TCC       <- numeric(n_score)                  # initialize TCC scoring table
+    raw_score     <- min_raw_score:max_raw_score       # raw scores
+    LH            <- matrix(0, nq, n_score)            # initialize distribution of summed scores
 
     ncat <- NCAT[1]
     max_score <- 0
@@ -765,11 +954,11 @@ runRSSS <- function(config, data = NULL, calibration, priorMean = 0.0, priorSD =
     idx <- ncat
 
     for (i in 2:ni) {
-      ncat <- NCAT[i] # number of categories for item i
-      max_score <- ncat - 1 # maximum score for item i
-      score <- 0:max_score # score values for item i
-      prob <- pp[, i, 1:ncat] # category probabilities for item i
-      pLH <- matrix(0, nq, n_score) # place holder for LH
+      ncat      <- NCAT[i]                # number of categories for item i
+      max_score <- ncat - 1               # maximum score for item i
+      score     <- 0:max_score            # score values for item i
+      prob      <- pp[, i, 1:ncat]        # category probabilities for item i
+      pLH       <- matrix(0, nq, n_score) # place holder for LH
 
       for (k in 1:ncat) {
         for (h in 1:idx) {
@@ -784,27 +973,24 @@ runRSSS <- function(config, data = NULL, calibration, priorMean = 0.0, priorSD =
     }
 
     scale_score <- numeric(n_score) # score table for EAP
-    SE <- numeric(n_score) # SE for EAP
-    prior <- dnorm((theta - priorMean) / priorSD)
-    posterior <- LH * prior
-    den <- colSums(posterior)
-    den <- matrix(rep(den, rep(nq, n_score)), nq, n_score)
-    posterior <- posterior / den
+    SE          <- numeric(n_score) # SE for EAP
+    prior       <- dnorm((theta - priorMean) / priorSD)
+    posterior   <- LH * prior
+    den         <- colSums(posterior)
+    den         <- matrix(rep(den, rep(nq, n_score)), nq, n_score)
+    posterior   <- posterior / den
 
     for (j in 1:n_score) {
-      scale_score[j] <- sum(posterior[, j] * theta) / sum(posterior[, j]) # EAP
+      scale_score[j] <- sum(posterior[, j] * theta) / sum(posterior[, j])                   # EAP
       SE[j] <- sqrt(sum(posterior[, j] * (theta - scale_score[j])^2) / sum(posterior[, j])) # EAP
     }
 
-    if (minScore == 1) {
-      raw_score <- raw_score + ni
-    }
     if (!base0) {
       raw_score <- raw_score + ni
     }
     if (Tscore) {
       scale_score <- round(scale_score * 10 + 50, 1)
-      SE <- round(SE * 10, 1)
+      SE          <- round(SE * 10, 1)
     }
 
     rsss_table <- data.frame(Raw = raw_score, Scale = scale_score, SE)

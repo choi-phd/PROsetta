@@ -36,11 +36,31 @@ An \code{equate} object containing the test equating result. The printed summary
 Performs equipercentile test equating between two scales.
 }
 \examples{
-\dontrun{
-solution <- runEquateObserved(cfg_asq,
+\dontshow{
+f1 <- tempfile()
+f2 <- tempfile()
+f3 <- tempfile()
+write.csv(response_asq, f1, row.names = FALSE)
+write.csv(itemmap_asq, f2, row.names = FALSE)
+write.csv(anchor_asq, f3, row.names = FALSE)
+cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
+}
+\donttest{
+write.csv(response_asq, "response.csv", row.names = FALSE)
+write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
+write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
+cfg <- createConfig(
+  response_file = "response.csv",
+  itemmap_file = "itemmap.csv",
+  anchor_file = "anchor.csv")
+}
+solution <- runEquateObserved(cfg,
   scaleTo = 1, scaleFrom = 2,
   type = "equipercentile", smooth = "loglinear"
 )
+\dontshow{
+  file.remove(f1)
+  file.remove(f2)
+  file.remove(f3)
 }
-
 }
