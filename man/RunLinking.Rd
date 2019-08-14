@@ -20,11 +20,31 @@ A list containing the scale linking results. These are obtained with \code{\link
 Performs scale linking and obtains a set of transformation coefficients.
 }
 \examples{
-\dontrun{
-cfg_asq2 <- cfg_asq
-cfg_asq2@linking_method <- "SL"
-solution <- runLinking(cfg_asq2, technical = list(NCYCLES = 1000))
-solution$link@constants$SL
+\dontshow{
+f1 <- tempfile()
+f2 <- tempfile()
+f3 <- tempfile()
+write.csv(response_asq, f1, row.names = FALSE)
+write.csv(itemmap_asq, f2, row.names = FALSE)
+write.csv(anchor_asq, f3, row.names = FALSE)
+cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3,
+  linking_method = "SL")
 }
-
+\donttest{
+write.csv(response_asq, "response.csv", row.names = FALSE)
+write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
+write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
+cfg <- createConfig(
+  response_file = "response.csv",
+  itemmap_file = "itemmap.csv",
+  anchor_file = "anchor.csv",
+  linking_method = "SL")
+}
+solution <- runLinking(cfg, technical = list(NCYCLES = 1000))
+solution$link@constants$SL
+\dontshow{
+  file.remove(f1)
+  file.remove(f2)
+  file.remove(f3)
+}
 }

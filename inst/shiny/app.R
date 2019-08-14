@@ -1,9 +1,9 @@
-library(shiny)
-library(shinythemes)
-library(shinyWidgets)
-library(shinyjs)
+library(shiny, quietly = TRUE)
+library(shinythemes, quietly = TRUE)
+library(shinyWidgets, quietly = TRUE)
+suppressPackageStartupMessages(library(shinyjs, quietly = TRUE, warn.conflicts = FALSE))
+library(DT, quietly = TRUE, warn.conflicts = FALSE)
 library(PROsetta)
-library(DT)
 
 css_y <- "overflow-y:scroll; max-height: 65vh"
 solver_icon <- list(yes = icon("drafting-compass"), no = icon("drafting-compass"))
@@ -32,14 +32,14 @@ label, .form-group, .progress {
   sidebarLayout(
     sidebarPanel(
       tags$head(
-        tags$style(type="text/css", "select { min-width: 100%; max-width: 100%; }"),
-        tags$style(type="text/css", ".span4 { min-width: 100%; max-width: 100%; }"),
-        tags$style(type="text/css", ".well { min-width: 100%; max-width: 100%; }"),
-        tags$style(type="text/css", "#textoutput { background-color: rgba(64,64,64,1); color: cyan; overflow-y:auto; height: 64px; display: flex; flex-direction: column-reverse; }"),
-        tags$style(type="text/css", ".shiny-notification { font-size: 20px; background-color: #404040; color: #fff; }"),
-        tags$style(type="text/css", "#shiny-notification-panel { width: 500px; }")
+        tags$style(type = "text/css", "select { min-width: 100%; max-width: 100%; }"),
+        tags$style(type = "text/css", ".span4 { min-width: 100%; max-width: 100%; }"),
+        tags$style(type = "text/css", ".well { min-width: 100%; max-width: 100%; }"),
+        tags$style(type = "text/css", "#textoutput { background-color: rgba(64,64,64,1); color: cyan; overflow-y:auto; height: 64px; display: flex; flex-direction: column-reverse; }"),
+        tags$style(type = "text/css", ".shiny-notification { font-size: 20px; background-color: #404040; color: #fff; }"),
+        tags$style(type = "text/css", "#shiny-notification-panel { width: 500px; }")
       ),
-      helpText("This is a demo of PROsetta Linking Analysis. (UI work in progress)"),
+      helpText("This is a demo of PROsetta Linking Analysis."),
 
       dropdownButton(
 
@@ -77,7 +77,7 @@ label, .form-group, .progress {
       ),
 
       dropdownButton(
-        label = "Tab visibility", inputId = "tabvisibility.dropdown",
+        label = "Tab visibility", inputId = "tabvisibility_dropdown",
         circle = FALSE, width = "100%", icon = icon("thumbtack"),
         checkboxGroupButtons(
           inputId = "tabvisibility",
@@ -143,9 +143,7 @@ toggleSolverButtons <- function(enable, session) {
   }
 }
 
-updateTabSet <- function(tabset, id, session) {
-
-  tabset <- unique(c(tabset, id))
+updateTabSet <- function(tabset, new_tabset = NULL, add_tabset = NULL, session) {
 
   i1 <- 11:13
   i2 <- 21:24
@@ -154,12 +152,23 @@ updateTabSet <- function(tabset, id, session) {
   i5 <- 51
   is <- list(i1, i2, i3, i4, i5)
 
-  for (i in do.call(c, is)) {
+  if (!is.null(add_tabset)) {
+    new_tabset <- unique(c(tabset, add_tabset))
+  }
+  if (!is.null(new_tabset)) {
+    if (identical(tabset, new_tabset)) {
+      tabset <- 1:5
+    }
+    old_tabs <- do.call(c, is[tabset])
+    new_tabs <- do.call(c, is[new_tabset])
+  }
+
+  for (i in old_tabs[!(old_tabs %in% new_tabs)]) {
     hideTab("tabs", target = as.character(i))
   }
 
-  if (!is.null(tabset)) {
-    for (i in do.call(c, is[tabset])) {
+  if (!is.null(new_tabs)) {
+    for (i in new_tabs[!(new_tabs %in% old_tabs)]) {
       showTab("tabs", target = as.character(i))
     }
   }
@@ -167,17 +176,17 @@ updateTabSet <- function(tabset, id, session) {
   updateCheckboxGroupButtons(
     session = session,
     inputId = "tabvisibility",
-    selected = as.character(tabset)
+    selected = as.character(new_tabset)
   )
 
-  return(tabset)
+  return(new_tabset)
 }
 
-getDataStatus <- function(ok) {
+getDataStatusMsg <- function(ok) {
   if (ok) {
     tmp <- "Files OK. Press the button to run analysis."
   } else {
-    tmp <- "Error: files are not in the correct format."
+    tmp <- "Error: the files are not in the correct format, or the specified ids are not in the files."
   }
   return(tmp)
 }
@@ -200,15 +209,23 @@ assignObject <- function(objname, obj, desc){
   message(tmp)
 }
 
-createConfigFromShiny <- function(input){
-  cfg <- createConfig(
-    anchor_file    = input$anchor_file$datapath,
-    response_file  = input$response_file$datapath,
-    itemmap_file   = input$itemmap_file$datapath,
-    linking_method = input$linking_type,
-    item_id        = input$item_id,
-    person_id      = input$person_id,
-    scale_id       = input$scale_id)
+createConfigFromShiny <- function(input, guess = FALSE) {
+  if (!guess) {
+    cfg <- createConfig(
+      anchor_file    = input$anchor_file$datapath,
+      response_file  = input$response_file$datapath,
+      itemmap_file   = input$itemmap_file$datapath,
+      linking_method = input$linking_type,
+      item_id        = input$item_id,
+      person_id      = input$person_id,
+      scale_id       = input$scale_id)
+  } else {
+    cfg <- createConfig(
+      anchor_file    = input$anchor_file$datapath,
+      response_file  = input$response_file$datapath,
+      itemmap_file   = input$itemmap_file$datapath,
+      linking_method = input$linking_type)
+  }
   return(cfg)
 }
 
@@ -219,77 +236,74 @@ getPath <- function(tmpdir, fn) {
 }
 
 updateLogs <- function(v, newlog) {
-  v$logs <- c(v$logs, newlog)
+  v$logs     <- c(v$logs, newlog)
   v$logstext <- paste0(v$logs, collapse = "\n")
   return(v)
 }
 
+validateData <- function(v, input, session) {
+
+  if (!is.null(input$anchor_file) & !is.null(input$response_file) & !is.null(input$itemmap_file)) {
+    cfg <- createConfigFromShiny(input)
+    v$inputdata <- tryCatch({loadData(cfg)}, warning = function (msg) { warning(msg); return(FALSE) })
+    v$data_exists <- class(v$inputdata) == "PROsetta_data"
+    v <- updateLogs(v, getDataStatusMsg(v$data_exists))
+
+    if (!v$data_exists) {
+      cfg <- createConfigFromShiny(input, guess = TRUE)
+      v$inputdata <- tryCatch({loadData(cfg)}, warning = function (msg) { warning(msg); return(FALSE) })
+      v$data_exists <- class(v$inputdata) == "PROsetta_data"
+      v <- updateLogs(v, "Attempting to guess the IDs..")
+
+      if (v$data_exists) {
+        updateTextInput(session, "item_id", value = cfg@item_id)
+        updateTextInput(session, "person_id", value = cfg@person_id)
+        updateTextInput(session, "scale_id", value = cfg@scale_id)
+        v <- updateLogs(v, getDataStatusMsg(v$data_exists))
+      }
+
+    } else {
+      v$active_tabset <- updateTabSet(v$active_tabset, add_tabset = 1, session = session)
+    }
+    toggleSolverButtons(v$data_exists, session)
+  }
+
+}
+
 server <- function(input, output, session) {
   v <- reactiveValues(
-    data_exists = FALSE,
+    data_exists   = FALSE,
     active_tabset = c(1,2))
 
   toggleSolverButtons(FALSE, session)
 
   observeEvent(input$tabvisibility, {
-    v$active_tabset = as.numeric(input$tabvisibility)
-    updateTabSet(v$active_tabset, v$active_tabset, session)
+    v$active_tabset <- updateTabSet(v$active_tabset, new_tabset = as.numeric(input$tabvisibility), session = session)
   }, ignoreNULL = FALSE)
 
   observeEvent(input$anchor_file, {
-    if (!is.null(input$anchor_file)){
+    if (!is.null(input$anchor_file)) {
       v$anchor_data <- read.csv(input$anchor_file$datapath)
       v <- updateLogs(v, sprintf("Anchor data imported: %i items", dim(v$anchor_data)[1]))
     }
-    if (!is.null(input$anchor_file) & !is.null(input$response_file) & !is.null(input$itemmap_file)) {
-      cfg <- createConfigFromShiny(input)
-      v$inputdata <- try(loadData(cfg))
-      v$data_exists <- class(v$inputdata) == "PROsetta_data"
-      v <- updateLogs(v, getDataStatus(v$data_exists))
-
-      if (v$data_exists) {
-        v$active_tabset <- updateTabSet(v$active_tabset, 1, session)
-      }
-
-      toggleSolverButtons(v$data_exists, session)
-    }
+    v <- validateData(v, input, session)
   })
 
   observeEvent(input$response_file, {
-    if (!is.null(input$response_file)){
+    if (!is.null(input$response_file)) {
       v$response_data <- read.csv(input$response_file$datapath)
       v <- updateLogs(v, sprintf("Response data imported: %i cases * %i items", dim(v$response_data)[1], dim(v$response_data)[2] - 1))
     }
-    if (!is.null(input$anchor_file) & !is.null(input$response_file) & !is.null(input$itemmap_file)){
-      cfg <- createConfigFromShiny(input)
-      v$inputdata <- try(loadData(cfg))
-      v$data_exists <- class(v$inputdata) == "PROsetta_data"
-      v <- updateLogs(v, getDataStatus(v$data_exists))
-
-      if (v$data_exists) {
-        v$active_tabset <- updateTabSet(v$active_tabset, 1, session)
-      }
-      toggleSolverButtons(v$data_exists, session)
-    }
+    v <- validateData(v, input, session)
   })
 
   observeEvent(input$itemmap_file, {
-    if (!is.null(input$itemmap_file)){
+    if (!is.null(input$itemmap_file)) {
       v$itemmap_data <- read.csv(input$itemmap_file$datapath)
       v$n.items <- dim(v$itemmap_data)[1]
       v <- updateLogs(v, sprintf("Item map imported: %i items", v$n.items))
     }
-    if (!is.null(input$anchor_file) & !is.null(input$response_file) & !is.null(input$itemmap_file)){
-      cfg <- createConfigFromShiny(input)
-      v$inputdata <- try(loadData(cfg))
-      v$data_exists <- class(v$inputdata) == "PROsetta_data"
-      v <- updateLogs(v, getDataStatus(v$data_exists))
-
-      if (v$data_exists) {
-        v$active_tabset = updateTabSet(v$active_tabset, 1, session)
-      }
-      toggleSolverButtons(v$data_exists, session)
-    }
+    v <- validateData(v, input, session)
   })
 
   observeEvent(input$rundescriptive, {
@@ -309,13 +323,13 @@ server <- function(input, output, session) {
     assignObject("shiny_desc", v$desctable, "Descriptives tab")
     v$classical <- runClassical(cfg, v$inputdata)
     assignObject("shiny_alpha", v$classical, "Classical tab")
-    v$classical2 <- try(runClassical(cfg, v$inputdata, omega = T, fm = "ml")[["Omega"]])
+    v$classical2 <- try(runClassical(cfg, v$inputdata, omega = TRUE, fm = "ml")[["Omega"]])
     assignObject("shiny_omega", v$classical2, "Classical (omega) tab")
 
     v$time <- Sys.time() - v$time
     v <- updateLogs(v, sprintf("Done in %7.3fs : run descriptive", v$time))
 
-    updateTabSet(v$active_tabset, 2, session)
+    v$active_tabset <- updateTabSet(v$active_tabset, add_tabset = 2, session = session)
     toggleSolverButtons(TRUE, session)
 
   })
@@ -325,7 +339,7 @@ server <- function(input, output, session) {
 
     toggleSolverButtons(FALSE, session)
 
-    progress = Progress$new(session)
+    progress <- Progress$new(session)
     on.exit(progress$close())
     progress$set(message = 'Computing..',
                  detail = 'This may take a while.')
@@ -335,7 +349,7 @@ server <- function(input, output, session) {
     cfg <- createConfigFromShiny(input)
     assignObject("shiny_config", cfg, "PROsetta_config object")
 
-    v$inputdata = loadData(cfg)
+    v$inputdata <- loadData(cfg)
     assignObject("shiny_data", v$inputdata, "PROsetta_data object")
 
     updateSliderTextInput(
@@ -345,13 +359,13 @@ server <- function(input, output, session) {
       selected = min(v$item_id_to_plot, v$n.items)
     )
 
-    v$calib <- runCalibration(cfg, v$inputdata)
+    v$calib <- runCalibration(cfg)
     assignObject("shiny_calib", v$calib, "Calibration result (full object)")
-    v$calib_params = mirt::coef(v$calib, IRTpars = TRUE, simplify = TRUE)$items
+    v$calib_params <- mirt::coef(v$calib, IRTpars = TRUE, simplify = TRUE)$items
     assignObject("shiny_params", v$calib_params, "Calibration result tab")
-    v$plot_itemfit  = mirt::itemfit(v$calib, empirical.plot = v$item_id_to_plot)
+    v$plot_itemfit <- mirt::itemfit(v$calib, empirical.plot = v$item_id_to_plot)
     assignObject("shiny_itemfit", v$plot_itemfit, "Item fit plot tab")
-    v$plot_iteminfo = mirt::itemplot(v$calib, item = v$item_id_to_plot, type = "info")
+    v$plot_iteminfo <- mirt::itemplot(v$calib, item = v$item_id_to_plot, type = "info")
     assignObject("shiny_iteminfo", v$plot_iteminfo, "Item info tab")
 
     tmp <- try(mirt::itemfit(v$calib, "S_X2", na.rm = TRUE), silent = T)
@@ -359,16 +373,16 @@ server <- function(input, output, session) {
       tmp <- try(mirt::itemfit(v$calib, "S_X2"))
     }
 
-    v$table_itemfit = tmp
+    v$table_itemfit <- tmp
     assignObject("shiny_itemfittable", v$table_itemfit, "Item fit table tab")
 
-    v$crosswalk_calibration <- runRSSS(cfg, v$inputdata, v$calib)
+    v$crosswalk_calibration <- runRSSS(cfg, calibration = v$calib)
     assignObject("shiny_crosswalk_calibration", v$crosswalk_calibration, "Crosswalk (calibration) tab")
 
     v$time <- Sys.time() - v$time
     v <- updateLogs(v, sprintf("Done in %7.3fs : run calibration", v$time))
 
-    v$active_tabset <- updateTabSet(v$active_tabset, 3, session)
+    v$active_tabset <- updateTabSet(v$active_tabset, add_tabset = 3, session = session)
     toggleSolverButtons(TRUE, session)
 
   })
@@ -380,11 +394,11 @@ server <- function(input, output, session) {
     toggleSolverButtons(FALSE, session)
 
     if (!(input$linking_type %in% c("MM", "MS", "HB", "SL", "LS"))) {
-      v$text = "Linking method must be one of the following: 'MM', 'MS', 'HB', 'SL', 'LS'."
+      v <- updateLogs(v, "Linking method must be one of the following: 'MM', 'MS', 'HB', 'SL', 'LS'.")
       break
     }
 
-    progress = Progress$new(session)
+    progress <- Progress$new(session)
     on.exit(progress$close())
     progress$set(message = 'Computing..',
                   detail = 'This may take a while.')
@@ -398,20 +412,20 @@ server <- function(input, output, session) {
     v$inputdata <- loadData(cfg)
     assignObject("shiny_data", v$inputdata, "PROsetta_data object")
 
-    v$linking <- runLinking(cfg, v$inputdata, technical = list(NCYCLES = 1000))
+    v$linking <- runLinking(cfg, technical = list(NCYCLES = 1000))
     assignObject("shiny_link", v$linking, "Linking result (full object)")
     v$linking_constants <- v$linking$link@constants$SL
     assignObject("shiny_link_constants", v$linking_constants, "Linking constants tab")
     v$transformed_params <- v$linking$pars@pars$From
     assignObject("shiny_transformed_params", v$transformed_params, "Transformed parameters tab")
 
-    v$crosswalk_linking <- runRSSS(cfg, v$inputdata, v$linking)
+    v$crosswalk_linking <- runRSSS(cfg, calibration = v$linking)
     assignObject("shiny_crosswalk_linking", v$crosswalk_linking, "Crosswalk (linking) tab")
 
     v$time <- Sys.time() - v$time
     v <- updateLogs(v, sprintf("Done in %7.3fs : run linking", v$time))
 
-    v$active_tabset <- updateTabSet(v$active_tabset, 4, session)
+    v$active_tabset <- updateTabSet(v$active_tabset, add_tabset = 4, session = session)
     toggleSolverButtons(TRUE, session)
   })
 
@@ -428,30 +442,32 @@ server <- function(input, output, session) {
     cfg <- createConfigFromShiny(input)
     assignObject("shiny_config", cfg, "PROsetta_config object")
 
-    v$inputdata = loadData(cfg)
+    v$inputdata <- loadData(cfg)
     assignObject("shiny_data", v$inputdata, "PROsetta_data object")
 
-    v$outequateequipercentile = runEquateObserved(cfg, v$inputdata, scale_to = 1, scale_from = 2, type = "equipercentile", smooth = "loglinear")
+    v$outequateequipercentile <- runEquateObserved(cfg, scale_to = 1, scale_from = 2, type = "equipercentile", smooth = "loglinear")
     assignObject("shiny_eq", v$outequateequipercentile, "Equating tab")
 
     v$time <- Sys.time() - v$time
     v <- updateLogs(v, sprintf("Done in %7.3fs : run equating", v$time))
 
-    v$active_tabset <- updateTabSet(v$active_tabset, 5, session)
+    v$active_tabset <- updateTabSet(v$active_tabset, add_tabset = 5, session = session)
     toggleSolverButtons(TRUE, session)
 
   })
 
   observeEvent(input$item_id_to_plot, {
-    if (verifyText(input$item_id_to_plot)){
+    if (verifyText(input$item_id_to_plot)) {
       eval(parse(text = sprintf("item_id_to_plot <- c(%s)[1]", input$item_id_to_plot)))
       item_id_to_plot <- min(item_id_to_plot, v$n.items)
-      item_id_to_plot = max(1, item_id_to_plot)
-      v$item_id_to_plot = item_id_to_plot
-      if (is.null(v$calib)) return()
-      v$plot_itemfit  = mirt::itemfit(v$calib, empirical.plot = v$item_id_to_plot)
+      item_id_to_plot <- max(1, item_id_to_plot)
+      v$item_id_to_plot <- item_id_to_plot
+      if (is.null(v$calib)) {
+        return()
+      }
+      v$plot_itemfit <- mirt::itemfit(v$calib, empirical.plot = v$item_id_to_plot)
       assignObject("shiny_itemfit", v$plot_itemfit, "Item fit plot tab")
-      v$plot_iteminfo = mirt::itemplot(v$calib, item = v$item_id_to_plot, type = "info")
+      v$plot_iteminfo <- mirt::itemplot(v$calib, item = v$item_id_to_plot, type = "info")
       assignObject("shiny_iteminfo", v$plot_iteminfo, "Item info tab")
     }
   })
@@ -481,7 +497,7 @@ server <- function(input, output, session) {
 
   output$export_data <- downloadHandler(
     filename = function() {
-      paste("data-", Sys.Date(), ".zip", sep="")
+      paste0("data-", Sys.Date(), ".zip")
     },
     content = function(fname) {
 
@@ -489,24 +505,27 @@ server <- function(input, output, session) {
       tmpdir <- tempdir()
 
       for (i in v$active_tabset) {
-        if (i == 1){
-          if (!is.null(v$anchor_data)){
-            path = getPath(tmpdir, "raw.data.anchor.csv")
-            fs = c(fs, path)
+        if (i == 1) {
+
+          if (!is.null(v$anchor_data)) {
+            path <- getPath(tmpdir, "raw_data_anchor.csv")
+            fs <- c(fs, path)
             write.csv(v$anchor_data, path, row.names = F)
           }
-          if (!is.null(v$response_data)){
-            path = getPath(tmpdir, "raw.data.response.csv")
-            fs = c(fs, path)
+          if (!is.null(v$response_data)) {
+            path <- getPath(tmpdir, "raw_data_response.csv")
+            fs <- c(fs, path)
             write.csv(v$response_data, path, row.names = F)
           }
-          if (!is.null(v$itemmap_data)){
-            path = getPath(tmpdir, "raw.data.itemmap.csv")
-            fs = c(fs, path)
+          if (!is.null(v$itemmap_data)) {
+            path <- getPath(tmpdir, "raw_data_itemmap.csv")
+            fs <- c(fs, path)
             write.csv(v$itemmap_data, path, row.names = F)
           }
+
         }
         if (i == 2) {
+
           if (!is.null(v$freqtable)) {
             path <- getPath(tmpdir, "basic_frequency.csv")
             fs <- c(fs, path)
@@ -529,76 +548,84 @@ server <- function(input, output, session) {
             tmp <- paste0(capture.output(v$classical2), collapse = "\n")
             write(tmp, path)
           }
+
         }
         if (i == 3) {
 
           if (!is.null(v$calib_params)) {
-            path = getPath(tmpdir, "calib_params.csv")
-            fs = c(fs, path)
+            path <- getPath(tmpdir, "calib_params.csv")
+            fs <- c(fs, path)
             write.csv(v$calib_params, path)
           }
 
-          n.items = dim(v$calib@data$data)[2]
+          n.items <- dim(v$calib@data$data)[2]
 
-          if (!is.null(v$calib)){
-            path = getPath(tmpdir, "calib.itemfit.pdf")
-            fs = c(fs, path)
+          if (!is.null(v$calib)) {
+
+            path <- getPath(tmpdir, "calib_itemfit.pdf")
+            fs <- c(fs, path)
             pdf(path)
-            for (id in 1:n.items){
-              p = mirt::itemfit(v$calib, empirical.plot = id)
+            for (id in 1:n.items) {
+              p <- mirt::itemfit(v$calib, empirical.plot = id)
               print(p)
             }
             dev.off()
 
-            path = getPath(tmpdir, "calib.iteminfo.pdf")
-            fs = c(fs, path)
+            path <- getPath(tmpdir, "calib_iteminfo.pdf")
+            fs <- c(fs, path)
             pdf(path)
-            for (id in 1:n.items){
-              p = mirt::itemplot(v$calib, item = id, type = "info")
+            for (id in 1:n.items) {
+              p <- mirt::itemplot(v$calib, item = id, type = "info")
               print(p)
             }
             dev.off()
+
           }
 
-          if (!is.null(v$table_itemfit)){
-            path = getPath(tmpdir, "calib.fit.csv")
-            fs = c(fs, path)
+          if (!is.null(v$table_itemfit)) {
+            path <- getPath(tmpdir, "calib_fit.csv")
+            fs <- c(fs, path)
             write.csv(v$table_itemfit, path, row.names = F)
           }
-          if (!is.null(v$crosswalk_calibration)){
-            path = getPath(tmpdir, "crosswalk_calibration.txt")
-            fs = c(fs, path)
-            tmp = paste0(capture.output(v$crosswalk_calibration), collapse = "\n")
+          if (!is.null(v$crosswalk_calibration)) {
+            path <- getPath(tmpdir, "crosswalk_calibration.txt")
+            fs <- c(fs, path)
+            tmp <- paste0(capture.output(v$crosswalk_calibration), collapse = "\n")
             write(tmp, path)
           }
+
         }
 
-        if (i == 4){
-          if (!is.null(v$linking_constants)){
-            path = getPath(tmpdir, "linking_constants.csv")
-            fs = c(fs, path)
+        if (i == 4) {
+
+          if (!is.null(v$linking_constants)) {
+            path <- getPath(tmpdir, "linking_constants.csv")
+            fs <- c(fs, path)
             write.csv(v$linking_constants, path)
           }
-          if (!is.null(v$transformed_params)){
-            path = getPath(tmpdir, "transformed_params.csv")
-            fs = c(fs, path)
+          if (!is.null(v$transformed_params)) {
+            path <- getPath(tmpdir, "transformed_params.csv")
+            fs <- c(fs, path)
             write.csv(v$transformed_params, path)
           }
-          if (!is.null(v$crosswalk_linking)){
-            path = getPath(tmpdir, "crosswalk_linking.txt")
-            fs = c(fs, path)
-            tmp = paste0(capture.output(v$crosswalk_linking), collapse = "\n")
+          if (!is.null(v$crosswalk_linking)) {
+            path <- getPath(tmpdir, "crosswalk_linking.txt")
+            fs <- c(fs, path)
+            tmp <- paste0(capture.output(v$crosswalk_linking), collapse = "\n")
             write(tmp, path)
           }
+
         }
 
-        if (i == 5){
-          if (!is.null(v$outequateequipercentile)){
-            path = getPath(tmpdir, "equating_constants.txt")
-            fs = c(fs, path)
-            tmp = paste0(capture.output(v$outequateequipercentile), collapse = "\n")
+        if (i == 5) {
+
+          if (!is.null(v$outequateequipercentile)) {
+            path <- getPath(tmpdir, "equating_constants.txt")
+            fs <- c(fs, path)
+            tmp <- paste0(capture.output(v$outequateequipercentile), collapse = "\n")
             write(tmp, path)
           }
+
         }
       }
       zip(zipfile = fname, files = fs, flags = "-j")
