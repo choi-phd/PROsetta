@@ -71,15 +71,30 @@ Creates a config object for PROsetta
 }}
 
 \examples{
-
-\dontrun{
+\dontshow{
+f1 <- tempfile()
+f2 <- tempfile()
+f3 <- tempfile()
+write.csv(response_asq, f1, row.names = FALSE)
+write.csv(itemmap_asq, f2, row.names = FALSE)
+write.csv(anchor_asq, f3, row.names = FALSE)
+cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3,
+  linking_method = "FIXEDPAR")
+}
+\donttest{
+write.csv(response_asq, "response.csv", row.names = FALSE)
+write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
+write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
 cfg <- createConfig(
-  response_file = "data-raw/dat_axmasq_v2.csv",
-  anchor_file = "data-raw/anchor_axmasq.csv",
-  itemmap_file = "data-raw/imap_axmasq.csv",
-  linking_method = "FIXEDPAR",
-  guess_id = TRUE
+  response_file = "response.csv",
+  itemmap_file = "itemmap.csv",
+  anchor_file = "anchor.csv",
+  linking_method = "FIXEDPAR"
 )
 }
-
+\dontshow{
+  file.remove(f1)
+  file.remove(f2)
+  file.remove(f3)
+}
 }

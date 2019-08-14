@@ -20,17 +20,38 @@ An object containing item calibration results. This object can be used in \code{
 Performs item calibration for the response data based on the supplied anchor information.
 }
 \examples{
-\dontrun{
-solution <- runCalibration(cfg_asq)
+\dontshow{
+f1 <- tempfile()
+f2 <- tempfile()
+f3 <- tempfile()
+write.csv(response_asq, f1, row.names = FALSE)
+write.csv(itemmap_asq, f2, row.names = FALSE)
+write.csv(anchor_asq, f3, row.names = FALSE)
+cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
+}
+\donttest{
+write.csv(response_asq, "response.csv", row.names = FALSE)
+write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
+write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
+cfg <- createConfig(
+  response_file = "response.csv",
+  itemmap_file = "itemmap.csv",
+  anchor_file = "anchor.csv")
+}
+solution <- runCalibration(cfg)
 mirt::coef(solution, IRTpars = TRUE, simplify = TRUE)
 mirt::itemfit(solution, empirical.plot = 1)
 mirt::itemplot(solution, item = 1, type = "info")
 mirt::itemfit(solution, "S_X2", na.rm = TRUE)
 
-cfg_asq2 <- cfg_asq
-cfg_asq2@linking_method <- "SL"
-solution2 <- runCalibration(cfg_asq2)
-solution2 <- runCalibration(cfg_asq2, technical = list(NCYCLES = 1000))
+cfg2 <- cfg
+cfg2@linking_method <- "SL"
+solution2 <- runCalibration(cfg2)
+solution2 <- runCalibration(cfg2, technical = list(NCYCLES = 1000))
 mirt::coef(solution2, IRTpars = TRUE, simplify = TRUE)
+\dontshow{
+  file.remove(f1)
+  file.remove(f2)
+  file.remove(f3)
 }
 }
