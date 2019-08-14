@@ -3,3 +3,4 @@
 ^data-raw$
 ^tutorial$
 ^R/test\.R$
+^cleanup.*$

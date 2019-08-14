@@ -1,4 +1,5 @@
 ## Written by Seung W. Choi (schoi@austin.utexas.edu)
+
 #' @import psych
 #' @import mirt
 #' @import plink
@@ -9,141 +10,180 @@ NULL
 
 #' An S4 class to represent configurations for reading datasets and writing outputs.
 #'
-#' @slot studyName Character. A user-specified name of the study.
-#' @slot inputDirectory Character. The path of the input directory for reading dataset.
-#' @slot outputDirectory Character. The path of the output directory for writing outputs. A new folder is created at the path if it does not exist.
-#' @slot itemID Character. The name of the variable representing item IDs in \code{anchorFile} and \code{itemmapFile}.
-#' @slot personID Character. The name of the variable representing person IDs in \code{responseFile}.
-#' @slot scaleID Character. The name of the variable representing scale IDs in \code{itemmapFile}.
-#' @slot responseFile Character. The filename of a dataset containing IDs and the responses of the items.
-#' @slot itemmapFile Character. The filename for an item map.
-#' @slot anchorFile Character. The filename of a dataset containing the parameters of the items.
-#' @slot linkingMethod Character. The linking method to use. Accepts "\code{MM}", "\code{MS}", "\code{HB}", "\code{SL}", "\code{FIXEDPAR}", or "\code{NONE}".
+#' @slot study_name Character. A user-specified name of the study.
+#' @slot input_directory Character. The path of the input directory for reading dataset.
+#' @slot output_directory Character. The path of the output directory for writing outputs. A new folder is created at the path if it does not exist.
+#' @slot item_id Character. The name of the variable representing item IDs in \code{anchor_file} and \code{itemmap_file}.
+#' @slot person_id Character. The name of the variable representing person IDs in \code{response_file}.
+#' @slot scale_id Character. The name of the variable representing scale IDs in \code{itemmap_file}.
+#' @slot response_file Character. The filename of a dataset containing IDs and the responses of the items.
+#' @slot itemmap_file Character. The filename for an item map.
+#' @slot anchor_file Character. The filename of a dataset containing the parameters of the items.
+#' @slot linking_method Character. The linking method to use. Accepts "\code{MM}", "\code{MS}", "\code{HB}", "\code{SL}", "\code{FIXEDPAR}", or "\code{NONE}".
 #'
-#' @export
+#' @rdname PROsetta_config
 #' @examples
-#' \dontrun{
-#' new.Config = new("PROsetta.Config",
-#'                  inputDirectory = getwd(),
-#'                  anchorFile = "data-raw\\anchor_axmasq.csv",
-#'                  responseFile = "data-raw\\dat_axmasq_v2.csv",
-#'                  itemmapFile = "data-raw\\imap_axmasq.csv",
-#'                  linkingMethod = "FIXEDPAR")
-#' new.Config@itemID = "item_id"
-#' new.Config@personID = "prosettaid"
-#' new.Config@scaleID = "instrument"
+#' \dontshow{
+#' f1 <- tempfile()
+#' f2 <- tempfile()
+#' f3 <- tempfile()
+#' write.csv(response_asq, f1, row.names = FALSE)
+#' write.csv(itemmap_asq, f2, row.names = FALSE)
+#' write.csv(anchor_asq, f3, row.names = FALSE)
+#' cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3,
+#'   linking_method = "FIXEDPAR")
 #' }
+#' \donttest{
+#' write.csv(response_asq, "response.csv", row.names = FALSE)
+#' write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
+#' write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
+#' cfg <- createConfig(
+#'   response_file = "response.csv",
+#'   itemmap_file = "itemmap.csv",
+#'   anchor_file = "anchor.csv",
+#'   linking_method = "FIXEDPAR"
+#' )
+#' }
+#' \dontshow{
+#'   file.remove(f1)
+#'   file.remove(f2)
+#'   file.remove(f3)
+#' }
+#' @export
 
-setClass("PROsetta.Config",
-         slots = c(studyName = "character",
-                   inputDirectory = "character",
-                   outputDirectory = "character",
-                   itemID = "character",
-                   personID = "character",
-                   scaleID = "character",
-                   responseFile = "character",
-                   itemmapFile = "character",
-                   anchorFile = "character",
-                   linkingMethod = "character"),
-         prototype = list(studyName = "PROsetta",
-                          inputDirectory = getwd(),
-                          outputDirectory = getwd(),
-                          itemID = "itemID",
-                          personID = "personID",
-                          scaleID = "scaleID",
-                          responseFile = "",
-                          itemmapFile = "",
-                          anchorFile = "",
-                          linkingMethod = "NONE"),
-         validity = function(object) {
-           if (!dir.exists(object@inputDirectory)) {
-             stop(paste("invalid inputDirectory :", object@inputDirectory))
-           }
-           if (object@outputDirectory != "") {
-             if (!dir.exists(object@outputDirectory)) dir.create(object@outputDirectory, recursive = TRUE)
-           }
-           if (object@responseFile != "") {
-             p = check.file.path(object@inputDirectory, object@responseFile)
-             if (!p$exists) stop(paste("responseFile does not exist :", p$path))
-           }
-           if (object@itemmapFile != "") {
-             p = check.file.path(object@inputDirectory, object@itemmapFile)
-             if (!p$exists) stop(paste("itemmapFile does not exist :", p$path))
-           }
-           if (object@linkingMethod != "NONE" && object@anchorFile != "") {
-             p = check.file.path(object@inputDirectory, object@anchorFile)
-             if (!p$exists) stop(paste("anchorFile does not exist :", p$path))
-           }
-           if (!object@linkingMethod %in% c("MM", "MS", "HB", "SL", "FIXEDPAR", "NONE")){
-             stop("invalid option for linkingMethod")
-           }
-           return (TRUE)
-         }
+setClass("PROsetta_config",
+  slots = c(
+    study_name = "character",
+    input_directory = "character",
+    output_directory = "character",
+    item_id = "character",
+    person_id = "character",
+    scale_id = "character",
+    response_file = "character",
+    itemmap_file = "character",
+    anchor_file = "character",
+    linking_method = "character"
+  ),
+  prototype = list(
+    study_name = "PROsetta",
+    input_directory = getwd(),
+    output_directory = getwd(),
+    item_id = "item_id",
+    person_id = "person_id",
+    scale_id = "scale_id",
+    response_file = "",
+    itemmap_file = "",
+    anchor_file = "",
+    linking_method = "NONE"
+  ),
+  validity = function(object) {
+    if (!dir.exists(object@input_directory)) {
+      stop(paste("invalid input_directory :", object@input_directory))
+    }
+    if (object@output_directory != "") {
+      if (!dir.exists(object@output_directory)) dir.create(object@output_directory, recursive = TRUE)
+    }
+    if (object@response_file != "") {
+      p <- checkFilePath(object@input_directory, object@response_file)
+      if (!p$exists) stop(paste("response_file does not exist :", p$path))
+    }
+    if (object@itemmap_file != "") {
+      p <- checkFilePath(object@input_directory, object@itemmap_file)
+      if (!p$exists) stop(paste("itemmap_file does not exist :", p$path))
+    }
+    if (object@linking_method != "NONE" && object@anchor_file != "") {
+      p <- checkFilePath(object@input_directory, object@anchor_file)
+      if (!p$exists) stop(paste("anchor_file does not exist :", p$path))
+    }
+    if (!object@linking_method %in% c("MM", "MS", "HB", "SL", "FIXEDPAR", "NONE")) {
+      stop("invalid option for linking_method")
+    }
+
+    return(TRUE)
+  }
 )
 
 #' Creates a config object for PROsetta
 #'
 #' Creates a config object for PROsetta
 #'
-#' @param studyName Character. A user-specified name of the study.
-#' @param inputDirectory Character. The path of the input directory for reading dataset. Defaults to \code{getwd()}.
-#' @param outputDirectory Character. The path of the output directory for writing outputs. Defaults to \code{getwd()}. A new folder is created at the path if it does not exist.
-#' @param itemID Character. The name of the variable representing item IDs in \code{anchorFile} and \code{itemmapFile}.
-#' @param personID Character. The name of the variable representing person IDs in \code{responseFile}.
-#' @param scaleID Character. The name of the variable representing scale IDs in \code{itemmapFile}.
-#' @param responseFile Character. The filename of a dataset containing IDs and the responses of the items.
-#' @param itemmapFile Character. The filename for an item map.
-#' @param anchorFile Character. The filename of a dataset containing the parameters of the items.
-#' @param linkingMethod Character. The linking method to use. Accepts "\code{MM}", "\code{MS}", "\code{HB}", "\code{SL}", "\code{FIXEDPAR}", or "\code{NONE}".
-#' @param guessID Logical. If \code{TRUE}, attempts to guess \code{itemID, personID, scaleID}.
-#' @return A \code{\linkS4class{PROsetta.Config}} object.
+#' @param study_name Character. A user-specified name of the study.
+#' @param input_directory Character. The path of the input directory for reading dataset. Defaults to \code{getwd()}.
+#' @param output_directory Character. The path of the output directory for writing outputs. Defaults to \code{getwd()}. A new folder is created at the path if it does not exist.
+#' @param item_id Character. The name of the variable representing item IDs in \code{anchor_file} and \code{itemmap_file}. Guessed if left blank.
+#' @param person_id Character. The name of the variable representing person IDs in \code{response_file}. Guessed if left blank.
+#' @param scale_id Character. The name of the variable representing scale IDs in \code{itemmap_file}. Guessed if left blank.
+#' @param response_file Character. The filename of a dataset containing IDs and the responses of the items.
+#' @param itemmap_file Character. The filename for an item map.
+#' @param anchor_file Character. The filename of a dataset containing the parameters of the items.
+#' @param linking_method Character. The linking method to use. Accepts "\code{MM}", "\code{MS}", "\code{HB}", "\code{SL}", "\code{FIXEDPAR}", or "\code{NONE}".
+#' @return A \code{\linkS4class{PROsetta_config}} object.
 #'
+#' @rdname PROsetta_config
 #' @export
 
-new.config = function(studyName = "Study",
-                      inputDirectory = getwd(), outputDirectory = getwd(),
-                      itemID = "", personID = "", scaleID = "",
-                      responseFile, itemmapFile, anchorFile,
-                      linkingMethod = "FIXEDPAR",
-                      guessID = F) {
-  new.Config = new("PROsetta.Config",
-                   inputDirectory = inputDirectory,
-                   outputDirectory = outputDirectory,
-                   responseFile = responseFile,
-                   itemmapFile = itemmapFile,
-                   anchorFile = anchorFile,
-                   linkingMethod = toupper(linkingMethod))
-  if (guessID){
-    p = check.file.path(inputDirectory, responseFile)
-    if (p$exists) d = read.csv(p$path, as.is = TRUE)
-    ids_response = colnames(d)
+createConfig <- function(study_name = "Study",
+                         input_directory = getwd(), output_directory = getwd(),
+                         item_id = NULL, person_id = NULL, scale_id = NULL,
+                         response_file, itemmap_file, anchor_file,
+                         linking_method = "FIXEDPAR") {
+  cfg <- new("PROsetta_config",
+    input_directory = input_directory,
+    output_directory = output_directory,
+    response_file = response_file,
+    itemmap_file = itemmap_file,
+    anchor_file = anchor_file,
+    linking_method = toupper(linking_method)
+  )
 
-    p = check.file.path(inputDirectory, itemmapFile)
-    if (p$exists) d = read.csv(p$path, as.is = TRUE)
-    ids_itemmap = colnames(d)
+  n_ids <- sum(!is.null(item_id), !is.null(person_id), !is.null(scale_id))
 
-    n_match = rep(NA, dim(d)[2])
-    for (j in 1:dim(d)[2]){ n_match[j] = sum(ids_response %in% d[,j]) }
-    idx = which(n_match == max(n_match))[1]
-    new.Config@itemID = ids_itemmap[idx]
-    cat("ItemID guessed as  : ", new.Config@itemID, "\n")
+  if (n_ids < 3) {
 
-    idx = which(ids_response %in% d[,idx] == F)[1]
-    new.Config@personID = ids_response[idx]
-    cat("PersonID guessed as: ", new.Config@personID, "\n")
+    if (n_ids > 0) {
+      warning("specify item_id, person_id, scale_id all three to override guessing.")
+    }
 
-    n_unique = rep(NA, dim(d)[2])
-    for (j in 1:dim(d)[2]){ n_unique[j] = length(unique(d[,j])) }
-    idx = which((n_unique != max(n_unique)) & (n_unique != 1))[1]
-    new.Config@scaleID = ids_itemmap[idx]
-    cat("ScaleID guessed as : ", new.Config@scaleID, "\n")
+    p <- checkFilePath(input_directory, response_file)
+    if (p$exists) {
+      d <- read.csv(p$path, as.is = TRUE)
+    }
+    ids_response <- colnames(d)
 
+    p <- checkFilePath(input_directory, itemmap_file)
+    if (p$exists) {
+      d <- read.csv(p$path, as.is = TRUE)
+    }
+    ids_itemmap <- colnames(d)
+
+    n_match <- rep(NA, dim(d)[2])
+    for (j in 1:dim(d)[2]) {
+      n_match[j] <- sum(ids_response %in% d[, j])
+    }
+
+    idx <- which(n_match == max(n_match))[1]
+    cfg@item_id <- ids_itemmap[idx]
+    cat(sprintf("item_id guessed as  : %s\n", cfg@item_id))
+
+    idx <- which(ids_response %in% d[, idx] == F)[1]
+    cfg@person_id <- ids_response[idx]
+    cat(sprintf("person_id guessed as: %s\n", cfg@person_id))
+
+    n_unique <- rep(NA, dim(d)[2])
+    for (j in 1:dim(d)[2]) {
+      n_unique[j] <- length(unique(d[, j]))
+    }
+
+    idx <- which((n_unique != max(n_unique)) & (n_unique != 1))[1]
+    cfg@scale_id <- ids_itemmap[idx]
+    cat(sprintf("scale_id guessed as : %s\n", cfg@scale_id))
   } else {
-    new.Config@itemID = itemID
-    new.Config@personID = personID
-    new.Config@scaleID = scaleID
+    cfg@item_id <- item_id
+    cfg@person_id <- person_id
+    cfg@scale_id <- scale_id
   }
-  return(new.Config)
+
+  return(cfg)
 }
 
 #' An S4 class to represent \code{PROsetta} datasets.
@@ -151,18 +191,23 @@ new.config = function(studyName = "Study",
 #' @slot response A list containing IDs and the responses of the items.
 #' @slot itemmap A list containing an item map.
 #' @slot anchor A list containing the parameters of the items.
+#'
 #' @export
 
-setClass("PROsetta.Data",
-         slots = c(response = "list",
-                   itemmap = "list",
-                   anchor = "list"),
-         prototype = list(response = NULL,
-                          itemmap = NULL,
-                          anchor = NULL),
-         validity = function(object){
-           return (TRUE)
-         }
+setClass("PROsetta_data",
+  slots = c(
+    response = "list",
+    itemmap = "list",
+    anchor = "list"
+  ),
+  prototype = list(
+    response = NULL,
+    itemmap = NULL,
+    anchor = NULL
+  ),
+  validity = function(object) {
+    return(TRUE)
+  }
 )
 
 #' Check file path
@@ -173,14 +218,19 @@ setClass("PROsetta.Data",
 #' @param path Absolute or relative path of a file.
 #'
 #' @return a list containing normalized file path and whether it exists.
-#'
-#' @export
-check.file.path = function(abspath, path){
-  p = path
-  if (file.exists(p)) return(list(path = normalizePath(p), exists = T))
-  p = file.path(abspath, path)
-  if (file.exists(p)) return(list(path = normalizePath(p), exists = T))
-  return(list(path = NULL, exists = F))
+
+checkFilePath <- function(abspath, path) {
+  p <- path
+  if (file.exists(p)) {
+    return(list(path = normalizePath(p), exists = TRUE))
+  }
+
+  p <- file.path(abspath, path)
+  if (file.exists(p)) {
+    return(list(path = normalizePath(p), exists = TRUE))
+  }
+
+  return(list(path = NULL, exists = FALSE))
 }
 
 
@@ -188,100 +238,111 @@ check.file.path = function(abspath, path){
 #'
 #' Loads data from the supplied configuration.
 #'
-#' @param Config A PROsetta.Config object. See \linkS4class{PROsetta.Config}.
+#' @param config A PROsetta_config object. See \linkS4class{PROsetta_config}.
 #'
 #' @return An S4-class object containing the loaded data.
 #'
 #' @export
 
-LoadData = function(Config) {
-  if (class(Config) != "PROsetta.Config") {
-    stop("Config must be a class of PROsetta.Config")
-  }
-  Data = new("PROsetta.Data")
-
-  p = check.file.path(Config@inputDirectory, Config@responseFile)
-  if (p$exists){
-    Data@response = read.csv(p$path, as.is = TRUE)
-    if (!(Config@personID %in% names(Data@response))) {
-      warning(sprintf("%s is not included in responseFile", Config@personID))
-    }
+loadData <- function(config) {
+  if (class(config) != "PROsetta_config") {
+    stop("config must be a class of PROsetta_config")
   }
 
-  p = check.file.path(Config@inputDirectory, Config@itemmapFile)
+  data <- new("PROsetta_data")
+
+  p <- checkFilePath(config@input_directory, config@response_file)
   if (p$exists) {
-    Data@itemmap = read.csv(p$path, as.is = TRUE)
-    if (!(Config@itemID %in% names(Data@itemmap))) {
-      warning(sprintf("%s is not included in itemmapFile", Config@itemID))
+    data@response <- read.csv(p$path, as.is = TRUE)
+    if (!(config@person_id %in% names(data@response))) {
+      warning(sprintf("%s is not included in response_file", config@person_id))
     }
   }
-  p = check.file.path(Config@inputDirectory, Config@anchorFile)
+
+  p <- checkFilePath(config@input_directory, config@itemmap_file)
   if (p$exists) {
-    Data@anchor = read.csv(p$path, as.is = TRUE)
-    if (!(Config@itemID %in% names(Data@anchor))) {
-      warning(sprintf("%s is not included in anchorFile", Config@itemID))
+    data@itemmap <- read.csv(p$path, as.is = TRUE)
+    if (!(config@item_id %in% names(data@itemmap))) {
+      warning(sprintf("%s is not included in itemmap_file", config@item_id))
     }
   }
-  if (!is.null(Data@itemmap) && !is.null(Data@anchor)) {
-    if (Config@itemID %in% names(Data@itemmap) && Config@itemID %in% names(Data@anchor)) {
-      if (!all(Data@anchor[[Config@itemID]] %in% Data@itemmap[[Config@itemID]])) {
-        stop(sprintf("%s in anchorFile contains items that are not in itemmapFile", Config@itemID))
+
+  p <- checkFilePath(config@input_directory, config@anchor_file)
+  if (p$exists) {
+    data@anchor <- read.csv(p$path, as.is = TRUE)
+    if (!(config@item_id %in% names(data@anchor))) {
+      warning(sprintf("%s is not included in anchor_file", config@item_id))
+    }
+  }
+
+  if (!is.null(data@itemmap) && !is.null(data@anchor)) {
+    if (config@item_id %in% names(data@itemmap) && config@item_id %in% names(data@anchor)) {
+      if (!all(data@anchor[[config@item_id]] %in% data@itemmap[[config@item_id]])) {
+        stop(sprintf("%s in anchor_file contains items that are not in itemmap_file", config@item_id))
       }
     }
   }
-  if (!is.null(Data@itemmap) && !is.null(Data@response)) {
-    if (!all(Data@itemmap[[Config@itemID]] %in% names(Data@response))) {
-      stop(sprintf("%s in itemmapFile contains items that are not in responseFile", Config@itemID))
+
+  if (!is.null(data@itemmap) && !is.null(data@response)) {
+    if (!all(data@itemmap[[config@item_id]] %in% names(data@response))) {
+      stop(sprintf("%s in itemmap_file contains items that are not in response_file", config@item_id))
     }
   }
-  return(Data)
+
+  return(data)
 }
+
 
 #' Check frequency table for unobserved response categories
 #'
 #' Checks frequency table for unobserved response categories.
 #'
-#' @param Config A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.
-#' @param Data A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.
+#' @param config A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.
+#' @param data A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.
 #'
 #' @return Logical. \code{TRUE} if all categories are present. \code{FALSE} otherwise.
 #'
 #' @export
-CheckFrequency = function(Config, Data = NULL){
-  if (class(Config) != "PROsetta.Config") {
-    stop("Config must be a class of PROsetta.Config")
+
+checkFrequency <- function(config, data = NULL) {
+  if (class(config) != "PROsetta_config") {
+    stop("config must be a class of PROsetta_config")
   }
-  if (is.null(Data)) {
-    Data = LoadData(Config)
-  } else if (class(Data) != "PROsetta.Data") {
-    stop("Data must be a class of PROsetta.Data")
+  if (is.null(data)) {
+    data <- loadData(config)
+  } else if (class(data) != "PROsetta_data") {
+    stop("data must be a class of PROsetta_data")
   }
-  tmp = RunFrequency(Config, Data, checkFrequency = F)
-  ni = dim(tmp)[1]
-  nc = dim(tmp)[2]
-  msg = c()
-  if (sum(is.na(tmp)) > 0){
-    for (i in 1:ni){
-      nm = sum(is.na(tmp[i,]))
-      ncats.observed = nc - nm
-      if (sum(is.na(tmp[i,])) > 0){
-        item.id = rownames(tmp[i,])
-        idx = which(Data@itemmap[[Config@itemID]] == item.id)
-        ncats.expected = Data@itemmap[idx,][['NCAT']]
-        if (ncats.expected != ncats.observed){
-          cats = colnames(tmp[i,])
-          missingcats = which(is.na(tmp[i,]))
-          cats[missingcats] = "missing"
-          cats = paste0(cats, collapse = ", ")
-          msg = c(msg, paste0("    ", item.id, " (", cats, ")"))
+
+  tmp <- runFrequency(config, data, check_frequency = FALSE)
+  ni <- dim(tmp)[1]
+  nc <- dim(tmp)[2]
+  msg <- c()
+
+  if (sum(is.na(tmp)) > 0) {
+    for (i in 1:ni) {
+      nm <- sum(is.na(tmp[i, ]))
+      ncats_obs <- nc - nm
+
+      if (nm > 0) {
+        item_id <- rownames(tmp[i, ])
+        idx <- which(data@itemmap[[config@item_id]] == item_id)
+        ncats_exp <- data@itemmap[idx, ][["NCAT"]]
+
+        if (ncats_exp != ncats_obs) {
+          cats <- colnames(tmp[i, ])
+          missingcats <- which(is.na(tmp[i, ]))
+          cats[missingcats] <- "missing"
+          cats <- paste0(cats, collapse = ", ")
+          msg <- c(msg, paste0("    ", item_id, " (", cats, ")"))
         }
       }
     }
   }
-  if (length(msg) > 0){
-    msg = c("The following items have one or more unobserved response categories:", msg)
-    msg = c(msg, "Proceeding to RunCFA or RunCalibration can cause problems.")
-    msg = paste0(msg, collapse = "\n")
+  if (length(msg) > 0) {
+    msg <- c("The following items have one or more unobserved response categories:", msg)
+    msg <- c(msg, "Proceeding to runCFA or runCalibration may cause problems.")
+    msg <- paste0(msg, collapse = "\n")
     warning(msg)
     return(FALSE)
   } else {
@@ -293,113 +354,177 @@ CheckFrequency = function(Config, Data = NULL){
 #'
 #' Obtains a frequency table from the supplied configuration and the dataset.
 #'
-#' @param Config A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.
-#' @param Data A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.
-#' @param checkFrequency Logical. If \code{TRUE}, check the frequency table for missing response categories, and display warning message if any is missing.
+#' @param config A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.
+#' @param data A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.
+#' @param check_frequency Logical. If \code{TRUE}, check the frequency table for missing response categories, and display warning message if any is missing.
 #' @return A \code{data.frame} containing the frequency table of the dataset.
 #'
-#' @export
-#'
 #' @examples
-#' \dontrun{
-#' inputData = new("PROsetta.Data")
-#' inputData@anchor = anchor_asq
-#' inputData@response = response_asq
-#' inputData@itemmap = itemmap_asq
-#' freqTable = RunFrequency(new.Config, inputData)
+#' \dontshow{
+#' f1 <- tempfile()
+#' f2 <- tempfile()
+#' f3 <- tempfile()
+#' write.csv(response_asq, f1, row.names = FALSE)
+#' write.csv(itemmap_asq, f2, row.names = FALSE)
+#' write.csv(anchor_asq, f3, row.names = FALSE)
+#' cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
 #' }
+#' \donttest{
+#' write.csv(response_asq, "response.csv", row.names = FALSE)
+#' write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
+#' write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
+#' cfg <- createConfig(
+#'   response_file = "response.csv",
+#'   itemmap_file = "itemmap.csv",
+#'   anchor_file = "anchor.csv")
+#' }
+#' freqTable <- runFrequency(cfg)
+#' \dontshow{
+#'   file.remove(f1)
+#'   file.remove(f2)
+#'   file.remove(f3)
+#' }
+#' @export
 
-RunFrequency = function(Config, Data = NULL, checkFrequency = T) {
-  if (class(Config) != "PROsetta.Config") {
-    stop("Config must be a class of PROsetta.Config")
+runFrequency <- function(config, data = NULL, check_frequency = TRUE) {
+  if (class(config) != "PROsetta_config") {
+    stop("config must be a class of PROsetta_config")
   }
-  if (is.null(Data)) {
-    Data = LoadData(Config)
-  } else if (class(Data) != "PROsetta.Data") {
-    stop("Data must be a class of PROsetta.Data")
+  if (is.null(data)) {
+    data <- loadData(config)
+  } else if (class(data) != "PROsetta_data") {
+    stop("data must be a class of PROsetta_data")
   }
-  tmp = Data@response[Data@itemmap[[Config@itemID]]]
-  tmp = apply(tmp, 2, table)
-  if (class(tmp) == "list"){
-    catnames = unique(do.call(c, lapply(tmp, names)))
-    Freq = as.data.frame(matrix(NA, length(tmp), length(catnames)))
-    colnames(Freq) = catnames
-    rownames(Freq) = names(tmp)
-    for (i in 1:length(tmp)){
-      cats = names(tmp[[i]])
-      Freq[i,cats] = tmp[[i]]
+
+  tmp <- data@response[data@itemmap[[config@item_id]]]
+  tmp <- apply(tmp, 2, table)
+
+  if (class(tmp) == "list") {
+    catnames <- unique(do.call(c, lapply(tmp, names)))
+    freq <- as.data.frame(matrix(NA, length(tmp), length(catnames)))
+    colnames(freq) <- catnames
+    rownames(freq) <- names(tmp)
+    for (i in 1:length(tmp)) {
+      cats <- names(tmp[[i]])
+      freq[i, cats] <- tmp[[i]]
     }
   }
-  if (class(tmp) == "matrix"){
-    Freq = t(tmp)
+
+  if (class(tmp) == "matrix") {
+    freq <- t(tmp)
   }
-  if (checkFrequency) CheckFrequency(Config, Data)
-  return(Freq)
+
+  if (check_frequency) {
+    checkFrequency(config, data)
+  }
+
+  return(freq)
 }
 
 #' Obtain a descriptive statistics table
 #'
 #' Obtains a table with descriptive statistics for each variable, from the supplied configuration and the dataset.
 #'
-#' @param Config A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.
-#' @param Data A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.
+#' @param config A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.
+#' @param data (Optional) A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.
 #'
 #' @return A \code{data.frame} containing the descriptive statistics (mean, standard deviation, median, ...) of the variables in the dataset. These are calculated with \code{\link[psych]{describe}} in \href{https://CRAN.R-project.org/package=psych}{\code{psych}} package.
 #'
-#' @export
-#'
 #' @examples
-#' \dontrun{
-#' inputData = LoadData(new.Config)
-#' descTable = RunDescriptive(new.Config, inputData)
+#' \dontshow{
+#' f1 <- tempfile()
+#' f2 <- tempfile()
+#' f3 <- tempfile()
+#' write.csv(response_asq, f1, row.names = FALSE)
+#' write.csv(itemmap_asq, f2, row.names = FALSE)
+#' write.csv(anchor_asq, f3, row.names = FALSE)
+#' cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
 #' }
+#' \donttest{
+#' write.csv(response_asq, "response.csv", row.names = FALSE)
+#' write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
+#' write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
+#' cfg <- createConfig(
+#'   response_file = "response.csv",
+#'   itemmap_file = "itemmap.csv",
+#'   anchor_file = "anchor.csv")
+#' }
+#' descTable <- runDescriptive(cfg)
+#' \dontshow{
+#'   file.remove(f1)
+#'   file.remove(f2)
+#'   file.remove(f3)
+#' }
+#' @export
 
-RunDescriptive = function(Config, Data = NULL) {
-  if (class(Config) != "PROsetta.Config") {
-    stop("Config must be a class of PROsetta.Config")
+runDescriptive <- function(config, data = NULL) {
+  if (class(config) != "PROsetta_config") {
+    stop("config must be a class of PROsetta_config")
   }
-  if (is.null(Data)) {
-    Data = LoadData(Config)
-  } else if (class(Data) != "PROsetta.Data") {
-    stop("Data must be a class of PROsetta.Data")
+  if (is.null(data)) {
+    data <- loadData(config)
+  } else if (class(data) != "PROsetta_data") {
+    stop("data must be a class of PROsetta_data")
   }
-  Descriptive = psych::describe(Data@response[Data@itemmap[[Config@itemID]]])[-1]
-  return(Descriptive)
+
+  desc <- psych::describe(data@response[data@itemmap[[config@item_id]]])[-1]
+  return(desc)
 }
 
 #' Run a CTT-based reliability analysis
 #'
 #' Performs a Classial Test Theory (CTT) reliability analysis.
 #'
-#' @param Config A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.
-#' @param Data A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.
+#' @param config A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.
+#' @param data (Optional) A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.
 #' @param omega If TRUE, also obtains McDonald's omega using \code{\link[psych]{omega}} in \href{https://CRAN.R-project.org/package=psych}{\code{psych}} package.
 #' @param ... Additional arguments to pass onto \code{\link[psych]{omega}}.
 #'
 #' @return The results of reliability analysis.
 #'
-#' @export
-#'
 #' @examples
-#' \dontrun{
-#' inputData = LoadData(new.Config)
-#' classicalTable = RunClassical(new.Config, inputData)
-#' classicalTable2 = RunClassical(new.Config, inputData, omega = TRUE)  # also obtains omega
+#' \dontshow{
+#' f1 <- tempfile()
+#' f2 <- tempfile()
+#' f3 <- tempfile()
+#' write.csv(response_asq, f1, row.names = FALSE)
+#' write.csv(itemmap_asq, f2, row.names = FALSE)
+#' write.csv(anchor_asq, f3, row.names = FALSE)
+#' cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
 #' }
+#' \donttest{
+#' write.csv(response_asq, "response.csv", row.names = FALSE)
+#' write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
+#' write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
+#' cfg <- createConfig(
+#'   response_file = "response.csv",
+#'   itemmap_file = "itemmap.csv",
+#'   anchor_file = "anchor.csv")
+#' }
+#' classicalTable <- runClassical(cfg)
+#' classicalTable2 <- runClassical(cfg, omega = TRUE) # also obtains omega
+#' \dontshow{
+#'   file.remove(f1)
+#'   file.remove(f2)
+#'   file.remove(f3)
+#' }
+#' @export
 
-RunClassical = function(Config, Data = NULL, omega = FALSE, ...) {
-  if (class(Config) != "PROsetta.Config") {
-    stop("Config must be a class of PROsetta.Config")
+runClassical <- function(config, data = NULL, omega = FALSE, ...) {
+  if (class(config) != "PROsetta_config") {
+    stop("config must be a class of PROsetta_config")
   }
-  if (is.null(Data)) {
-    Data = LoadData(Config)
-  } else if (class(Data) != "PROsetta.Data") {
-    stop("Data must be a class of PROsetta.Data")
+  if (is.null(data)) {
+    data <- loadData(config)
+  } else if (class(data) != "PROsetta_data") {
+    stop("data must be a class of PROsetta_data")
   }
-  CIA = psych::alpha(Data@response[Data@itemmap[[Config@itemID]]])
+
+  CIA <- psych::alpha(data@response[data@itemmap[[config@item_id]]])
   if (omega) {
-    CIA[["Omega"]] = psych::omega(Data@response[Data@itemmap[[Config@itemID]]], ...)
+    CIA[["Omega"]] <- psych::omega(data@response[data@itemmap[[config@item_id]]], ...)
   }
+
   return(CIA)
 }
 
@@ -408,45 +533,67 @@ RunClassical = function(Config, Data = NULL, omega = FALSE, ...) {
 #'
 #' Performs a one-factor confirmatory factor analysis (CFA) to test unidimensionality.
 #'
-#' @param Config A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.
-#' @param Data A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.
+#' @param config A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.
+#' @param data (Optional) A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.
 #' @param estimator The estimator to be used. Passed onto \code{\link[lavaan]{cfa}} in \href{https://CRAN.R-project.org/package=lavaan}{\code{lavaan}} package.
 #' @param std.lv If \code{TRUE}, the metric of the latent variable is determined by fixing their (residual) variances to 1.0. If \code{FALSE}, the metric of each latent variable is determined by fixing the factor loading of the first indicator to 1.0. Passed onto \code{\link[lavaan]{cfa}}.
 #' @param ... Additional arguments to pass onto \code{\link[lavaan]{cfa}}.
 #'
 #' @return A list containing the CFA results. The models are as follows:
-#' \item{all}{A one-factor model where all items in the \code{itemmap} slot of \code{Data} are loaded onto the factor.}
-#' \item{anchor}{A one-factor model where the items in the \code{anchor} slot of \code{Data} are loaded onto the factor.}
-#'
-#' @export
+#' \item{all}{A one-factor model where all items in the \code{itemmap} slot of \code{data} are loaded onto the factor.}
+#' \item{anchor}{A one-factor model where the items in the \code{anchor} slot of \code{data} are loaded onto the factor.}
 #'
 #' @examples
-#' \dontrun{
-#' inputData = LoadData(new.Config)
-#' outCFA = RunCFA(new.Config, inputData)
-#' summary(outCFA$all, fit.measures = TRUE, standardized = TRUE)
-#' summary(outCFA$anchor, fit.measures = TRUE, standardized = TRUE)
+#' \dontshow{
+#' f1 <- tempfile()
+#' f2 <- tempfile()
+#' f3 <- tempfile()
+#' write.csv(response_asq, f1, row.names = FALSE)
+#' write.csv(itemmap_asq, f2, row.names = FALSE)
+#' write.csv(anchor_asq, f3, row.names = FALSE)
+#' cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
 #' }
+#' \donttest{
+#' write.csv(response_asq, "response.csv", row.names = FALSE)
+#' write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
+#' write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
+#' cfg <- createConfig(
+#'   response_file = "response.csv",
+#'   itemmap_file = "itemmap.csv",
+#'   anchor_file = "anchor.csv")
+#' }
+#' solution <- runCFA(cfg)
+#' summary(solution$all, fit.measures = TRUE, standardized = TRUE)
+#' summary(solution$anchor, fit.measures = TRUE, standardized = TRUE)
+#' \dontshow{
+#'   file.remove(f1)
+#'   file.remove(f2)
+#'   file.remove(f3)
+#' }
+#' @export
 
-RunCFA = function(Config, Data = NULL, estimator = "WLSMV", std.lv = TRUE, ...) {
-  if (class(Config) != "PROsetta.Config") {
-    stop("Config must be a class of PROsetta.Config")
+runCFA <- function(config, data = NULL, estimator = "WLSMV", std.lv = TRUE, ...) {
+  if (class(config) != "PROsetta_config") {
+    stop("config must be a class of PROsetta_config")
   }
-  if (is.null(Data)) {
-    Data = LoadData(Config)
-  } else if (class(Data) != "PROsetta.Data") {
-    stop("Data must be a class of PROsetta.Data")
+  if (is.null(data)) {
+    data <- loadData(config)
+  } else if (class(data) != "PROsetta_data") {
+    stop("data must be a class of PROsetta_data")
   }
-  all.items = Data@itemmap[[Config@itemID]]
-  model.all = paste("Factor =~", paste0(all.items, collapse = " + "))
-  model.all.fit = lavaan::cfa(model.all, Data@response, estimator = estimator, ordered = all.items, std.lv = std.lv, ...)
-  out = list(all = model.all.fit)
-  if (!is.null(Data@anchor)) {
-    anchor.items = Data@anchor[[Config@itemID]]
-    model.anchor = paste("Factor =~", paste0(anchor.items, collapse = " + "))
-    model.anchor.fit = lavaan::cfa(model.anchor, Data@response, estimator = estimator, ordered = anchor.items, std.lv = std.lv, ...)
-    out$anchor = model.anchor.fit
+
+  all_items <- data@itemmap[[config@item_id]]
+  model_all <- paste("Factor =~ ", paste0(all_items, collapse = " + "))
+  model_all_fit <- lavaan::cfa(model_all, data@response, estimator = estimator, ordered = all_items, std.lv = std.lv, ...)
+  out <- list(all = model_all_fit)
+
+  if (!is.null(data@anchor)) {
+    anchor_items <- data@anchor[[config@item_id]]
+    model_anchor <- paste("Factor =~ ", paste0(anchor_items, collapse = " + "))
+    model_anchor_fit <- lavaan::cfa(model_anchor, data@response, estimator = estimator, ordered = anchor_items, std.lv = std.lv, ...)
+    out$anchor <- model_anchor_fit
   }
+
   return(out)
 }
 
@@ -454,110 +601,161 @@ RunCFA = function(Config, Data = NULL, estimator = "WLSMV", std.lv = TRUE, ...) 
 #'
 #' Performs item calibration for the response data based on the supplied anchor information.
 #'
-#' @param Config A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.
-#' @param Data A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.
+#' @param config A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.
+#' @param data A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.
 #' @param ... Additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{\code{mirt}} package.
 #'
 #' @return An object containing item calibration results. This object can be used in \code{\link[mirt:coef-method]{coef}}, \code{\link[mirt]{itemfit}}, \code{\link[mirt]{itemplot}} in \href{https://CRAN.R-project.org/package=mirt}{\code{mirt}} package to extract wanted information.
 #'
-#' @export
-#'
 #' @examples
-#' \dontrun{
-#' inputData = LoadData(new.Config)
-#' outCalib = RunCalibration(new.Config, inputData)
-#' mirt::coef(outCalib, IRTpars = TRUE, simplify = TRUE)
-#' mirt::itemfit(outCalib, empirical.plot = 1)
-#' mirt::itemplot(outCalib, item = 1, type = "info")
-#' mirt::itemfit(outCalib, "S_X2", na.rm = TRUE)
-#'
-#' new.Config@linkingMethod = "SL"
-#' outCalib.Free = RunCalibration(new.Config, inputData)
-#' outCalib.Free = RunCalibration(new.Config, inputData, technical = list(NCYCLES = 1000))
-#' mirt::coef(outCalib.Free, IRTpars = TRUE, simplify = TRUE)
+#' \dontshow{
+#' f1 <- tempfile()
+#' f2 <- tempfile()
+#' f3 <- tempfile()
+#' write.csv(response_asq, f1, row.names = FALSE)
+#' write.csv(itemmap_asq, f2, row.names = FALSE)
+#' write.csv(anchor_asq, f3, row.names = FALSE)
+#' cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
 #' }
-RunCalibration = function(Config, Data = NULL, ...) {
-  if (class(Config) != "PROsetta.Config") {
-    stop("Config must be a class of PROsetta.Config")
+#' \donttest{
+#' write.csv(response_asq, "response.csv", row.names = FALSE)
+#' write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
+#' write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
+#' cfg <- createConfig(
+#'   response_file = "response.csv",
+#'   itemmap_file = "itemmap.csv",
+#'   anchor_file = "anchor.csv")
+#' }
+#' solution <- runCalibration(cfg)
+#' mirt::coef(solution, IRTpars = TRUE, simplify = TRUE)
+#' mirt::itemfit(solution, empirical.plot = 1)
+#' mirt::itemplot(solution, item = 1, type = "info")
+#' mirt::itemfit(solution, "S_X2", na.rm = TRUE)
+#'
+#' cfg2 <- cfg
+#' cfg2@linking_method <- "SL"
+#' solution2 <- runCalibration(cfg2)
+#' solution2 <- runCalibration(cfg2, technical = list(NCYCLES = 1000))
+#' mirt::coef(solution2, IRTpars = TRUE, simplify = TRUE)
+#' \dontshow{
+#'   file.remove(f1)
+#'   file.remove(f2)
+#'   file.remove(f3)
+#' }
+#' @export
+
+runCalibration <- function(config, data = NULL, ...) {
+  if (class(config) != "PROsetta_config") {
+    stop("config must be a class of PROsetta_config")
   }
-  if (is.null(Data)) {
-    Data = LoadData(Config)
-  } else if (class(Data) != "PROsetta.Data") {
-    stop("Data must be a class of PROsetta.Data")
+  if (is.null(data)) {
+    data <- loadData(config)
+  } else if (class(data) != "PROsetta_data") {
+    stop("data must be a class of PROsetta_data")
   }
-  if (Config@linkingMethod == "FIXEDPAR") {
-    parLayout = mirt::mirt(Data@response[Data@itemmap[[Config@itemID]]], 1, itemtype = "graded", pars = "values")
-    fixed = which(parLayout$item %in% Data@anchor[[Config@itemID]])
-    parLayout[fixed, "est"] = FALSE
-    parLayout[which(parLayout$class == "GroupPars"), "est"] = TRUE
+
+  if (config@linking_method == "FIXEDPAR") {
+    par_layout <- mirt::mirt(data@response[data@itemmap[[config@item_id]]], 1, itemtype = "graded", pars = "values")
+    fixed <- which(par_layout$item %in% data@anchor[[config@item_id]])
+    par_layout[fixed, "est"] <- FALSE
+    par_layout[which(par_layout$class == "GroupPars"), "est"] <- TRUE
+
     for (i in fixed) {
-      item = which(Data@anchor[[Config@itemID]] == parLayout$item[i])
-      if (substr(parLayout$name[i], 1, 1) == "a") {
-        parLayout[i, "value"] = Data@anchor[item, "a"]
+      item <- which(data@anchor[[config@item_id]] == par_layout$item[i])
+
+      if (substr(par_layout$name[i], 1, 1) == "a") {
+        par_layout[i, "value"] <- data@anchor[item, "a"]
       } else {
-        k = as.numeric(gsub("[[:alpha:]]", "", parLayout$name[i]))
-        parLayout[i, "value"] = -Data@anchor[item, "a"] * Data@anchor[item, paste0("cb", k)]
+        k <- as.numeric(gsub("[[:alpha:]]", "", par_layout$name[i]))
+        par_layout[i, "value"] <- -data@anchor[item, "a"] * data@anchor[item, paste0("cb", k)]
       }
     }
-    Calibration = mirt::mirt(Data@response[Data@itemmap[[Config@itemID]]], 1, itemtype = "graded", pars = parLayout, ...)
+
+    calibration <- mirt::mirt(data@response[data@itemmap[[config@item_id]]], 1, itemtype = "graded", pars = par_layout, ...)
   } else {
-    Calibration = mirt::mirt(Data@response[Data@itemmap[[Config@itemID]]], 1, itemtype = "graded", ...)
+    calibration <- mirt::mirt(data@response[data@itemmap[[config@item_id]]], 1, itemtype = "graded", ...)
   }
-  #ipar = mirt::coef(Calibration, IRTpars = TRUE, simplify = TRUE)$items
-  return(Calibration)
+  # ipar = mirt::coef(calibration, IRTpars = TRUE, simplify = TRUE)$items
+  return(calibration)
 }
 
 #' Run Scale Linking
 #'
 #' Performs scale linking and obtains a set of transformation coefficients.
 #'
-#' @param Config A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.
-#' @param Data A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.
+#' @param config A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.
+#' @param data (Optional) A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.
 #' @param ... Additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{\code{mirt}} package.
 #'
 #' @return A list containing the scale linking results. These are obtained with \code{\link[plink]{plink-methods}} in \href{https://CRAN.R-project.org/package=plink}{\code{plink}} package.
 #'
-#' @export
-#'
 #' @examples
-#' \dontrun{
-#' inputData = LoadData(new.Config)
-#' outEquate = RunLinking(new.Config, inputData, technical = list(NCYCLES = 1000))
-#' outEquate$link@constants$SL
+#' \dontshow{
+#' f1 <- tempfile()
+#' f2 <- tempfile()
+#' f3 <- tempfile()
+#' write.csv(response_asq, f1, row.names = FALSE)
+#' write.csv(itemmap_asq, f2, row.names = FALSE)
+#' write.csv(anchor_asq, f3, row.names = FALSE)
+#' cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3,
+#'   linking_method = "SL")
 #' }
+#' \donttest{
+#' write.csv(response_asq, "response.csv", row.names = FALSE)
+#' write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
+#' write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
+#' cfg <- createConfig(
+#'   response_file = "response.csv",
+#'   itemmap_file = "itemmap.csv",
+#'   anchor_file = "anchor.csv",
+#'   linking_method = "SL")
+#' }
+#' solution <- runLinking(cfg, technical = list(NCYCLES = 1000))
+#' solution$link@constants$SL
+#' \dontshow{
+#'   file.remove(f1)
+#'   file.remove(f2)
+#'   file.remove(f3)
+#' }
+#' @export
 
-RunLinking = function(Config, Data = NULL, ...) {
-  if (class(Config) != "PROsetta.Config") {
-    stop("Config must be a class of PROsetta.Config")
+runLinking <- function(config, data = NULL, ...) {
+  if (class(config) != "PROsetta_config") {
+    stop("config must be a class of PROsetta_config")
   }
-  if (is.null(Data)) {
-    Data = LoadData(Config)
-  } else if (class(Data) != "PROsetta.Data") {
-    stop("Data must be a class of PROsetta.Data")
+  if (is.null(data)) {
+    data <- loadData(config)
+  } else if (class(data) != "PROsetta_data") {
+    stop("data must be a class of PROsetta_data")
   }
-  if (is.null(Data@anchor)) {
+  if (is.null(data@anchor)) {
     stop("anchor cannot be NULL")
   }
-  if (!Config@linkingMethod %in% c("MM","MS","HB","SL","LS")) {
-    stop("Config@linkingMethod must be one of the following: \"MM\", \"MS\", \"HB\", \"SL\", \"LS\".")
+  if (!config@linking_method %in% c("MM", "MS", "HB", "SL", "LS")) {
+    stop("config@linking_method must be one of the following: 'MM', 'MS', 'HB', 'SL', 'LS'.")
   }
-  Calibration = RunCalibration(Config, Data, ...)
-  ipar = mirt::coef(Calibration, IRTpars = TRUE, simplify = TRUE)$items
-  ni.all = nrow(ipar)
-  ni.anchor = nrow(Data@anchor)
-  maxCat = max(Data@anchor$NCAT)
-  ID.new = data.frame(New = 1:ni.all, ID = Data@itemmap[[Config@itemID]])
-  ID.old = data.frame(Old = 1:ni.anchor, ID = Data@anchor[[Config@itemID]])
-  common = merge(ID.new, ID.old, by = "ID", sort = FALSE)[c("New", "Old")]
-  pars = vector("list", 2)
-  pars[[1]] = ipar
-  pars[[2]] = Data@anchor[c("a", paste0("cb", 1:(maxCat - 1)))]
-  pm.all = as.poly.mod(ni.all, "grm", 1:ni.all)
-  pm.anchor = as.poly.mod(ni.anchor, "grm", 1:ni.anchor)
-  ncat = list(Data@itemmap$NCAT, Data@anchor$NCAT)
-  out = plink::plink(as.irt.pars(pars, common, cat = ncat, list(pm.all, pm.anchor), grp.names=c("From","To")), rescale = Config@linkingMethod, base.grp = 2)
-  rownames(out$pars@pars$From) = ID.new$ID
-  rownames(out$pars@pars$To)   = ID.old$ID
+
+  calibration <- runCalibration(config, data, ...)
+  ipar <- mirt::coef(calibration, IRTpars = TRUE, simplify = TRUE)$items
+  ni_all <- nrow(ipar)
+  ni_anchor <- nrow(data@anchor)
+  maxCat <- max(data@anchor$NCAT)
+  id_new <- data.frame(New = 1:ni_all, ID = data@itemmap[[config@item_id]])
+  id_old <- data.frame(Old = 1:ni_anchor, ID = data@anchor[[config@item_id]])
+  common <- merge(id_new, id_old, by = "ID", sort = FALSE)[c("New", "Old")]
+  pars <- vector("list", 2)
+
+  pars[[1]] <- ipar
+  pars[[2]] <- data@anchor[c("a", paste0("cb", 1:(maxCat - 1)))]
+
+  pm_all <- as.poly.mod(ni_all, "grm", 1:ni_all)
+  pm_anchor <- as.poly.mod(ni_anchor, "grm", 1:ni_anchor)
+  ncat <- list(data@itemmap$NCAT, data@anchor$NCAT)
+  out <- plink::plink(as.irt.pars(pars, common, cat = ncat, list(pm_all, pm_anchor), grp.names = c("From", "To")), rescale = config@linking_method, base.grp = 2)
+
+  rownames(out$pars@pars$From) <- id_new$ID
+  rownames(out$pars@pars$To) <- id_old$ID
+
   return(out)
 }
 
@@ -565,10 +763,10 @@ RunLinking = function(Config, Data = NULL, ...) {
 #'
 #' Performs equipercentile test equating between two scales.
 #'
-#' @param Config A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.
-#' @param Data A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.
-#' @param scaleTo Numeric. The index of the target scale to equate to. This and \code{scaleFrom} below both reference to the information stored in the \code{itemmap} slot of \code{Data} argument. The \code{scaleID} slot of \code{Config} argument needs to be specified as the name of the varible containing the scale IDs in the \code{itemmap} slot.
-#' @param scaleFrom Numeric. The index of the scale in need of test equating.
+#' @param config A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.
+#' @param data A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.
+#' @param scale_to Numeric. The index of the target scale to equate to. This and \code{scale_from} below both reference to the information stored in the \code{itemmap} slot of \code{Data} argument. The \code{scale_id} slot of \code{config} argument needs to be specified as the name of the varible containing the scale IDs in the \code{itemmap} slot.
+#' @param scale_from Numeric. The index of the scale in need of test equating.
 #' @param type The type of equating to be passed onto \code{\link[equate]{equate}} in \href{https://CRAN.R-project.org/package=equate}{\code{equate}} package.
 #' @param smooth The type of smoothing method to be passed onto \code{\link[equate]{presmoothing}} in \href{https://CRAN.R-project.org/package=equate}{\code{equate}} package.
 #' @param degrees The degrees of smoothing to be passed onto \code{\link[equate]{presmoothing}}.
@@ -576,42 +774,67 @@ RunLinking = function(Config, Data = NULL, ...) {
 #' @param reps Numeric. The number of replications in bootsrapping.
 #' @param ... Other arguments to pass onto \code{\link[equate]{equate}}..
 #'
-#' @return An \code{equate} object containing the test equating result. The printed summary statistics indicate the distributional properties of the two supplied scales and the equated scale. The rows titled \code{x} and \code{y} correspond to the scales specified in \code{scaleFrom} and \code{scaleTo} respectively. The row titled \code{yx} corresponds to the \code{scaleFrom} scale transformed to \code{scaleTo}. See \code{\link[equate]{equate}} for details.
-#'
-#' @export
+#' @return An \code{equate} object containing the test equating result. The printed summary statistics indicate the distributional properties of the two supplied scales and the equated scale. The rows titled \code{x} and \code{y} correspond to the scales specified in \code{scale_from} and \code{scale_to} respectively. The row titled \code{yx} corresponds to the \code{scale_from} scale transformed to \code{scale_to}. See \code{\link[equate]{equate}} for details.
 #'
 #' @examples
-#' \dontrun{
-#' inputData = LoadData(new.Config)
-#' outEquateEquipercentile = RunEquateObserved(new.Config, inputData, scaleTo = 1, scaleFrom = 2,
-#'             type = "equipercentile", smooth = "loglinear")
+#' \dontshow{
+#' f1 <- tempfile()
+#' f2 <- tempfile()
+#' f3 <- tempfile()
+#' write.csv(response_asq, f1, row.names = FALSE)
+#' write.csv(itemmap_asq, f2, row.names = FALSE)
+#' write.csv(anchor_asq, f3, row.names = FALSE)
+#' cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
 #' }
+#' \donttest{
+#' write.csv(response_asq, "response.csv", row.names = FALSE)
+#' write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
+#' write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
+#' cfg <- createConfig(
+#'   response_file = "response.csv",
+#'   itemmap_file = "itemmap.csv",
+#'   anchor_file = "anchor.csv")
+#' }
+#' solution <- runEquateObserved(cfg,
+#'   scale_to = 1, scale_from = 2,
+#'   type = "equipercentile", smooth = "loglinear"
+#' )
+#' \dontshow{
+#'   file.remove(f1)
+#'   file.remove(f2)
+#'   file.remove(f3)
+#' }
+#' @export
 
-RunEquateObserved = function(Config, Data = NULL, scaleTo = 1, scaleFrom = 2, type = "equipercentile", smooth = "loglinear", degrees = list(3, 1), boot = TRUE, reps = 100, ...) {
-  if (class(Config) != "PROsetta.Config") {
-    stop("Config must be a class of PROsetta.Config")
+runEquateObserved <- function(config, data = NULL, scale_to = 1, scale_from = 2, type = "equipercentile", smooth = "loglinear", degrees = list(3, 1), boot = TRUE, reps = 100, ...) {
+  if (class(config) != "PROsetta_config") {
+    stop("config must be a class of PROsetta_config")
   }
-  if (is.null(Data)) {
-    Data = LoadData(Config)
-  } else if (class(Data) != "PROsetta.Data") {
-    stop("Data must be a class of PROsetta.Data")
+  if (is.null(data)) {
+    data <- loadData(config)
+  } else if (class(data) != "PROsetta_data") {
+    stop("data must be a class of PROsetta_data")
   }
-  scaleID    = Data@itemmap[[Config@scaleID]]
-  scaleCode  = unique(scaleID)
-  itemsTo    = which(scaleID %in% scaleTo)
-  itemsFrom  = which(scaleID %in% scaleFrom)
-  scoresTo   = rowSums(Data@response[Data@itemmap[[Config@itemID]][itemsTo]])
-  scoresFrom = rowSums(Data@response[Data@itemmap[[Config@itemID]][itemsFrom]])
-  freqTo     = equate::freqtab(Data@response[Data@itemmap[[Config@itemID]]], items = itemsTo)
-  freqFrom   = equate::freqtab(Data@response[Data@itemmap[[Config@itemID]]], items = itemsFrom)
-  scoreStat  = rbind(From = summary(freqFrom), To = summary(freqTo))
-  #plot(x = freqTo, lwd = 2, xlab = "Score", ylab = "Count")
-  #plot(x = sfreqTo, lwd = 2, xlab = "Score", ylab = "Count")
+
+  scale_id    <- data@itemmap[[config@scale_id]]
+  scale_code  <- unique(scale_id)
+  items_to    <- which(scale_id %in% scale_to)
+  items_from  <- which(scale_id %in% scale_from)
+  scores_to   <- rowSums(data@response[data@itemmap[[config@item_id]][items_to]])
+  scores_from <- rowSums(data@response[data@itemmap[[config@item_id]][items_from]])
+  freq_to     <- equate::freqtab(data@response[data@itemmap[[config@item_id]]], items = items_to)
+  freq_from   <- equate::freqtab(data@response[data@itemmap[[config@item_id]]], items = items_from)
+  score_stat  <- rbind(From = summary(freq_from), To = summary(freq_to))
+
+  # plot(x = freq_to, lwd = 2, xlab = "Score", ylab = "Count")
+  # plot(x = sfreq_to, lwd = 2, xlab = "Score", ylab = "Count")
+
   if (smooth != "none") {
-    freqTo   = equate::presmoothing(freqTo, smoothmethod = smooth, degrees = degrees)
-    freqFrom = equate::presmoothing(freqFrom, smoothmethod = smooth, degrees = degrees)
+    freq_to   <- equate::presmoothing(freq_to, smoothmethod = smooth, degrees = degrees)
+    freq_from <- equate::presmoothing(freq_from, smoothmethod = smooth, degrees = degrees)
   }
-  out = equate::equate(freqFrom, freqTo, type = type, boot = boot, reps = reps, ...)
+
+  out <- equate::equate(freq_from, freq_to, type = type, boot = boot, reps = reps, ...)
   return(out)
 }
 
@@ -619,136 +842,175 @@ RunEquateObserved = function(Config, Data = NULL, scaleTo = 1, scaleFrom = 2, ty
 #'
 #' Generates raw-score to scale-score crosswalk tables.
 #'
-#' @param Config A PROsetta.Config object. See \code{\linkS4class{PROsetta.Config}}.
-#' @param Data A PROsetta.Data object. See \code{\link{LoadData}} for loading a dataset.
-#' @param Calibration An object returned from \code{\link{RunCalibration}} or \code{\link{RunLinking}}
-#' @param priorMean Prior mean.
-#' @param priorSD Prior standard deviation.
-#' @param minTheta LL of theta grid.
-#' @param maxTheta UL of theta grid.
+#' @param config A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.
+#' @param data (Optional) A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.
+#' @param calibration An object returned from \code{\link{runCalibration}} or \code{\link{runLinking}}
+#' @param prior_mean Prior mean.
+#' @param prior_sd Prior standard deviation.
+#' @param min_theta LL of theta grid.
+#' @param max_theta UL of theta grid.
 #' @param inc Increment of theta grid.
-#' @param minScore Minimum item score (0 or 1).
-#' @param Tscore TRUE to convert theta to Tscore.
+#' @param min_score Minimum item score (0 or 1).
+#' @param t_score TRUE to convert theta to T-score.
 #'
 #' @return A list containing crosswalk tables.
 #'
-#' @export
-#'
 #' @examples
-#' \dontrun{
-#' inputData = LoadData(new.Config)
-#' outCalib = RunCalibration(new.Config, inputData)
-#' scoreTable = RunRSSS(outCalib)
-#' outEquate = RunLinking(new.Config, inputData, technical = list(NCYCLES = 1000))
-#' scoreTableLinking = RunRSSS(outEquate)
+#' \dontshow{
+#' f1 <- tempfile()
+#' f2 <- tempfile()
+#' f3 <- tempfile()
+#' write.csv(response_asq, f1, row.names = FALSE)
+#' write.csv(itemmap_asq, f2, row.names = FALSE)
+#' write.csv(anchor_asq, f3, row.names = FALSE)
+#' cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
 #' }
+#' \donttest{
+#' write.csv(response_asq, "response.csv", row.names = FALSE)
+#' write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
+#' write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
+#' cfg <- createConfig(
+#'   response_file = "response.csv",
+#'   itemmap_file = "itemmap.csv",
+#'   anchor_file = "anchor.csv")
+#' }
+#' solution    <- runCalibration(cfg)
+#' score_table <- runRSSS(cfg, calibration = solution)
+#'
+#' cfg2                    <- cfg
+#' cfg2@linking_method     <- "SL"
+#' solution                <- runLinking(cfg2, technical = list(NCYCLES = 1000))
+#' score_table_linking     <- runRSSS(cfg2, calibration = solution)
+#' \dontshow{
+#'   file.remove(f1)
+#'   file.remove(f2)
+#'   file.remove(f3)
+#' }
+#' @export
 
-RunRSSS = function(Config, Data = NULL, Calibration, priorMean = 0.0, priorSD = 1.0, minTheta = -4.0, maxTheta = 4.0, inc = 0.01, minScore = 1, Tscore = TRUE) {
-  if (class(Config) != "PROsetta.Config") {
-    stop("Config must be a class of PROsetta.Config")
+runRSSS <- function(config, data = NULL, calibration, prior_mean = 0.0, prior_sd = 1.0, min_theta = -4.0, max_theta = 4.0, inc = 0.01, min_score = 1, t_score = TRUE) {
+  if (class(config) != "PROsetta_config") {
+    stop("config must be a class of PROsetta_config")
   }
-  if (is.null(Data)) {
-    Data = LoadData(Config)
-  } else if (class(Data) != "PROsetta.Data") {
-    stop("Data must be a class of PROsetta.Data")
+  if (is.null(data)) {
+    data <- loadData(config)
+  } else if (class(data) != "PROsetta_data") {
+    stop("data must be a class of PROsetta_data")
   }
-  if (is.null(attr(class(Calibration), "package"))) {
-    item.par = Calibration$pars@pars$From
-  } else if (isS4(Calibration) && attr(class(Calibration), "package") == "mirt") {
-    item.par = mirt::coef(Calibration, IRTpars = TRUE, simplify = TRUE)$items
-  }
-  item.par.by.scale = split(data.frame(item.par), Data@itemmap[[Config@scaleID]])
-  n.scale = length(item.par.by.scale)
-
-  if (!all(minScore %in% c(0, 1))) {
-    stop("minScore must contain only 0 or 1")
+  if (is.null(attr(class(calibration), "package"))) {
+    item_par <- calibration$pars@pars$From
+  } else if (isS4(calibration) && attr(class(calibration), "package") == "mirt") {
+    item_par <- mirt::coef(calibration, IRTpars = TRUE, simplify = TRUE)$items
   }
 
-  if (length(minScore) == 1) {
-    if (n.scale > 1) {
-      minScore = rep(minScore, n.scale + 1)
+  item_par_by_scale <- split(data.frame(item_par), data@itemmap[[config@scale_id]])
+  n_scale <- length(item_par_by_scale)
+
+  if (!all(min_score %in% c(0, 1))) {
+    stop("min_score must contain only 0 or 1")
+  }
+  if (length(min_score) == 1) {
+    if (n_scale > 1) {
+      min_score <- rep(min_score, n_scale + 1)
     }
-  } else if (length(minScore) != n.scale + 1) {
-    stop(sprintf("length of minScore must be either 1 or %i", n.scale + 1))
+  } else if (length(min_score) != n_scale + 1) {
+    stop(sprintf("length of min_score must be either 1 or %i", n_scale + 1))
   }
 
-  rsss = function(ipar, base0) {
-    theta = seq(minTheta, maxTheta, by = inc)
-    nq = length(theta)
-    NCAT = rowSums(!is.na(ipar))
-    maxCat = max(NCAT)
-    DISC = ipar[, 1]
-    CB = ipar[, 2:maxCat]
-    ni = dim(ipar)[1]
-    pp = array(0, c(nq, ni, maxCat))
+  rsss <- function(ipar, base0) {
+    theta <- seq(min_theta, max_theta, by = inc)
+    nq <- length(theta)
+    NCAT <- rowSums(!is.na(ipar))
+    maxCat <- max(NCAT)
+    DISC <- ipar[, 1]
+    CB <- ipar[, 2:maxCat]
+    ni <- dim(ipar)[1]
+    pp <- array(0, c(nq, ni, maxCat))
+
     for (i in 1:ni) {
-      ps = matrix(0, nq, NCAT[i] + 1)
-      ps[, 1] = 1
-      ps[, NCAT[i] + 1] = 0
+      ps <- matrix(0, nq, NCAT[i] + 1)
+      ps[, 1] <- 1
+      ps[, NCAT[i] + 1] <- 0
+
       for (k in 1:(NCAT[i] - 1)) {
-        ps[, k + 1] = 1/(1 + exp(-DISC[i] * (theta - CB[i, k])))
+        ps[, k + 1] <- 1 / (1 + exp(-DISC[i] * (theta - CB[i, k])))
       }
       for (k in 1:NCAT[i]) {
-        pp[, i, k] = ps[, k] - ps[, k + 1]
+        pp[, i, k] <- ps[, k] - ps[, k + 1]
       }
     }
-    min.Raw.Score = 0 #minimum obtainable raw score
-    max.Raw.Score = sum(NCAT) - ni #maximum obtainable raw score
-    nScore = max.Raw.Score - min.Raw.Score + 1 #number of score points
-    TCCinv = numeric(nScore) #initialize TCC scoring table
-    Raw.Score = min.Raw.Score:max.Raw.Score #raw scores
-    LH = matrix(0, nq, nScore) #initializing distribution of summed scores
-    ncat = NCAT[1]
-    maxScore = 0
-    LH[, 1:ncat] = pp[, 1, 1:ncat]
-    idx = ncat
+
+    min_raw_score <- 0                                 # minimum obtainable raw score
+    max_raw_score <- sum(NCAT) - ni                    # maximum obtainable raw score
+    n_score       <- max_raw_score - min_raw_score + 1 # number of score points
+    inv_TCC       <- numeric(n_score)                  # initialize TCC scoring table
+    raw_score     <- min_raw_score:max_raw_score       # raw scores
+    LH            <- matrix(0, nq, n_score)            # initialize distribution of summed scores
+
+    ncat <- NCAT[1]
+    max_score <- 0
+    LH[, 1:ncat] <- pp[, 1, 1:ncat]
+
+    idx <- ncat
+
     for (i in 2:ni) {
-      ncat = NCAT[i]  #number of categories for item i
-      maxScore = ncat - 1 #maximum score for item i
-      score = 0:maxScore #score values for item i
-      prob = pp[, i, 1:ncat] #category probabilities for item i
-      pLH = matrix(0, nq, nScore) #place holder for LH
+      ncat      <- NCAT[i]                # number of categories for item i
+      max_score <- ncat - 1               # maximum score for item i
+      score     <- 0:max_score            # score values for item i
+      prob      <- pp[, i, 1:ncat]        # category probabilities for item i
+      pLH       <- matrix(0, nq, n_score) # place holder for LH
+
       for (k in 1:ncat) {
         for (h in 1:idx) {
-          sco = Raw.Score[h] + score[k]
-          position = which(Raw.Score == sco)
-          pLH[, position] = pLH[, position] + LH[, h] * prob[, k]
+          sco <- raw_score[h] + score[k]
+          position <- which(raw_score == sco)
+          pLH[, position] <- pLH[, position] + LH[, h] * prob[, k]
         }
       }
-      idx = idx + maxScore
-      LH = pLH
+
+      idx <- idx + max_score
+      LH <- pLH
     }
-    Scale.Score = numeric(nScore) #score table for EAP
-    SE = numeric(nScore) #SE for EAP
-    prior = dnorm((theta - priorMean) / priorSD)
-    posterior = LH * prior #posterior distribution
-    den = colSums(posterior)
-    den = matrix(rep(den, rep(nq, nScore)), nq, nScore)
-    posterior = posterior / den
-    for (j in 1:nScore) {
-      Scale.Score[j] = sum(posterior[, j] * theta) / sum(posterior[, j]) #EAP
-      SE[j] = sqrt(sum(posterior[, j] * (theta - Scale.Score[j])^2) / sum(posterior[, j])) #EAP
+
+    scale_score <- numeric(n_score) # score table for EAP
+    SE          <- numeric(n_score) # SE for EAP
+    prior       <- dnorm((theta - prior_mean) / prior_sd)
+    posterior   <- LH * prior
+    den         <- colSums(posterior)
+    den         <- matrix(rep(den, rep(nq, n_score)), nq, n_score)
+    posterior   <- posterior / den
+
+    for (j in 1:n_score) {
+      scale_score[j] <- sum(posterior[, j] * theta) / sum(posterior[, j])                   # EAP
+      SE[j] <- sqrt(sum(posterior[, j] * (theta - scale_score[j])^2) / sum(posterior[, j])) # EAP
     }
+
     if (!base0) {
-      Raw.Score = Raw.Score + ni
+      raw_score <- raw_score + ni
     }
-    if (Tscore) {
-      Scale.Score = round(Scale.Score * 10 + 50, 1)
-      SE = round(SE * 10, 1)
+    if (t_score) {
+      scale_score <- round(scale_score * 10 + 50, 1)
+      SE          <- round(SE * 10, 1)
     }
-    rsss.table = data.frame(Raw = Raw.Score, Scale = Scale.Score, SE)
-    return(rsss.table)
+
+    rsss_table <- data.frame(Raw = raw_score, Scale = scale_score, SE)
+
+    return(rsss_table)
   }
-  if (n.scale == 1) {
-    score.table = rsss(item.par, minScore == 0)
-    return(score.table)
-  } else if (n.scale > 1) {
-    score.table = vector(mode = "list", length = n.scale + 1)
-    for (s in 1:n.scale) {
-      score.table[[s]] = rsss(item.par.by.scale[[s]], minScore[s] == 0)
+
+  if (n_scale == 1) {
+    score_table <- rsss(item_par, min_score == 0)
+    return(score_table)
+  } else if (n_scale > 1) {
+    score_table <- vector(mode = "list", length = n_scale + 1)
+
+    for (s in 1:n_scale) {
+      score_table[[s]] <- rsss(item_par_by_scale[[s]], min_score[s] == 0)
     }
-    score.table[[n.scale + 1]] = rsss(item.par, minScore[n.scale + 1] == 0)
-    names(score.table) = c(names(item.par.by.scale), "combined")
-    return(score.table)
+
+    score_table[[n_scale + 1]] <- rsss(item_par, min_score[n_scale + 1] == 0)
+    names(score_table) <- c(names(item_par_by_scale), "combined")
+
+    return(score_table)
   }
 }
