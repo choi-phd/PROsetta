@@ -765,8 +765,8 @@ runLinking <- function(config, data = NULL, ...) {
 #'
 #' @param config A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.
 #' @param data A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.
-#' @param scaleTo Numeric. The index of the target scale to equate to. This and \code{scaleFrom} below both reference to the information stored in the \code{itemmap} slot of \code{Data} argument. The \code{scale_id} slot of \code{config} argument needs to be specified as the name of the varible containing the scale IDs in the \code{itemmap} slot.
-#' @param scaleFrom Numeric. The index of the scale in need of test equating.
+#' @param scale_to Numeric. The index of the target scale to equate to. This and \code{scale_from} below both reference to the information stored in the \code{itemmap} slot of \code{Data} argument. The \code{scale_id} slot of \code{config} argument needs to be specified as the name of the varible containing the scale IDs in the \code{itemmap} slot.
+#' @param scale_from Numeric. The index of the scale in need of test equating.
 #' @param type The type of equating to be passed onto \code{\link[equate]{equate}} in \href{https://CRAN.R-project.org/package=equate}{\code{equate}} package.
 #' @param smooth The type of smoothing method to be passed onto \code{\link[equate]{presmoothing}} in \href{https://CRAN.R-project.org/package=equate}{\code{equate}} package.
 #' @param degrees The degrees of smoothing to be passed onto \code{\link[equate]{presmoothing}}.
@@ -774,7 +774,7 @@ runLinking <- function(config, data = NULL, ...) {
 #' @param reps Numeric. The number of replications in bootsrapping.
 #' @param ... Other arguments to pass onto \code{\link[equate]{equate}}..
 #'
-#' @return An \code{equate} object containing the test equating result. The printed summary statistics indicate the distributional properties of the two supplied scales and the equated scale. The rows titled \code{x} and \code{y} correspond to the scales specified in \code{scaleFrom} and \code{scaleTo} respectively. The row titled \code{yx} corresponds to the \code{scaleFrom} scale transformed to \code{scaleTo}. See \code{\link[equate]{equate}} for details.
+#' @return An \code{equate} object containing the test equating result. The printed summary statistics indicate the distributional properties of the two supplied scales and the equated scale. The rows titled \code{x} and \code{y} correspond to the scales specified in \code{scale_from} and \code{scale_to} respectively. The row titled \code{yx} corresponds to the \code{scale_from} scale transformed to \code{scale_to}. See \code{\link[equate]{equate}} for details.
 #'
 #' @examples
 #' \dontshow{
@@ -796,7 +796,7 @@ runLinking <- function(config, data = NULL, ...) {
 #'   anchor_file = "anchor.csv")
 #' }
 #' solution <- runEquateObserved(cfg,
-#'   scaleTo = 1, scaleFrom = 2,
+#'   scale_to = 1, scale_from = 2,
 #'   type = "equipercentile", smooth = "loglinear"
 #' )
 #' \dontshow{
@@ -806,7 +806,7 @@ runLinking <- function(config, data = NULL, ...) {
 #' }
 #' @export
 
-runEquateObserved <- function(config, data = NULL, scaleTo = 1, scaleFrom = 2, type = "equipercentile", smooth = "loglinear", degrees = list(3, 1), boot = TRUE, reps = 100, ...) {
+runEquateObserved <- function(config, data = NULL, scale_to = 1, scale_from = 2, type = "equipercentile", smooth = "loglinear", degrees = list(3, 1), boot = TRUE, reps = 100, ...) {
   if (class(config) != "PROsetta_config") {
     stop("config must be a class of PROsetta_config")
   }
@@ -816,25 +816,25 @@ runEquateObserved <- function(config, data = NULL, scaleTo = 1, scaleFrom = 2, t
     stop("data must be a class of PROsetta_data")
   }
 
-  scale_id <- data@itemmap[[config@scale_id]]
-  scaleCode <- unique(scale_id)
-  itemsTo <- which(scale_id %in% scaleTo)
-  itemsFrom <- which(scale_id %in% scaleFrom)
-  scoresTo <- rowSums(data@response[data@itemmap[[config@item_id]][itemsTo]])
-  scoresFrom <- rowSums(data@response[data@itemmap[[config@item_id]][itemsFrom]])
-  freqTo <- equate::freqtab(data@response[data@itemmap[[config@item_id]]], items = itemsTo)
-  freqFrom <- equate::freqtab(data@response[data@itemmap[[config@item_id]]], items = itemsFrom)
-  scoreStat <- rbind(From = summary(freqFrom), To = summary(freqTo))
+  scale_id    <- data@itemmap[[config@scale_id]]
+  scale_code  <- unique(scale_id)
+  items_to    <- which(scale_id %in% scale_to)
+  items_from  <- which(scale_id %in% scale_from)
+  scores_to   <- rowSums(data@response[data@itemmap[[config@item_id]][items_to]])
+  scores_from <- rowSums(data@response[data@itemmap[[config@item_id]][items_from]])
+  freq_to     <- equate::freqtab(data@response[data@itemmap[[config@item_id]]], items = items_to)
+  freq_from   <- equate::freqtab(data@response[data@itemmap[[config@item_id]]], items = items_from)
+  score_stat  <- rbind(From = summary(freq_from), To = summary(freq_to))
 
-  # plot(x = freqTo, lwd = 2, xlab = "Score", ylab = "Count")
-  # plot(x = sfreqTo, lwd = 2, xlab = "Score", ylab = "Count")
+  # plot(x = freq_to, lwd = 2, xlab = "Score", ylab = "Count")
+  # plot(x = sfreq_to, lwd = 2, xlab = "Score", ylab = "Count")
 
   if (smooth != "none") {
-    freqTo <- equate::presmoothing(freqTo, smoothmethod = smooth, degrees = degrees)
-    freqFrom <- equate::presmoothing(freqFrom, smoothmethod = smooth, degrees = degrees)
+    freq_to   <- equate::presmoothing(freq_to, smoothmethod = smooth, degrees = degrees)
+    freq_from <- equate::presmoothing(freq_from, smoothmethod = smooth, degrees = degrees)
   }
 
-  out <- equate::equate(freqFrom, freqTo, type = type, boot = boot, reps = reps, ...)
+  out <- equate::equate(freq_from, freq_to, type = type, boot = boot, reps = reps, ...)
   return(out)
 }
 
@@ -845,13 +845,13 @@ runEquateObserved <- function(config, data = NULL, scaleTo = 1, scaleFrom = 2, t
 #' @param config A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.
 #' @param data (Optional) A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.
 #' @param calibration An object returned from \code{\link{runCalibration}} or \code{\link{runLinking}}
-#' @param priorMean Prior mean.
-#' @param priorSD Prior standard deviation.
-#' @param minTheta LL of theta grid.
-#' @param maxTheta UL of theta grid.
+#' @param prior_mean Prior mean.
+#' @param prior_sd Prior standard deviation.
+#' @param min_theta LL of theta grid.
+#' @param max_theta UL of theta grid.
 #' @param inc Increment of theta grid.
-#' @param minScore Minimum item score (0 or 1).
-#' @param Tscore TRUE to convert theta to Tscore.
+#' @param min_score Minimum item score (0 or 1).
+#' @param t_score TRUE to convert theta to T-score.
 #'
 #' @return A list containing crosswalk tables.
 #'
@@ -888,7 +888,7 @@ runEquateObserved <- function(config, data = NULL, scaleTo = 1, scaleFrom = 2, t
 #' }
 #' @export
 
-runRSSS <- function(config, data = NULL, calibration, priorMean = 0.0, priorSD = 1.0, minTheta = -4.0, maxTheta = 4.0, inc = 0.01, minScore = 1, Tscore = TRUE) {
+runRSSS <- function(config, data = NULL, calibration, prior_mean = 0.0, prior_sd = 1.0, min_theta = -4.0, max_theta = 4.0, inc = 0.01, min_score = 1, t_score = TRUE) {
   if (class(config) != "PROsetta_config") {
     stop("config must be a class of PROsetta_config")
   }
@@ -906,19 +906,19 @@ runRSSS <- function(config, data = NULL, calibration, priorMean = 0.0, priorSD =
   item_par_by_scale <- split(data.frame(item_par), data@itemmap[[config@scale_id]])
   n_scale <- length(item_par_by_scale)
 
-  if (!all(minScore %in% c(0, 1))) {
-    stop("minScore must contain only 0 or 1")
+  if (!all(min_score %in% c(0, 1))) {
+    stop("min_score must contain only 0 or 1")
   }
-  if (length(minScore) == 1) {
+  if (length(min_score) == 1) {
     if (n_scale > 1) {
-      minScore <- rep(minScore, n_scale + 1)
+      min_score <- rep(min_score, n_scale + 1)
     }
-  } else if (length(minScore) != n_scale + 1) {
-    stop(sprintf("length of minScore must be either 1 or %i", n_scale + 1))
+  } else if (length(min_score) != n_scale + 1) {
+    stop(sprintf("length of min_score must be either 1 or %i", n_scale + 1))
   }
 
   rsss <- function(ipar, base0) {
-    theta <- seq(minTheta, maxTheta, by = inc)
+    theta <- seq(min_theta, max_theta, by = inc)
     nq <- length(theta)
     NCAT <- rowSums(!is.na(ipar))
     maxCat <- max(NCAT)
@@ -974,7 +974,7 @@ runRSSS <- function(config, data = NULL, calibration, priorMean = 0.0, priorSD =
 
     scale_score <- numeric(n_score) # score table for EAP
     SE          <- numeric(n_score) # SE for EAP
-    prior       <- dnorm((theta - priorMean) / priorSD)
+    prior       <- dnorm((theta - prior_mean) / prior_sd)
     posterior   <- LH * prior
     den         <- colSums(posterior)
     den         <- matrix(rep(den, rep(nq, n_score)), nq, n_score)
@@ -988,7 +988,7 @@ runRSSS <- function(config, data = NULL, calibration, priorMean = 0.0, priorSD =
     if (!base0) {
       raw_score <- raw_score + ni
     }
-    if (Tscore) {
+    if (t_score) {
       scale_score <- round(scale_score * 10 + 50, 1)
       SE          <- round(SE * 10, 1)
     }
@@ -999,16 +999,16 @@ runRSSS <- function(config, data = NULL, calibration, priorMean = 0.0, priorSD =
   }
 
   if (n_scale == 1) {
-    score_table <- rsss(item_par, minScore == 0)
+    score_table <- rsss(item_par, min_score == 0)
     return(score_table)
   } else if (n_scale > 1) {
     score_table <- vector(mode = "list", length = n_scale + 1)
 
     for (s in 1:n_scale) {
-      score_table[[s]] <- rsss(item_par_by_scale[[s]], minScore[s] == 0)
+      score_table[[s]] <- rsss(item_par_by_scale[[s]], min_score[s] == 0)
     }
 
-    score_table[[n_scale + 1]] <- rsss(item_par, minScore[n_scale + 1] == 0)
+    score_table[[n_scale + 1]] <- rsss(item_par, min_score[n_scale + 1] == 0)
     names(score_table) <- c(names(item_par_by_scale), "combined")
 
     return(score_table)

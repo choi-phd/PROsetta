@@ -4,7 +4,7 @@
 \alias{runEquateObserved}
 \title{Run Test Equating}
 \usage{
-runEquateObserved(config, data = NULL, scaleTo = 1, scaleFrom = 2,
+runEquateObserved(config, data = NULL, scale_to = 1, scale_from = 2,
   type = "equipercentile", smooth = "loglinear", degrees = list(3,
   1), boot = TRUE, reps = 100, ...)
 }
@@ -13,9 +13,9 @@ runEquateObserved(config, data = NULL, scaleTo = 1, scaleFrom = 2,
 
 \item{data}{A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.}
 
-\item{scaleTo}{Numeric. The index of the target scale to equate to. This and \code{scaleFrom} below both reference to the information stored in the \code{itemmap} slot of \code{Data} argument. The \code{scale_id} slot of \code{config} argument needs to be specified as the name of the varible containing the scale IDs in the \code{itemmap} slot.}
+\item{scale_to}{Numeric. The index of the target scale to equate to. This and \code{scale_from} below both reference to the information stored in the \code{itemmap} slot of \code{Data} argument. The \code{scale_id} slot of \code{config} argument needs to be specified as the name of the varible containing the scale IDs in the \code{itemmap} slot.}
 
-\item{scaleFrom}{Numeric. The index of the scale in need of test equating.}
+\item{scale_from}{Numeric. The index of the scale in need of test equating.}
 
 \item{type}{The type of equating to be passed onto \code{\link[equate]{equate}} in \href{https://CRAN.R-project.org/package=equate}{\code{equate}} package.}
 
@@ -30,7 +30,7 @@ runEquateObserved(config, data = NULL, scaleTo = 1, scaleFrom = 2,
 \item{...}{Other arguments to pass onto \code{\link[equate]{equate}}..}
 }
 \value{
-An \code{equate} object containing the test equating result. The printed summary statistics indicate the distributional properties of the two supplied scales and the equated scale. The rows titled \code{x} and \code{y} correspond to the scales specified in \code{scaleFrom} and \code{scaleTo} respectively. The row titled \code{yx} corresponds to the \code{scaleFrom} scale transformed to \code{scaleTo}. See \code{\link[equate]{equate}} for details.
+An \code{equate} object containing the test equating result. The printed summary statistics indicate the distributional properties of the two supplied scales and the equated scale. The rows titled \code{x} and \code{y} correspond to the scales specified in \code{scale_from} and \code{scale_to} respectively. The row titled \code{yx} corresponds to the \code{scale_from} scale transformed to \code{scale_to}. See \code{\link[equate]{equate}} for details.
 }
 \description{
 Performs equipercentile test equating between two scales.
@@ -55,7 +55,7 @@ cfg <- createConfig(
   anchor_file = "anchor.csv")
 }
 solution <- runEquateObserved(cfg,
-  scaleTo = 1, scaleFrom = 2,
+  scale_to = 1, scale_from = 2,
   type = "equipercentile", smooth = "loglinear"
 )
 \dontshow{
