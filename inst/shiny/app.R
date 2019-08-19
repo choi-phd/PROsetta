@@ -229,7 +229,8 @@ createConfigFromShiny <- function(input, guess = FALSE) {
   return(cfg)
 }
 
-getPath <- function(tmpdir, fn) {
+getPath <- function(fn) {
+  tmpdir <- tempdir()
   tmp <- file.path(tmpdir, fn)
   tmp <- normalizePath(tmp, mustWork = FALSE)
   return(tmp)
@@ -502,23 +503,22 @@ server <- function(input, output, session) {
     content = function(fname) {
 
       fs     <- c()
-      tmpdir <- tempdir()
 
       for (i in v$active_tabset) {
         if (i == 1) {
 
           if (!is.null(v$anchor_data)) {
-            path <- getPath(tmpdir, "raw_data_anchor.csv")
+            path <- getPath("raw_data_anchor.csv")
             fs <- c(fs, path)
             write.csv(v$anchor_data, path, row.names = F)
           }
           if (!is.null(v$response_data)) {
-            path <- getPath(tmpdir, "raw_data_response.csv")
+            path <- getPath("raw_data_response.csv")
             fs <- c(fs, path)
             write.csv(v$response_data, path, row.names = F)
           }
           if (!is.null(v$itemmap_data)) {
-            path <- getPath(tmpdir, "raw_data_itemmap.csv")
+            path <- getPath("raw_data_itemmap.csv")
             fs <- c(fs, path)
             write.csv(v$itemmap_data, path, row.names = F)
           }
@@ -527,23 +527,23 @@ server <- function(input, output, session) {
         if (i == 2) {
 
           if (!is.null(v$freqtable)) {
-            path <- getPath(tmpdir, "basic_frequency.csv")
+            path <- getPath("basic_frequency.csv")
             fs <- c(fs, path)
             write.csv(v$freqtable, path)
           }
           if (!is.null(v$desctable)) {
-            path <- getPath(tmpdir, "basic_descriptive.csv")
+            path <- getPath("basic_descriptive.csv")
             fs <- c(fs, path)
             write.csv(v$desctable, path)
           }
           if (!is.null(v$classical)) {
-            path <- getPath(tmpdir, "basic_reliability_alpha.txt")
+            path <- getPath("basic_reliability_alpha.txt")
             fs <- c(fs, path)
             tmp <- paste0(capture.output(v$classical), collapse = "\n")
             write(tmp, path)
           }
           if (!is.null(v$classical2)) {
-            path <- getPath(tmpdir, "basic_reliability_omega.txt")
+            path <- getPath("basic_reliability_omega.txt")
             fs <- c(fs, path)
             tmp <- paste0(capture.output(v$classical2), collapse = "\n")
             write(tmp, path)
@@ -553,7 +553,7 @@ server <- function(input, output, session) {
         if (i == 3) {
 
           if (!is.null(v$calib_params)) {
-            path <- getPath(tmpdir, "calib_params.csv")
+            path <- getPath("calib_params.csv")
             fs <- c(fs, path)
             write.csv(v$calib_params, path)
           }
@@ -562,7 +562,7 @@ server <- function(input, output, session) {
 
           if (!is.null(v$calib)) {
 
-            path <- getPath(tmpdir, "calib_itemfit.pdf")
+            path <- getPath("calib_itemfit.pdf")
             fs <- c(fs, path)
             pdf(path)
             for (id in 1:n.items) {
@@ -571,7 +571,7 @@ server <- function(input, output, session) {
             }
             dev.off()
 
-            path <- getPath(tmpdir, "calib_iteminfo.pdf")
+            path <- getPath("calib_iteminfo.pdf")
             fs <- c(fs, path)
             pdf(path)
             for (id in 1:n.items) {
@@ -583,12 +583,12 @@ server <- function(input, output, session) {
           }
 
           if (!is.null(v$table_itemfit)) {
-            path <- getPath(tmpdir, "calib_fit.csv")
+            path <- getPath("calib_fit.csv")
             fs <- c(fs, path)
             write.csv(v$table_itemfit, path, row.names = F)
           }
           if (!is.null(v$crosswalk_calibration)) {
-            path <- getPath(tmpdir, "crosswalk_calibration.txt")
+            path <- getPath("crosswalk_calibration.txt")
             fs <- c(fs, path)
             tmp <- paste0(capture.output(v$crosswalk_calibration), collapse = "\n")
             write(tmp, path)
@@ -599,17 +599,17 @@ server <- function(input, output, session) {
         if (i == 4) {
 
           if (!is.null(v$linking_constants)) {
-            path <- getPath(tmpdir, "linking_constants.csv")
+            path <- getPath("linking_constants.csv")
             fs <- c(fs, path)
             write.csv(v$linking_constants, path)
           }
           if (!is.null(v$transformed_params)) {
-            path <- getPath(tmpdir, "transformed_params.csv")
+            path <- getPath("transformed_params.csv")
             fs <- c(fs, path)
             write.csv(v$transformed_params, path)
           }
           if (!is.null(v$crosswalk_linking)) {
-            path <- getPath(tmpdir, "crosswalk_linking.txt")
+            path <- getPath("crosswalk_linking.txt")
             fs <- c(fs, path)
             tmp <- paste0(capture.output(v$crosswalk_linking), collapse = "\n")
             write(tmp, path)
@@ -620,7 +620,7 @@ server <- function(input, output, session) {
         if (i == 5) {
 
           if (!is.null(v$outequateequipercentile)) {
-            path <- getPath(tmpdir, "equating_constants.txt")
+            path <- getPath("equating_constants.txt")
             fs <- c(fs, path)
             tmp <- paste0(capture.output(v$outequateequipercentile), collapse = "\n")
             write(tmp, path)
@@ -628,7 +628,12 @@ server <- function(input, output, session) {
 
         }
       }
-      zip(zipfile = fname, files = fs, flags = "-j")
+
+      if (length(fs) > 0) {
+        zip(zipfile = fname, files = fs, flags = "-j")
+        file.remove(fs)
+      }
+
     },
     contentType = "application/zip"
   )
