@@ -386,7 +386,7 @@ checkFrequency <- function(config, data = NULL) {
 #' }
 #' @export
 
-runFrequency <- function(config, data = NULL, check_frequency = TRUE) {
+runFrequency <- function(config, check_frequency = TRUE, data = NULL) {
   if (class(config) != "PROsetta_config") {
     stop("config must be a class of PROsetta_config")
   }
@@ -510,7 +510,7 @@ runDescriptive <- function(config, data = NULL) {
 #' }
 #' @export
 
-runClassical <- function(config, data = NULL, omega = FALSE, ...) {
+runClassical <- function(config, omega = FALSE, data = NULL, ...) {
   if (class(config) != "PROsetta_config") {
     stop("config must be a class of PROsetta_config")
   }
@@ -572,7 +572,7 @@ runClassical <- function(config, data = NULL, omega = FALSE, ...) {
 #' }
 #' @export
 
-runCFA <- function(config, data = NULL, estimator = "WLSMV", std.lv = TRUE, ...) {
+runCFA <- function(config, estimator = "WLSMV", std.lv = TRUE, data = NULL, ...) {
   if (class(config) != "PROsetta_config") {
     stop("config must be a class of PROsetta_config")
   }
@@ -806,7 +806,7 @@ runLinking <- function(config, data = NULL, ...) {
 #' }
 #' @export
 
-runEquateObserved <- function(config, data = NULL, scale_to = 1, scale_from = 2, type = "equipercentile", smooth = "loglinear", degrees = list(3, 1), boot = TRUE, reps = 100, ...) {
+runEquateObserved <- function(config, scale_to = 1, scale_from = 2, type = "equipercentile", smooth = "loglinear", degrees = list(3, 1), boot = TRUE, reps = 100, data = NULL, ...) {
   if (class(config) != "PROsetta_config") {
     stop("config must be a class of PROsetta_config")
   }
@@ -888,7 +888,7 @@ runEquateObserved <- function(config, data = NULL, scale_to = 1, scale_from = 2,
 #' }
 #' @export
 
-runRSSS <- function(config, data = NULL, calibration, prior_mean = 0.0, prior_sd = 1.0, min_theta = -4.0, max_theta = 4.0, inc = 0.01, min_score = 1, t_score = TRUE) {
+runRSSS <- function(config, calibration, prior_mean = 0.0, prior_sd = 1.0, min_theta = -4.0, max_theta = 4.0, inc = 0.01, min_score = 1, t_score = TRUE, data = NULL) {
   if (class(config) != "PROsetta_config") {
     stop("config must be a class of PROsetta_config")
   }
