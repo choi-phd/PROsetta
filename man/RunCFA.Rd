@@ -4,16 +4,16 @@
 \alias{runCFA}
 \title{Run a confirmatory factor analysis}
 \usage{
-runCFA(config, data = NULL, estimator = "WLSMV", std.lv = TRUE, ...)
+runCFA(config, estimator = "WLSMV", std.lv = TRUE, data = NULL, ...)
 }
 \arguments{
 \item{config}{A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.}
 
-\item{data}{(Optional) A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.}
-
 \item{estimator}{The estimator to be used. Passed onto \code{\link[lavaan]{cfa}} in \href{https://CRAN.R-project.org/package=lavaan}{\code{lavaan}} package.}
 
 \item{std.lv}{If \code{TRUE}, the metric of the latent variable is determined by fixing their (residual) variances to 1.0. If \code{FALSE}, the metric of each latent variable is determined by fixing the factor loading of the first indicator to 1.0. Passed onto \code{\link[lavaan]{cfa}}.}
+
+\item{data}{(Optional) A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.}
 
 \item{...}{Additional arguments to pass onto \code{\link[lavaan]{cfa}}.}
 }

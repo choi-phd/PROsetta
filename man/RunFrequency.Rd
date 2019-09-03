@@ -4,14 +4,14 @@
 \alias{runFrequency}
 \title{Obtain a frequency table}
 \usage{
-runFrequency(config, data = NULL, check_frequency = TRUE)
+runFrequency(config, check_frequency = TRUE, data = NULL)
 }
 \arguments{
 \item{config}{A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.}
 
-\item{data}{A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.}
-
 \item{check_frequency}{Logical. If \code{TRUE}, check the frequency table for missing response categories, and display warning message if any is missing.}
+
+\item{data}{A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.}
 }
 \value{
 A \code{data.frame} containing the frequency table of the dataset.
