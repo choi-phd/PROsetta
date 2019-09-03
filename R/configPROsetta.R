@@ -754,7 +754,9 @@ runLinking <- function(config, data = NULL, ...) {
   out <- plink::plink(as.irt.pars(pars, common, cat = ncat, list(pm_all, pm_anchor), grp.names = c("From", "To")), rescale = config@linking_method, base.grp = 2)
 
   rownames(out$pars@pars$From) <- id_new$ID
-  rownames(out$pars@pars$To) <- id_old$ID
+  rownames(out$pars@pars$To)   <- id_old$ID
+  colnames(out$pars@pars$From) <- colnames(ipar)
+  colnames(out$pars@pars$To)   <- colnames(ipar)
 
   return(out)
 }

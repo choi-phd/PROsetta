@@ -4,14 +4,12 @@
 \alias{runEquateObserved}
 \title{Run Test Equating}
 \usage{
-runEquateObserved(config, data = NULL, scale_to = 1, scale_from = 2,
+runEquateObserved(config, scale_to = 1, scale_from = 2,
   type = "equipercentile", smooth = "loglinear", degrees = list(3,
-  1), boot = TRUE, reps = 100, ...)
+  1), boot = TRUE, reps = 100, data = NULL, ...)
 }
 \arguments{
 \item{config}{A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.}
-
-\item{data}{A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.}
 
 \item{scale_to}{Numeric. The index of the target scale to equate to. This and \code{scale_from} below both reference to the information stored in the \code{itemmap} slot of \code{Data} argument. The \code{scale_id} slot of \code{config} argument needs to be specified as the name of the varible containing the scale IDs in the \code{itemmap} slot.}
 
@@ -26,6 +24,8 @@ runEquateObserved(config, data = NULL, scale_to = 1, scale_from = 2,
 \item{boot}{Logical. Performs bootstrapping if \code{TRUE}.}
 
 \item{reps}{Numeric. The number of replications in bootsrapping.}
+
+\item{data}{A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.}
 
 \item{...}{Other arguments to pass onto \code{\link[equate]{equate}}..}
 }

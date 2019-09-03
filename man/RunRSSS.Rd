@@ -4,14 +4,12 @@
 \alias{runRSSS}
 \title{Run Scoring Table Generation}
 \usage{
-runRSSS(config, data = NULL, calibration, prior_mean = 0,
-  prior_sd = 1, min_theta = -4, max_theta = 4, inc = 0.01,
-  min_score = 1, t_score = TRUE)
+runRSSS(config, calibration, prior_mean = 0, prior_sd = 1,
+  min_theta = -4, max_theta = 4, inc = 0.01, min_score = 1,
+  t_score = TRUE, data = NULL)
 }
 \arguments{
 \item{config}{A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.}
-
-\item{data}{(Optional) A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.}
 
 \item{calibration}{An object returned from \code{\link{runCalibration}} or \code{\link{runLinking}}}
 
@@ -28,6 +26,8 @@ runRSSS(config, data = NULL, calibration, prior_mean = 0,
 \item{min_score}{Minimum item score (0 or 1).}
 
 \item{t_score}{TRUE to convert theta to T-score.}
+
+\item{data}{(Optional) A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.}
 }
 \value{
 A list containing crosswalk tables.

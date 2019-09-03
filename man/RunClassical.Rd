@@ -4,14 +4,14 @@
 \alias{runClassical}
 \title{Run a CTT-based reliability analysis}
 \usage{
-runClassical(config, data = NULL, omega = FALSE, ...)
+runClassical(config, omega = FALSE, data = NULL, ...)
 }
 \arguments{
 \item{config}{A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.}
 
-\item{data}{(Optional) A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.}
-
 \item{omega}{If TRUE, also obtains McDonald's omega using \code{\link[psych]{omega}} in \href{https://CRAN.R-project.org/package=psych}{\code{psych}} package.}
+
+\item{data}{(Optional) A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.}
 
 \item{...}{Additional arguments to pass onto \code{\link[psych]{omega}}.}
 }

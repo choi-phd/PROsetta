@@ -118,7 +118,8 @@ label, .form-group, .progress {
         tabPanel("Transformed parameters", value = 42, DTOutput("table_transformed_params"),     style = css_y),
         tabPanel("Crosswalk table (from linking)", value = 43,
                  verbatimTextOutput("crosswalk_linking"), style = css_y),
-        tabPanel("Equating",               value = 51, verbatimTextOutput("equating_constants"), style = css_y)
+        tabPanel("Equating",               value = 51, verbatimTextOutput("equating_constants"), style = css_y),
+        tabPanel("Concordance table",      value = 52, DTOutput("table_concordance"),            style = css_y)
       )
     )
   )
@@ -149,7 +150,7 @@ updateTabSet <- function(tabset, new_tabset = NULL, add_tabset = NULL, session) 
   i2 <- 21:24
   i3 <- 31:35
   i4 <- 41:43
-  i5 <- 51
+  i5 <- 51:52
   is <- list(i1, i2, i3, i4, i5)
 
   if (!is.null(add_tabset)) {
@@ -318,13 +319,13 @@ server <- function(input, output, session) {
     assignObject("shiny_config", cfg, "PROsetta_config object")
     v$inputdata <- loadData(cfg)
     assignObject("shiny_data", v$inputdata, "PROsetta_data object")
-    v$freqtable <- runFrequency(cfg, v$inputdata)
+    v$freqtable <- runFrequency(cfg, data = v$inputdata)
     assignObject("shiny_freq", v$freqtable, "Frequency table tab")
     v$desctable <- runDescriptive(cfg, v$inputdata)
     assignObject("shiny_desc", v$desctable, "Descriptives tab")
-    v$classical <- runClassical(cfg, v$inputdata)
+    v$classical <- runClassical(cfg, data = v$inputdata)
     assignObject("shiny_alpha", v$classical, "Classical tab")
-    v$classical2 <- try(runClassical(cfg, v$inputdata, omega = TRUE, fm = "ml")[["Omega"]])
+    v$classical2 <- try(runClassical(cfg, data = v$inputdata, omega = TRUE, fm = "ml")[["Omega"]])
     assignObject("shiny_omega", v$classical2, "Classical (omega) tab")
 
     v$time <- Sys.time() - v$time
@@ -448,6 +449,8 @@ server <- function(input, output, session) {
 
     v$outequateequipercentile <- runEquateObserved(cfg, scale_to = 1, scale_from = 2, type = "equipercentile", smooth = "loglinear")
     assignObject("shiny_eq", v$outequateequipercentile, "Equating tab")
+    v$concordance <- v$outequateequipercentile$concordance
+    assignObject("shiny_concordance", v$concordance, "Concordance table")
 
     v$time <- Sys.time() - v$time
     v <- updateLogs(v, sprintf("Done in %7.3fs : run equating", v$time))
@@ -495,6 +498,7 @@ server <- function(input, output, session) {
   output$crosswalk_linking        <- renderPrint(parseObject(v$crosswalk_linking))
 
   output$equating_constants       <- renderPrint(parseObject(v$outequateequipercentile))
+  output$table_concordance        <- renderDT(parseObject(v$concordance, 3),        options = list(pageLength = 100))
 
   output$export_data <- downloadHandler(
     filename = function() {
@@ -624,6 +628,12 @@ server <- function(input, output, session) {
             fs <- c(fs, path)
             tmp <- paste0(capture.output(v$outequateequipercentile), collapse = "\n")
             write(tmp, path)
+          }
+
+          if (!is.null(v$concordance)) {
+            path <- getPath("equating_concordance.csv")
+            fs <- c(fs, path)
+            write.csv(v$concordance, path, row.names = F)
           }
 
         }
