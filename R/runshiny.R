@@ -4,26 +4,31 @@
 #'
 #' @export
 guiPROsetta <- function() {
-  appDir <- system.file("shiny", package = "PROsetta")
-  if (appDir == "") {
+  app_dir <- system.file("shiny", package = "PROsetta")
+  if (app_dir == "") {
     stop("Could not find application directory. Try re-installing `PROsetta`.", call. = FALSE)
   }
 
+  pkgs <- c("shiny", "shinythemes", "shinyWidgets", "shinyjs", "DT")
   tmp <- NULL
-  if (!requireNamespace("shiny")) tmp <- c(tmp, "'shiny'")
-  if (!requireNamespace("shinythemes")) tmp <- c(tmp, "'shinythemes'")
-  if (!requireNamespace("shinyWidgets")) tmp <- c(tmp, "'shinyWidgets'")
-  if (!requireNamespace("shinyjs")) tmp <- c(tmp, "'shinyjs'")
-  if (!requireNamespace("DT")) tmp <- c(tmp, "'DT'")
+
+  for (pkg in pkgs) {
+    if (length(find.package(pkg, quiet = TRUE)) == 0) {
+      tmp <- c(tmp, sprintf("'%s'", pkg))
+    }
+  }
 
   if (!is.null(tmp)) {
-    tmp <- paste(tmp, collapse = ", ")
     message("Shiny application requires additional packages.")
     message("Run the following code to install:")
     message("")
-    tmp <- paste0("install.packages(", tmp, ")")
+    tmp <- paste(tmp, collapse = ", ")
+    tmp <- paste0("install.packages(c(", tmp, "))")
     message(tmp)
   } else {
-    shiny::runApp(appDir, display.mode = "normal")
+    if (!isNamespaceLoaded("shiny")) {
+      attachNamespace("shiny")
+    }
+    shiny::runApp(app_dir, display.mode = "normal", launch.browser = TRUE)
   }
 }
