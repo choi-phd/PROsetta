@@ -562,7 +562,7 @@ server <- function(input, output, session) {
             write.csv(v$calib_params, path)
           }
 
-          n.items <- dim(v$calib@data$data)[2]
+          n.items <- dim(v$response_data)[2] - 1
 
           if (!is.null(v$calib)) {
 
