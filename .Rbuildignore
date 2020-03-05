@@ -4,3 +4,4 @@
 ^tutorial$
 ^R/test\.R$
 ^cleanup.*$
+^\.travis\.yml$
