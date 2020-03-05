@@ -290,6 +290,13 @@ loadData <- function(config) {
     }
   }
 
+  resp_with_missing_values <- apply(is.na(data@response), 1, any)
+  if (any(resp_with_missing_values)) {
+    n_resp <- sum(resp_with_missing_values)
+    data@response <- data@response[!resp_with_missing_values, ]
+    message(sprintf("%s response rows were removed because they had missing values", n_resp))
+  }
+
   return(data)
 }
 
