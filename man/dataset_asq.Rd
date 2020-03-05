@@ -20,7 +20,7 @@ This dataset is associated with the following objects:
     \item \code{MASQ1 -- MASQ11}. Response to development items.
   }
 
-\item \code{anchor_asq} Item attributes. A data frame with 29 rows and 8 variables.
+  \item \code{anchor_asq} Item attributes. A data frame with 29 rows and 8 variables.
   \itemize{
     \item \code{item_order} Item index.
     \item \code{item_id} Item ID, same to those in \code{response_asq} data.
@@ -29,7 +29,7 @@ This dataset is associated with the following objects:
     \item \code{NCAT} The number of categories.
   }
 
-\item \code{itemmap_asq} Item map describing the items in each instrument. A data frame with 40 rows and 9 variables.
+  \item \code{itemmap_asq} Item map describing the items in each instrument. A data frame with 40 rows and 9 variables.
   \itemize{
     \item \code{item_order} Item index. Refers to column \code{item_order} in item attributes.
     \item \code{instrument} Instrument index.
@@ -42,7 +42,7 @@ This dataset is associated with the following objects:
     \item \code{NCATc} (placeholder)
   }
 
-\item \code{cfg_asq}
+  \item \code{cfg_asq}
 }
 }
 \examples{
