@@ -4,9 +4,18 @@
 \alias{runEquateObserved}
 \title{Run Test Equating}
 \usage{
-runEquateObserved(config, scale_to = 1, scale_from = 2,
-  type = "equipercentile", smooth = "loglinear", degrees = list(3,
-  1), boot = TRUE, reps = 100, data = NULL, ...)
+runEquateObserved(
+  config,
+  scale_to = 1,
+  scale_from = 2,
+  type = "equipercentile",
+  smooth = "loglinear",
+  degrees = list(3, 1),
+  boot = TRUE,
+  reps = 100,
+  data = NULL,
+  ...
+)
 }
 \arguments{
 \item{config}{A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.}

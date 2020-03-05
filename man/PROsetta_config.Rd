@@ -6,10 +6,18 @@
 \alias{createConfig}
 \title{An S4 class to represent configurations for reading datasets and writing outputs.}
 \usage{
-createConfig(study_name = "Study", input_directory = getwd(),
-  output_directory = getwd(), item_id = NULL, person_id = NULL,
-  scale_id = NULL, response_file, itemmap_file, anchor_file,
-  linking_method = "FIXEDPAR")
+createConfig(
+  study_name = "Study",
+  input_directory = getwd(),
+  output_directory = getwd(),
+  item_id = NULL,
+  person_id = NULL,
+  scale_id = NULL,
+  response_file,
+  itemmap_file,
+  anchor_file,
+  linking_method = "FIXEDPAR"
+)
 }
 \arguments{
 \item{study_name}{Character. A user-specified name of the study.}

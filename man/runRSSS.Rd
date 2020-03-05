@@ -4,9 +4,18 @@
 \alias{runRSSS}
 \title{Run Scoring Table Generation}
 \usage{
-runRSSS(config, calibration, prior_mean = 0, prior_sd = 1,
-  min_theta = -4, max_theta = 4, inc = 0.01, min_score = 1,
-  t_score = TRUE, data = NULL)
+runRSSS(
+  config,
+  calibration,
+  prior_mean = 0,
+  prior_sd = 1,
+  min_theta = -4,
+  max_theta = 4,
+  inc = 0.01,
+  min_score = 1,
+  t_score = TRUE,
+  data = NULL
+)
 }
 \arguments{
 \item{config}{A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.}
