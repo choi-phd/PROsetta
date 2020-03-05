@@ -818,15 +818,18 @@ runEquateObserved <- function(config, scale_to = 1, scale_from = 2, type = "equi
     stop("data must be a class of PROsetta_data")
   }
 
-  scale_id    <- data@itemmap[[config@scale_id]]
-  scale_code  <- unique(scale_id)
-  items_to    <- which(scale_id %in% scale_to)
-  items_from  <- which(scale_id %in% scale_from)
-  scores_to   <- rowSums(data@response[data@itemmap[[config@item_id]][items_to]])
-  scores_from <- rowSums(data@response[data@itemmap[[config@item_id]][items_from]])
-  freq_to     <- equate::freqtab(data@response[data@itemmap[[config@item_id]]], items = items_to)
-  freq_from   <- equate::freqtab(data@response[data@itemmap[[config@item_id]]], items = items_from)
-  score_stat  <- rbind(From = summary(freq_from), To = summary(freq_to))
+  scale_id       <- data@itemmap[[config@scale_id]]
+  scale_code     <- unique(scale_id)
+  items_to       <- which(scale_id %in% scale_to)   # Reference items
+  items_from     <- which(scale_id %in% scale_from) # Items that need to be equated
+  itemnames      <- data@itemmap[[config@item_id]]
+  itemnames_to   <- itemnames[items_to]
+  itemnames_from <- itemnames[items_from]
+  scores_to      <- rowSums(data@response[itemnames_to])
+  scores_from    <- rowSums(data@response[itemnames_from])
+  freq_to        <- equate::freqtab(data@response[itemnames], items = items_to  )
+  freq_from      <- equate::freqtab(data@response[itemnames], items = items_from)
+  score_stat     <- rbind(From = summary(freq_from), To = summary(freq_to))
 
   # plot(x = freq_to, lwd = 2, xlab = "Score", ylab = "Count")
   # plot(x = sfreq_to, lwd = 2, xlab = "Score", ylab = "Count")
