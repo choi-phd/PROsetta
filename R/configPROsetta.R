@@ -78,25 +78,25 @@ setClass("PROsetta_config",
   ),
   validity = function(object) {
     if (!dir.exists(object@input_directory)) {
-      stop(paste("invalid input_directory :", object@input_directory))
+      stop(paste("cannot find the specified path in input_directory :", object@input_directory))
     }
     if (object@output_directory != "") {
       if (!dir.exists(object@output_directory)) dir.create(object@output_directory, recursive = TRUE)
     }
     if (object@response_file != "") {
       p <- checkFilePath(object@input_directory, object@response_file)
-      if (!p$exists) stop(paste("response_file does not exist :", p$path))
+      if (!p$exists) stop(paste("cannot find the specified file in response_file :", p$path))
     }
     if (object@itemmap_file != "") {
       p <- checkFilePath(object@input_directory, object@itemmap_file)
-      if (!p$exists) stop(paste("itemmap_file does not exist :", p$path))
+      if (!p$exists) stop(paste("cannot find the specified file in itemmap_file :", p$path))
     }
     if (object@linking_method != "NONE" && object@anchor_file != "") {
       p <- checkFilePath(object@input_directory, object@anchor_file)
-      if (!p$exists) stop(paste("anchor_file does not exist :", p$path))
+      if (!p$exists) stop(paste("cannot find the specified file in anchor_file :", p$path))
     }
     if (!object@linking_method %in% c("MM", "MS", "HB", "SL", "FIXEDPAR", "NONE")) {
-      stop("invalid option for linking_method")
+      stop(sprintf("unrecognized option in @linking_method : %s", object@linking_method))
     }
 
     return(TRUE)
@@ -245,8 +245,9 @@ checkFilePath <- function(abspath, path) {
 #' @export
 
 loadData <- function(config) {
+
   if (class(config) != "PROsetta_config") {
-    stop("config must be a class of PROsetta_config")
+    stop("config must be a 'PROsetta_config' class object")
   }
 
   data <- new("PROsetta_data")
@@ -255,7 +256,7 @@ loadData <- function(config) {
   if (p$exists) {
     data@response <- read.csv(p$path, as.is = TRUE)
     if (!(config@person_id %in% names(data@response))) {
-      warning(sprintf("%s is not included in response_file", config@person_id))
+      warning(sprintf("column '%s' does not exist in response_file", config@person_id))
     }
   }
 
@@ -263,7 +264,7 @@ loadData <- function(config) {
   if (p$exists) {
     data@itemmap <- read.csv(p$path, as.is = TRUE)
     if (!(config@item_id %in% names(data@itemmap))) {
-      warning(sprintf("%s is not included in itemmap_file", config@item_id))
+      warning(sprintf("column '%s' does not exist in itemmap_file", config@item_id))
     }
   }
 
@@ -271,14 +272,14 @@ loadData <- function(config) {
   if (p$exists) {
     data@anchor <- read.csv(p$path, as.is = TRUE)
     if (!(config@item_id %in% names(data@anchor))) {
-      warning(sprintf("%s is not included in anchor_file", config@item_id))
+      warning(sprintf("column '%s' does not exist in anchor_file", config@item_id))
     }
   }
 
   if (!is.null(data@itemmap) && !is.null(data@anchor)) {
     if (config@item_id %in% names(data@itemmap) && config@item_id %in% names(data@anchor)) {
       if (!all(data@anchor[[config@item_id]] %in% data@itemmap[[config@item_id]])) {
-        stop(sprintf("%s in anchor_file contains items that are not in itemmap_file", config@item_id))
+        stop(sprintf("column '%s' in anchor_file contains items that are not in itemmap_file", config@item_id))
       }
     }
   }
@@ -306,12 +307,12 @@ loadData <- function(config) {
 
 checkFrequency <- function(config, data = NULL) {
   if (class(config) != "PROsetta_config") {
-    stop("config must be a class of PROsetta_config")
+    stop("config must be a 'PROsetta_config' class object")
   }
   if (is.null(data)) {
     data <- loadData(config)
   } else if (class(data) != "PROsetta_data") {
-    stop("data must be a class of PROsetta_data")
+    stop("data must be a 'PROsetta_data' class object")
   }
 
   tmp <- runFrequency(config, data, check_frequency = FALSE)
@@ -388,12 +389,12 @@ checkFrequency <- function(config, data = NULL) {
 
 runFrequency <- function(config, check_frequency = TRUE, data = NULL) {
   if (class(config) != "PROsetta_config") {
-    stop("config must be a class of PROsetta_config")
+    stop("config must be a 'PROsetta_config' class object")
   }
   if (is.null(data)) {
     data <- loadData(config)
   } else if (class(data) != "PROsetta_data") {
-    stop("data must be a class of PROsetta_data")
+    stop("data must be a 'PROsetta_data' class object")
   }
 
   tmp <- data@response[data@itemmap[[config@item_id]]]
@@ -459,12 +460,12 @@ runFrequency <- function(config, check_frequency = TRUE, data = NULL) {
 
 runDescriptive <- function(config, data = NULL) {
   if (class(config) != "PROsetta_config") {
-    stop("config must be a class of PROsetta_config")
+    stop("config must be a 'PROsetta_config' class object")
   }
   if (is.null(data)) {
     data <- loadData(config)
   } else if (class(data) != "PROsetta_data") {
-    stop("data must be a class of PROsetta_data")
+    stop("data must be a 'PROsetta_data' class object")
   }
 
   desc <- psych::describe(data@response[data@itemmap[[config@item_id]]])[-1]
@@ -512,12 +513,12 @@ runDescriptive <- function(config, data = NULL) {
 
 runClassical <- function(config, omega = FALSE, data = NULL, ...) {
   if (class(config) != "PROsetta_config") {
-    stop("config must be a class of PROsetta_config")
+    stop("config must be a 'PROsetta_config' class object")
   }
   if (is.null(data)) {
     data <- loadData(config)
   } else if (class(data) != "PROsetta_data") {
-    stop("data must be a class of PROsetta_data")
+    stop("data must be a 'PROsetta_data' class object")
   }
 
   CIA <- psych::alpha(data@response[data@itemmap[[config@item_id]]])
@@ -574,12 +575,12 @@ runClassical <- function(config, omega = FALSE, data = NULL, ...) {
 
 runCFA <- function(config, estimator = "WLSMV", std.lv = TRUE, data = NULL, ...) {
   if (class(config) != "PROsetta_config") {
-    stop("config must be a class of PROsetta_config")
+    stop("config must be a 'PROsetta_config' class object")
   }
   if (is.null(data)) {
     data <- loadData(config)
   } else if (class(data) != "PROsetta_data") {
-    stop("data must be a class of PROsetta_data")
+    stop("data must be a 'PROsetta_data' class object")
   }
 
   all_items <- data@itemmap[[config@item_id]]
@@ -646,12 +647,12 @@ runCFA <- function(config, estimator = "WLSMV", std.lv = TRUE, data = NULL, ...)
 
 runCalibration <- function(config, data = NULL, ...) {
   if (class(config) != "PROsetta_config") {
-    stop("config must be a class of PROsetta_config")
+    stop("config must be a 'PROsetta_config' class object")
   }
   if (is.null(data)) {
     data <- loadData(config)
   } else if (class(data) != "PROsetta_data") {
-    stop("data must be a class of PROsetta_data")
+    stop("data must be a 'PROsetta_data' class object")
   }
 
   if (config@linking_method == "FIXEDPAR") {
@@ -721,12 +722,12 @@ runCalibration <- function(config, data = NULL, ...) {
 
 runLinking <- function(config, data = NULL, ...) {
   if (class(config) != "PROsetta_config") {
-    stop("config must be a class of PROsetta_config")
+    stop("config must be a 'PROsetta_config' class object")
   }
   if (is.null(data)) {
     data <- loadData(config)
   } else if (class(data) != "PROsetta_data") {
-    stop("data must be a class of PROsetta_data")
+    stop("data must be a 'PROsetta_data' class object")
   }
   if (is.null(data@anchor)) {
     stop("anchor cannot be NULL")
@@ -810,12 +811,12 @@ runLinking <- function(config, data = NULL, ...) {
 
 runEquateObserved <- function(config, scale_to = 1, scale_from = 2, type = "equipercentile", smooth = "loglinear", degrees = list(3, 1), boot = TRUE, reps = 100, data = NULL, ...) {
   if (class(config) != "PROsetta_config") {
-    stop("config must be a class of PROsetta_config")
+    stop("config must be a 'PROsetta_config' class object")
   }
   if (is.null(data)) {
     data <- loadData(config)
   } else if (class(data) != "PROsetta_data") {
-    stop("data must be a class of PROsetta_data")
+    stop("data must be a 'PROsetta_data' class object")
   }
 
   scale_id       <- data@itemmap[[config@scale_id]]
@@ -895,12 +896,12 @@ runEquateObserved <- function(config, scale_to = 1, scale_from = 2, type = "equi
 
 runRSSS <- function(config, calibration, prior_mean = 0.0, prior_sd = 1.0, min_theta = -4.0, max_theta = 4.0, inc = 0.01, min_score = 1, t_score = TRUE, data = NULL) {
   if (class(config) != "PROsetta_config") {
-    stop("config must be a class of PROsetta_config")
+    stop("config must be a 'PROsetta_config' class object")
   }
   if (is.null(data)) {
     data <- loadData(config)
   } else if (class(data) != "PROsetta_data") {
-    stop("data must be a class of PROsetta_data")
+    stop("data must be a 'PROsetta_data' class object")
   }
   if (is.null(attr(class(calibration), "package"))) {
     item_par <- calibration$pars@pars$From
