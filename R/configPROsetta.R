@@ -313,6 +313,7 @@ loadData <- function(config) {
 #' @export
 
 checkFrequency <- function(config, data = NULL) {
+
   if (class(config) != "PROsetta_config") {
     stop("config must be a 'PROsetta_config' class object")
   }
@@ -519,6 +520,7 @@ runDescriptive <- function(config, data = NULL) {
 #' @export
 
 runClassical <- function(config, omega = FALSE, data = NULL, ...) {
+
   if (class(config) != "PROsetta_config") {
     stop("config must be a 'PROsetta_config' class object")
   }
@@ -528,12 +530,29 @@ runClassical <- function(config, omega = FALSE, data = NULL, ...) {
     stop("data must be a 'PROsetta_data' class object")
   }
 
-  CIA <- psych::alpha(data@response[data@itemmap[[config@item_id]]])
-  if (omega) {
-    CIA[["Omega"]] <- psych::omega(data@response[data@itemmap[[config@item_id]]], ...)
+  out_alpha = list()
+  out_omega = list()
+
+  for (scale_id in unique(data@itemmap[[config@scale_id]])) {
+    itemmap <- subset(data@itemmap, data@itemmap[[config@scale_id]] == scale_id)
+    items <- itemmap[[config@item_id]]
+    out_alpha[[as.character(scale_id)]] <- psych::alpha(data@response[items])
+    if (omega) {
+      out_omega[[as.character(scale_id)]] <- psych::omega(data@response[items], ...)
+    }
   }
 
-  return(CIA)
+  items <- data@itemmap[[config@item_id]]
+  out_alpha[['combined']] <- psych::alpha(data@response[items])
+  if (omega) {
+    out_omega[['combined']] <- psych::omega(data@response[items], ...)
+  }
+
+  return(list(
+    alpha = out_alpha,
+    omega = out_omega
+  ))
+
 }
 
 
