@@ -323,9 +323,9 @@ server <- function(input, output, session) {
     assignObject("shiny_freq", v$freqtable, "Frequency table tab")
     v$desctable <- runDescriptive(cfg, v$inputdata)
     assignObject("shiny_desc", v$desctable, "Descriptives tab")
-    v$classical <- runClassical(cfg, data = v$inputdata)
+    v$classical <- runClassical(cfg, data = v$inputdata)$alpha$combined
     assignObject("shiny_alpha", v$classical, "Classical tab")
-    v$classical2 <- try(runClassical(cfg, data = v$inputdata, omega = TRUE, fm = "ml")[["Omega"]])
+    v$classical2 <- try(runClassical(cfg, data = v$inputdata, omega = TRUE, fm = "ml")$omega$combined)
     assignObject("shiny_omega", v$classical2, "Classical (omega) tab")
 
     v$time <- Sys.time() - v$time
