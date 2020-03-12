@@ -487,6 +487,7 @@ runDescriptive <- function(config, data = NULL) {
 #' @param config A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.
 #' @param data (Optional) A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.
 #' @param omega If TRUE, also obtains McDonald's omega using \code{\link[psych]{omega}} in \href{https://CRAN.R-project.org/package=psych}{\code{psych}} package.
+#' @param scalewise If TRUE, run analysis for each scale as well as for the combined scale. If FALSE (default), run analysis only for the combined scale.
 #' @param ... Additional arguments to pass onto \code{\link[psych]{omega}}.
 #'
 #' @return The results of reliability analysis.
@@ -519,7 +520,7 @@ runDescriptive <- function(config, data = NULL) {
 #' }
 #' @export
 
-runClassical <- function(config, omega = FALSE, data = NULL, ...) {
+runClassical <- function(config, data = NULL, omega = FALSE, scalewise = FALSE, ...) {
 
   if (class(config) != "PROsetta_config") {
     stop("config must be a 'PROsetta_config' class object")
@@ -533,12 +534,14 @@ runClassical <- function(config, omega = FALSE, data = NULL, ...) {
   out_alpha = list()
   out_omega = list()
 
-  for (scale_id in unique(data@itemmap[[config@scale_id]])) {
-    itemmap <- subset(data@itemmap, data@itemmap[[config@scale_id]] == scale_id)
-    items <- itemmap[[config@item_id]]
-    out_alpha[[as.character(scale_id)]] <- psych::alpha(data@response[items])
-    if (omega) {
-      out_omega[[as.character(scale_id)]] <- psych::omega(data@response[items], ...)
+  if (scalewise) {
+    for (scale_id in unique(data@itemmap[[config@scale_id]])) {
+      itemmap <- subset(data@itemmap, data@itemmap[[config@scale_id]] == scale_id)
+      items <- itemmap[[config@item_id]]
+      out_alpha[[as.character(scale_id)]] <- psych::alpha(data@response[items])
+      if (omega) {
+        out_omega[[as.character(scale_id)]] <- psych::omega(data@response[items], ...)
+      }
     }
   }
 
