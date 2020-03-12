@@ -567,6 +567,7 @@ runClassical <- function(config, data = NULL, omega = FALSE, scalewise = FALSE, 
 #' @param data (Optional) A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.
 #' @param estimator The estimator to be used. Passed onto \code{\link[lavaan]{cfa}} in \href{https://CRAN.R-project.org/package=lavaan}{\code{lavaan}} package.
 #' @param std.lv If \code{TRUE}, the metric of the latent variable is determined by fixing their (residual) variances to 1.0. If \code{FALSE}, the metric of each latent variable is determined by fixing the factor loading of the first indicator to 1.0. Passed onto \code{\link[lavaan]{cfa}}.
+#' @param scalewise If TRUE, run analysis for each scale as well as for the combined scale. If FALSE (default), run analysis only for the combined scale.
 #' @param ... Additional arguments to pass onto \code{\link[lavaan]{cfa}}.
 #'
 #' @return A list containing the CFA results. The models are as follows:
@@ -602,7 +603,7 @@ runClassical <- function(config, data = NULL, omega = FALSE, scalewise = FALSE, 
 #' }
 #' @export
 
-runCFA <- function(config, estimator = "WLSMV", std.lv = TRUE, data = NULL, ...) {
+runCFA <- function(config, estimator = "WLSMV", std.lv = TRUE, data = NULL, scalewise = FALSE, ...) {
   if (class(config) != "PROsetta_config") {
     stop("config must be a 'PROsetta_config' class object")
   }
@@ -612,17 +613,23 @@ runCFA <- function(config, estimator = "WLSMV", std.lv = TRUE, data = NULL, ...)
     stop("data must be a 'PROsetta_data' class object")
   }
 
-  all_items <- data@itemmap[[config@item_id]]
-  model_all <- paste("Factor =~ ", paste0(all_items, collapse = " + "))
-  model_all_fit <- lavaan::cfa(model_all, data@response, estimator = estimator, ordered = all_items, std.lv = std.lv, ...)
-  out <- list(all = model_all_fit)
+  out <- list()
 
-  if (!is.null(data@anchor)) {
-    anchor_items <- data@anchor[[config@item_id]]
-    model_anchor <- paste("Factor =~ ", paste0(anchor_items, collapse = " + "))
-    model_anchor_fit <- lavaan::cfa(model_anchor, data@response, estimator = estimator, ordered = anchor_items, std.lv = std.lv, ...)
-    out$anchor <- model_anchor_fit
+  if (scalewise) {
+    for (scale_id in unique(data@itemmap[[config@scale_id]])) {
+      itemmap <- subset(data@itemmap, data@itemmap[[config@scale_id]] == scale_id)
+      items <- itemmap[[config@item_id]]
+      model <- paste("Factor =~ ", paste0(items, collapse = " + "))
+      model_fit <- lavaan::cfa(model, data@response, estimator = estimator, ordered = items, std.lv = std.lv, ...)
+      out[[as.character(scale_id)]] <- model_fit
+    }
   }
+
+  itemmap <- data@itemmap
+  items <- itemmap[[config@item_id]]
+  model <- paste("Factor =~ ", paste0(items, collapse = " + "))
+  model_fit <- lavaan::cfa(model, data@response, estimator = estimator, ordered = items, std.lv = std.lv, ...)
+  out[['combined']] <- model_fit
 
   return(out)
 }
