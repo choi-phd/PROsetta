@@ -246,7 +246,7 @@ checkFilePath <- function(abspath, path) {
 
 loadData <- function(config) {
 
-  if (class(config) != "PROsetta_config") {
+  if (!inherits(config, "PROsetta_config")) {
     stop("config must be a 'PROsetta_config' class object")
   }
 
@@ -314,12 +314,12 @@ loadData <- function(config) {
 
 checkFrequency <- function(config, data = NULL) {
 
-  if (class(config) != "PROsetta_config") {
+  if (!inherits(config, "PROsetta_config")) {
     stop("config must be a 'PROsetta_config' class object")
   }
   if (is.null(data)) {
     data <- loadData(config)
-  } else if (class(data) != "PROsetta_data") {
+  } else if (!inherits(data, "PROsetta_data")) {
     stop("data must be a 'PROsetta_data' class object")
   }
 
@@ -396,19 +396,19 @@ checkFrequency <- function(config, data = NULL) {
 #' @export
 
 runFrequency <- function(config, check_frequency = TRUE, data = NULL) {
-  if (class(config) != "PROsetta_config") {
+  if (!inherits(config, "PROsetta_config")) {
     stop("config must be a 'PROsetta_config' class object")
   }
   if (is.null(data)) {
     data <- loadData(config)
-  } else if (class(data) != "PROsetta_data") {
+  } else if (!inherits(data, "PROsetta_data")) {
     stop("data must be a 'PROsetta_data' class object")
   }
 
   tmp <- data@response[data@itemmap[[config@item_id]]]
   tmp <- apply(tmp, 2, table)
 
-  if (class(tmp) == "list") {
+  if (inherits(tmp, "list")) {
     catnames <- unique(do.call(c, lapply(tmp, names)))
     freq <- as.data.frame(matrix(NA, length(tmp), length(catnames)))
     colnames(freq) <- catnames
@@ -419,7 +419,7 @@ runFrequency <- function(config, check_frequency = TRUE, data = NULL) {
     }
   }
 
-  if (class(tmp) == "matrix") {
+  if (inherits(tmp, "matrix")) {
     freq <- t(tmp)
   }
 
@@ -467,12 +467,12 @@ runFrequency <- function(config, check_frequency = TRUE, data = NULL) {
 #' @export
 
 runDescriptive <- function(config, data = NULL) {
-  if (class(config) != "PROsetta_config") {
+  if (!inherits(config, "PROsetta_config")) {
     stop("config must be a 'PROsetta_config' class object")
   }
   if (is.null(data)) {
     data <- loadData(config)
-  } else if (class(data) != "PROsetta_data") {
+  } else if (!inherits(data, "PROsetta_data")) {
     stop("data must be a 'PROsetta_data' class object")
   }
 
@@ -522,12 +522,12 @@ runDescriptive <- function(config, data = NULL) {
 
 runClassical <- function(config, data = NULL, omega = FALSE, scalewise = FALSE, ...) {
 
-  if (class(config) != "PROsetta_config") {
+  if (!inherits(config, "PROsetta_config")) {
     stop("config must be a 'PROsetta_config' class object")
   }
   if (is.null(data)) {
     data <- loadData(config)
-  } else if (class(data) != "PROsetta_data") {
+  } else if (!inherits(data, "PROsetta_data")) {
     stop("data must be a 'PROsetta_data' class object")
   }
 
@@ -604,12 +604,12 @@ runClassical <- function(config, data = NULL, omega = FALSE, scalewise = FALSE, 
 #' @export
 
 runCFA <- function(config, estimator = "WLSMV", std.lv = TRUE, data = NULL, scalewise = FALSE, ...) {
-  if (class(config) != "PROsetta_config") {
+  if (!inherits(config, "PROsetta_config")) {
     stop("config must be a 'PROsetta_config' class object")
   }
   if (is.null(data)) {
     data <- loadData(config)
-  } else if (class(data) != "PROsetta_data") {
+  } else if (!inherits(data, "PROsetta_data")) {
     stop("data must be a 'PROsetta_data' class object")
   }
 
@@ -682,12 +682,12 @@ runCFA <- function(config, estimator = "WLSMV", std.lv = TRUE, data = NULL, scal
 #' @export
 
 runCalibration <- function(config, data = NULL, ...) {
-  if (class(config) != "PROsetta_config") {
+  if (!inherits(config, "PROsetta_config")) {
     stop("config must be a 'PROsetta_config' class object")
   }
   if (is.null(data)) {
     data <- loadData(config)
-  } else if (class(data) != "PROsetta_data") {
+  } else if (!inherits(data, "PROsetta_data")) {
     stop("data must be a 'PROsetta_data' class object")
   }
 
@@ -757,12 +757,12 @@ runCalibration <- function(config, data = NULL, ...) {
 #' @export
 
 runLinking <- function(config, data = NULL, ...) {
-  if (class(config) != "PROsetta_config") {
+  if (!inherits(config, "PROsetta_config")) {
     stop("config must be a 'PROsetta_config' class object")
   }
   if (is.null(data)) {
     data <- loadData(config)
-  } else if (class(data) != "PROsetta_data") {
+  } else if (!inherits(data, "PROsetta_data")) {
     stop("data must be a 'PROsetta_data' class object")
   }
   if (is.null(data@anchor)) {
@@ -846,12 +846,13 @@ runLinking <- function(config, data = NULL, ...) {
 #' @export
 
 runEquateObserved <- function(config, scale_to = 1, scale_from = 2, type = "equipercentile", smooth = "loglinear", degrees = list(3, 1), boot = TRUE, reps = 100, data = NULL, ...) {
-  if (class(config) != "PROsetta_config") {
+
+  if (!inherits(config, "PROsetta_config")) {
     stop("config must be a 'PROsetta_config' class object")
   }
   if (is.null(data)) {
     data <- loadData(config)
-  } else if (class(data) != "PROsetta_data") {
+  } else if (!inherits(data, "PROsetta_data")) {
     stop("data must be a 'PROsetta_data' class object")
   }
 
@@ -931,12 +932,12 @@ runEquateObserved <- function(config, scale_to = 1, scale_from = 2, type = "equi
 #' @export
 
 runRSSS <- function(config, calibration, prior_mean = 0.0, prior_sd = 1.0, min_theta = -4.0, max_theta = 4.0, inc = 0.01, min_score = 1, t_score = TRUE, data = NULL) {
-  if (class(config) != "PROsetta_config") {
+  if (!inherits(config, "PROsetta_config")) {
     stop("config must be a 'PROsetta_config' class object")
   }
   if (is.null(data)) {
     data <- loadData(config)
-  } else if (class(data) != "PROsetta_data") {
+  } else if (!inherits(data, "PROsetta_data")) {
     stop("data must be a 'PROsetta_data' class object")
   }
   if (is.null(attr(class(calibration), "package"))) {
