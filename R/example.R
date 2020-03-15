@@ -1,44 +1,39 @@
 
 if (FALSE) {
-  new.Config <- new.config(
-    inputDirectory = "/Users/sl47276/Downloads/",
-    anchorFile = "RADAR_promisanchor.csv",
-    responseFile = "RADAR_promis_asr.csv",
-    itemmapFile = "promis_asr_imap.csv",
-    linkingMethod = "FIXEDPAR",
-    guessID = T
+
+  cfg <- createConfig(
+    response_file = "data-raw/dat_axmasq_v2.csv",
+    anchor_file = "data-raw/anchor_axmasq.csv",
+    itemmap_file = "data-raw/imap_axmasq.csv"
   )
 
-  inputData <- LoadData(new.Config)
-  freqTable <- RunFrequency(new.Config, inputData)
-  descTable <- RunDescriptive(new.Config, inputData)
-  classicalTable <- capture.output(RunClassical(new.Config, inputData))
-  cat(classicalTable, sep = "\n")
-  names(classicalTable)
+  input_data <- loadData(cfg)
+  freq_table <- runFrequency(cfg)
+  desc_table <- runDescriptive(cfg)
+  classical_table  <- runClassical(cfg)
+  classical_table2 <- runClassical(cfg, omega = TRUE)
 
-  classicalTable$item.stat
+  out_CFA <- runCFA(cfg)
 
-  classicalTable2 <- RunClassical(new.Config, inputData, omega = TRUE)
-  outCFA <- RunCFA(new.Config, inputData)
-  summary(outCFA$all, fit.measures = TRUE, standardized = TRUE)
-  summary(outCFA$anchor, fit.measures = TRUE, standardized = TRUE)
+  summary(out_CFA$combined, fit.measures = TRUE, standardized = TRUE)
 
-  outCalib <- RunCalibration(new.Config, inputData)
+  out_calib <- runCalibration(cfg)
 
-  mirt::coef(outCalib, IRTpars = TRUE, simplify = TRUE)
-  mirt::itemfit(outCalib, empirical.plot = 1)
-  mirt::itemplot(outCalib, item = 1, type = "info")
-  mirt::itemfit(outCalib, "S_X2", na.rm = TRUE)
+  mirt::coef(out_calib, IRTpars = TRUE, simplify = TRUE)
+  mirt::itemfit(out_calib, empirical.plot = 1)
+  mirt::itemplot(out_calib, item = 1, type = "info")
+  mirt::itemfit(out_calib, "S_X2", na.rm = TRUE)
 
-  new.Config@linkingMethod <- "SL"
-  outCalib.Free <- RunCalibration(new.Config, inputData)
-  outCalib.Free <- RunCalibration(new.Config, inputData, technical = list(NCYCLES = 1000))
-  mirt::coef(outCalib.Free, IRTpars = TRUE, simplify = TRUE)
+  cfg@linking_method <- "SL"
+  out_calib_free <- runCalibration(cfg)
+  out_calib_free <- runCalibration(cfg, technical = list(NCYCLES = 1000))
 
-  outEquate <- RunLinking(new.Config, inputData, technical = list(NCYCLES = 1000))
-  outEquate$link@constants$SL
+  mirt::coef(out_calib_free, IRTpars = TRUE, simplify = TRUE)
 
-  outEquateEquipercentile <- RunEquateObserved(new.Config, inputData, scaleTo = 1, scaleFrom = 2, type = "equipercentile", smooth = "loglinear")
+  out_equate <- runLinking(cfg, technical = list(NCYCLES = 1000))
+  out_equate$link@constants$SL
+
+  out_equate_equiper <- runEquateObserved(cfg, scaleTo = 1, scaleFrom = 2, type = "equipercentile", smooth = "loglinear")
 
   inputData
 }
