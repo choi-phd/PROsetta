@@ -1,3 +1,5 @@
+#' @include datasets.R
+NULL
 
 if (FALSE) {
 
