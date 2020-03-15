@@ -1,13 +1,3 @@
-## Written by Seung W. Choi (schoi@austin.utexas.edu)
-
-#' @import psych
-#' @import mirt
-#' @import plink
-#' @importFrom methods new
-#' @importFrom utils read.csv
-#' @importFrom stats dnorm
-NULL
-
 #' An S4 class to represent configurations for reading datasets and writing outputs.
 #'
 #' @slot study_name Character. A user-specified name of the study.
