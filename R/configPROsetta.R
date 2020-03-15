@@ -1,3 +1,6 @@
+#' @include import.R
+NULL
+
 #' An S4 class to represent configurations for reading datasets and writing outputs.
 #'
 #' @slot study_name Character. A user-specified name of the study.
