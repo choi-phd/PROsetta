@@ -1,6 +1,6 @@
 Package: PROsetta
 Title: PROsetta Linking Analysis
-Version: 0.0.3
+Version: 0.0.4
 Authors@R: as.person(c(
     "Seung Choi <schoi@austin.utexas.edu> [aut, cre]",
     "Benjamin Schalet <b-schalet@northwewstern.edu> [ctb]",
