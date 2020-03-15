@@ -1,3 +1,6 @@
+#' @include configPROsetta.R
+NULL
+
 #' ASQ dataset
 #'
 #' This dataset is associated with the following objects:

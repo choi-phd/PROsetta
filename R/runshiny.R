@@ -1,8 +1,12 @@
+#' @include example.R
+NULL
+
 #' guiPROsetta
 #'
 #' Launches a Shiny app locally.
 #'
 #' @export
+
 guiPROsetta <- function() {
   app_dir <- system.file("shiny", package = "PROsetta")
   if (app_dir == "") {
