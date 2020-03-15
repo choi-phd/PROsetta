@@ -110,6 +110,7 @@ setClass("PROsetta_config",
 #' @param itemmap_file Character. The filename for an item map.
 #' @param anchor_file Character. The filename of a dataset containing the parameters of the items.
 #' @param linking_method Character. The linking method to use. Accepts "\code{MM}", "\code{MS}", "\code{HB}", "\code{SL}", "\code{FIXEDPAR}", or "\code{NONE}".
+#'
 #' @return A \code{\linkS4class{PROsetta_config}} object.
 #'
 #' @rdname PROsetta_config
@@ -283,16 +284,8 @@ loadData <- function(config) {
     }
   }
 
-  resp_with_missing_values <- apply(is.na(data@response), 1, any)
-  if (any(resp_with_missing_values)) {
-    n_resp <- sum(resp_with_missing_values)
-    data@response <- data@response[!resp_with_missing_values, ]
-    message(sprintf("%s response rows were removed because they had missing values", n_resp))
-  }
-
   return(data)
 }
-
 
 #' Check frequency table for unobserved response categories
 #'
@@ -389,6 +382,7 @@ checkFrequency <- function(config, data = NULL) {
 #' @export
 
 runFrequency <- function(config, check_frequency = TRUE, data = NULL) {
+
   if (!inherits(config, "PROsetta_config")) {
     stop("config must be a 'PROsetta_config' class object")
   }
@@ -460,6 +454,7 @@ runFrequency <- function(config, check_frequency = TRUE, data = NULL) {
 #' @export
 
 runDescriptive <- function(config, data = NULL) {
+
   if (!inherits(config, "PROsetta_config")) {
     stop("config must be a 'PROsetta_config' class object")
   }
@@ -471,6 +466,7 @@ runDescriptive <- function(config, data = NULL) {
 
   desc <- psych::describe(data@response[data@itemmap[[config@item_id]]])[-1]
   return(desc)
+
 }
 
 #' Run a CTT-based reliability analysis
@@ -597,6 +593,7 @@ runClassical <- function(config, data = NULL, omega = FALSE, scalewise = FALSE, 
 #' @export
 
 runCFA <- function(config, estimator = "WLSMV", std.lv = TRUE, data = NULL, scalewise = FALSE, ...) {
+
   if (!inherits(config, "PROsetta_config")) {
     stop("config must be a 'PROsetta_config' class object")
   }
@@ -675,6 +672,7 @@ runCFA <- function(config, estimator = "WLSMV", std.lv = TRUE, data = NULL, scal
 #' @export
 
 runCalibration <- function(config, data = NULL, ...) {
+
   if (!inherits(config, "PROsetta_config")) {
     stop("config must be a 'PROsetta_config' class object")
   }
@@ -750,6 +748,7 @@ runCalibration <- function(config, data = NULL, ...) {
 #' @export
 
 runLinking <- function(config, data = NULL, ...) {
+
   if (!inherits(config, "PROsetta_config")) {
     stop("config must be a 'PROsetta_config' class object")
   }
@@ -816,7 +815,10 @@ runLinking <- function(config, data = NULL, ...) {
 #' write.csv(response_asq, f1, row.names = FALSE)
 #' write.csv(itemmap_asq, f2, row.names = FALSE)
 #' write.csv(anchor_asq, f3, row.names = FALSE)
-#' cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
+#' cfg <- createConfig(
+#'   response_file = f1,
+#'   itemmap_file = f2,
+#'   anchor_file = f3)
 #' }
 #' \donttest{
 #' write.csv(response_asq, "response.csv", row.names = FALSE)
@@ -847,6 +849,12 @@ runEquateObserved <- function(config, scale_to = 1, scale_from = 2, type = "equi
     data <- loadData(config)
   } else if (!inherits(data, "PROsetta_data")) {
     stop("data must be a 'PROsetta_data' class object")
+  }
+  resp_with_missing_values <- apply(is.na(data@response), 1, any)
+  n_resp <- sum(resp_with_missing_values)
+  if (any(resp_with_missing_values)) {
+    data@response <- data@response[!resp_with_missing_values, ]
+    message(sprintf("runEquateObserved was conducted with removing %s cases with one or more missing responses", n_resp))
   }
 
   scale_id       <- data@itemmap[[config@scale_id]]
@@ -925,6 +933,7 @@ runEquateObserved <- function(config, scale_to = 1, scale_from = 2, type = "equi
 #' @export
 
 runRSSS <- function(config, calibration, prior_mean = 0.0, prior_sd = 1.0, min_theta = -4.0, max_theta = 4.0, inc = 0.01, min_score = 1, t_score = TRUE, data = NULL) {
+
   if (!inherits(config, "PROsetta_config")) {
     stop("config must be a 'PROsetta_config' class object")
   }
