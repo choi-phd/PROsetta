@@ -52,7 +52,10 @@ f3 <- tempfile()
 write.csv(response_asq, f1, row.names = FALSE)
 write.csv(itemmap_asq, f2, row.names = FALSE)
 write.csv(anchor_asq, f3, row.names = FALSE)
-cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
+cfg <- createConfig(
+  response_file = f1,
+  itemmap_file = f2,
+  anchor_file = f3)
 }
 \donttest{
 write.csv(response_asq, "response.csv", row.names = FALSE)
