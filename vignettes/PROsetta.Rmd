@@ -1,0 +1,401 @@
+---
+title: "Scale linking/equating with PROsetta package"
+author: "Sangdon Lim"
+output:
+  html_document:
+    css: styles.css
+    number_sections: yes
+    toc: yes
+    toc_float: yes
+vignette: >
+  %\VignetteIndexEntry{Scale linking/equating with PROsetta package}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options:
+  chunk_output_type: console
+---
+
+# Introduction
+
+This document explains how to perform scale linking/equating with *PROsetta* package.
+
+```{r, echo = FALSE, message = FALSE, output = 'hide'}
+library(knitr)
+library(kableExtra)
+library(PROsetta)
+```
+
+# Load datasets
+
+First step is to read in datasets with `loadData()`. The PROMIS Depression – PHQ9 linking data, included in the package, is used for this example.
+
+```{r cfg, results = 'hide'}
+fp = system.file("data-raw", package = "PROsetta")
+d = loadData(
+  response  = "dat_DeCESD_v2.csv",
+  itemmap   = "imap_DeCESD.csv",
+  anchor    = "anchor_DeCESD.csv",
+  input_dir = fp)
+```
+
+* `response`: Response data from current administration, containing anchor and input items. Can be a .csv file name or a data frame.
+* `itemmap_file`: Item map specifying which items are in which instrument. Can be a .csv file or a data frame.
+* `anchor_file`: Item parameters for anchor items. Can be a .csv file name or a data frame.
+* `input_dir`: The path of the directory to look for the .csv files.
+
+
+## Response file
+
+The response file requires the following columns.
+
+* `prosettaid`: The person ID of the response row. The name of this variable does not have to be `prosettaid` but should not conflict with other files.
+* Other columns should have the unique ID of each item as column names. The item names are referred by the `item_id` column in the anchor file, and the `item_id` column in the item map file.
+
+See below for an example.
+
+```{r, eval = FALSE}
+file.edit(system.file("data-raw", "dat_DeCESD_v2.csv", package = "PROsetta"))
+```
+
+
+## Item map file
+
+The item map file requires the following columns.
+
+* `item_order`: The position of the item in the combined scale (beginning from 1)
+* `instrument`: Instrument ID (beginning from 1)
+* `item_id`: The unique ID of the item. The name of this column does not have to be `item_id`, but should be consistent with the anchor data. The content of this column should refer to column names in the response data.
+* `item_name`: New names to use in the combined scale
+* `NCAT`: The number of response categories
+* `minScore`: The minimum score of the item
+* `reverse`: Whether the item has been reverse scored
+* `scores`: Comma-separated values for all possible scores of the item
+
+See below for an example.
+
+```{r, eval = FALSE}
+file.edit(system.file("data-raw", "imap_DeCESD.csv"  , package = "PROsetta"))
+```
+
+
+## Anchor file
+
+The anchor file requires the following columns.
+
+* `item_order`: The position of the item in the anchor scale (beginning from 1)
+* `item_id`: The unique ID of the item. The name of this column does not have to be `item_id`, but should be consistent with the item map. The content of this column should refer to column names in the response data.
+* `a`: Parameter in graded response model
+* `cb1`, `cb2`, ...: Parameters in graded response model
+* `NCAT`: The number of response categories
+
+See below for an example.
+
+```{r, eval = FALSE}
+file.edit(system.file("data-raw", "anchor_DeCESD.csv", package = "PROsetta"))
+```
+
+
+# Descriptive analysis
+
+## Basic descriptives
+
+Frequency table of response data is obtained by `runFrequency()`. This function is robust to having no response in a specific response category.
+
+```{r freq, results = 'hide'}
+runFrequency(d)
+```
+
+<br>
+
+Frequency table can be plotted as a histogram with `plot()`. Adjust the `scale` argument to specify which scale to plot. `scale = 'combined'` represents the combined scale.
+
+```{r, fig.align = 'center', fig.width = 7, fig.height = 7}
+plot(d, scale = 'combined', title = "Combined scale")
+```
+
+```{r eval = FALSE}
+plot(d, scale = 1, title = "Scale 1") # not run
+plot(d, scale = 2, title = "Scale 2") # not run
+```
+
+<br>
+
+Basic descriptive measures are obtained by `runDescriptive()`.
+
+```{r desc, results = 'hide'}
+runDescriptive(d)
+```
+
+<br>
+
+## Classical reliability
+
+Classical reliability measures are obtained by `runClassical()`. By default, analysis is performed only for the combined scale. Set `scalewise = TRUE` to request analysis for each scale in addition to the combined scale.
+
+```{r alpha, cache = TRUE, eval = FALSE}
+classical_table = runClassical(d, scalewise = TRUE)
+classical_table$alpha$combined # alpha values for combined scale
+classical_table$alpha$`1`      # alpha values for each scale, created when scalewise = TRUE
+classical_table$alpha$`2`      # alpha values for each scale, created when scalewise = TRUE
+```
+
+Specifying `omega = TRUE` returns $\omega$ coefficients as well.
+
+```{r omega, cache = TRUE, eval = FALSE}
+classical_table = runClassical(d, scalewise = TRUE, omega = TRUE)
+classical_table$omega$combined # omega values for combined scale
+classical_table$omega$`1`      # omega values for each scale, created when scalewise = TRUE
+classical_table$omega$`2`      # omega values for each scale, created when scalewise = TRUE
+```
+
+Additional arguments can be supplied to `runClassical()` to pass onto `psych::omega()`.
+
+```{r eval = FALSE}
+classical_table = runClassical(d, scalewise = TRUE, omega = TRUE, nfactors = 5) # not run
+```
+
+<br>
+
+## Dimensionality analysis
+
+Dimensionality analysis with CFA is performed by `runCFA()`. Set `scalewise = TRUE` to perform analysis for each scale in addition to the combined scale. `runCFA()` calls for `lavaan::cfa()` internally, and can pass additional arguments onto it.
+
+```{r cfa, cache = FALSE, results = 'hide'}
+out_cfa = runCFA(d, scalewise = TRUE)
+```
+
+```{r, eval = FALSE}
+out_cfa = runCFA(d, scalewise = TRUE, std.lv = TRUE) # not run
+```
+
+The analysis result for the combined scale is stored in the `combined` slot, and if `scalewise = TRUE` then the analysis for each scale is also stored in each numbered slot.
+
+```{r}
+out_cfa$combined
+out_cfa$`1`
+out_cfa$`2`
+```
+
+The fit measures can be obtained by using `summary()` from *lavaan* package.
+
+```{r}
+lavaan::summary(out_cfa$combined, fit.measures = TRUE, standardized = TRUE, estimates = FALSE)
+```
+
+```{r, eval = FALSE}
+lavaan::summary(out_cfa$`1`     , fit.measures = TRUE, standardized = TRUE, estimates = FALSE) # not run
+lavaan::summary(out_cfa$`2`     , fit.measures = TRUE, standardized = TRUE, estimates = FALSE) # not run
+```
+
+# Scale linking
+
+`runLinking()` performs linking of item parameters from the response data to supplied anchor item parameters.
+
+
+## Fixed parameter calibration method
+
+Item parameter linking through fixed parameter calibration is performed by setting `method = "FIXEDPAR"`.
+
+```{r fixedpar, cache = TRUE, results = 'hide'}
+out_link_fixedpar = runLinking(d, method = "FIXEDPAR")
+```
+
+The linked parameters are stored in the `$ipar_linked` slot.
+
+```{r}
+out_link_fixedpar$ipar_linked
+```
+
+
+## Linear transformation methods
+
+Item parameter linking through linear transformation is performed by setting the `method` argument to:
+
+* `MM` (Mean-Mean)
+* `MS` (Mean-Sigma)
+* `HB` (Haebara)
+* `SL` (Stocking-Lord)
+
+```{r sl, cache = TRUE, results = 'hide', error = TRUE}
+out_link_sl = runLinking(d, method = "SL")
+out_link_sl
+```
+
+In case of nonconvergence in the free calibration step as above, `runLinking()` will not return the results. Increase the number of iterations by `technical = list(NCYCLES = 1000)`, which is passed onto `mirt::mirt()` internally. Other arguments can also be passed onto it.
+
+```{r sl2, cache = TRUE, results = 'hide'}
+out_link_sl = runLinking(d, method = "SL", technical = list(NCYCLES = 1000))
+```
+
+The linked parameters calibrated to the response data are stored in the `$ipar_linked` slot.
+
+```{r}
+out_link_sl$ipar_linked
+```
+
+Transformation constants for the specified method are stored in the `$constants` slot.
+
+```{r}
+out_link_sl$constants
+```
+
+
+<br>
+
+
+## Obtaining standard scores
+
+From the linked parameters, the raw-score to standard-score table can be obtained by `runRSSS()`.
+
+The table contains theta values corresponding to each level of raw sum score, as well as expected scores in each scale from the theta values.
+
+```{r}
+rsss_fixedpar <- runRSSS(d, out_link_fixedpar)
+rsss_sl       <- runRSSS(d, out_link_sl)
+```
+
+
+```{r}
+rsss_fixedpar$`2`
+```
+
+
+
+# Item parameter calibration
+
+`runCalibration()` performs item parameter calibration without linking to the anchor. Supplied arguments are passed onto `mirt::mirt()`.
+
+```{r calib, cache = TRUE, results = 'hide', error = TRUE}
+out_calib = runCalibration(d)
+```
+
+In case of nonconvergence, `runCalibration()` will not return the results. Increase the number of iterations by `technical = list(NCYCLES = 1000)`. `runCalibration()` calls `mirt::mirt()` internally, and other arguments can be passed onto it.
+
+```{r calib2, cache = TRUE, results = 'hide', error = TRUE}
+out_calib = runCalibration(d, technical = list(NCYCLES = 1000))
+```
+
+The output object can be summarized with functions from *mirt* package.
+
+Use `coef()` to extract item parameters:
+
+```{r mirt_coef, cache = TRUE}
+mirt::coef(out_calib, IRTpars = TRUE, simplify = TRUE)
+```
+
+```{r mirt_plot, cache = TRUE, eval = FALSE, results = 'hide'}
+mirt::itemfit(out_calib, empirical.plot = 1)
+mirt::itemplot(out_calib, item = 1, type = "info")
+mirt::itemfit(out_calib, "S_X2", na.rm = TRUE)
+```
+
+<br>
+
+Scale information can be plotted with `plotInfo`. The last values in arguments `scale_label`, `color`, `lty` represent the values for the combined scale.
+
+```{r, fig.align = 'center', fig.width = 7, fig.height = 7}
+plotInfo(
+  out_calib, d,
+  scale_label = c("PROMIS Depression", "CES-D", "Combined"),
+  color = c("blue", "red", "black"),
+  lty = c(1, 2, 3))
+```
+
+<br>
+
+
+## Equipercentile method: raw-raw
+
+Equipercentile equating of observed scores is performed by `runEquateObserved()`.
+
+Cases with missing responses are removed to be able to generate correct scores in concordance tables.
+
+This function requires four arguments:
+
+* `scaleFrom`: the index of the input scale as specified in the item map
+* `scaleTo`: the index of the anchor scale as specified in the item map
+* `type`: set to `equipercentile` for this example
+* `smooth`: the type of presmoothing to perform
+
+By default, `runEquateObserved()` performs raw-raw equating. In this example, this maps the raw scores from Scale 2 (range 20 to 80) onto raw score equivalents in Scale 1 (range 28 to 140).
+
+```{r eqp_raw, cache = TRUE, results = 'hide'}
+out_equate = runEquateObserved(
+  d, scaleFrom = 2, scaleTo = 1,
+  eq_type = "equipercentile", smooth = "loglinear")
+```
+
+The concordance table can be obtained from the `concordance` slot:
+
+```{r}
+out_equate$concordance
+```
+
+Direct raw-Tscore equating can be triggered by specifying `type_to = 'tscore'`. In this example, this maps the raw scores from Scale 2 (range 20 to 80) onto t-score equivalents in Scale 1 (mean = 50, SD = 10).
+
+```{r eqp_dir, cache = TRUE, results = 'hide'}
+out_equate_dir = runEquateObserved(
+  d, scale_from = 2, scale_to = 1,
+  type_to = "tscore", rsss = rsss_fixedpar,
+  eq_type = "equipercentile", smooth = "loglinear")
+```
+
+
+# Evaluation
+
+
+The results so far produced are now compared. Before starting, produce raw scores from Scale 2 for each examinee.
+
+```{r}
+tmp       <- getScaleSum(d, 2)
+person_id <- d@person_id
+```
+
+Also, obtain EAP estimates of individual T-scores from Scale 1 item parameters to serve as reference scores. Here, fixed parameter calibration results are used for the item parameters.
+
+**Note: Be careful with the `sort = F` option in `merge`, since it does not prevent rows from being sorted. It only prevents column sort.**
+
+```{r}
+o1  <- getTheta(d, out_link_fixedpar$ipar_linked, scale = 1)
+tmp <- merge(tmp, o1$theta, by = person_id)
+tmp <- tmp[, 1:3]
+tmp[, 3] <- tmp[, 3] * 10 + 50
+names(tmp)[3] <- "fxpar_ipar1_tscore"
+```
+
+First, obtain EAP estimates of individual T-scores from Scale 2 item parameters.
+
+```{r}
+o2  <- getTheta(d, out_link_fixedpar$ipar_linked, scale = 2)
+tmp <- merge(tmp, o2$theta, by = person_id)
+tmp <- tmp[, 1:4]
+tmp[, 4] <- tmp[, 4] * 10 + 50
+names(tmp)[4] <- "fxpar_ipar2_tscore"
+```
+
+Second, use the RSSS table to map each raw score level of Scale 2 onto T-scores.
+
+```{r}
+tmp <- merge(tmp, rsss_fixedpar$`2`, by = "raw_2")
+tmp <- tmp[, 1:5]
+names(tmp)[5] <- "fxpar_rsss_tscore"
+```
+
+Third, use the concordance table from direct raw-Tscore equating to map each raw score level of Scale 2 onto T-scores.
+
+```{r}
+tmp <- merge(tmp, out_equate_dir$concordance, by = "raw_2")
+tmp <- tmp[, 1:6]
+names(tmp)[6] <- "eqp_tscore"
+```
+
+
+Finally, use `compareScores()` to compare the obtained T-scores.
+
+```{r}
+# Reference score: IRT pattern scoring of Scale 1
+compareScores(tmp$fxpar_ipar1_tscore, tmp$fxpar_ipar2_tscore) ## IRT pattern scoring of Scale 2
+compareScores(tmp$fxpar_ipar1_tscore, tmp$fxpar_rsss_tscore)  ## IRT raw_2 -> tscore
+compareScores(tmp$fxpar_ipar1_tscore, tmp$eqp_tscore)         ## EQP raw_2 -> tscore
+```
+
