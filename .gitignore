@@ -4,3 +4,9 @@
 .RData
 .Ruserdata
 R/test.R
+vignettes/**/*.RData
+vignettes/**/*.rdb
+vignettes/**/*.rdx
+vignettes/**/*.png
+vignettes/**/__packages
+inst/doc

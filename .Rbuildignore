@@ -5,3 +5,6 @@
 ^R/test\.R$
 ^cleanup.*$
 ^\.travis\.yml$
+^tutorial/*\.*$
+^tutorial/img/*\.*$
+^vignettes/PROsetta_files/PROsetta_cache/html/*\.*$
