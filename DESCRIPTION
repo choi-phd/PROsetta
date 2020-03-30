@@ -1,30 +1,47 @@
 Package: PROsetta
+Type: Package
 Title: PROsetta Linking Analysis
-Version: 0.0.4
-Authors@R: as.person(c(
-    "Seung Choi <schoi@austin.utexas.edu> [aut, cre]",
-    "Benjamin Schalet <b-schalet@northwewstern.edu> [ctb]",
-    "Aaron Kaat <aaron.kaat@northwestern.edu> [ctb]",
-    "Ryne Eastbrook <reastbrook@northwestern.edu> [ctb]",
-    "Sangdon Lim <sangdonlim@utexas.edu> [ctb]"
-  ))
+Version: 0.1.0
+Date: 2020-04-14
+Authors@R: c(
+    person("Seung W.", "Choi",
+        email = "schoi@austin.utexas.edu",
+        role = c("aut", "cre"),
+        comment = c(ORCID = "0000-0003-4777-5420")),
+    person("Benjamin", "Schalet",
+        email = "b-schalet@northwewstern.edu",
+        role = c("ctb")),
+    person("Aaron", "Kaat",
+        email = "aaron.kaat@northwestern.edu",
+        role = c("ctb")),
+    person("Ryne", "Eastbrook",
+        email = "reastbrook@northwestern.edu",
+        role = c("ctb")),
+    person("Sangdon", "Lim",
+        email = "sangdonlim@utexas.edu",
+        role = c("aut"),
+        comment = c(ORCID = "0000-0002-2988-014X")))
 Description: Performs scale linking to establish relationships between instruments
     that measure similar constructs according to the PROsetta Stone methodology.
 URL: http://www.prosettastone.org
 Imports: equate, lavaan, mirt, plink, psych, methods
-Depends: R (>= 2.10.0)
-Suggests: 
+Depends: R (>= 3.5.0)
+Suggests:
     shiny,
     shinythemes,
     shinyWidgets,
     shinyjs,
     DT,
-    testthat (>= 2.1.0)
+    knitr,
+    kableExtra,
+    testthat (>= 2.1.0),
+    rmarkdown
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.0.2
-Collate: 
+RoxygenNote: 7.1.0
+VignetteBuilder: knitr
+Collate:
     'import.R'
     'configPROsetta.R'
     'post_functions.R'
