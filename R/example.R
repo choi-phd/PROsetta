@@ -4,9 +4,9 @@ NULL
 if (FALSE) {
 
   cfg <- createConfig(
-    response_file = "data-raw/dat_axmasq_v2.csv",
-    anchor_file = "data-raw/anchor_axmasq.csv",
-    itemmap_file = "data-raw/imap_axmasq.csv"
+    response_file = "inst/data-raw/dat_decesd_v2.csv",
+    anchor_file = "inst/data-raw/anchor_decesd.csv",
+    itemmap_file = "inst/data-raw/imap_decesd.csv"
   )
 
   input_data <- loadData(cfg)
