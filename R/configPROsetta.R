@@ -576,68 +576,48 @@ runCFA <- function(data, estimator = "WLSMV", std.lv = TRUE, scalewise = FALSE, 
 #'
 #' Performs item calibration for the response data based on the supplied anchor information.
 #'
-#' @param config A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.
 #' @param data A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.
+#' @param fixedpar If TRUE (default), perform fixed parameter calibration using anchor data.
+#' @param ignore_nonconv If TRUE, return results even when calibration did not converge. Defaults to FALSE.
 #' @param ... Additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{\code{mirt}} package.
 #'
 #' @return An object containing item calibration results. This object can be used in \code{\link[mirt:coef-method]{coef}}, \code{\link[mirt]{itemfit}}, \code{\link[mirt]{itemplot}} in \href{https://CRAN.R-project.org/package=mirt}{\code{mirt}} package to extract wanted information.
 #'
 #' @examples
-#' \dontshow{
-#' f1 <- tempfile()
-#' f2 <- tempfile()
-#' f3 <- tempfile()
-#' write.csv(response_asq, f1, row.names = FALSE)
-#' write.csv(itemmap_asq, f2, row.names = FALSE)
-#' write.csv(anchor_asq, f3, row.names = FALSE)
-#' cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
-#' }
 #' \donttest{
-#' write.csv(response_asq, "response.csv", row.names = FALSE)
-#' write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
-#' write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
-#' cfg <- createConfig(
-#'   response_file = "response.csv",
-#'   itemmap_file = "itemmap.csv",
-#'   anchor_file = "anchor.csv")
-#' }
-#' solution <- runCalibration(cfg)
-#' mirt::coef(solution, IRTpars = TRUE, simplify = TRUE)
-#' mirt::itemfit(solution, empirical.plot = 1)
-#' mirt::itemplot(solution, item = 1, type = "info")
-#' mirt::itemfit(solution, "S_X2", na.rm = TRUE)
+#' out_calib <- runCalibration(data_asq) # errors
+#' out_calib <- runCalibration(data_asq, technical = list(NCYCLES = 1000))
 #'
-#' cfg2 <- cfg
-#' cfg2@linking_method <- "SL"
-#' solution2 <- runCalibration(cfg2)
-#' solution2 <- runCalibration(cfg2, technical = list(NCYCLES = 1000))
-#' mirt::coef(solution2, IRTpars = TRUE, simplify = TRUE)
-#' \dontshow{
-#'   file.remove(f1)
-#'   file.remove(f2)
-#'   file.remove(f3)
+#' mirt::coef(out_calib, IRTpars = TRUE, simplify = TRUE)
+#' mirt::itemfit(out_calib, empirical.plot = 1)
+#' mirt::itemplot(out_calib, item = 1, type = "info")
+#' mirt::itemfit(out_calib, "S_X2", na.rm = TRUE)
 #' }
 #' @export
 
-runCalibration <- function(config, data = NULL, ...) {
+runCalibration <- function(data, fixedpar = FALSE, ignore_nonconv = FALSE, ...) {
 
-  if (!inherits(config, "PROsetta_config")) {
-    stop("config must be a 'PROsetta_config' class object")
-  }
-  if (is.null(data)) {
-    data <- loadData(config)
-  } else if (!inherits(data, "PROsetta_data")) {
+  if (!inherits(data, "PROsetta_data")) {
     stop("data must be a 'PROsetta_data' class object")
   }
 
-  if (config@linking_method == "FIXEDPAR") {
-    par_layout <- mirt::mirt(data@response[data@itemmap[[config@item_id]]], 1, itemtype = "graded", pars = "values")
-    fixed <- which(par_layout$item %in% data@anchor[[config@item_id]])
+  resp_data <- data@response[data@itemmap[[data@item_id]]]
+  ni <- dim(resp_data)[2]
+
+  message(sprintf("response data has %i items", ni))
+
+  if (fixedpar) {
+
+    par_layout <- mirt::mirt(resp_data, 1, itemtype = "graded", pars = "values")
+    fixed <- which(par_layout$item %in% data@anchor[[data@item_id]])
+    ni_fixed <- length(unique(par_layout[fixed, "item"]))
+    message(sprintf("performing fixed parameter calibration, fixing %i items from anchor data", ni_fixed))
+
     par_layout[fixed, "est"] <- FALSE
     par_layout[which(par_layout$class == "GroupPars"), "est"] <- TRUE
 
     for (i in fixed) {
-      item <- which(data@anchor[[config@item_id]] == par_layout$item[i])
+      item <- which(data@anchor[[data@item_id]] == par_layout$item[i])
 
       if (substr(par_layout$name[i], 1, 1) == "a") {
         par_layout[i, "value"] <- data@anchor[item, "a"]
@@ -647,11 +627,21 @@ runCalibration <- function(config, data = NULL, ...) {
       }
     }
 
-    calibration <- mirt::mirt(data@response[data@itemmap[[config@item_id]]], 1, itemtype = "graded", pars = par_layout, ...)
+    calibration <- mirt::mirt(resp_data, 1, itemtype = "graded", pars = par_layout, ...)
   } else {
-    calibration <- mirt::mirt(data@response[data@itemmap[[config@item_id]]], 1, itemtype = "graded", ...)
+    message("performing free calibration of all items, ignoring anchor data")
+    calibration <- mirt::mirt(resp_data, 1, itemtype = "graded", ...)
   }
-  # ipar = mirt::coef(calibration, IRTpars = TRUE, simplify = TRUE)$items
+
+  if (calibration@OptimInfo$iter == calibration@Options$NCYCLES) {
+    msg = sprintf("calibration did not converge: increase iteration limit by adjusting the 'technical' argument, e.g., technical = list(NCYCLES = %i)", calibration@Options$NCYCLES + 500)
+    if (ignore_nonconv) {
+      warning(msg)
+    } else {
+      stop(msg)
+    }
+  }
+
   return(calibration)
 }
 
