@@ -182,24 +182,55 @@ createConfig <- function(study_name = "Study",
 
 #' An S4 class to represent \code{PROsetta} datasets.
 #'
-#' @slot response A list containing IDs and the responses of the items.
-#' @slot itemmap A list containing an item map.
-#' @slot anchor A list containing the parameters of the items.
-#'
-#' @export
+#' @rdname loadData
 
 setClass("PROsetta_data",
   slots = c(
     response = "list",
     itemmap = "list",
-    anchor = "list"
+    anchor = "list",
+    item_id = "character",
+    person_id = "character",
+    scale_id = "character"
   ),
   prototype = list(
     response = NULL,
     itemmap = NULL,
-    anchor = NULL
+    anchor = NULL,
+    item_id = "",
+    person_id = "",
+    scale_id = ""
   ),
   validity = function(object) {
+
+    msg_all <- c()
+    if (!object@person_id %in% names(object@response)) {
+      msg <- sprintf("column '%s' for person ID does not exist in response data", object@person_id)
+      msg_all <- c(msg_all, msg)
+    }
+    if (!(object@item_id %in% names(object@itemmap))) {
+      msg <- sprintf("column '%s' for item ID does not exist in item map", object@item_id)
+      msg_all <- c(msg_all, msg)
+    }
+    if (!(object@item_id %in% names(object@anchor))) {
+      msg <- sprintf("column '%s' for item ID does not exist in anchor data", object@item_id)
+      msg_all <- c(msg_all, msg)
+    }
+    if (!is.null(object@itemmap) && !is.null(object@anchor)) {
+      if (!all(object@anchor[[object@item_id]] %in% object@itemmap[[object@item_id]])) {
+        msg <- sprintf("column '%s' in anchor data contains items that are not in itemmap_file", object@item_id)
+        msg_all <- c(msg_all, msg)
+      }
+    }
+    if (!is.null(object@itemmap) && !is.null(object@response)) {
+      if (!all(object@itemmap[[object@item_id]] %in% names(object@response))) {
+        msg <- sprintf("column '%s' in item map contains items that are not in response data", object@item_id)
+        msg_all <- c(msg_all, msg)
+      }
+    }
+    if (length(msg_all) > 0) {
+      return(msg_all)
+    }
     return(TRUE)
   }
 )
