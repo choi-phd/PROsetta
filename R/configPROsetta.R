@@ -475,8 +475,7 @@ runDescriptive <- function(data = NULL) {
 #'
 #' Performs a Classial Test Theory (CTT) reliability analysis.
 #'
-#' @param config A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.
-#' @param data (Optional) A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.
+#' @param data A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.
 #' @param omega If TRUE, also obtains McDonald's omega using \code{\link[psych]{omega}} in \href{https://CRAN.R-project.org/package=psych}{\code{psych}} package.
 #' @param scalewise If TRUE, run analysis for each scale as well as for the combined scale. If FALSE (default), run analysis only for the combined scale.
 #' @param ... Additional arguments to pass onto \code{\link[psych]{omega}}.
@@ -484,41 +483,14 @@ runDescriptive <- function(data = NULL) {
 #' @return The results of reliability analysis.
 #'
 #' @examples
-#' \dontshow{
-#' f1 <- tempfile()
-#' f2 <- tempfile()
-#' f3 <- tempfile()
-#' write.csv(response_asq, f1, row.names = FALSE)
-#' write.csv(itemmap_asq, f2, row.names = FALSE)
-#' write.csv(anchor_asq, f3, row.names = FALSE)
-#' cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
-#' }
-#' \donttest{
-#' write.csv(response_asq, "response.csv", row.names = FALSE)
-#' write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
-#' write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
-#' cfg <- createConfig(
-#'   response_file = "response.csv",
-#'   itemmap_file = "itemmap.csv",
-#'   anchor_file = "anchor.csv")
-#' }
-#' classicalTable <- runClassical(cfg)
-#' classicalTable2 <- runClassical(cfg, omega = TRUE) # also obtains omega
-#' \dontshow{
-#'   file.remove(f1)
-#'   file.remove(f2)
-#'   file.remove(f3)
-#' }
+#' out_alpha <- runClassical(data_asq)
+#' out_omega <- runClassical(data_asq, omega = TRUE) # also obtains omega
+#'
 #' @export
 
-runClassical <- function(config, data = NULL, omega = FALSE, scalewise = FALSE, ...) {
+runClassical <- function(data, omega = FALSE, scalewise = FALSE, ...) {
 
-  if (!inherits(config, "PROsetta_config")) {
-    stop("config must be a 'PROsetta_config' class object")
-  }
-  if (is.null(data)) {
-    data <- loadData(config)
-  } else if (!inherits(data, "PROsetta_data")) {
+  if (!inherits(data, "PROsetta_data")) {
     stop("data must be a 'PROsetta_data' class object")
   }
 
@@ -526,9 +498,9 @@ runClassical <- function(config, data = NULL, omega = FALSE, scalewise = FALSE, 
   out_omega = list()
 
   if (scalewise) {
-    for (scale_id in unique(data@itemmap[[config@scale_id]])) {
-      itemmap <- subset(data@itemmap, data@itemmap[[config@scale_id]] == scale_id)
-      items <- itemmap[[config@item_id]]
+    for (scale_id in unique(data@itemmap[[data@scale_id]])) {
+      itemmap <- subset(data@itemmap, data@itemmap[[data@scale_id]] == scale_id)
+      items <- itemmap[[data@item_id]]
       out_alpha[[as.character(scale_id)]] <- psych::alpha(data@response[items])
       if (omega) {
         out_omega[[as.character(scale_id)]] <- psych::omega(data@response[items], ...)
@@ -536,7 +508,7 @@ runClassical <- function(config, data = NULL, omega = FALSE, scalewise = FALSE, 
     }
   }
 
-  items <- data@itemmap[[config@item_id]]
+  items <- data@itemmap[[data@item_id]]
   out_alpha[['combined']] <- psych::alpha(data@response[items])
   if (omega) {
     out_omega[['combined']] <- psych::omega(data@response[items], ...)
