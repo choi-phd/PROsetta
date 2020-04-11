@@ -241,59 +241,113 @@ setClass("PROsetta_data",
 #'
 #' Loads data from the supplied configuration.
 #'
-#' @param config A PROsetta_config object. See \linkS4class{PROsetta_config}.
+#' @param response A dataset containing case IDs and item responses. Can be a .csv file name or a data frame.
+#' @param itemmap An item map containing item IDs and scale IDs. Can be a .csv file name or a data frame.
+#' @param anchor Item parameters for anchor items. Can be a .csv file name or a data frame.
+#' @param item_id The column name to look for item IDs. Automatically determined if not specified.
+#' @param person_id The column name to look for case IDs. Automatically determined if not specified.
+#' @param scale_id The column name to look for scale IDs. Automatically determined if not specified.
+#' @param input_dir The directory to look for the files.
 #'
-#' @return An S4-class object containing the loaded data.
+#' @return A \code{\linkS4class{PROsetta_data}} object containing the loaded data.
 #'
 #' @export
 
-loadData <- function(config) {
+loadData <- function(response, itemmap, anchor,
+  item_id = NULL, person_id = NULL, scale_id = NULL, input_dir = getwd()) {
 
-  if (!inherits(config, "PROsetta_config")) {
-    stop("config must be a 'PROsetta_config' class object")
+  if (inherits(response, "character")) {
+    p <- check_fp(input_dir, response)
+    if (!p$exists) stop(sprintf("'response': cannot find the specified file %s", p$path))
+    response <- read.csv(p$path, as.is = TRUE)
+  } else if (inherits(response, "matrix")) {
+    response <- as.data.frame(response)
+  } else if (!inherits(response, "data.frame")) {
+    stop(sprintf("'response': unrecognized object type %s", class(response)))
   }
+
+  if (inherits(itemmap, "character")) {
+    p <- check_fp(input_dir, itemmap)
+    if (!p$exists) stop(sprintf("'itemmap': cannot find the specified file %s", p$path))
+    itemmap <- read.csv(p$path, as.is = TRUE)
+  } else if (inherits(itemmap, "matrix")) {
+    itemmap <- as.data.frame(itemmap)
+  } else if (!inherits(itemmap, "data.frame")) {
+    stop(sprintf("'itemmap': unrecognized object type %s", class(itemmap)))
+  }
+
+  if (inherits(anchor, "character")) {
+    p <- check_fp(input_dir, anchor)
+    if (!p$exists) stop(sprintf("'anchor': cannot find the specified file %s", p$path))
+    anchor <- read.csv(p$path, as.is = TRUE)
+  } else if (inherits(anchor, "matrix")) {
+    anchor <- as.data.frame(anchor)
+  } else if (!inherits(anchor, "data.frame")) {
+    stop(sprintf("'anchor': unrecognized object type %s", class(anchor)))
+  }
+
+
+  names_response <- colnames(response)
+  names_itemmap  <- colnames(itemmap)
+
+
+  if ("reverse" %in% names_itemmap) {
+    if (any(itemmap$reverse == 1)) {
+      message("some items were marked as reversed items in 'reverse' column in item map")
+      message("assuming the response data is already reverse coded")
+    } else {
+      message("'reverse' column is present in item map and no items were marked as reversed")
+    }
+  }
+
+
+  # Guess IDs
+
+  n_ids <- sum(!is.null(item_id), !is.null(person_id), !is.null(scale_id))
+
+  if (n_ids < 3 & n_ids > 0) {
+    stop("specify item_id, person_id, scale_id all three to override ID guessing.")
+  }
+
+  if (n_ids == 0) {
+
+    n_match <- rep(NA, dim(itemmap)[2])
+    for (j in 1:dim(itemmap)[2]) {
+      n_match[j] <- sum(names_response %in% itemmap[, j])
+    }
+    idx <- which(n_match == max(n_match))[1]
+    item_id <- names_itemmap[idx]
+    cat(sprintf("item_id guessed as   : %s\n", item_id))
+
+    idx <- which(names_response %in% itemmap[[item_id]] == F)[1]
+    person_id <- names_response[idx]
+    cat(sprintf("person_id guessed as : %s\n", person_id))
+
+    n_unique <- rep(NA, dim(itemmap)[2])
+    for (j in 1:dim(itemmap)[2]) {
+      n_unique[j] <- length(unique(itemmap[, j]))
+    }
+
+    idx <- which((n_unique != max(n_unique)) & (n_unique != 1))[1]
+    scale_id <- names_itemmap[idx]
+    cat(sprintf("scale_id guessed as  : %s\n", scale_id))
+
+  }
+
+
+  # Create PROsetta_data object
 
   data <- new("PROsetta_data")
+  data@response  <- response
+  data@itemmap   <- itemmap
+  data@anchor    <- anchor
+  data@item_id   <- item_id
+  data@person_id <- person_id
+  data@scale_id  <- scale_id
 
-  p <- checkFilePath(config@input_directory, config@response_file)
-  if (p$exists) {
-    data@response <- read.csv(p$path, as.is = TRUE)
-    if (!(config@person_id %in% names(data@response))) {
-      warning(sprintf("column '%s' does not exist in response_file", config@person_id))
-    }
+  if (validObject(data)) {
+    return(data)
   }
-
-  p <- checkFilePath(config@input_directory, config@itemmap_file)
-  if (p$exists) {
-    data@itemmap <- read.csv(p$path, as.is = TRUE)
-    if (!(config@item_id %in% names(data@itemmap))) {
-      warning(sprintf("column '%s' does not exist in itemmap_file", config@item_id))
-    }
-  }
-
-  p <- checkFilePath(config@input_directory, config@anchor_file)
-  if (p$exists) {
-    data@anchor <- read.csv(p$path, as.is = TRUE)
-    if (!(config@item_id %in% names(data@anchor))) {
-      warning(sprintf("column '%s' does not exist in anchor_file", config@item_id))
-    }
-  }
-
-  if (!is.null(data@itemmap) && !is.null(data@anchor)) {
-    if (config@item_id %in% names(data@itemmap) && config@item_id %in% names(data@anchor)) {
-      if (!all(data@anchor[[config@item_id]] %in% data@itemmap[[config@item_id]])) {
-        stop(sprintf("column '%s' in anchor_file contains items that are not in itemmap_file", config@item_id))
-      }
-    }
-  }
-
-  if (!is.null(data@itemmap) && !is.null(data@response)) {
-    if (!all(data@itemmap[[config@item_id]] %in% names(data@response))) {
-      stop(sprintf("%s in itemmap_file contains items that are not in response_file", config@item_id))
-    }
-  }
-
-  return(data)
 }
 
 #' Check frequency table for unobserved response categories
