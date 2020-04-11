@@ -451,50 +451,22 @@ runFrequency <- function(data, check_frequency = TRUE) {
 #'
 #' Obtains a table with descriptive statistics for each variable, from the supplied configuration and the dataset.
 #'
-#' @param config A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.
-#' @param data (Optional) A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.
+#' @param data A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.
 #'
 #' @return A \code{data.frame} containing the descriptive statistics (mean, standard deviation, median, ...) of the variables in the dataset. These are calculated with \code{\link[psych]{describe}} in \href{https://CRAN.R-project.org/package=psych}{\code{psych}} package.
 #'
 #' @examples
-#' \dontshow{
-#' f1 <- tempfile()
-#' f2 <- tempfile()
-#' f3 <- tempfile()
-#' write.csv(response_asq, f1, row.names = FALSE)
-#' write.csv(itemmap_asq, f2, row.names = FALSE)
-#' write.csv(anchor_asq, f3, row.names = FALSE)
-#' cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
-#' }
-#' \donttest{
-#' write.csv(response_asq, "response.csv", row.names = FALSE)
-#' write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
-#' write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
-#' cfg <- createConfig(
-#'   response_file = "response.csv",
-#'   itemmap_file = "itemmap.csv",
-#'   anchor_file = "anchor.csv")
-#' }
-#' descTable <- runDescriptive(cfg)
-#' \dontshow{
-#'   file.remove(f1)
-#'   file.remove(f2)
-#'   file.remove(f3)
-#' }
+#' out_desc <- runDescriptive(data_asq)
+#'
 #' @export
 
-runDescriptive <- function(config, data = NULL) {
+runDescriptive <- function(data = NULL) {
 
-  if (!inherits(config, "PROsetta_config")) {
-    stop("config must be a 'PROsetta_config' class object")
-  }
-  if (is.null(data)) {
-    data <- loadData(config)
-  } else if (!inherits(data, "PROsetta_data")) {
+  if (!inherits(data, "PROsetta_data")) {
     stop("data must be a 'PROsetta_data' class object")
   }
 
-  desc <- psych::describe(data@response[data@itemmap[[config@item_id]]])[-1]
+  desc <- psych::describe(data@response[data@itemmap[[data@item_id]]])[-1]
   return(desc)
 
 }
