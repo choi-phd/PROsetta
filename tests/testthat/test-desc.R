@@ -5,16 +5,17 @@ test_that("runRSSS", {
   write.csv(response_asq, f1, row.names = FALSE)
   write.csv(itemmap_asq, f2, row.names = FALSE)
   write.csv(anchor_asq, f3, row.names = FALSE)
-  cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
 
-  solution    <- runCalibration(cfg)
-  score_table <- runRSSS(cfg, calibration = solution)
+  d <- loadData(response = f1, itemmap = f2, anchor = f3)
 
-  cfg2 <- cfg
-  cfg2@linking_method <- "SL"
+  out_cfa     <- runCFA(d)
 
-  solution    <- runLinking(cfg2, technical = list(NCYCLES = 1000))
-  score_table <- runRSSS(cfg2, calibration = solution)
+  solution    <- runLinking(d, method = "SL", technical = list(NCYCLES = 1000))
+  score_table <- runRSSS(d, solution)
+  solution    <- runLinking(d, method = "FIXEDPAR")
+  score_table <- runRSSS(d, solution)
+
+  solution    <- runEquateObserved(d)
 
   file.remove(f1)
   file.remove(f2)
