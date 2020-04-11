@@ -824,73 +824,39 @@ runEquateObserved <- function(data, scale_from = 2, scale_to = 1, type_to = "raw
 
 }
 
-#' Run Scoring Table Generation
+#' Run Crosswalk Table Generation
 #'
-#' Generates raw-score to scale-score crosswalk tables.
+#' Generates raw-score to standard-score crosswalk tables from supplied calibrated item parameters.
 #'
-#' @param config A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.
-#' @param data (Optional) A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.
-#' @param calibration An object returned from \code{\link{runCalibration}} or \code{\link{runLinking}}
+#' @param data A \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
+#' @param ipar_linked An object returned from \code{\link{runCalibration}} or \code{\link{runLinking}}.
 #' @param prior_mean Prior mean.
 #' @param prior_sd Prior standard deviation.
-#' @param min_theta LL of theta grid.
-#' @param max_theta UL of theta grid.
-#' @param inc Increment of theta grid.
+#' @param min_theta The lower limit of theta grid.
+#' @param max_theta The upper limit of theta grid.
+#' @param inc The increment to use in theta grid.
 #' @param min_score Minimum item score (0 or 1).
-#' @param t_score TRUE to convert theta to T-score.
 #'
 #' @return A list containing crosswalk tables.
 #'
 #' @examples
-#' \dontshow{
-#' f1 <- tempfile()
-#' f2 <- tempfile()
-#' f3 <- tempfile()
-#' write.csv(response_asq, f1, row.names = FALSE)
-#' write.csv(itemmap_asq, f2, row.names = FALSE)
-#' write.csv(anchor_asq, f3, row.names = FALSE)
-#' cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
-#' }
-#' \donttest{
-#' write.csv(response_asq, "response.csv", row.names = FALSE)
-#' write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
-#' write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
-#' cfg <- createConfig(
-#'   response_file = "response.csv",
-#'   itemmap_file = "itemmap.csv",
-#'   anchor_file = "anchor.csv")
-#' }
-#' solution    <- runCalibration(cfg)
-#' score_table <- runRSSS(cfg, calibration = solution)
+#' out_link    <- runLinking(data_asq, method = "FIXEDPAR")
+#' score_table <- runRSSS(data_asq, out_link)
 #'
-#' cfg2                    <- cfg
-#' cfg2@linking_method     <- "SL"
-#' solution                <- runLinking(cfg2, technical = list(NCYCLES = 1000))
-#' score_table_linking     <- runRSSS(cfg2, calibration = solution)
-#' \dontshow{
-#'   file.remove(f1)
-#'   file.remove(f2)
-#'   file.remove(f3)
-#' }
 #' @export
 
-runRSSS <- function(config, calibration, prior_mean = 0.0, prior_sd = 1.0, min_theta = -4.0, max_theta = 4.0, inc = 0.01, min_score = 1, t_score = TRUE, data = NULL) {
+runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_theta = -4.0, max_theta = 4.0, inc = 0.01, min_score = 1) {
 
-  if (!inherits(config, "PROsetta_config")) {
-    stop("config must be a 'PROsetta_config' class object")
-  }
-  if (is.null(data)) {
-    data <- loadData(config)
-  } else if (!inherits(data, "PROsetta_data")) {
+  if (!inherits(data, "PROsetta_data")) {
     stop("data must be a 'PROsetta_data' class object")
   }
-  if (is.null(attr(class(calibration), "package"))) {
-    item_par <- calibration$pars@pars$From
-  } else if (isS4(calibration) && attr(class(calibration), "package") == "mirt") {
-    item_par <- mirt::coef(calibration, IRTpars = TRUE, simplify = TRUE)$items
+  if (is.null(attr(class(ipar_linked), "package"))) {
+    item_par <- ipar_linked$ipar_linked
+  } else if (isS4(ipar_linked) && attr(class(ipar_linked), "package") == "mirt") {
+    item_par <- mirt::coef(ipar_linked, IRTpars = TRUE, simplify = TRUE)$items
   }
 
-  item_par_by_scale <- split(data.frame(item_par), data@itemmap[[config@scale_id]])
+  item_par_by_scale <- split(data.frame(item_par), data@itemmap[[data@scale_id]])
   n_scale <- length(item_par_by_scale)
 
   if (!all(min_score %in% c(0, 1))) {
@@ -904,86 +870,78 @@ runRSSS <- function(config, calibration, prior_mean = 0.0, prior_sd = 1.0, min_t
     stop(sprintf("length of min_score must be either 1 or %i", n_scale + 1))
   }
 
-  rsss <- function(ipar, base0) {
-    theta <- seq(min_theta, max_theta, by = inc)
-    nq <- length(theta)
-    NCAT <- rowSums(!is.na(ipar))
-    maxCat <- max(NCAT)
-    DISC <- ipar[, 1]
-    CB <- ipar[, 2:maxCat]
-    ni <- dim(ipar)[1]
-    pp <- array(0, c(nq, ni, maxCat))
 
-    for (i in 1:ni) {
-      ps <- matrix(0, nq, NCAT[i] + 1)
-      ps[, 1] <- 1
-      ps[, NCAT[i] + 1] <- 0
+  rsss <- function(ipar, is_minscore_0) {
 
-      for (k in 1:(NCAT[i] - 1)) {
-        ps[, k + 1] <- 1 / (1 + exp(-DISC[i] * (theta - CB[i, k])))
-      }
-      for (k in 1:NCAT[i]) {
-        pp[, i, k] <- ps[, k] - ps[, k + 1]
-      }
-    }
+    theta_grid <- seq(min_theta, max_theta, inc)
+    pp         <- prep_prob(ipar, "grm", theta_grid)
+
+    ni   <- dim(ipar)[1]
+    nq   <- length(theta_grid)
+    ncat <- apply(ipar, 1, function(x) sum(!is.na(x)))
 
     min_raw_score <- 0                                 # minimum obtainable raw score
-    max_raw_score <- sum(NCAT) - ni                    # maximum obtainable raw score
-    n_score       <- max_raw_score - min_raw_score + 1 # number of score points
-    inv_TCC       <- numeric(n_score)                  # initialize TCC scoring table
+    max_raw_score <- sum(ncat) - ni                    # maximum obtainable raw score
     raw_score     <- min_raw_score:max_raw_score       # raw scores
-    LH            <- matrix(0, nq, n_score)            # initialize distribution of summed scores
+    n_score       <- length(raw_score)                 # number of score levels
+    inv_tcc       <- numeric(n_score)                  # initialize TCC scoring table
+    lh            <- matrix(0, nq, n_score)            # initialize distribution of summed scores
 
-    ncat <- NCAT[1]
+    ncat_i    <- ncat[1]
     max_score <- 0
-    LH[, 1:ncat] <- pp[, 1, 1:ncat]
-
-    idx <- ncat
+    lh[, 1:ncat_i] <- pp[, 1, 1:ncat_i]
+    idx <- ncat_i
 
     for (i in 2:ni) {
-      ncat      <- NCAT[i]                # number of categories for item i
-      max_score <- ncat - 1               # maximum score for item i
+      ncat_i    <- ncat[i]                # number of categories for item i
+      max_score <- ncat_i - 1             # maximum score for item i
       score     <- 0:max_score            # score values for item i
-      prob      <- pp[, i, 1:ncat]        # category probabilities for item i
-      pLH       <- matrix(0, nq, n_score) # place holder for LH
-
-      for (k in 1:ncat) {
+      prob      <- pp[, i, 1:ncat_i]      # category probabilities for item i
+      plh       <- matrix(0, nq, n_score) # place holder for lh
+      for (k in 1:ncat_i) {
         for (h in 1:idx) {
           sco <- raw_score[h] + score[k]
           position <- which(raw_score == sco)
-          pLH[, position] <- pLH[, position] + LH[, h] * prob[, k]
+          plh[, position] <- plh[, position] + lh[, h] * prob[, k]
         }
       }
-
       idx <- idx + max_score
-      LH <- pLH
+      lh <- plh
     }
 
-    scale_score <- numeric(n_score) # score table for EAP
-    SE          <- numeric(n_score) # SE for EAP
-    prior       <- dnorm((theta - prior_mean) / prior_sd)
-    posterior   <- LH * prior
+    theta_score <- numeric(n_score) # score table for EAP
+    theta_se    <- numeric(n_score) # SE for EAP
+
+    prior       <- gen_prior(theta_grid, "normal", prior_mean, prior_sd)
+    posterior   <- lh * prior
     den         <- colSums(posterior)
     den         <- matrix(rep(den, rep(nq, n_score)), nq, n_score)
     posterior   <- posterior / den
 
     for (j in 1:n_score) {
-      scale_score[j] <- sum(posterior[, j] * theta) / sum(posterior[, j])                   # EAP
-      SE[j] <- sqrt(sum(posterior[, j] * (theta - scale_score[j])^2) / sum(posterior[, j])) # EAP
+      theta_score[j] <- sum(posterior[, j] * theta_grid) / sum(posterior[, j])                   # EAP
+      theta_se[j] <- sqrt(sum(posterior[, j] * (theta_grid - theta_score[j])^2) / sum(posterior[, j])) # EAP
     }
 
-    if (!base0) {
+    if (!is_minscore_0) {
       raw_score <- raw_score + ni
     }
-    if (t_score) {
-      scale_score <- round(scale_score * 10 + 50, 1)
-      SE          <- round(SE * 10, 1)
-    }
 
-    rsss_table <- data.frame(Raw = raw_score, Scale = scale_score, SE)
+    t_score <- theta_score * 10 + 50
+    t_se    <- theta_se * 10
+
+    rsss_table <- data.frame(
+      raw_sum     = raw_score,
+      t_score     = t_score,
+      t_se        = t_se,
+      theta_score = theta_score,
+      theta_se    = theta_se
+    )
 
     return(rsss_table)
   }
+
+  is_minscore_0 = F
 
   if (n_scale == 1) {
     score_table <- rsss(item_par, min_score == 0)
@@ -991,11 +949,37 @@ runRSSS <- function(config, calibration, prior_mean = 0.0, prior_sd = 1.0, min_t
   } else if (n_scale > 1) {
     score_table <- vector(mode = "list", length = n_scale + 1)
 
-    for (s in 1:n_scale) {
-      score_table[[s]] <- rsss(item_par_by_scale[[s]], min_score[s] == 0)
+    for (s in 1:(n_scale + 1)) {
+      if (s != n_scale + 1) {
+        ipar <- item_par_by_scale[[s]]
+      } else {
+        ipar <- item_par
+      }
+      score_table[[s]] <- rsss(ipar, min_score[s] == 0)
+      colnames(score_table[[s]])[1] <- sprintf("raw_%i", s)
     }
 
-    score_table[[n_scale + 1]] <- rsss(item_par, min_score[n_scale + 1] == 0)
+    for (s in 1:(n_scale + 1)) {
+      for (d in 1:(n_scale + 1)) {
+        n_theta <- length(score_table[[s]]$theta_score)
+        e_theta <- rep(NA, n_theta)
+        if (d != n_scale + 1) {
+          ipar <- item_par_by_scale[[d]]
+        } else {
+          ipar <- item_par
+        }
+        for (i in 1:n_theta) {
+          e_theta[i] <- calc_escore(ipar, "grm", score_table[[s]]$theta_score[i], min_score[d] == 0)
+        }
+        if (d != n_scale + 1) {
+          e_name <- sprintf("escore_%i", d)
+        } else {
+          e_name <- sprintf("escore_combined")
+        }
+        score_table[[s]][[e_name]] <- e_theta
+      }
+    }
+
     names(score_table) <- c(names(item_par_by_scale), "combined")
 
     return(score_table)
