@@ -729,94 +729,99 @@ runLinking <- function(data, method, ...) {
 
 #' Run Test Equating
 #'
-#' Performs equipercentile test equating between two scales.
+#' Performs equipercentile test equating between two scales. A concordance table is produced, mapping the observed raw scores from one scale to the scores from another scale.
 #'
-#' @param config A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.
 #' @param data A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.
-#' @param scale_to Numeric. The index of the target scale to equate to. This and \code{scale_from} below both reference to the information stored in the \code{itemmap} slot of \code{Data} argument. The \code{scale_id} slot of \code{config} argument needs to be specified as the name of the varible containing the scale IDs in the \code{itemmap} slot.
 #' @param scale_from Numeric. The index of the scale in need of test equating.
-#' @param type The type of equating to be passed onto \code{\link[equate]{equate}} in \href{https://CRAN.R-project.org/package=equate}{\code{equate}} package.
+#' @param scale_to Numeric. The index of the target scale to equate to. This and \code{scale_from} below both reference to the information stored in the \code{itemmap} slot of \code{Data} argument. The \code{scale_id} slot of \code{config} argument needs to be specified as the name of the varible containing the scale IDs in the \code{itemmap} slot.
+#' @param type_to The type of score to use as the target scale frequency table. Accepts 'raw' (default) and 'tscore'. 'tscore' requires RSSS table to be supplied.
+#' @param rsss If 'type_to' = 'tscore', the RSSS table to use to map each raw score level onto t-score. See \code{\link{runRSSS}}.
+#' @param eq_type The type of equating to be passed onto \code{\link[equate]{equate}} in \href{https://CRAN.R-project.org/package=equate}{\code{equate}} package.
 #' @param smooth The type of smoothing method to be passed onto \code{\link[equate]{presmoothing}} in \href{https://CRAN.R-project.org/package=equate}{\code{equate}} package.
 #' @param degrees The degrees of smoothing to be passed onto \code{\link[equate]{presmoothing}}.
 #' @param boot Logical. Performs bootstrapping if \code{TRUE}.
 #' @param reps Numeric. The number of replications in bootsrapping.
-#' @param ... Other arguments to pass onto \code{\link[equate]{equate}}..
+#' @param ... Other arguments to pass onto \code{\link[equate]{equate}}.
 #'
 #' @return An \code{equate} object containing the test equating result. The printed summary statistics indicate the distributional properties of the two supplied scales and the equated scale. The rows titled \code{x} and \code{y} correspond to the scales specified in \code{scale_from} and \code{scale_to} respectively. The row titled \code{yx} corresponds to the \code{scale_from} scale transformed to \code{scale_to}. See \code{\link[equate]{equate}} for details.
 #'
 #' @examples
-#' \dontshow{
-#' f1 <- tempfile()
-#' f2 <- tempfile()
-#' f3 <- tempfile()
-#' write.csv(response_asq, f1, row.names = FALSE)
-#' write.csv(itemmap_asq, f2, row.names = FALSE)
-#' write.csv(anchor_asq, f3, row.names = FALSE)
-#' cfg <- createConfig(
-#'   response_file = f1,
-#'   itemmap_file = f2,
-#'   anchor_file = f3)
-#' }
-#' \donttest{
-#' write.csv(response_asq, "response.csv", row.names = FALSE)
-#' write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
-#' write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
-#' cfg <- createConfig(
-#'   response_file = "response.csv",
-#'   itemmap_file = "itemmap.csv",
-#'   anchor_file = "anchor.csv")
-#' }
-#' solution <- runEquateObserved(cfg,
+#' out_eq_raw <- runEquateObserved(data_asq,
 #'   scale_to = 1, scale_from = 2,
-#'   type = "equipercentile", smooth = "loglinear"
+#'   eq_type = "equipercentile", smooth = "loglinear"
 #' )
-#' \dontshow{
-#'   file.remove(f1)
-#'   file.remove(f2)
-#'   file.remove(f3)
-#' }
+#' out_eq_raw$concordance
+#'
+#' out_link <- runLinking(data_asq, method = "FIXEDPAR")
+#' out_rsss <- runRSSS(data_asq, out_link)
+#' out_eq_tscore <- runEquateObserved(data_asq,
+#'   scale_to = 1, scale_from = 2,
+#'   type_to = "tscore", rsss = out_rsss,
+#'   eq_type = "equipercentile", smooth = "loglinear"
+#' )
+#' out_eq_tscore$concordance
+#'
 #' @export
 
-runEquateObserved <- function(config, scale_to = 1, scale_from = 2, type = "equipercentile", smooth = "loglinear", degrees = list(3, 1), boot = TRUE, reps = 100, data = NULL, ...) {
+runEquateObserved <- function(data, scale_from = 2, scale_to = 1, type_to = "raw", rsss = NULL, eq_type = "equipercentile", smooth = "loglinear", degrees = list(3, 1), boot = TRUE, reps = 100, ...) {
 
-  if (!inherits(config, "PROsetta_config")) {
-    stop("config must be a 'PROsetta_config' class object")
-  }
-  if (is.null(data)) {
-    data <- loadData(config)
-  } else if (!inherits(data, "PROsetta_data")) {
+  if (!inherits(data, "PROsetta_data")) {
     stop("data must be a 'PROsetta_data' class object")
   }
-  resp_with_missing_values <- apply(is.na(data@response), 1, any)
-  n_resp <- sum(resp_with_missing_values)
-  if (any(resp_with_missing_values)) {
-    data@response <- data@response[!resp_with_missing_values, ]
-    message(sprintf("runEquateObserved was conducted with removing %s cases with one or more missing responses", n_resp))
-  }
 
-  scale_id       <- data@itemmap[[config@scale_id]]
+  message("runEquateObserved requires complete data, attempting to remove cases")
+  data <- getCompleteData(data)
+
+  scale_id       <- data@itemmap[[data@scale_id]]
   scale_code     <- unique(scale_id)
-  items_to       <- which(scale_id %in% scale_to)   # Reference items
   items_from     <- which(scale_id %in% scale_from) # Items that need to be equated
-  itemnames      <- data@itemmap[[config@item_id]]
-  itemnames_to   <- itemnames[items_to]
+  items_to       <- which(scale_id %in% scale_to)   # Reference items
+  itemnames      <- data@itemmap[[data@item_id]]
   itemnames_from <- itemnames[items_from]
-  scores_to      <- rowSums(data@response[itemnames_to])
+  itemnames_to   <- itemnames[items_to]
   scores_from    <- rowSums(data@response[itemnames_from])
-  freq_to        <- equate::freqtab(data@response[itemnames], items = items_to  )
-  freq_from      <- equate::freqtab(data@response[itemnames], items = items_from)
-  score_stat     <- rbind(From = summary(freq_from), To = summary(freq_to))
+  scores_to      <- rowSums(data@response[itemnames_to])
+  freq_from      <- equate::freqtab(scores_from)
+  freq_to        <- equate::freqtab(scores_to)
 
-  # plot(x = freq_to, lwd = 2, xlab = "Score", ylab = "Count")
-  # plot(x = sfreq_to, lwd = 2, xlab = "Score", ylab = "Count")
+
+  # scale_from
 
   if (smooth != "none") {
-    freq_to   <- equate::presmoothing(freq_to, smoothmethod = smooth, degrees = degrees)
+    message(sprintf("performing %s presmoothing on scale %i (scale_from) distribution", smooth, scale_from))
     freq_from <- equate::presmoothing(freq_from, smoothmethod = smooth, degrees = degrees)
   }
 
-  out <- equate::equate(freq_from, freq_to, type = type, boot = boot, reps = reps, ...)
+
+  # scale_to
+
+  if (type_to == "tscore") {
+    if (!is.null(rsss)) {
+      message(sprintf("mapping scale %i (scale_to) raw scores to t-scores using supplied rsss", scale_to))
+      tmp <- as.data.frame(freq_to)
+      tmp <- merge(
+        tmp, rsss[[as.character(scale_to)]],
+        by.x = "total", by.y = sprintf("raw_%i", scale_to))
+      tmp <- tmp[, c("t_score", "count")]
+      freq_to <- equate::as.freqtab(tmp)
+    } else {
+      stop("type_to = 'tscore' requires rsss to be able to map raw scores to t-scores")
+    }
+  }
+  if (smooth != "none") {
+    message(sprintf("performing %s presmoothing on scale %i (scale_to) distribution", smooth, scale_to))
+    freq_to   <- equate::presmoothing(freq_to  , smoothmethod = smooth, degrees = degrees)
+  }
+
+  score_stat     <- rbind(From = summary(freq_from), To = summary(freq_to))
+
+  out <- equate::equate(freq_from, freq_to, type = eq_type, boot = boot, reps = reps, ...)
+
+  names(out$concordance)[1:2] <- c(
+    sprintf("raw_%i"  , scale_from),
+    sprintf("equiv_%i", scale_to))
   return(out)
+
 }
 
 #' Run Scoring Table Generation
