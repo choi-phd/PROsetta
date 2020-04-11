@@ -27,6 +27,8 @@ RoxygenNote: 7.0.2
 Collate: 
     'import.R'
     'configPROsetta.R'
+    'post_functions.R'
+    'core_functions.R'
     'datasets.R'
     'example.R'
     'runshiny.R'
