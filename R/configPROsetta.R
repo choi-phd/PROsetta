@@ -204,28 +204,6 @@ setClass("PROsetta_data",
   }
 )
 
-#' Check file path
-#'
-#' Check file path to see if it exists.
-#'
-#' @param abspath Absolute path of an input directory.
-#' @param path Absolute or relative path of a file.
-#'
-#' @return a list containing normalized file path and whether it exists.
-
-checkFilePath <- function(abspath, path) {
-  p <- path
-  if (file.exists(p)) {
-    return(list(path = normalizePath(p), exists = TRUE))
-  }
-
-  p <- file.path(abspath, path)
-  if (file.exists(p)) {
-    return(list(path = normalizePath(p), exists = TRUE))
-  }
-
-  return(list(path = NULL, exists = FALSE))
-}
 
 
 #' Load data from supplied config
