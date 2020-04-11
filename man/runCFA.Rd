@@ -4,23 +4,14 @@
 \alias{runCFA}
 \title{Run a confirmatory factor analysis}
 \usage{
-runCFA(
-  config,
-  estimator = "WLSMV",
-  std.lv = TRUE,
-  data = NULL,
-  scalewise = FALSE,
-  ...
-)
+runCFA(data, estimator = "WLSMV", std.lv = TRUE, scalewise = FALSE, ...)
 }
 \arguments{
-\item{config}{A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.}
+\item{data}{A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.}
 
 \item{estimator}{The estimator to be used. Passed onto \code{\link[lavaan]{cfa}} in \href{https://CRAN.R-project.org/package=lavaan}{\code{lavaan}} package.}
 
 \item{std.lv}{If \code{TRUE}, the metric of the latent variable is determined by fixing their (residual) variances to 1.0. If \code{FALSE}, the metric of each latent variable is determined by fixing the factor loading of the first indicator to 1.0. Passed onto \code{\link[lavaan]{cfa}}.}
-
-\item{data}{(Optional) A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.}
 
 \item{scalewise}{If TRUE, run analysis for each scale as well as for the combined scale. If FALSE (default), run analysis only for the combined scale.}
 
@@ -35,30 +26,10 @@ A list containing the CFA results. The models are as follows:
 Performs a one-factor confirmatory factor analysis (CFA) to test unidimensionality.
 }
 \examples{
-\dontshow{
-f1 <- tempfile()
-f2 <- tempfile()
-f3 <- tempfile()
-write.csv(response_asq, f1, row.names = FALSE)
-write.csv(itemmap_asq, f2, row.names = FALSE)
-write.csv(anchor_asq, f3, row.names = FALSE)
-cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
-}
 \donttest{
-write.csv(response_asq, "response.csv", row.names = FALSE)
-write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
-write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
-cfg <- createConfig(
-  response_file = "response.csv",
-  itemmap_file = "itemmap.csv",
-  anchor_file = "anchor.csv")
-}
-solution <- runCFA(cfg)
-summary(solution$all, fit.measures = TRUE, standardized = TRUE)
-summary(solution$anchor, fit.measures = TRUE, standardized = TRUE)
-\dontshow{
-  file.remove(f1)
-  file.remove(f2)
-  file.remove(f3)
+out_cfa <- runCFA(data_asq, scalewise = TRUE)
+lavaan::summary(out_cfa$`1`       , fit.measures = TRUE, standardized = TRUE, estimates = FALSE)
+lavaan::summary(out_cfa$`2`       , fit.measures = TRUE, standardized = TRUE, estimates = FALSE)
+lavaan::summary(out_cfa$`combined`, fit.measures = TRUE, standardized = TRUE, estimates = FALSE)
 }
 }
