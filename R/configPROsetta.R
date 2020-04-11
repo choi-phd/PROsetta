@@ -406,50 +406,23 @@ checkFrequency <- function(data) {
 #'
 #' Obtains a frequency table from the supplied configuration and the dataset.
 #'
-#' @param config A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.
-#' @param data A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.
+#' @param data A \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
 #' @param check_frequency Logical. If \code{TRUE}, check the frequency table for missing response categories, and display warning message if any is missing.
+#'
 #' @return A \code{data.frame} containing the frequency table of the dataset.
 #'
 #' @examples
-#' \dontshow{
-#' f1 <- tempfile()
-#' f2 <- tempfile()
-#' f3 <- tempfile()
-#' write.csv(response_asq, f1, row.names = FALSE)
-#' write.csv(itemmap_asq, f2, row.names = FALSE)
-#' write.csv(anchor_asq, f3, row.names = FALSE)
-#' cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
-#' }
-#' \donttest{
-#' write.csv(response_asq, "response.csv", row.names = FALSE)
-#' write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
-#' write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
-#' cfg <- createConfig(
-#'   response_file = "response.csv",
-#'   itemmap_file = "itemmap.csv",
-#'   anchor_file = "anchor.csv")
-#' }
-#' freqTable <- runFrequency(cfg)
-#' \dontshow{
-#'   file.remove(f1)
-#'   file.remove(f2)
-#'   file.remove(f3)
-#' }
+#' out_freq <- runFrequency(data_asq)
+#'
 #' @export
 
-runFrequency <- function(config, check_frequency = TRUE, data = NULL) {
+runFrequency <- function(data, check_frequency = TRUE) {
 
-  if (!inherits(config, "PROsetta_config")) {
-    stop("config must be a 'PROsetta_config' class object")
-  }
-  if (is.null(data)) {
-    data <- loadData(config)
-  } else if (!inherits(data, "PROsetta_data")) {
+  if (!inherits(data, "PROsetta_data")) {
     stop("data must be a 'PROsetta_data' class object")
   }
 
-  tmp <- data@response[data@itemmap[[config@item_id]]]
+  tmp <- data@response[data@itemmap[[data@item_id]]]
   tmp <- apply(tmp, 2, table)
 
   if (inherits(tmp, "list")) {
@@ -468,7 +441,7 @@ runFrequency <- function(config, check_frequency = TRUE, data = NULL) {
   }
 
   if (check_frequency) {
-    checkFrequency(config, data)
+    checkFrequency(data)
   }
 
   return(freq)
