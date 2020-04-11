@@ -4,12 +4,10 @@
 \alias{runClassical}
 \title{Run a CTT-based reliability analysis}
 \usage{
-runClassical(config, data = NULL, omega = FALSE, scalewise = FALSE, ...)
+runClassical(data, omega = FALSE, scalewise = FALSE, ...)
 }
 \arguments{
-\item{config}{A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.}
-
-\item{data}{(Optional) A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.}
+\item{data}{A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.}
 
 \item{omega}{If TRUE, also obtains McDonald's omega using \code{\link[psych]{omega}} in \href{https://CRAN.R-project.org/package=psych}{\code{psych}} package.}
 
@@ -24,29 +22,7 @@ The results of reliability analysis.
 Performs a Classial Test Theory (CTT) reliability analysis.
 }
 \examples{
-\dontshow{
-f1 <- tempfile()
-f2 <- tempfile()
-f3 <- tempfile()
-write.csv(response_asq, f1, row.names = FALSE)
-write.csv(itemmap_asq, f2, row.names = FALSE)
-write.csv(anchor_asq, f3, row.names = FALSE)
-cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
-}
-\donttest{
-write.csv(response_asq, "response.csv", row.names = FALSE)
-write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
-write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
-cfg <- createConfig(
-  response_file = "response.csv",
-  itemmap_file = "itemmap.csv",
-  anchor_file = "anchor.csv")
-}
-classicalTable <- runClassical(cfg)
-classicalTable2 <- runClassical(cfg, omega = TRUE) # also obtains omega
-\dontshow{
-  file.remove(f1)
-  file.remove(f2)
-  file.remove(f3)
-}
+out_alpha <- runClassical(data_asq)
+out_omega <- runClassical(data_asq, omega = TRUE) # also obtains omega
+
 }
