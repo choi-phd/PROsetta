@@ -2,77 +2,44 @@
 % Please edit documentation in R/configPROsetta.R
 \name{runRSSS}
 \alias{runRSSS}
-\title{Run Scoring Table Generation}
+\title{Run Crosswalk Table Generation}
 \usage{
 runRSSS(
-  config,
-  calibration,
+  data,
+  ipar_linked,
   prior_mean = 0,
   prior_sd = 1,
   min_theta = -4,
   max_theta = 4,
   inc = 0.01,
-  min_score = 1,
-  t_score = TRUE,
-  data = NULL
+  min_score = 1
 )
 }
 \arguments{
-\item{config}{A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.}
+\item{data}{A \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.}
 
-\item{calibration}{An object returned from \code{\link{runCalibration}} or \code{\link{runLinking}}}
+\item{ipar_linked}{An object returned from \code{\link{runCalibration}} or \code{\link{runLinking}}.}
 
 \item{prior_mean}{Prior mean.}
 
 \item{prior_sd}{Prior standard deviation.}
 
-\item{min_theta}{LL of theta grid.}
+\item{min_theta}{The lower limit of theta grid.}
 
-\item{max_theta}{UL of theta grid.}
+\item{max_theta}{The upper limit of theta grid.}
 
-\item{inc}{Increment of theta grid.}
+\item{inc}{The increment to use in theta grid.}
 
 \item{min_score}{Minimum item score (0 or 1).}
-
-\item{t_score}{TRUE to convert theta to T-score.}
-
-\item{data}{(Optional) A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.}
 }
 \value{
 A list containing crosswalk tables.
 }
 \description{
-Generates raw-score to scale-score crosswalk tables.
+Generates raw-score to standard-score crosswalk tables from supplied calibrated item parameters.
 }
 \examples{
-\dontshow{
-f1 <- tempfile()
-f2 <- tempfile()
-f3 <- tempfile()
-write.csv(response_asq, f1, row.names = FALSE)
-write.csv(itemmap_asq, f2, row.names = FALSE)
-write.csv(anchor_asq, f3, row.names = FALSE)
-cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
-}
-\donttest{
-write.csv(response_asq, "response.csv", row.names = FALSE)
-write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
-write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
-cfg <- createConfig(
-  response_file = "response.csv",
-  itemmap_file = "itemmap.csv",
-  anchor_file = "anchor.csv")
-}
-solution    <- runCalibration(cfg)
-score_table <- runRSSS(cfg, calibration = solution)
+out_link    <- runLinking(data_asq, method = "FIXEDPAR")
+score_table <- runRSSS(data_asq, out_link)
 
-cfg2                    <- cfg
-cfg2@linking_method     <- "SL"
-solution                <- runLinking(cfg2, technical = list(NCYCLES = 1000))
-score_table_linking     <- runRSSS(cfg2, calibration = solution)
-\dontshow{
-  file.remove(f1)
-  file.remove(f2)
-  file.remove(f3)
-}
 }
