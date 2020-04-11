@@ -5,5 +5,7 @@
 #' @import plink
 #' @importFrom methods new
 #' @importFrom utils read.csv
-#' @importFrom stats dnorm
+#' @importFrom stats dnorm sd
+#' @importFrom grDevices pdf jpeg png tiff dev.off
+#' @importFrom graphics hist text points box legend grid lines
 NULL

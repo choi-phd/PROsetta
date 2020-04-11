@@ -31,4 +31,5 @@ Collate:
     'core_functions.R'
     'datasets.R'
     'example.R'
+    'plot_functions.R'
     'runshiny.R'
