@@ -5,26 +5,31 @@
 \title{Run Test Equating}
 \usage{
 runEquateObserved(
-  config,
-  scale_to = 1,
+  data,
   scale_from = 2,
-  type = "equipercentile",
+  scale_to = 1,
+  type_to = "raw",
+  rsss = NULL,
+  eq_type = "equipercentile",
   smooth = "loglinear",
   degrees = list(3, 1),
   boot = TRUE,
   reps = 100,
-  data = NULL,
   ...
 )
 }
 \arguments{
-\item{config}{A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.}
-
-\item{scale_to}{Numeric. The index of the target scale to equate to. This and \code{scale_from} below both reference to the information stored in the \code{itemmap} slot of \code{Data} argument. The \code{scale_id} slot of \code{config} argument needs to be specified as the name of the varible containing the scale IDs in the \code{itemmap} slot.}
+\item{data}{A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.}
 
 \item{scale_from}{Numeric. The index of the scale in need of test equating.}
 
-\item{type}{The type of equating to be passed onto \code{\link[equate]{equate}} in \href{https://CRAN.R-project.org/package=equate}{\code{equate}} package.}
+\item{scale_to}{Numeric. The index of the target scale to equate to. This and \code{scale_from} below both reference to the information stored in the \code{itemmap} slot of \code{Data} argument. The \code{scale_id} slot of \code{config} argument needs to be specified as the name of the varible containing the scale IDs in the \code{itemmap} slot.}
+
+\item{type_to}{The type of score to use as the target scale frequency table. Accepts 'raw' (default) and 'tscore'. 'tscore' requires RSSS table to be supplied.}
+
+\item{rsss}{If 'type_to' = 'tscore', the RSSS table to use to map each raw score level onto t-score. See \code{\link{runRSSS}}.}
+
+\item{eq_type}{The type of equating to be passed onto \code{\link[equate]{equate}} in \href{https://CRAN.R-project.org/package=equate}{\code{equate}} package.}
 
 \item{smooth}{The type of smoothing method to be passed onto \code{\link[equate]{presmoothing}} in \href{https://CRAN.R-project.org/package=equate}{\code{equate}} package.}
 
@@ -34,45 +39,28 @@ runEquateObserved(
 
 \item{reps}{Numeric. The number of replications in bootsrapping.}
 
-\item{data}{A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.}
-
-\item{...}{Other arguments to pass onto \code{\link[equate]{equate}}..}
+\item{...}{Other arguments to pass onto \code{\link[equate]{equate}}.}
 }
 \value{
 An \code{equate} object containing the test equating result. The printed summary statistics indicate the distributional properties of the two supplied scales and the equated scale. The rows titled \code{x} and \code{y} correspond to the scales specified in \code{scale_from} and \code{scale_to} respectively. The row titled \code{yx} corresponds to the \code{scale_from} scale transformed to \code{scale_to}. See \code{\link[equate]{equate}} for details.
 }
 \description{
-Performs equipercentile test equating between two scales.
+Performs equipercentile test equating between two scales. A concordance table is produced, mapping the observed raw scores from one scale to the scores from another scale.
 }
 \examples{
-\dontshow{
-f1 <- tempfile()
-f2 <- tempfile()
-f3 <- tempfile()
-write.csv(response_asq, f1, row.names = FALSE)
-write.csv(itemmap_asq, f2, row.names = FALSE)
-write.csv(anchor_asq, f3, row.names = FALSE)
-cfg <- createConfig(
-  response_file = f1,
-  itemmap_file = f2,
-  anchor_file = f3)
-}
-\donttest{
-write.csv(response_asq, "response.csv", row.names = FALSE)
-write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
-write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
-cfg <- createConfig(
-  response_file = "response.csv",
-  itemmap_file = "itemmap.csv",
-  anchor_file = "anchor.csv")
-}
-solution <- runEquateObserved(cfg,
+out_eq_raw <- runEquateObserved(data_asq,
   scale_to = 1, scale_from = 2,
-  type = "equipercentile", smooth = "loglinear"
+  eq_type = "equipercentile", smooth = "loglinear"
 )
-\dontshow{
-  file.remove(f1)
-  file.remove(f2)
-  file.remove(f3)
-}
+out_eq_raw$concordance
+
+out_link <- runLinking(data_asq, method = "FIXEDPAR")
+out_rsss <- runRSSS(data_asq, out_link)
+out_eq_tscore <- runEquateObserved(data_asq,
+  scale_to = 1, scale_from = 2,
+  type_to = "tscore", rsss = out_rsss,
+  eq_type = "equipercentile", smooth = "loglinear"
+)
+out_eq_tscore$concordance
+
 }
