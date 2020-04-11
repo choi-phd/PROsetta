@@ -4,12 +4,14 @@
 \alias{runCalibration}
 \title{Run Calibration}
 \usage{
-runCalibration(config, data = NULL, ...)
+runCalibration(data, fixedpar = FALSE, ignore_nonconv = FALSE, ...)
 }
 \arguments{
-\item{config}{A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.}
-
 \item{data}{A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.}
+
+\item{fixedpar}{If TRUE (default), perform fixed parameter calibration using anchor data.}
+
+\item{ignore_nonconv}{If TRUE, return results even when calibration did not converge. Defaults to FALSE.}
 
 \item{...}{Additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{\code{mirt}} package.}
 }
@@ -20,38 +22,13 @@ An object containing item calibration results. This object can be used in \code{
 Performs item calibration for the response data based on the supplied anchor information.
 }
 \examples{
-\dontshow{
-f1 <- tempfile()
-f2 <- tempfile()
-f3 <- tempfile()
-write.csv(response_asq, f1, row.names = FALSE)
-write.csv(itemmap_asq, f2, row.names = FALSE)
-write.csv(anchor_asq, f3, row.names = FALSE)
-cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
-}
 \donttest{
-write.csv(response_asq, "response.csv", row.names = FALSE)
-write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
-write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
-cfg <- createConfig(
-  response_file = "response.csv",
-  itemmap_file = "itemmap.csv",
-  anchor_file = "anchor.csv")
-}
-solution <- runCalibration(cfg)
-mirt::coef(solution, IRTpars = TRUE, simplify = TRUE)
-mirt::itemfit(solution, empirical.plot = 1)
-mirt::itemplot(solution, item = 1, type = "info")
-mirt::itemfit(solution, "S_X2", na.rm = TRUE)
+out_calib <- runCalibration(data_asq) # errors
+out_calib <- runCalibration(data_asq, technical = list(NCYCLES = 1000))
 
-cfg2 <- cfg
-cfg2@linking_method <- "SL"
-solution2 <- runCalibration(cfg2)
-solution2 <- runCalibration(cfg2, technical = list(NCYCLES = 1000))
-mirt::coef(solution2, IRTpars = TRUE, simplify = TRUE)
-\dontshow{
-  file.remove(f1)
-  file.remove(f2)
-  file.remove(f3)
+mirt::coef(out_calib, IRTpars = TRUE, simplify = TRUE)
+mirt::itemfit(out_calib, empirical.plot = 1)
+mirt::itemplot(out_calib, item = 1, type = "info")
+mirt::itemfit(out_calib, "S_X2", na.rm = TRUE)
 }
 }
