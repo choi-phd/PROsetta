@@ -4,14 +4,12 @@
 \alias{runFrequency}
 \title{Obtain a frequency table}
 \usage{
-runFrequency(config, check_frequency = TRUE, data = NULL)
+runFrequency(data, check_frequency = TRUE)
 }
 \arguments{
-\item{config}{A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.}
+\item{data}{A \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.}
 
 \item{check_frequency}{Logical. If \code{TRUE}, check the frequency table for missing response categories, and display warning message if any is missing.}
-
-\item{data}{A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.}
 }
 \value{
 A \code{data.frame} containing the frequency table of the dataset.
@@ -20,28 +18,6 @@ A \code{data.frame} containing the frequency table of the dataset.
 Obtains a frequency table from the supplied configuration and the dataset.
 }
 \examples{
-\dontshow{
-f1 <- tempfile()
-f2 <- tempfile()
-f3 <- tempfile()
-write.csv(response_asq, f1, row.names = FALSE)
-write.csv(itemmap_asq, f2, row.names = FALSE)
-write.csv(anchor_asq, f3, row.names = FALSE)
-cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3)
-}
-\donttest{
-write.csv(response_asq, "response.csv", row.names = FALSE)
-write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
-write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
-cfg <- createConfig(
-  response_file = "response.csv",
-  itemmap_file = "itemmap.csv",
-  anchor_file = "anchor.csv")
-}
-freqTable <- runFrequency(cfg)
-\dontshow{
-  file.remove(f1)
-  file.remove(f2)
-  file.remove(f3)
-}
+out_freq <- runFrequency(data_asq)
+
 }
