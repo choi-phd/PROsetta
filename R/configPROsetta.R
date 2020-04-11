@@ -649,81 +649,80 @@ runCalibration <- function(data, fixedpar = FALSE, ignore_nonconv = FALSE, ...) 
 #'
 #' Performs scale linking and obtains a set of transformation coefficients.
 #'
-#' @param config A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.
-#' @param data (Optional) A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.
+#' @param data A \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
+#' @param method The type of linking to perform. Accepts "MM" for mean-mean, "MS" for mean-sigma, "HB" for Haebara, "SL" for Stocking-Lord, "FIXEDPAR" for fixed parameter calibration.
 #' @param ... Additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{\code{mirt}} package.
 #'
 #' @return A list containing the scale linking results. These are obtained with \code{\link[plink]{plink-methods}} in \href{https://CRAN.R-project.org/package=plink}{\code{plink}} package.
 #'
 #' @examples
-#' \dontshow{
-#' f1 <- tempfile()
-#' f2 <- tempfile()
-#' f3 <- tempfile()
-#' write.csv(response_asq, f1, row.names = FALSE)
-#' write.csv(itemmap_asq, f2, row.names = FALSE)
-#' write.csv(anchor_asq, f3, row.names = FALSE)
-#' cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3,
-#'   linking_method = "SL")
-#' }
 #' \donttest{
-#' write.csv(response_asq, "response.csv", row.names = FALSE)
-#' write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
-#' write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
-#' cfg <- createConfig(
-#'   response_file = "response.csv",
-#'   itemmap_file = "itemmap.csv",
-#'   anchor_file = "anchor.csv",
-#'   linking_method = "SL")
-#' }
-#' solution <- runLinking(cfg, technical = list(NCYCLES = 1000))
-#' solution$link@constants$SL
-#' \dontshow{
-#'   file.remove(f1)
-#'   file.remove(f2)
-#'   file.remove(f3)
+#' out_link <- runLinking(data_asq, "SL", technical = list(NCYCLES = 1000))
+#' out_link$constants   # transformation constants
+#' out_link$ipar_linked # item parameters linked to anchor
+#' out_link <- runLinking(data_asq, "FIXEDPAR")
+#' out_link$ipar_linked # item parameters linked to anchor
 #' }
 #' @export
 
-runLinking <- function(config, data = NULL, ...) {
+runLinking <- function(data, method, ...) {
 
-  if (!inherits(config, "PROsetta_config")) {
-    stop("config must be a 'PROsetta_config' class object")
-  }
-  if (is.null(data)) {
-    data <- loadData(config)
-  } else if (!inherits(data, "PROsetta_data")) {
+  if (!inherits(data, "PROsetta_data")) {
     stop("data must be a 'PROsetta_data' class object")
   }
   if (is.null(data@anchor)) {
-    stop("anchor cannot be NULL")
+    stop("anchor must be supplied to perform scale linking")
   }
-  if (!config@linking_method %in% c("MM", "MS", "HB", "SL", "LS")) {
-    stop("config@linking_method must be one of the following: 'MM', 'MS', 'HB', 'SL', 'LS'.")
+  if (!method %in% c("MM", "MS", "HB", "SL", "FIXEDPAR")) {
+    stop(sprintf("unrecognized value in 'method': %s", method))
   }
 
-  calibration <- runCalibration(config, data, ...)
-  ipar <- mirt::coef(calibration, IRTpars = TRUE, simplify = TRUE)$items
-  ni_all <- nrow(ipar)
+  if (method == "FIXEDPAR") {
+    do_fixedpar <- TRUE
+  } else {
+    do_fixedpar <- FALSE
+  }
+
+  calibration <- runCalibration(data, fixedpar = do_fixedpar, ...)
+
+  ipar      <- mirt::coef(calibration, IRTpars = TRUE, simplify = TRUE)$items
+  ni_all    <- nrow(ipar)
   ni_anchor <- nrow(data@anchor)
-  maxCat <- max(data@anchor$NCAT)
-  id_new <- data.frame(New = 1:ni_all, ID = data@itemmap[[config@item_id]])
-  id_old <- data.frame(Old = 1:ni_anchor, ID = data@anchor[[config@item_id]])
+  max_cat   <- max(data@anchor$NCAT)
+
+  id_new <- data.frame(New = 1:ni_all   , ID = data@itemmap[[data@item_id]])
+  id_old <- data.frame(Old = 1:ni_anchor, ID = data@anchor[[data@item_id]])
   common <- merge(id_new, id_old, by = "ID", sort = FALSE)[c("New", "Old")]
   pars <- vector("list", 2)
-
   pars[[1]] <- ipar
-  pars[[2]] <- data@anchor[c("a", paste0("cb", 1:(maxCat - 1)))]
+  pars[[2]] <- data@anchor[c("a", paste0("cb", 1:(max_cat - 1)))]
 
-  pm_all <- as.poly.mod(ni_all, "grm", 1:ni_all)
-  pm_anchor <- as.poly.mod(ni_anchor, "grm", 1:ni_anchor)
-  ncat <- list(data@itemmap$NCAT, data@anchor$NCAT)
-  out <- plink::plink(as.irt.pars(pars, common, cat = ncat, list(pm_all, pm_anchor), grp.names = c("From", "To")), rescale = config@linking_method, base.grp = 2)
+  if (!do_fixedpar) {
+    message(sprintf("now performing linear transformation to match anchor with %s method", method))
+    pm_all    <- plink::as.poly.mod(ni_all   , "grm", 1:ni_all)
+    pm_anchor <- plink::as.poly.mod(ni_anchor, "grm", 1:ni_anchor)
+    ncat <- list(data@itemmap$NCAT, data@anchor$NCAT)
+    plink_pars <- plink::as.irt.pars(
+      pars, common, cat = ncat,
+      list(pm_all, pm_anchor),
+      grp.names = c("From", "To")
+    )
+    out <- plink::plink(plink_pars, rescale = method, base.grp = 2)
+    out$constants <- out$link@constants[[method]]
+    out$ipar_linked <- out$pars@pars$From
+    out$ipar_anchor <- out$pars@pars$To
+  } else {
+    out <- list()
+    out$constants <- NA
+    out$ipar_linked <- pars[[1]]
+    out$ipar_anchor <- pars[[2]]
+  }
 
-  rownames(out$pars@pars$From) <- id_new$ID
-  rownames(out$pars@pars$To)   <- id_old$ID
-  colnames(out$pars@pars$From) <- colnames(ipar)
-  colnames(out$pars@pars$To)   <- colnames(ipar)
+  out$method           <- method
+  rownames(out$ipar_linked) <- id_new$ID
+  rownames(out$ipar_anchor) <- id_old$ID
+  colnames(out$ipar_linked) <- colnames(ipar)
+  colnames(out$ipar_anchor) <- colnames(ipar)
 
   return(out)
 }

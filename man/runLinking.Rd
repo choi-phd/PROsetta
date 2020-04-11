@@ -4,12 +4,12 @@
 \alias{runLinking}
 \title{Run Scale Linking}
 \usage{
-runLinking(config, data = NULL, ...)
+runLinking(data, method, ...)
 }
 \arguments{
-\item{config}{A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.}
+\item{data}{A \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.}
 
-\item{data}{(Optional) A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.}
+\item{method}{The type of linking to perform. Accepts "MM" for mean-mean, "MS" for mean-sigma, "HB" for Haebara, "SL" for Stocking-Lord, "FIXEDPAR" for fixed parameter calibration.}
 
 \item{...}{Additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{\code{mirt}} package.}
 }
@@ -20,31 +20,11 @@ A list containing the scale linking results. These are obtained with \code{\link
 Performs scale linking and obtains a set of transformation coefficients.
 }
 \examples{
-\dontshow{
-f1 <- tempfile()
-f2 <- tempfile()
-f3 <- tempfile()
-write.csv(response_asq, f1, row.names = FALSE)
-write.csv(itemmap_asq, f2, row.names = FALSE)
-write.csv(anchor_asq, f3, row.names = FALSE)
-cfg <- createConfig(response_file = f1, itemmap_file = f2, anchor_file = f3,
-  linking_method = "SL")
-}
 \donttest{
-write.csv(response_asq, "response.csv", row.names = FALSE)
-write.csv(itemmap_asq, "itemmap.csv", row.names = FALSE)
-write.csv(anchor_asq, "anchor.csv", row.names = FALSE)
-cfg <- createConfig(
-  response_file = "response.csv",
-  itemmap_file = "itemmap.csv",
-  anchor_file = "anchor.csv",
-  linking_method = "SL")
-}
-solution <- runLinking(cfg, technical = list(NCYCLES = 1000))
-solution$link@constants$SL
-\dontshow{
-  file.remove(f1)
-  file.remove(f2)
-  file.remove(f3)
+out_link <- runLinking(data_asq, "SL", technical = list(NCYCLES = 1000))
+out_link$constants   # transformation constants
+out_link$ipar_linked # item parameters linked to anchor
+out_link <- runLinking(data_asq, "FIXEDPAR")
+out_link$ipar_linked # item parameters linked to anchor
 }
 }
