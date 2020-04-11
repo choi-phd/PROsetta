@@ -4,15 +4,13 @@
 \alias{checkFrequency}
 \title{Check frequency table for unobserved response categories}
 \usage{
-checkFrequency(config, data = NULL)
+checkFrequency(data)
 }
 \arguments{
-\item{config}{A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.}
-
-\item{data}{A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.}
+\item{data}{A \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.}
 }
 \value{
-Logical. \code{TRUE} if all categories are present. \code{FALSE} otherwise.
+\code{TRUE} if all categories are present. \code{FALSE} otherwise.
 }
 \description{
 Checks frequency table for unobserved response categories.

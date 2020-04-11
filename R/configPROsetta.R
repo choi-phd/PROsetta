@@ -354,25 +354,19 @@ loadData <- function(response, itemmap, anchor,
 #'
 #' Checks frequency table for unobserved response categories.
 #'
-#' @param config A PROsetta_config object. See \code{\linkS4class{PROsetta_config}}.
-#' @param data A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.
+#' @param data A \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
 #'
-#' @return Logical. \code{TRUE} if all categories are present. \code{FALSE} otherwise.
+#' @return \code{TRUE} if all categories are present. \code{FALSE} otherwise.
 #'
 #' @export
 
-checkFrequency <- function(config, data = NULL) {
+checkFrequency <- function(data) {
 
-  if (!inherits(config, "PROsetta_config")) {
-    stop("config must be a 'PROsetta_config' class object")
-  }
-  if (is.null(data)) {
-    data <- loadData(config)
-  } else if (!inherits(data, "PROsetta_data")) {
+  if (!inherits(data, "PROsetta_data")) {
     stop("data must be a 'PROsetta_data' class object")
   }
 
-  tmp <- runFrequency(config, data, check_frequency = FALSE)
+  tmp <- runFrequency(data, check_frequency = FALSE)
   ni <- dim(tmp)[1]
   nc <- dim(tmp)[2]
   msg <- c()
@@ -384,7 +378,7 @@ checkFrequency <- function(config, data = NULL) {
 
       if (nm > 0) {
         item_id <- rownames(tmp[i, ])
-        idx <- which(data@itemmap[[config@item_id]] == item_id)
+        idx <- which(data@itemmap[[data@item_id]] == item_id)
         ncats_exp <- data@itemmap[idx, ][["NCAT"]]
 
         if (ncats_exp != ncats_obs) {
