@@ -6,13 +6,33 @@
 \alias{loadData}
 \title{An S4 class to represent \code{PROsetta} datasets.}
 \usage{
-loadData(config)
+loadData(
+  response,
+  itemmap,
+  anchor,
+  item_id = NULL,
+  person_id = NULL,
+  scale_id = NULL,
+  input_dir = getwd()
+)
 }
 \arguments{
-\item{config}{A PROsetta_config object. See \linkS4class{PROsetta_config}.}
+\item{response}{A dataset containing case IDs and item responses. Can be a .csv file name or a data frame.}
+
+\item{itemmap}{An item map containing item IDs and scale IDs. Can be a .csv file name or a data frame.}
+
+\item{anchor}{Item parameters for anchor items. Can be a .csv file name or a data frame.}
+
+\item{item_id}{The column name to look for item IDs. Automatically determined if not specified.}
+
+\item{person_id}{The column name to look for case IDs. Automatically determined if not specified.}
+
+\item{scale_id}{The column name to look for scale IDs. Automatically determined if not specified.}
+
+\item{input_dir}{The directory to look for the files.}
 }
 \value{
-An S4-class object containing the loaded data.
+A \code{\linkS4class{PROsetta_data}} object containing the loaded data.
 }
 \description{
 Loads data from the supplied configuration.
