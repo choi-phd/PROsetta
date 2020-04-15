@@ -8,19 +8,16 @@ Authors@R: c(
         email = "schoi@austin.utexas.edu",
         role = c("aut", "cre"),
         comment = c(ORCID = "0000-0003-4777-5420")),
+    person("Sangdon", "Lim",
+        email = "sangdonlim@utexas.edu",
+        role = c("aut"),
+        comment = c(ORCID = "0000-0002-2988-014X")),
     person("Benjamin", "Schalet",
         email = "b-schalet@northwewstern.edu",
         role = c("ctb")),
     person("Aaron", "Kaat",
         email = "aaron.kaat@northwestern.edu",
-        role = c("ctb")),
-    person("Ryne", "Eastbrook",
-        email = "reastbrook@northwestern.edu",
-        role = c("ctb")),
-    person("Sangdon", "Lim",
-        email = "sangdonlim@utexas.edu",
-        role = c("aut"),
-        comment = c(ORCID = "0000-0002-2988-014X")))
+        role = c("ctb")))
 Description: Performs scale linking to establish relationships between instruments
     that measure similar constructs according to the PROsetta Stone methodology.
 URL: http://www.prosettastone.org
