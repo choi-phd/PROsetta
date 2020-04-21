@@ -5,7 +5,7 @@
 ## Structural changes
 * `PROsetta_config` class and `createConfig()` are now deprecated. The functionalities are merged to `PROsetta_data` class and `loadData()`.
 * `run*()` functions now require `PROsetta_data` objects instead of `PROsetta_config` objects.
-* `runLinking()` now has `method` argument to specify the type of linking to perform. Accepts MM, MS, HB, SL, and FIXEDPAR.
+* `runLinking()` now has `method` argument to specify the type of linking to perform. Accepts `MM`, `MS`, `HB`, `SL`, and `FIXEDPAR`.
 
 ## Updates
 * `runLinking()` is now capable of performing fixed calibration.
@@ -25,10 +25,10 @@
 
 # PROsetta 0.0.4
 
-* Added 'scalewise' argument to runClassical() and runCFA(). When TRUE, analysis is performed for each scale.
-* runEquateObserved() now removes missing values to produce correct raw sums.
-* loadData() now retains missing values.
+* Added '`scalewise`' argument to `runClassical()` and `runCFA()`. When TRUE, analysis is performed for each scale.
+* `runEquateObserved()` now removes missing values to produce correct raw sums.
+* `loadData()` now retains missing values.
 
 # PROsetta 0.0.3
 
-* loadData() now removes missing values.
+* `loadData()` now removes missing values.
