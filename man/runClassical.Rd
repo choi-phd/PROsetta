@@ -2,27 +2,27 @@
 % Please edit documentation in R/configPROsetta.R
 \name{runClassical}
 \alias{runClassical}
-\title{Run a CTT-based reliability analysis}
+\title{Run CTT-based reliability analysis}
 \usage{
 runClassical(data, omega = FALSE, scalewise = FALSE, ...)
 }
 \arguments{
-\item{data}{A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.}
+\item{data}{a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.}
 
-\item{omega}{If TRUE, also obtains McDonald's omega using \code{\link[psych]{omega}} in \href{https://CRAN.R-project.org/package=psych}{\code{psych}} package.}
+\item{omega}{if \code{TRUE}, also obtain McDonald's omega using \code{\link[psych]{omega}} in \href{https://CRAN.R-project.org/package=psych}{\code{psych}} package.}
 
-\item{scalewise}{If TRUE, run analysis for each scale as well as for the combined scale. If FALSE (default), run analysis only for the combined scale.}
+\item{scalewise}{if \code{TRUE}, run analysis for each scale as well as for the combined scale. If \code{FALSE} (default), run analysis only for the combined scale.}
 
-\item{...}{Additional arguments to pass onto \code{\link[psych]{omega}}.}
+\item{...}{additional arguments to pass onto \code{\link[psych]{omega}}.}
 }
 \value{
-The results of reliability analysis.
+\code{\link{runClassical}} returns a \code{\link{list}} containing reliability analysis results.
 }
 \description{
-Performs a Classial Test Theory (CTT) reliability analysis.
+\code{\link{runClassical}} is a function to perform Classial Test Theory (CTT) based reliability analysis.
 }
 \examples{
 out_alpha <- runClassical(data_asq)
-out_omega <- runClassical(data_asq, omega = TRUE) # also obtains omega
+out_omega <- runClassical(data_asq, omega = TRUE) # also obtain omega
 
 }

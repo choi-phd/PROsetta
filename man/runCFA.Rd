@@ -7,23 +7,21 @@
 runCFA(data, estimator = "WLSMV", std.lv = TRUE, scalewise = FALSE, ...)
 }
 \arguments{
-\item{data}{A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.}
+\item{data}{a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.}
 
-\item{estimator}{The estimator to be used. Passed onto \code{\link[lavaan]{cfa}} in \href{https://CRAN.R-project.org/package=lavaan}{\code{lavaan}} package.}
+\item{estimator}{the estimator to be used. Passed onto \code{\link[lavaan]{cfa}} in \href{https://CRAN.R-project.org/package=lavaan}{'lavaan'} package.}
 
-\item{std.lv}{If \code{TRUE}, the metric of the latent variable is determined by fixing their (residual) variances to 1.0. If \code{FALSE}, the metric of each latent variable is determined by fixing the factor loading of the first indicator to 1.0. Passed onto \code{\link[lavaan]{cfa}}.}
+\item{std.lv}{if \code{TRUE}, the metric of the latent variable is determined by fixing their (residual) variances to 1.0. If \code{FALSE}, the metric of each latent variable is determined by fixing the factor loading of the first indicator to 1.0. Passed onto \code{\link[lavaan]{cfa}}.}
 
-\item{scalewise}{If TRUE, run analysis for each scale as well as for the combined scale. If FALSE (default), run analysis only for the combined scale.}
+\item{scalewise}{if TRUE, run analysis for each scale as well as for the combined scale. If FALSE (default), run analysis only for the combined scale.}
 
-\item{...}{Additional arguments to pass onto \code{\link[lavaan]{cfa}}.}
+\item{...}{additional arguments to pass onto \code{\link[lavaan]{cfa}}.}
 }
 \value{
-A list containing the CFA results. The models are as follows:
-\item{all}{A one-factor model where all items in the \code{itemmap} slot of \code{data} are loaded onto the factor.}
-\item{anchor}{A one-factor model where the items in the \code{anchor} slot of \code{data} are loaded onto the factor.}
+\code{\link{runCFA}} returns a list containing the CFA results.
 }
 \description{
-Performs a one-factor confirmatory factor analysis (CFA) to test unidimensionality.
+\code{\link{runCFA}} is a function to perform a one-factor confirmatory factor analysis (CFA) to test unidimensionality.
 }
 \examples{
 \donttest{

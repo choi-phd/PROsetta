@@ -7,11 +7,13 @@
 checkFrequency(data)
 }
 \arguments{
-\item{data}{A \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.}
+\item{data}{a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.}
 }
 \value{
-\code{TRUE} if all categories are present. \code{FALSE} otherwise.
+If all response categories have a frequency of at least 1, the value is \code{TRUE}.
+
+Otherwise, the value is \code{FALSE}.
 }
 \description{
-Checks frequency table for unobserved response categories.
+\code{\link{checkFrequency}} is a descriptive function to check whether all response categories in a frequency table have a frequency of at least 1.
 }
