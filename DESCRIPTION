@@ -48,5 +48,6 @@ Collate:
     'core_functions.R'
     'datasets.R'
     'example.R'
+    'linking_functions.R'
     'plot_functions.R'
     'runshiny.R'
