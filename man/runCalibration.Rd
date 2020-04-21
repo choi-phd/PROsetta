@@ -7,19 +7,21 @@
 runCalibration(data, fixedpar = FALSE, ignore_nonconv = FALSE, ...)
 }
 \arguments{
-\item{data}{A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.}
+\item{data}{a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.}
 
-\item{fixedpar}{If TRUE (default), perform fixed parameter calibration using anchor data.}
+\item{fixedpar}{if \code{TRUE} (default), perform fixed parameter calibration using anchor data.}
 
-\item{ignore_nonconv}{If TRUE, return results even when calibration did not converge. Defaults to FALSE.}
+\item{ignore_nonconv}{if \code{TRUE}, return results even when calibration did not converge. Defaults to \code{FALSE}.}
 
-\item{...}{Additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{\code{mirt}} package.}
+\item{...}{additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{'mirt'} package.}
 }
 \value{
-An object containing item calibration results. This object can be used in \code{\link[mirt:coef-method]{coef}}, \code{\link[mirt]{itemfit}}, \code{\link[mirt]{itemplot}} in \href{https://CRAN.R-project.org/package=mirt}{\code{mirt}} package to extract wanted information.
+\code{\link{runCalibration}} returns a \code{\linkS4class{SingleGroupClass}} object containing item calibration results.
+
+This object can be used in \code{\link[mirt:coef-method]{coef}}, \code{\link[mirt]{itemfit}}, \code{\link[mirt]{itemplot}} in \href{https://CRAN.R-project.org/package=mirt}{'mirt'} package to extract wanted information.
 }
 \description{
-Performs item calibration for the response data based on the supplied anchor information.
+\code{\link{runCalibration}} is a function to perform item calibration on the response data.
 }
 \examples{
 \donttest{

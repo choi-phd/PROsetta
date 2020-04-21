@@ -5,9 +5,9 @@ NULL
 
 #' Get complete data
 #'
-#' Perform casewise deletion of missing values.
+#' \code{\link{getCompleteData}} is a helper function to perform casewise deletion of missing values.
 #'
-#' @param data A \code{\linkS4class{PROsetta_data}} object.
+#' @param data a \code{\linkS4class{PROsetta_data}} object.
 #'
 #' @export
 
@@ -28,16 +28,18 @@ getCompleteData <- function(data) {
 
 #' Obtain EAP estimates
 #'
-#' Obtain EAP estimates
+#' \code{\link{getTheta}} is a helper function to calculate EAP estimates.
 #'
-#' @param data A \code{\linkS4class{PROsetta_data}} object.
-#' @param ipar A data frame containing item parameters.
-#' @param scale The index of the scale to use. Set to 'combined' to use the combined scale.
-#' @param model The item model to use. Accepts 'grm' or 'gpcm'.
-#' @param theta_grid The theta grid to use in calculating EAP estimates.
-#' @param prior_dist The type of prior distribution. Accepts 'normal' or 'logistic'.
-#' @param prior_mean Mean of the prior distribution.
+#' @param data a \code{\linkS4class{PROsetta_data}} object.
+#' @param ipar a \code{\link{data.frame}} containing item parameters.
+#' @param scale the index of the scale to use. Set to 'combined' to use the combined scale.
+#' @param model the item model to use. Accepts 'grm' or 'gpcm'.
+#' @param theta_grid the theta grid to use in calculating EAP estimates.
+#' @param prior_dist the type of prior distribution. Accepts '\code{normal}' or '\code{logistic}'.
+#' @param prior_mean mean of the prior distribution.
 #' @param prior_sd SD of the prior distribution.
+#'
+#' @return \code{\link{getTheta}} returns a \code{\link{list}} containing EAP estimates.
 #'
 #' @export
 
@@ -80,14 +82,16 @@ getTheta <- function(
 
 
 
-#' Computed expected scores at thetas using item parameters
+#' Calculate expected scores at theta
 #'
-#' Computed expected scores at thetas using item parameters
+#' \code{\link{getEscore}} is a helper function to calculate expected scores at supplied thetas.
 #'
-#' @param ipar Item parameters
-#' @param model Item model to use
-#' @param theta Theta values
-#' @param is_minscore_0 If TRUE the score begins from 0 instead of 1.
+#' @param ipar item parameters.
+#' @param model item model to use.
+#' @param theta theta values.
+#' @param is_minscore_0 if \code{TRUE} the score begins from 0 instead of 1.
+#'
+#' @return \code{\link{getEscore}} returns a vector of expected scores.
 #'
 #' @export
 
@@ -102,12 +106,12 @@ getEscore <- function(ipar, model, theta, is_minscore_0) {
 
 }
 
-#' Compute raw sum scores of the specified scale
+#' Calculate raw sum scores of a scale
 #'
-#' Compute raw sum scores of the specified scale
+#' \code{\link{getScaleSum}} is a helper function to calculate raw sum scores of a scale.
 #'
-#' @param data A \code{\linkS4class{PROsetta_data}} object.
-#' @param scale_idx The index of the scacle to obtain the raw sum scores.
+#' @param data a \code{\linkS4class{PROsetta_data}} object.
+#' @param scale_idx the index of the scale to obtain the raw sum scores.
 #'
 #' @export
 
@@ -124,11 +128,13 @@ getScaleSum <- function(data, scale_idx) {
 
 #' Compare two sets of scores
 #'
-#' Compare two sets of scores.
+#' \code{\link{compareScores}} is a helper function to compare two sets of scores.
 #'
-#' @param left Scores on the left side of comparison.
-#' @param right Scores on the right side of comparison. This is subtracted from 'left'.
-#' @param type Type of comparisons to include. Accepts 'corr', "mean', 'sd', 'rmsd'. Defaults to all four.
+#' @param left scores on the left side of comparison.
+#' @param right scores on the right side of comparison. This is subtracted from 'left'.
+#' @param type type of comparisons to include. Accepts '\code{corr}', "\code{mean}', '\code{sd}', '\code{rmsd}'. Defaults to all four.
+#'
+#' @return \code{\link{compareScores}} returns a \code{\link{data.frame}} containing the comparison results.
 #'
 #' @export
 

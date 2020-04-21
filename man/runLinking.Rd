@@ -7,17 +7,30 @@
 runLinking(data, method, ...)
 }
 \arguments{
-\item{data}{A \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.}
+\item{data}{a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.}
 
-\item{method}{The type of linking to perform. Accepts "MM" for mean-mean, "MS" for mean-sigma, "HB" for Haebara, "SL" for Stocking-Lord, "FIXEDPAR" for fixed parameter calibration.}
+\item{method}{the type of linking to perform. Accepts:
+\itemize{
+  \item{\code{MM} for mean-mean}
+  \item{\code{MS} for mean-sigma}
+  \item{\code{HB} for Haebara method}
+  \item{\code{SL} for Stocking-Lord method}
+  \item{\code{FIXEDPAR} for fixed parameter calibration}
+}
+Linear transformation methods are performed with \code{\link[plink]{plink}} in \href{https://CRAN.R-project.org/package=plink}{'plink'} package.}
 
-\item{...}{Additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{\code{mirt}} package.}
+\item{...}{additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{'mirt'} package.}
 }
 \value{
-A list containing the scale linking results. These are obtained with \code{\link[plink]{plink-methods}} in \href{https://CRAN.R-project.org/package=plink}{\code{plink}} package.
+\code{\link{runLinking}} returns a \code{\link{list}} containing the scale linking results.
+\itemize{
+  \item{\code{constants}} linear transformation constants. \code{NA} if \code{method} argument was \code{FIXEDPAR}.
+  \item{\code{ipar_linked}} item parameters calibrated to the response data, and linked to the anchor item parameters.
+  \item{\code{ipar_anchor}} anchor item parameters used in linking.
+}
 }
 \description{
-Performs scale linking and obtains a set of transformation coefficients.
+\code{\link{runLinking}} is a function to obtain item parameters from the response data, and perform scale linking onto the metric of supplied anchor item parameters.
 }
 \examples{
 \donttest{

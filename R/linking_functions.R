@@ -5,14 +5,16 @@ NULL
 
 #' Run Calibration
 #'
-#' Performs item calibration for the response data based on the supplied anchor information.
+#' \code{\link{runCalibration}} is a function to perform item calibration on the response data.
 #'
-#' @param data A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.
-#' @param fixedpar If TRUE (default), perform fixed parameter calibration using anchor data.
-#' @param ignore_nonconv If TRUE, return results even when calibration did not converge. Defaults to FALSE.
-#' @param ... Additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{\code{mirt}} package.
+#' @param data a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
+#' @param fixedpar if \code{TRUE} (default), perform fixed parameter calibration using anchor data.
+#' @param ignore_nonconv if \code{TRUE}, return results even when calibration did not converge. Defaults to \code{FALSE}.
+#' @param ... additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{'mirt'} package.
 #'
-#' @return An object containing item calibration results. This object can be used in \code{\link[mirt:coef-method]{coef}}, \code{\link[mirt]{itemfit}}, \code{\link[mirt]{itemplot}} in \href{https://CRAN.R-project.org/package=mirt}{\code{mirt}} package to extract wanted information.
+#' @return \code{\link{runCalibration}} returns a \code{\linkS4class{SingleGroupClass}} object containing item calibration results.
+#'
+#' This object can be used in \code{\link[mirt:coef-method]{coef}}, \code{\link[mirt]{itemfit}}, \code{\link[mirt]{itemplot}} in \href{https://CRAN.R-project.org/package=mirt}{'mirt'} package to extract wanted information.
 #'
 #' @examples
 #' \donttest{
@@ -78,14 +80,28 @@ runCalibration <- function(data, fixedpar = FALSE, ignore_nonconv = FALSE, ...) 
 
 #' Run Scale Linking
 #'
-#' Performs scale linking and obtains a set of transformation coefficients.
+#' \code{\link{runLinking}} is a function to obtain item parameters from the response data, and perform scale linking onto the metric of supplied anchor item parameters.
 #'
-#' @param data A \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
-#' @param method The type of linking to perform. Accepts "MM" for mean-mean, "MS" for mean-sigma, "HB" for Haebara, "SL" for Stocking-Lord, "FIXEDPAR" for fixed parameter calibration.
-#' @param ... Additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{\code{mirt}} package.
+#' @param data a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
+#' @param method the type of linking to perform. Accepts:
+#' \itemize{
+#'   \item{\code{MM} for mean-mean}
+#'   \item{\code{MS} for mean-sigma}
+#'   \item{\code{HB} for Haebara method}
+#'   \item{\code{SL} for Stocking-Lord method}
+#'   \item{\code{FIXEDPAR} for fixed parameter calibration}
+#' }
+#' Linear transformation methods are performed with \code{\link[plink]{plink}} in \href{https://CRAN.R-project.org/package=plink}{'plink'} package.
 #'
-#' @return A list containing the scale linking results. These are obtained with \code{\link[plink]{plink-methods}} in \href{https://CRAN.R-project.org/package=plink}{\code{plink}} package.
+#' @param ... additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{'mirt'} package.
 #'
+#' @return \code{\link{runLinking}} returns a \code{\link{list}} containing the scale linking results.
+
+#' \itemize{
+#'   \item{\code{constants}} linear transformation constants. \code{NA} if \code{method} argument was \code{FIXEDPAR}.
+#'   \item{\code{ipar_linked}} item parameters calibrated to the response data, and linked to the anchor item parameters.
+#'   \item{\code{ipar_anchor}} anchor item parameters used in linking.
+#' }
 #' @examples
 #' \donttest{
 #' out_link <- runLinking(data_asq, "SL", technical = list(NCYCLES = 1000))
@@ -158,23 +174,35 @@ runLinking <- function(data, method, ...) {
   return(out)
 }
 
+
+
 #' Run Test Equating
 #'
-#' Performs equipercentile test equating between two scales. A concordance table is produced, mapping the observed raw scores from one scale to the scores from another scale.
+#' \code{\link{runEquateObserved}} is a function to perform equipercentile test equating between two scales. A concordance table is produced, mapping the observed raw scores from one scale to the scores from another scale.
 #'
-#' @param data A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.
-#' @param scale_from Numeric. The index of the scale in need of test equating.
-#' @param scale_to Numeric. The index of the target scale to equate to. This and \code{scale_from} below both reference to the information stored in the \code{itemmap} slot of \code{Data} argument. The \code{scale_id} slot of \code{config} argument needs to be specified as the name of the varible containing the scale IDs in the \code{itemmap} slot.
-#' @param type_to The type of score to use as the target scale frequency table. Accepts 'raw' (default) and 'tscore'. 'tscore' requires RSSS table to be supplied.
-#' @param rsss If 'type_to' = 'tscore', the RSSS table to use to map each raw score level onto t-score. See \code{\link{runRSSS}}.
-#' @param eq_type The type of equating to be passed onto \code{\link[equate]{equate}} in \href{https://CRAN.R-project.org/package=equate}{\code{equate}} package.
-#' @param smooth The type of smoothing method to be passed onto \code{\link[equate]{presmoothing}} in \href{https://CRAN.R-project.org/package=equate}{\code{equate}} package.
-#' @param degrees The degrees of smoothing to be passed onto \code{\link[equate]{presmoothing}}.
-#' @param boot Logical. Performs bootstrapping if \code{TRUE}.
-#' @param reps Numeric. The number of replications in bootsrapping.
-#' @param ... Other arguments to pass onto \code{\link[equate]{equate}}.
+#' @param data a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
+#' @param scale_from the scale ID of the input scale. References to \code{itemmap} in \code{data} argument.
+#' @param scale_to the scale ID of the target scale to equate to. References to \code{itemmap} in \code{data} argument.
+#' @param type_to the type of score to use in the target scale frequency table. Accepts '\code{raw}' (default) and '\code{tscore}'. '\code{tscore}' requires RSSS table to be supplied.
+#' @param rsss the RSSS table to use to map each raw score level onto t-score. See \code{\link{runRSSS}}.
+#' @param eq_type the type of equating to be passed onto \code{\link[equate]{equate}} in \href{https://CRAN.R-project.org/package=equate}{'equate'} package.
+#' @param smooth the type of smoothing method to be passed onto \code{\link[equate]{presmoothing}} in \href{https://CRAN.R-project.org/package=equate}{'equate'} package.
+#' @param degrees the degrees of smoothing to be passed onto \code{\link[equate]{presmoothing}}.
+#' @param boot performs bootstrapping if \code{TRUE}.
+#' @param reps the number of replications to perform in bootsrapping.
+#' @param ... other arguments to pass onto \code{\link[equate]{equate}}.
 #'
-#' @return An \code{equate} object containing the test equating result. The printed summary statistics indicate the distributional properties of the two supplied scales and the equated scale. The rows titled \code{x} and \code{y} correspond to the scales specified in \code{scale_from} and \code{scale_to} respectively. The row titled \code{yx} corresponds to the \code{scale_from} scale transformed to \code{scale_to}. See \code{\link[equate]{equate}} for details.
+#' @return \code{\link{runEquateObserved}} returns an \code{\link{equate}} object containing the test equating result.
+#'
+#' The printed summary statistics indicate the distributional properties of the two supplied scales and the equated scale.
+#' \itemize{
+#'   \item{\code{x}} corresponds to \code{scale_from}.
+#'   \item{\code{y}} corresponds to \code{scale_to}.
+#'   \item{\code{yx}} corresponds to \code{scale_from} after equating to \code{scale_to}.
+#' }
+#' See \code{\link[equate]{equate}} for details.
+#'
+#' The concordance table is stored in \code{concordance} slot.
 #'
 #' @examples
 #' out_eq_raw <- runEquateObserved(data_asq,
@@ -257,18 +285,18 @@ runEquateObserved <- function(data, scale_from = 2, scale_to = 1, type_to = "raw
 
 #' Run Crosswalk Table Generation
 #'
-#' Generates raw-score to standard-score crosswalk tables from supplied calibrated item parameters.
+#' \code{\link{runRSSS}} is a function to generate raw-score to standard-score crosswalk tables from supplied calibrated item parameters.
 #'
-#' @param data A \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
-#' @param ipar_linked An object returned from \code{\link{runCalibration}} or \code{\link{runLinking}}.
-#' @param prior_mean Prior mean.
-#' @param prior_sd Prior standard deviation.
-#' @param min_theta The lower limit of theta grid.
-#' @param max_theta The upper limit of theta grid.
-#' @param inc The increment to use in theta grid.
-#' @param min_score Minimum item score (0 or 1).
+#' @param data a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
+#' @param ipar_linked an object returned from \code{\link{runLinking}} or \code{\link{runCalibration}}.
+#' @param prior_mean prior mean.
+#' @param prior_sd prior standard deviation.
+#' @param min_theta the lower limit of theta grid.
+#' @param max_theta the upper limit of theta grid.
+#' @param inc the increment to use in theta grid.
+#' @param min_score minimum item score (0 or 1).
 #'
-#' @return A list containing crosswalk tables.
+#' @return \code{\link{runRSSS}} returns a \code{\link{list}} containing crosswalk tables.
 #'
 #' @examples
 #' out_link    <- runLinking(data_asq, method = "FIXEDPAR")

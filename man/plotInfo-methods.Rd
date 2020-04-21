@@ -11,9 +11,9 @@ plotInfo(
   data,
   theta = seq(-4, 4, 0.1),
   t_score = FALSE,
-  scale_label,
-  color = "blue",
-  lty = 1
+  scale_label = c(1, 2, "Combined"),
+  color = c("red", "blue", "black"),
+  lty = c(3, 2, 1)
 )
 
 \S4method{plotInfo}{SingleGroupClass}(
@@ -21,26 +21,33 @@ plotInfo(
   data,
   theta = seq(-4, 4, 0.1),
   t_score = FALSE,
-  scale_label,
-  color = "blue",
-  lty = 1
+  scale_label = c(1, 2, "Combined"),
+  color = c("red", "blue", "black"),
+  lty = c(3, 2, 1)
 )
 }
 \arguments{
-\item{object}{An \code{\linkS4class{SingleGroupClass}} object from \code{\link{runClassical}}.}
+\item{object}{a \code{\linkS4class{SingleGroupClass}} object from \code{\link{runCalibration}}.}
 
-\item{data}{A \code{\linkS4class{PROsetta_data}} object.}
+\item{data}{a \code{\linkS4class{PROsetta_data}} object.}
 
-\item{theta}{Theta values to plot on the x-axis.}
+\item{theta}{theta values to plot on the x-axis.}
 
-\item{t_score}{Set to \code{TRUE} to convert thetas into T-scores.}
+\item{t_score}{set to \code{TRUE} to convert thetas into T-scores.}
 
-\item{scale_label}{Names of each scale.}
+\item{scale_label}{names of each scale.}
 
-\item{color}{Line colors to plot.}
+\item{color}{line colors to plot.}
 
-\item{lty}{Line types to plot.}
+\item{lty}{line types to plot.}
 }
 \description{
-Plot scale information
+\code{\link{plotInfo}} is a plotting function to visualize scale-level information.
+}
+\examples{
+\donttest{
+out_calib = runCalibration(data_asq)
+plot(out_calib, data_asq)
+}
+
 }

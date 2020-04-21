@@ -19,33 +19,43 @@ runEquateObserved(
 )
 }
 \arguments{
-\item{data}{A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.}
+\item{data}{a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.}
 
-\item{scale_from}{Numeric. The index of the scale in need of test equating.}
+\item{scale_from}{the scale ID of the input scale. References to \code{itemmap} in \code{data} argument.}
 
-\item{scale_to}{Numeric. The index of the target scale to equate to. This and \code{scale_from} below both reference to the information stored in the \code{itemmap} slot of \code{Data} argument. The \code{scale_id} slot of \code{config} argument needs to be specified as the name of the varible containing the scale IDs in the \code{itemmap} slot.}
+\item{scale_to}{the scale ID of the target scale to equate to. References to \code{itemmap} in \code{data} argument.}
 
-\item{type_to}{The type of score to use as the target scale frequency table. Accepts 'raw' (default) and 'tscore'. 'tscore' requires RSSS table to be supplied.}
+\item{type_to}{the type of score to use in the target scale frequency table. Accepts '\code{raw}' (default) and '\code{tscore}'. '\code{tscore}' requires RSSS table to be supplied.}
 
-\item{rsss}{If 'type_to' = 'tscore', the RSSS table to use to map each raw score level onto t-score. See \code{\link{runRSSS}}.}
+\item{rsss}{the RSSS table to use to map each raw score level onto t-score. See \code{\link{runRSSS}}.}
 
-\item{eq_type}{The type of equating to be passed onto \code{\link[equate]{equate}} in \href{https://CRAN.R-project.org/package=equate}{\code{equate}} package.}
+\item{eq_type}{the type of equating to be passed onto \code{\link[equate]{equate}} in \href{https://CRAN.R-project.org/package=equate}{'equate'} package.}
 
-\item{smooth}{The type of smoothing method to be passed onto \code{\link[equate]{presmoothing}} in \href{https://CRAN.R-project.org/package=equate}{\code{equate}} package.}
+\item{smooth}{the type of smoothing method to be passed onto \code{\link[equate]{presmoothing}} in \href{https://CRAN.R-project.org/package=equate}{'equate'} package.}
 
-\item{degrees}{The degrees of smoothing to be passed onto \code{\link[equate]{presmoothing}}.}
+\item{degrees}{the degrees of smoothing to be passed onto \code{\link[equate]{presmoothing}}.}
 
-\item{boot}{Logical. Performs bootstrapping if \code{TRUE}.}
+\item{boot}{performs bootstrapping if \code{TRUE}.}
 
-\item{reps}{Numeric. The number of replications in bootsrapping.}
+\item{reps}{the number of replications to perform in bootsrapping.}
 
-\item{...}{Other arguments to pass onto \code{\link[equate]{equate}}.}
+\item{...}{other arguments to pass onto \code{\link[equate]{equate}}.}
 }
 \value{
-An \code{equate} object containing the test equating result. The printed summary statistics indicate the distributional properties of the two supplied scales and the equated scale. The rows titled \code{x} and \code{y} correspond to the scales specified in \code{scale_from} and \code{scale_to} respectively. The row titled \code{yx} corresponds to the \code{scale_from} scale transformed to \code{scale_to}. See \code{\link[equate]{equate}} for details.
+\code{\link{runEquateObserved}} returns an \code{\link{equate}} object containing the test equating result.
+
+The printed summary statistics indicate the distributional properties of the two supplied scales and the equated scale.
+\itemize{
+  \item{\code{x}} corresponds to \code{scale_from}.
+  \item{\code{y}} corresponds to \code{scale_to}.
+  \item{\code{yx}} corresponds to \code{scale_from} after equating to \code{scale_to}.
+}
+See \code{\link[equate]{equate}} for details.
+
+The concordance table is stored in \code{concordance} slot.
 }
 \description{
-Performs equipercentile test equating between two scales. A concordance table is produced, mapping the observed raw scores from one scale to the scores from another scale.
+\code{\link{runEquateObserved}} is a function to perform equipercentile test equating between two scales. A concordance table is produced, mapping the observed raw scores from one scale to the scores from another scale.
 }
 \examples{
 out_eq_raw <- runEquateObserved(data_asq,

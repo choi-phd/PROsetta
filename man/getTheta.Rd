@@ -16,22 +16,25 @@ getTheta(
 )
 }
 \arguments{
-\item{data}{A \code{\linkS4class{PROsetta_data}} object.}
+\item{data}{a \code{\linkS4class{PROsetta_data}} object.}
 
-\item{ipar}{A data frame containing item parameters.}
+\item{ipar}{a \code{\link{data.frame}} containing item parameters.}
 
-\item{scale}{The index of the scale to use. Set to 'combined' to use the combined scale.}
+\item{scale}{the index of the scale to use. Set to 'combined' to use the combined scale.}
 
-\item{model}{The item model to use. Accepts 'grm' or 'gpcm'.}
+\item{model}{the item model to use. Accepts 'grm' or 'gpcm'.}
 
-\item{theta_grid}{The theta grid to use in calculating EAP estimates.}
+\item{theta_grid}{the theta grid to use in calculating EAP estimates.}
 
-\item{prior_dist}{The type of prior distribution. Accepts 'normal' or 'logistic'.}
+\item{prior_dist}{the type of prior distribution. Accepts '\code{normal}' or '\code{logistic}'.}
 
-\item{prior_mean}{Mean of the prior distribution.}
+\item{prior_mean}{mean of the prior distribution.}
 
 \item{prior_sd}{SD of the prior distribution.}
 }
+\value{
+\code{\link{getTheta}} returns a \code{\link{list}} containing EAP estimates.
+}
 \description{
-Obtain EAP estimates
+\code{\link{getTheta}} is a helper function to calculate EAP estimates.
 }

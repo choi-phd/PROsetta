@@ -7,13 +7,13 @@
 runDescriptive(data = NULL)
 }
 \arguments{
-\item{data}{A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.}
+\item{data}{a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.}
 }
 \value{
-A \code{data.frame} containing the descriptive statistics (mean, standard deviation, median, ...) of the variables in the dataset. These are calculated with \code{\link[psych]{describe}} in \href{https://CRAN.R-project.org/package=psych}{\code{psych}} package.
+\code{\link{runDescriptive}} returns a \code{\link{data.frame}} containing descriptive statistics (mean, standard deviation, median, ...) of the items in the dataset. These are calculated with \code{\link[psych]{describe}} in '\href{https://CRAN.R-project.org/package=psych}{psych}' package.
 }
 \description{
-Obtains a table with descriptive statistics for each variable, from the supplied configuration and the dataset.
+\code{\link{runDescriptive}} is a descriptive function to obtain descriptive statistics for each item in the dataset.
 }
 \examples{
 out_desc <- runDescriptive(data_asq)

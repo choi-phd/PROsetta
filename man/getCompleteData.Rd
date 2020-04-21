@@ -7,8 +7,8 @@
 getCompleteData(data)
 }
 \arguments{
-\item{data}{A \code{\linkS4class{PROsetta_data}} object.}
+\item{data}{a \code{\linkS4class{PROsetta_data}} object.}
 }
 \description{
-Perform casewise deletion of missing values.
+\code{\link{getCompleteData}} is a helper function to perform casewise deletion of missing values.
 }

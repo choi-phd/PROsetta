@@ -2,15 +2,15 @@
 % Please edit documentation in R/post_functions.R
 \name{getScaleSum}
 \alias{getScaleSum}
-\title{Compute raw sum scores of the specified scale}
+\title{Calculate raw sum scores of a scale}
 \usage{
 getScaleSum(data, scale_idx)
 }
 \arguments{
-\item{data}{A \code{\linkS4class{PROsetta_data}} object.}
+\item{data}{a \code{\linkS4class{PROsetta_data}} object.}
 
-\item{scale_idx}{The index of the scacle to obtain the raw sum scores.}
+\item{scale_idx}{the index of the scale to obtain the raw sum scores.}
 }
 \description{
-Compute raw sum scores of the specified scale
+\code{\link{getScaleSum}} is a helper function to calculate raw sum scores of a scale.
 }

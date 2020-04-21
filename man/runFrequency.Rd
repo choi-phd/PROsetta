@@ -7,17 +7,18 @@
 runFrequency(data, check_frequency = TRUE)
 }
 \arguments{
-\item{data}{A \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.}
+\item{data}{a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.}
 
 \item{check_frequency}{Logical. If \code{TRUE}, check the frequency table for missing response categories, and display warning message if any is missing.}
 }
 \value{
-A \code{data.frame} containing the frequency table of the dataset.
+\code{\link{runFrequency}} returns a \code{\link{data.frame}} containing the frequency table.
 }
 \description{
-Obtains a frequency table from the supplied configuration and the dataset.
+\code{\link{runFrequency}} is a descriptive function to obtain a frequency table from the dataset.
 }
 \examples{
-out_freq <- runFrequency(data_asq)
+freq_asq <- runFrequency(data_asq)
+freq_dep <- runFrequency(data_dep)
 
 }

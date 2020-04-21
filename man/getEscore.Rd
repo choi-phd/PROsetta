@@ -2,19 +2,22 @@
 % Please edit documentation in R/post_functions.R
 \name{getEscore}
 \alias{getEscore}
-\title{Computed expected scores at thetas using item parameters}
+\title{Calculate expected scores at theta}
 \usage{
 getEscore(ipar, model, theta, is_minscore_0)
 }
 \arguments{
-\item{ipar}{Item parameters}
+\item{ipar}{item parameters.}
 
-\item{model}{Item model to use}
+\item{model}{item model to use.}
 
-\item{theta}{Theta values}
+\item{theta}{theta values.}
 
-\item{is_minscore_0}{If TRUE the score begins from 0 instead of 1.}
+\item{is_minscore_0}{if \code{TRUE} the score begins from 0 instead of 1.}
+}
+\value{
+\code{\link{getEscore}} returns a vector of expected scores.
 }
 \description{
-Computed expected scores at thetas using item parameters
+\code{\link{getEscore}} is a helper function to calculate expected scores at supplied thetas.
 }

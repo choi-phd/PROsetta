@@ -3,8 +3,23 @@ NULL
 
 
 
-#' An S4 class to represent \code{PROsetta} datasets.
+#' Load data from supplied config
 #'
+#' \code{\link{loadData}} is a data loading function to create a \code{\linkS4class{PROsetta_data}} object, for scale linking/equating with 'PROsetta' package.
+#'
+#' @param response response data containing case IDs and item responses. This can be a \code{.csv} filename or a \code{\link{data.frame}} object.
+#' @param itemmap an item map containing item IDs and scale IDs. This can be a \code{.csv} filename or a \code{\link{data.frame}} object.
+#' @param anchor anchor data containing item parameters for anchor items. This can be a \code{.csv} filename or a \code{\link{data.frame}} object.
+#' @param item_id the column name to look for item IDs. Automatically determined if not specified.
+#' @param person_id the column name to look for case IDs. Automatically determined if not specified.
+#' @param scale_id the column name to look for scale IDs. Automatically determined if not specified.
+#' @param input_dir the directory to look for the files.
+#'
+#' @return \code{\link{loadData}} returns a \code{\linkS4class{PROsetta_data}} object containing the loaded data.
+#'
+#' @name loadData
+NULL
+
 #' @rdname loadData
 
 setClass("PROsetta_data",
@@ -60,19 +75,7 @@ setClass("PROsetta_data",
 
 
 
-#' Load data from supplied config
-#'
-#' Loads data from the supplied configuration.
-#'
-#' @param response A dataset containing case IDs and item responses. Can be a .csv file name or a data frame.
-#' @param itemmap An item map containing item IDs and scale IDs. Can be a .csv file name or a data frame.
-#' @param anchor Item parameters for anchor items. Can be a .csv file name or a data frame.
-#' @param item_id The column name to look for item IDs. Automatically determined if not specified.
-#' @param person_id The column name to look for case IDs. Automatically determined if not specified.
-#' @param scale_id The column name to look for scale IDs. Automatically determined if not specified.
-#' @param input_dir The directory to look for the files.
-#'
-#' @return A \code{\linkS4class{PROsetta_data}} object containing the loaded data.
+#' @rdname loadData
 #'
 #' @export
 
@@ -173,13 +176,17 @@ loadData <- function(response, itemmap, anchor,
   }
 }
 
+
+
 #' Check frequency table for unobserved response categories
 #'
-#' Checks frequency table for unobserved response categories.
+#' \code{\link{checkFrequency}} is a descriptive function to check whether all response categories in a frequency table have a frequency of at least 1.
 #'
-#' @param data A \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
+#' @param data a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
 #'
-#' @return \code{TRUE} if all categories are present. \code{FALSE} otherwise.
+#' @return If all response categories have a frequency of at least 1, the value is \code{TRUE}.
+#'
+#' Otherwise, the value is \code{FALSE}.
 #'
 #' @export
 
@@ -225,17 +232,20 @@ checkFrequency <- function(data) {
   }
 }
 
+
+
 #' Obtain a frequency table
 #'
-#' Obtains a frequency table from the supplied configuration and the dataset.
+#' \code{\link{runFrequency}} is a descriptive function to obtain a frequency table from the dataset.
 #'
-#' @param data A \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
+#' @param data a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
 #' @param check_frequency Logical. If \code{TRUE}, check the frequency table for missing response categories, and display warning message if any is missing.
 #'
-#' @return A \code{data.frame} containing the frequency table of the dataset.
+#' @return \code{\link{runFrequency}} returns a \code{\link{data.frame}} containing the frequency table.
 #'
 #' @examples
-#' out_freq <- runFrequency(data_asq)
+#' freq_asq <- runFrequency(data_asq)
+#' freq_dep <- runFrequency(data_dep)
 #'
 #' @export
 
@@ -270,13 +280,15 @@ runFrequency <- function(data, check_frequency = TRUE) {
   return(freq)
 }
 
+
+
 #' Obtain a descriptive statistics table
 #'
-#' Obtains a table with descriptive statistics for each variable, from the supplied configuration and the dataset.
+#' \code{\link{runDescriptive}} is a descriptive function to obtain descriptive statistics for each item in the dataset.
 #'
-#' @param data A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.
+#' @param data a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
 #'
-#' @return A \code{data.frame} containing the descriptive statistics (mean, standard deviation, median, ...) of the variables in the dataset. These are calculated with \code{\link[psych]{describe}} in \href{https://CRAN.R-project.org/package=psych}{\code{psych}} package.
+#' @return \code{\link{runDescriptive}} returns a \code{\link{data.frame}} containing descriptive statistics (mean, standard deviation, median, ...) of the items in the dataset. These are calculated with \code{\link[psych]{describe}} in '\href{https://CRAN.R-project.org/package=psych}{psych}' package.
 #'
 #' @examples
 #' out_desc <- runDescriptive(data_asq)
@@ -294,20 +306,22 @@ runDescriptive <- function(data = NULL) {
 
 }
 
-#' Run a CTT-based reliability analysis
+
+
+#' Run CTT-based reliability analysis
 #'
-#' Performs a Classial Test Theory (CTT) reliability analysis.
+#' \code{\link{runClassical}} is a function to perform Classial Test Theory (CTT) based reliability analysis.
 #'
-#' @param data A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.
-#' @param omega If TRUE, also obtains McDonald's omega using \code{\link[psych]{omega}} in \href{https://CRAN.R-project.org/package=psych}{\code{psych}} package.
-#' @param scalewise If TRUE, run analysis for each scale as well as for the combined scale. If FALSE (default), run analysis only for the combined scale.
-#' @param ... Additional arguments to pass onto \code{\link[psych]{omega}}.
+#' @param data a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
+#' @param omega if \code{TRUE}, also obtain McDonald's omega using \code{\link[psych]{omega}} in \href{https://CRAN.R-project.org/package=psych}{\code{psych}} package.
+#' @param scalewise if \code{TRUE}, run analysis for each scale as well as for the combined scale. If \code{FALSE} (default), run analysis only for the combined scale.
+#' @param ... additional arguments to pass onto \code{\link[psych]{omega}}.
 #'
-#' @return The results of reliability analysis.
+#' @return \code{\link{runClassical}} returns a \code{\link{list}} containing reliability analysis results.
 #'
 #' @examples
 #' out_alpha <- runClassical(data_asq)
-#' out_omega <- runClassical(data_asq, omega = TRUE) # also obtains omega
+#' out_omega <- runClassical(data_asq, omega = TRUE) # also obtain omega
 #'
 #' @export
 
@@ -345,19 +359,18 @@ runClassical <- function(data, omega = FALSE, scalewise = FALSE, ...) {
 }
 
 
+
 #' Run a confirmatory factor analysis
 #'
-#' Performs a one-factor confirmatory factor analysis (CFA) to test unidimensionality.
+#' \code{\link{runCFA}} is a function to perform a one-factor confirmatory factor analysis (CFA) to test unidimensionality.
 #'
-#' @param data A PROsetta_data object. See \code{\link{loadData}} for loading a dataset.
-#' @param estimator The estimator to be used. Passed onto \code{\link[lavaan]{cfa}} in \href{https://CRAN.R-project.org/package=lavaan}{\code{lavaan}} package.
-#' @param std.lv If \code{TRUE}, the metric of the latent variable is determined by fixing their (residual) variances to 1.0. If \code{FALSE}, the metric of each latent variable is determined by fixing the factor loading of the first indicator to 1.0. Passed onto \code{\link[lavaan]{cfa}}.
-#' @param scalewise If TRUE, run analysis for each scale as well as for the combined scale. If FALSE (default), run analysis only for the combined scale.
-#' @param ... Additional arguments to pass onto \code{\link[lavaan]{cfa}}.
+#' @param data a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
+#' @param estimator the estimator to be used. Passed onto \code{\link[lavaan]{cfa}} in \href{https://CRAN.R-project.org/package=lavaan}{'lavaan'} package.
+#' @param std.lv if \code{TRUE}, the metric of the latent variable is determined by fixing their (residual) variances to 1.0. If \code{FALSE}, the metric of each latent variable is determined by fixing the factor loading of the first indicator to 1.0. Passed onto \code{\link[lavaan]{cfa}}.
+#' @param scalewise if TRUE, run analysis for each scale as well as for the combined scale. If FALSE (default), run analysis only for the combined scale.
+#' @param ... additional arguments to pass onto \code{\link[lavaan]{cfa}}.
 #'
-#' @return A list containing the CFA results. The models are as follows:
-#' \item{all}{A one-factor model where all items in the \code{itemmap} slot of \code{data} are loaded onto the factor.}
-#' \item{anchor}{A one-factor model where the items in the \code{anchor} slot of \code{data} are loaded onto the factor.}
+#' @return \code{\link{runCFA}} returns a list containing the CFA results.
 #'
 #' @examples
 #' \donttest{
