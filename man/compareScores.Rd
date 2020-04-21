@@ -7,12 +7,15 @@
 compareScores(left, right, type = c("corr", "mean", "sd", "rmsd"))
 }
 \arguments{
-\item{left}{Scores on the left side of comparison.}
+\item{left}{scores on the left side of comparison.}
 
-\item{right}{Scores on the right side of comparison. This is subtracted from 'left'.}
+\item{right}{scores on the right side of comparison. This is subtracted from 'left'.}
 
-\item{type}{Type of comparisons to include. Accepts 'corr', "mean', 'sd', 'rmsd'. Defaults to all four.}
+\item{type}{type of comparisons to include. Accepts '\code{corr}', "\code{mean}', '\code{sd}', '\code{rmsd}'. Defaults to all four.}
+}
+\value{
+\code{\link{compareScores}} returns a \code{\link{data.frame}} containing the comparison results.
 }
 \description{
-Compare two sets of scores.
+\code{\link{compareScores}} is a helper function to compare two sets of scores.
 }

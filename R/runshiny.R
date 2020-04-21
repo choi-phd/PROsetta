@@ -1,9 +1,16 @@
 #' @include example.R
 NULL
 
+
+
 #' guiPROsetta
 #'
-#' Launches a Shiny app locally.
+#' \code{\link{guiPROsetta}} is a caller function to launch a Shiny app locally.
+#'
+#' @examples
+#' \donttest{
+#' guiPROsetta()
+#' }
 #'
 #' @export
 
