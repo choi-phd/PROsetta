@@ -1,36 +1,32 @@
 #' @include configPROsetta.R
 NULL
 
-#' Plot from objects
+
+
+#' Plot frequency distribution
 #'
-#' Plot from objects in the PROsetta package.
+#' This is an extension of \code{\link{plot}} to visualize frequency distribution from \code{\linkS4class{PROsetta_data}} object.
 #'
-#' @param x A \code{\linkS4class{PROsetta_data}} object.
-#' @param y Unused argument, exists for compatibility with \code{\link{plot}} in the base R package.
-#' @param scale_id Instrument ID to plot. 0 represents the combined scale.
-#' @param filename Filename to write if 'savefile' is TRUE.
-#' @param title The title of the figure.
-#' @param xlim The range of scores to plot.
-#' @param color The color to fill the histogram.
-#' @param nbar The number of histogram bars.
-#' @param rug If TRUE, display the actual distribution of scores below each bar.
-#' @param filetype The type of file to write if 'savefile' is TRUE. Accepts 'pdf', 'jpeg', 'png', and 'tiff'.
-#' @param savefile If TRUE, save the figure as a file.
-#' @param bg The background color of the plot.
-#' @param width The width of the plot.
-#' @param height The height of the plot.
-#' @param pointsize Point size to pass onto file writing functions.
+#' @param x a \code{\linkS4class{PROsetta_data}} object.
+#' @param y unused argument, exists for compatibility with \code{\link{plot}} in the base R package.
+#' @param scale_id scale ID to plot. \code{combined} (default) represents the combined scale.
+#' @param filename filename to write if '\code{savefile}' argument is \code{TRUE}.
+#' @param title the title of the figure.
+#' @param xlim the range of scores to plot.
+#' @param color the color to fill the histogram.
+#' @param nbar the number of histogram bars.
+#' @param rug if \code{TRUE}, display the actual distribution of scores below each bar.
+#' @param filetype the type of file to write if '\code{savefile}' argument is \code{TRUE}. Accepts '\code{pdf}', '\code{jpeg}', '\code{png}', and '\code{tiff}'.
+#' @param savefile if \code{TRUE}, save the figure as a file.
+#' @param bg the background color of the plot.
+#' @param width the width of the plot.
+#' @param height the height of the plot.
+#' @param pointsize point size to pass onto file writing functions.
 #'
 #' @examples
-#'
-#' \donttest{
-#' cfg <- createConfig(
-#'   response_file = "inst/data-raw/dat_decesd_v2.csv",
-#'   anchor_file = "inst/data-raw/anchor_decesd.csv",
-#'   itemmap_file = "inst/data-raw/imap_decesd.csv"
-#' )
-#' plot(cfg)
-#' }
+#' plot(data_asq)
+#' plot(data_asq, scale_id = 1)
+#' plot(data_asq, scale_id = 2)
 #'
 #' @docType methods
 #' @rdname plot-methods
@@ -41,7 +37,7 @@ setMethod(
   signature = "PROsetta_data",
   definition = function(
     x, y,
-    scale_id = 0,
+    scale_id = "combined",
     filename = NULL, title = NULL, xlim = NULL,
     color = "blue", nbar = 20, rug = FALSE, filetype = "pdf", savefile = FALSE,
     bg = "white", width = 6, height = 6, pointsize = 12) {
@@ -53,6 +49,9 @@ setMethod(
 
     if (scale_id != "combined") {
       item_names <- subset(x@itemmap, x@itemmap[[x@scale_id]] == scale_id)[[x@item_id]]
+      if (length(item_names) == 0) {
+        stop(sprintf("unrecognized value in 'scale_id' argument: %s", scale_id))
+      }
     }
 
     resp      <- resp[, item_names]
@@ -98,7 +97,7 @@ setMethod(
         tiff(filename = paste0(filename, ".tif"),
              width = width, height = height, pointsize = pointsize, bg = bg)
       } else {
-        stop(sprintf("Unrecognized 'filetype' argument: %s", filetype))
+        stop(sprintf("unrecognized 'filetype' argument: %s", filetype))
       }
     }
 
@@ -124,24 +123,33 @@ setMethod(
   }
 )
 
+
+
 #' Plot scale information
 #'
-#' Plot scale information
+#' \code{\link{plotInfo}} is a plotting function to visualize scale-level information.
 #'
-#' @param object An \code{\linkS4class{SingleGroupClass}} object from \code{\link{runClassical}}.
-#' @param data A \code{\linkS4class{PROsetta_data}} object.
-#' @param theta Theta values to plot on the x-axis.
-#' @param t_score Set to \code{TRUE} to convert thetas into T-scores.
-#' @param scale_label Names of each scale.
-#' @param color Line colors to plot.
-#' @param lty Line types to plot.
+#' @param object a \code{\linkS4class{SingleGroupClass}} object from \code{\link{runCalibration}}.
+#' @param data a \code{\linkS4class{PROsetta_data}} object.
+#' @param theta theta values to plot on the x-axis.
+#' @param t_score set to \code{TRUE} to convert thetas into T-scores.
+#' @param scale_label names of each scale.
+#' @param color line colors to plot.
+#' @param lty line types to plot.
+#'
+#' @examples
+#' \donttest{
+#' out_calib = runCalibration(data_asq)
+#' plot(out_calib, data_asq)
+#' }
+#'
 #' @docType methods
 #' @rdname plotInfo-methods
 #' @export
 
 setGeneric(
   name = "plotInfo",
-  def = function(object, data, theta = seq(-4, 4, .1), t_score = FALSE, scale_label, color = "blue", lty = 1) {
+  def = function(object, data, theta = seq(-4, 4, .1), t_score = FALSE, scale_label = c(1, 2, "Combined"), color = c("red", "blue", "black"), lty = c(3, 2, 1)) {
     standardGeneric("plotInfo")
   }
 )
@@ -153,7 +161,7 @@ setGeneric(
 setMethod(
   f = "plotInfo",
   signature = "SingleGroupClass",
-  definition = function(object, data, theta = seq(-4, 4, .1), t_score = FALSE, scale_label, color = "blue", lty = 1) {
+  definition = function(object, data, theta = seq(-4, 4, .1), t_score = FALSE, scale_label = c(1, 2, "Combined"), color = c("red", "blue", "black"), lty = c(3, 2, 1)) {
 
     info  <- list()
     for (scale_id in c(unique(data@itemmap[[data@scale_id]]), 0)) {
@@ -192,8 +200,8 @@ setMethod(
     }
 
     legend(
-      "topleft",
-      scale_label,
+      x = "topleft",
+      legend = scale_label,
       lty = lty,
       col = color
     )

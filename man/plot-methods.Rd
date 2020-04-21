@@ -3,12 +3,12 @@
 \docType{methods}
 \name{plot,PROsetta_data,ANY-method}
 \alias{plot,PROsetta_data,ANY-method}
-\title{Plot from objects}
+\title{Plot frequency distribution}
 \usage{
 \S4method{plot}{PROsetta_data,ANY}(
   x,
   y,
-  scale_id = 0,
+  scale_id = "combined",
   filename = NULL,
   title = NULL,
   xlim = NULL,
@@ -24,48 +24,42 @@
 )
 }
 \arguments{
-\item{x}{A \code{\linkS4class{PROsetta_data}} object.}
+\item{x}{a \code{\linkS4class{PROsetta_data}} object.}
 
-\item{y}{Unused argument, exists for compatibility with \code{\link{plot}} in the base R package.}
+\item{y}{unused argument, exists for compatibility with \code{\link{plot}} in the base R package.}
 
-\item{scale_id}{Instrument ID to plot. 0 represents the combined scale.}
+\item{scale_id}{scale ID to plot. \code{combined} (default) represents the combined scale.}
 
-\item{filename}{Filename to write if 'savefile' is TRUE.}
+\item{filename}{filename to write if '\code{savefile}' argument is \code{TRUE}.}
 
-\item{title}{The title of the figure.}
+\item{title}{the title of the figure.}
 
-\item{xlim}{The range of scores to plot.}
+\item{xlim}{the range of scores to plot.}
 
-\item{color}{The color to fill the histogram.}
+\item{color}{the color to fill the histogram.}
 
-\item{nbar}{The number of histogram bars.}
+\item{nbar}{the number of histogram bars.}
 
-\item{rug}{If TRUE, display the actual distribution of scores below each bar.}
+\item{rug}{if \code{TRUE}, display the actual distribution of scores below each bar.}
 
-\item{filetype}{The type of file to write if 'savefile' is TRUE. Accepts 'pdf', 'jpeg', 'png', and 'tiff'.}
+\item{filetype}{the type of file to write if '\code{savefile}' argument is \code{TRUE}. Accepts '\code{pdf}', '\code{jpeg}', '\code{png}', and '\code{tiff}'.}
 
-\item{savefile}{If TRUE, save the figure as a file.}
+\item{savefile}{if \code{TRUE}, save the figure as a file.}
 
-\item{bg}{The background color of the plot.}
+\item{bg}{the background color of the plot.}
 
-\item{width}{The width of the plot.}
+\item{width}{the width of the plot.}
 
-\item{height}{The height of the plot.}
+\item{height}{the height of the plot.}
 
-\item{pointsize}{Point size to pass onto file writing functions.}
+\item{pointsize}{point size to pass onto file writing functions.}
 }
 \description{
-Plot from objects in the PROsetta package.
+This is an extension of \code{\link{plot}} to visualize frequency distribution from \code{\linkS4class{PROsetta_data}} object.
 }
 \examples{
-
-\donttest{
-cfg <- createConfig(
-  response_file = "inst/data-raw/dat_decesd_v2.csv",
-  anchor_file = "inst/data-raw/anchor_decesd.csv",
-  itemmap_file = "inst/data-raw/imap_decesd.csv"
-)
-plot(cfg)
-}
+plot(data_asq)
+plot(data_asq, scale_id = 1)
+plot(data_asq, scale_id = 2)
 
 }

@@ -16,27 +16,27 @@ runRSSS(
 )
 }
 \arguments{
-\item{data}{A \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.}
+\item{data}{a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.}
 
-\item{ipar_linked}{An object returned from \code{\link{runCalibration}} or \code{\link{runLinking}}.}
+\item{ipar_linked}{an object returned from \code{\link{runLinking}} or \code{\link{runCalibration}}.}
 
-\item{prior_mean}{Prior mean.}
+\item{prior_mean}{prior mean.}
 
-\item{prior_sd}{Prior standard deviation.}
+\item{prior_sd}{prior standard deviation.}
 
-\item{min_theta}{The lower limit of theta grid.}
+\item{min_theta}{the lower limit of theta grid.}
 
-\item{max_theta}{The upper limit of theta grid.}
+\item{max_theta}{the upper limit of theta grid.}
 
-\item{inc}{The increment to use in theta grid.}
+\item{inc}{the increment to use in theta grid.}
 
-\item{min_score}{Minimum item score (0 or 1).}
+\item{min_score}{minimum item score (0 or 1).}
 }
 \value{
-A list containing crosswalk tables.
+\code{\link{runRSSS}} returns a \code{\link{list}} containing crosswalk tables.
 }
 \description{
-Generates raw-score to standard-score crosswalk tables from supplied calibrated item parameters.
+\code{\link{runRSSS}} is a function to generate raw-score to standard-score crosswalk tables from supplied calibrated item parameters.
 }
 \examples{
 out_link    <- runLinking(data_asq, method = "FIXEDPAR")
