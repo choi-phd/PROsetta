@@ -139,8 +139,8 @@ setMethod(
 #'
 #' @examples
 #' \donttest{
-#' out_calib = runCalibration(data_asq)
-#' plot(out_calib, data_asq)
+#' out_calib = runCalibration(data_asq, technical = list(NCYCLES = 1000))
+#' plotInfo(out_calib, data_asq)
 #' }
 #'
 #' @docType methods
