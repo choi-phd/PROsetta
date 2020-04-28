@@ -17,8 +17,10 @@ NULL
 #' This object can be used in \code{\link[mirt:coef-method]{coef}}, \code{\link[mirt]{itemfit}}, \code{\link[mirt]{itemplot}} in \href{https://CRAN.R-project.org/package=mirt}{'mirt'} package to extract wanted information.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' out_calib <- runCalibration(data_asq) # errors
+#' }
+#' \donttest{
 #' out_calib <- runCalibration(data_asq, technical = list(NCYCLES = 1000))
 #'
 #' mirt::coef(out_calib, IRTpars = TRUE, simplify = TRUE)
