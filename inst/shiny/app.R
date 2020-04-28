@@ -55,10 +55,10 @@ ui <- fluidPage(
         label = "Options"
       ),
 
-      checkboxGroupButtons(choices = c("Run descriptive")      , inputId = "rundescriptive", status = "primary", justified = T, checkIcon = solver_icon),
-      checkboxGroupButtons(choices = c("Run calibration")      , inputId = "runcalibration", status = "primary", justified = T, checkIcon = solver_icon),
-      checkboxGroupButtons(choices = c("Run parameter linking"), inputId = "runlinking",     status = "primary", justified = T, checkIcon = solver_icon),
-      checkboxGroupButtons(choices = c("Run score equating")   , inputId = "runequating",    status = "primary", justified = T, checkIcon = solver_icon),
+      checkboxGroupButtons(choices = c("Run descriptive")      , inputId = "rundescriptive", status = "primary", justified = TRUE, checkIcon = solver_icon),
+      checkboxGroupButtons(choices = c("Run calibration")      , inputId = "runcalibration", status = "primary", justified = TRUE, checkIcon = solver_icon),
+      checkboxGroupButtons(choices = c("Run parameter linking"), inputId = "runlinking",     status = "primary", justified = TRUE, checkIcon = solver_icon),
+      checkboxGroupButtons(choices = c("Run score equating")   , inputId = "runequating",    status = "primary", justified = TRUE, checkIcon = solver_icon),
 
       h3(""),
 
