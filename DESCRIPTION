@@ -1,6 +1,6 @@
 Package: PROsetta
 Type: Package
-Title: PROsetta Linking Analysis
+Title: Linking Patient-Reported Outcomes Measures
 Version: 0.1.0
 Date: 2020-04-14
 Authors@R: c(
