@@ -269,6 +269,19 @@ runEquateObserved <- function(data, scale_from = 2, scale_to = 1, type_to = "raw
       stop("type_to = 'tscore' requires rsss to be able to map raw scores to t-scores")
     }
   }
+  if (type_to == "theta") {
+    if (!is.null(rsss)) {
+      message(sprintf("mapping scale %i (scale_to) raw scores to theta using supplied rsss", scale_to))
+      tmp <- as.data.frame(freq_to)
+      tmp <- merge(
+        tmp, rsss[[as.character(scale_to)]],
+        by.x = "total", by.y = sprintf("raw_%i", scale_to))
+      tmp <- tmp[, c("theta_score", "count")]
+      freq_to <- equate::as.freqtab(tmp)
+    } else {
+      stop("type_to = 'theta' requires rsss to be able to map raw scores to theta")
+    }
+  }
   if (smooth != "none") {
     message(sprintf("performing %s presmoothing on scale %i (scale_to) distribution", smooth, scale_to))
     freq_to   <- equate::presmoothing(freq_to  , smoothmethod = smooth, degrees = degrees)
