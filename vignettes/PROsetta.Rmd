@@ -3,10 +3,11 @@ title: "Scale linking/equating with PROsetta package"
 author: "Sangdon Lim"
 output:
   html_document:
+    number_sections: true
+    toc: true
+    toc_float:
+      smooth_scroll: false
     css: styles.css
-    number_sections: yes
-    toc: yes
-    toc_float: yes
 vignette: >
   %\VignetteIndexEntry{Scale linking/equating with PROsetta package}
   %\VignetteEncoding{UTF-8}
@@ -39,8 +40,8 @@ d = loadData(
 ```
 
 * `response`: Response data from current administration, containing anchor and input items. Can be a .csv file name or a data frame.
-* `itemmap_file`: Item map specifying which items are in which instrument. Can be a .csv file or a data frame.
-* `anchor_file`: Item parameters for anchor items. Can be a .csv file name or a data frame.
+* `itemmap`: Item map specifying which items are in which instrument. Can be a .csv file or a data frame.
+* `anchor`: Item parameters for anchor items. Can be a .csv file name or a data frame.
 * `input_dir`: The path of the directory to look for the .csv files.
 
 
@@ -256,7 +257,7 @@ rsss_sl       <- runRSSS(d, out_link_sl)
 
 
 ```{r}
-rsss_fixedpar$`2`
+round(rsss_fixedpar$`2`, 3)
 ```
 
 
