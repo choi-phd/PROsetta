@@ -6,7 +6,15 @@
 }
 
 .tocify-subheader .tocify-item {
-  font-size: inherit;
+  font-size: 1em !important;
+}
+
+.tocify-subheader {
+  text-indent: 10px;
+}
+
+.tocify-subheader .tocify-subheader {
+  text-indent: 10px;
 }
 
 /* font sizes */
