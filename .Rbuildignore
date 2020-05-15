@@ -2,10 +2,15 @@
 ^\.Rproj\.user$
 ^data-raw$
 ^tutorial$
+^docs$
+^pkgdown$
 ^R/test\.R$
 ^cleanup.*$
+^README\.Rmd$
 ^\.travis\.yml$
+^_pkgdown\.yml$
 ^tutorial/*\.*$
 ^tutorial/img/*\.*$
 ^vignettes/PROsetta_files/PROsetta_cache/html/*\.*$
 ^cran-comments\.md$
+^vignettes/debug\.log$
