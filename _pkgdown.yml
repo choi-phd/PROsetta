@@ -1,0 +1,56 @@
+destination: docs
+
+template:
+  params:
+    bootswatch: cosmo
+
+authors:
+  Seung W. Choi:
+    href: https://education.utexas.edu/faculty/seung_choi
+  Sangdon Lim:
+    href: https://sdlim.com/
+  Benjamin D. Schalet:
+    href: https://www.feinberg.northwestern.edu/faculty-profiles/az/profile.html?xid=25925
+  Aaron Kaat:
+    href: https://www.feinberg.northwestern.edu/faculty-profiles/az/profile.html?xid=32067
+
+reference:
+- title: "Data loading & descriptive functions"
+  contents:
+  - loadData
+  - runFrequency
+  - runDescriptive
+  - runClassical
+  - runCFA
+
+- title: "Item parameter linking functions"
+  desc: "Functions for metric-matching of item parameters"
+  contents:
+  - runLinking
+  - runRSSS
+  - runCalibration
+
+- title: "Observed score equating functions"
+  desc: "Functions for metric-matching of observed scores"
+  contents:
+  - runEquateObserved
+
+- title: "Web GUI"
+  contents:
+  - guiPROsetta
+
+- title: "Helper functions"
+  contents:
+  - plotInfo
+  - plot,PROsetta_data,ANY-method
+  - getCompleteData
+  - getEscore
+  - getScaleSum
+  - getTheta
+  - compareScores
+  - checkFrequency
+
+- title: "Example datasets"
+  contents:
+  - dataset_asq
+  - dataset_dep
