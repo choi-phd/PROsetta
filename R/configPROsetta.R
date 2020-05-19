@@ -113,11 +113,13 @@ loadData <- function(response, itemmap, anchor,
   }
 
 
+  colnames(itemmap) <- tolower(colnames(itemmap))
+
   names_response <- colnames(response)
   names_itemmap  <- colnames(itemmap)
 
 
-  if ("reverse" %in% names_itemmap) {
+  if ("reverse" %in% tolower(names_itemmap)) {
     if (any(itemmap$reverse == 1)) {
       message("some items were marked as reversed items in 'reverse' column in item map")
       message("assuming the response data is already reverse coded")
@@ -207,9 +209,9 @@ checkFrequency <- function(data) {
       ncats_obs <- nc - nm
 
       if (nm > 0) {
-        item_id <- rownames(tmp[i, ])
-        idx <- which(data@itemmap[[data@item_id]] == item_id)
-        ncats_exp <- data@itemmap[idx, ][["NCAT"]]
+        item_id   <- rownames(tmp[i, ])
+        idx       <- which(data@itemmap[[data@item_id]] == item_id)
+        ncats_exp <- data@itemmap[idx, ][["ncat"]]
 
         if (ncats_exp != ncats_obs) {
           cats <- colnames(tmp[i, ])
