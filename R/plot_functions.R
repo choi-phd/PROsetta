@@ -105,7 +105,7 @@ setMethod(
       raw_score, nbar, xlim = xlim,
       xlab = "Raw Summed Score", ylab = "Frequency", sub = string, main = title, col = color)
 
-    text(hist1$mids, hist1$counts + 2.5,
+    text(hist1$mids, hist1$counts + strheight("1") * 0.5,
          hist1$counts,
          cex = .8)
     text(hist1$mids, hist1$counts / 2,
