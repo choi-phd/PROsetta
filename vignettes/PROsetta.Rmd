@@ -67,8 +67,8 @@ The item map file requires the following columns.
 * `instrument`: Instrument ID (beginning from 1)
 * `item_id`: The unique ID of the item. The name of this column does not have to be `item_id`, but should be consistent with the anchor data. The content of this column should refer to column names in the response data.
 * `item_name`: New names to use in the combined scale
-* `NCAT`: The number of response categories
-* `minScore`: The minimum score of the item
+* `ncat`: The number of response categories
+* `min_score`: The minimum score of the item
 * `reverse`: Whether the item has been reverse scored
 * `scores`: Comma-separated values for all possible scores of the item
 
@@ -87,7 +87,7 @@ The anchor file requires the following columns.
 * `item_id`: The unique ID of the item. The name of this column does not have to be `item_id`, but should be consistent with the item map. The content of this column should refer to column names in the response data.
 * `a`: Parameter in graded response model
 * `cb1`, `cb2`, ...: Parameters in graded response model
-* `NCAT`: The number of response categories
+* `ncat`: The number of response categories
 
 See below for an example.
 
