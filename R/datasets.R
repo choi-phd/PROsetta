@@ -18,8 +18,8 @@ NULL
 #'     \item \code{instrument} Instrument index.
 #'     \item \code{item_id} Item ID. Refers to column \code{prosettaid} in \code{response_asq} data.
 #'     \item \code{item_name} New item names to be used in mapping.
-#'     \item \code{NCAT} The number of response categories.
-#'     \item \code{minScore} The minimum score of the item.
+#'     \item \code{ncat} The number of response categories.
+#'     \item \code{min_score} The minimum score of the item.
 #'     \item \code{reverse} 1 indicates a reverse-scored item.
 #'     \item \code{scores} A vector representing all possible score values from the item.
 #'   }
@@ -29,7 +29,7 @@ NULL
 #'     \item \code{item_id} Item ID, same to those in the response data above.
 #'     \item \code{a} The discrimination (slope) parameter.
 #'     \item \code{cb1 - cb4} The boundaries between each category-pair.
-#'     \item \code{NCAT} The number of response categories.
+#'     \item \code{ncat} The number of response categories.
 #'   }
 #'
 #' }
@@ -73,8 +73,8 @@ NULL
 #'     \item \code{instrument} Instrument index.
 #'     \item \code{item_id} Item ID. Refers to column \code{prosettaid} in \code{response_asq} data.
 #'     \item \code{item_name} New item names to be used in mapping.
-#'     \item \code{NCAT} The number of response categories.
-#'     \item \code{minScore} The minimum score of the item.
+#'     \item \code{ncat} The number of response categories.
+#'     \item \code{min_score} The minimum score of the item.
 #'     \item \code{reverse} 1 indicates a reverse-scored item.
 #'     \item \code{scores} A vector representing all possible score values from the item.
 #'   }
@@ -84,7 +84,7 @@ NULL
 #'     \item \code{item_id} Item ID, same to those in the response data above.
 #'     \item \code{a} The discrimination (slope) parameter.
 #'     \item \code{cb1 - cb4} The boundaries between each category-pair.
-#'     \item \code{NCAT} The number of response categories.
+#'     \item \code{ncat} The number of response categories.
 #'   }
 #' }
 #'
