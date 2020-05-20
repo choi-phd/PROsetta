@@ -14,7 +14,7 @@ check_fp <- function(fp, f) {
   if (file.exists(p)) {
     return(list(path = normalizePath(p), exists = TRUE))
   }
-  return(list(path = NULL, exists = FALSE))
+  return(list(path = normalizePath(p), exists = FALSE))
 }
 
 
