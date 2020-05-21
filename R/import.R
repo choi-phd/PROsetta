@@ -7,5 +7,5 @@
 #' @importFrom utils read.csv
 #' @importFrom stats dnorm sd cor
 #' @importFrom grDevices pdf jpeg png tiff dev.off
-#' @importFrom graphics hist text points box legend grid lines
+#' @importFrom graphics hist text points box legend grid lines strheight
 NULL
