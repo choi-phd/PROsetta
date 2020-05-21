@@ -137,7 +137,7 @@ runLinking <- function(data, method, ...) {
   ipar      <- mirt::coef(calibration, IRTpars = TRUE, simplify = TRUE)$items
   ni_all    <- nrow(ipar)
   ni_anchor <- nrow(data@anchor)
-  max_cat   <- max(data@anchor[['ncat']])
+  max_cat   <- max(get_col(data@anchor, "ncat"))
 
   id_new <- data.frame(New = 1:ni_all   , ID = data@itemmap[[data@item_id]])
   id_old <- data.frame(Old = 1:ni_anchor, ID = data@anchor[[data@item_id]])
@@ -150,7 +150,10 @@ runLinking <- function(data, method, ...) {
     message(sprintf("now performing linear transformation to match anchor with %s method", method))
     pm_all    <- plink::as.poly.mod(ni_all   , "grm", 1:ni_all)
     pm_anchor <- plink::as.poly.mod(ni_anchor, "grm", 1:ni_anchor)
-    ncat <- list(data@itemmap[['ncat']], data@anchor[['ncat']])
+    ncat <- list(
+      get_col(data@itemmap, "ncat"),
+      get_col(data@anchor, "ncat")
+    )
     plink_pars <- plink::as.irt.pars(
       pars, common, cat = ncat,
       list(pm_all, pm_anchor),
