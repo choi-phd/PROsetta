@@ -21,6 +21,13 @@ check_fp <- function(fp, f) {
 
 #' @noRd
 
+get_col <- function(d, cn) {
+  idx <- which(tolower(names(d)) == cn)
+  return(d[, idx])
+}
+
+#' @noRd
+
 gen_prior <- function(theta_grid, dist_type, prior_mean, prior_sd) {
 
   if (dist_type == "normal") {
