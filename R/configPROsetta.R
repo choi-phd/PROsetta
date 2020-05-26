@@ -303,7 +303,9 @@ runDescriptive <- function(data = NULL) {
     stop("data must be a 'PROsetta_data' class object")
   }
 
-  desc <- psych::describe(data@response[data@itemmap[[data@item_id]]])[-1]
+  desc      <- psych::describe(data@response[data@itemmap[[data@item_id]]])
+  desc$vars <- NULL
+
   return(desc)
 
 }
