@@ -32,9 +32,7 @@ NULL
 
 runCalibration <- function(data, fixedpar = FALSE, ignore_nonconv = FALSE, ...) {
 
-  if (!inherits(data, "PROsetta_data")) {
-    stop("argument 'data': must be a 'PROsetta_data' class object")
-  }
+  validate_data(data)
 
   resp_data <- data@response[data@itemmap[[data@item_id]]]
   ni <- dim(resp_data)[2]
@@ -116,9 +114,8 @@ runCalibration <- function(data, fixedpar = FALSE, ignore_nonconv = FALSE, ...) 
 
 runLinking <- function(data, method, ...) {
 
-  if (!inherits(data, "PROsetta_data")) {
-    stop("argument 'data': must be a 'PROsetta_data' class object")
-  }
+  validate_data(data)
+
   if (is.null(data@anchor)) {
     stop("argument 'data': @anchor must be supplied for runLinking()")
   }
@@ -229,9 +226,7 @@ runLinking <- function(data, method, ...) {
 
 runEquateObserved <- function(data, scale_from = 2, scale_to = 1, type_to = "raw", rsss = NULL, eq_type = "equipercentile", smooth = "loglinear", degrees = list(3, 1), boot = TRUE, reps = 100, ...) {
 
-  if (!inherits(data, "PROsetta_data")) {
-    stop("argument 'data': must be a 'PROsetta_data' class object")
-  }
+  validate_data(data)
 
   message("runEquateObserved requires complete data, attempting to remove cases\n")
   data <- getCompleteData(data)
@@ -327,9 +322,8 @@ runEquateObserved <- function(data, scale_from = 2, scale_to = 1, type_to = "raw
 
 runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_theta = -4.0, max_theta = 4.0, inc = 0.01, min_score = 1) {
 
-  if (!inherits(data, "PROsetta_data")) {
-    stop("argument 'data': must be a 'PROsetta_data' class object")
-  }
+  validate_data(data)
+
   if (is.null(attr(class(ipar_linked), "package"))) {
     item_par <- ipar_linked$ipar_linked
   } else if (isS4(ipar_linked) && attr(class(ipar_linked), "package") == "mirt") {

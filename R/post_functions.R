@@ -12,9 +12,9 @@ NULL
 #' @export
 
 getCompleteData <- function(data) {
-  if (!inherits(data, "PROsetta_data")) {
-    stop("argument 'data': must be a 'PROsetta_data' class object")
-  }
+
+  validate_data(data)
+
   resp_with_missing_values <- apply(is.na(data@response), 1, any)
   n_resp <- sum(resp_with_missing_values)
   if (any(resp_with_missing_values)) {

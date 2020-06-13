@@ -194,9 +194,7 @@ loadData <- function(response, itemmap, anchor,
 
 checkFrequency <- function(data) {
 
-  if (!inherits(data, "PROsetta_data")) {
-    stop("argument 'data': must be a 'PROsetta_data' class object")
-  }
+  validate_data(data)
 
   tmp <- runFrequency(data, check_frequency = FALSE)
   ni <- dim(tmp)[1]
@@ -253,9 +251,7 @@ checkFrequency <- function(data) {
 
 runFrequency <- function(data, check_frequency = TRUE) {
 
-  if (!inherits(data, "PROsetta_data")) {
-    stop("argument 'data': must be a 'PROsetta_data' class object")
-  }
+  validate_data(data)
 
   tmp <- data@response[data@itemmap[[data@item_id]]]
   tmp <- apply(tmp, 2, table)
@@ -299,9 +295,7 @@ runFrequency <- function(data, check_frequency = TRUE) {
 
 runDescriptive <- function(data = NULL) {
 
-  if (!inherits(data, "PROsetta_data")) {
-    stop("argument 'data': must be a 'PROsetta_data' class object")
-  }
+  validate_data(data)
 
   desc      <- psych::describe(data@response[data@itemmap[[data@item_id]]])
   desc$vars <- NULL
@@ -331,9 +325,7 @@ runDescriptive <- function(data = NULL) {
 
 runClassical <- function(data, omega = FALSE, scalewise = FALSE, ...) {
 
-  if (!inherits(data, "PROsetta_data")) {
-    stop("argument 'data': must be a 'PROsetta_data' class object")
-  }
+  validate_data(data)
 
   out_alpha = list()
   out_omega = list()
@@ -387,9 +379,7 @@ runClassical <- function(data, omega = FALSE, scalewise = FALSE, ...) {
 
 runCFA <- function(data, estimator = "WLSMV", std.lv = TRUE, scalewise = FALSE, ...) {
 
-  if (!inherits(data, "PROsetta_data")) {
-    stop("argument 'data': must be a 'PROsetta_data' class object")
-  }
+  validate_data(data)
 
   out <- list()
 

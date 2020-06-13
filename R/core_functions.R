@@ -21,10 +21,22 @@ check_fp <- function(fp, f) {
 
 #' @noRd
 
+validate_data <- function(d) {
+  if (!inherits(d, "PROsetta_data")) {
+    stop("argument 'data': must be a 'PROsetta_data' class object")
+  }
+}
+
+
+
+#' @noRd
+
 get_col <- function(d, cn) {
   idx <- which(tolower(names(d)) == cn)
   return(d[, idx])
 }
+
+
 
 #' @noRd
 
