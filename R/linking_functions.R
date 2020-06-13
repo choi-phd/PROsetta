@@ -266,7 +266,7 @@ runEquateObserved <- function(data, scale_from = 2, scale_to = 1, type_to = "raw
       tmp <- merge(
         tmp, rsss[[as.character(scale_to)]],
         by.x = "total", by.y = sprintf("raw_%i", scale_to))
-      tmp <- tmp[, c("t_score", "count")]
+      tmp <- tmp[, c("tscore", "count")]
       freq_to <- equate::as.freqtab(tmp)
     } else {
       stop("type_to = 'tscore' requires rsss to be able to map raw scores to t-scores")
@@ -279,7 +279,7 @@ runEquateObserved <- function(data, scale_from = 2, scale_to = 1, type_to = "raw
       tmp <- merge(
         tmp, rsss[[as.character(scale_to)]],
         by.x = "total", by.y = sprintf("raw_%i", scale_to))
-      tmp <- tmp[, c("theta_score", "count")]
+      tmp <- tmp[, c("theta", "count")]
       freq_to <- equate::as.freqtab(tmp)
     } else {
       stop("type_to = 'theta' requires rsss to be able to map raw scores to theta")
@@ -294,9 +294,12 @@ runEquateObserved <- function(data, scale_from = 2, scale_to = 1, type_to = "raw
 
   out <- equate::equate(freq_from, freq_to, type = eq_type, boot = boot, reps = reps, ...)
 
-  names(out$concordance)[1:2] <- c(
-    sprintf("raw_%i"  , scale_from),
-    sprintf("equiv_%i", scale_to))
+  names(out$concordance)[1:4] <- c(
+    sprintf("raw_%i"       , scale_from),
+    sprintf("%s_%i"        , type_to, scale_to),
+    sprintf("%s_%i_se"     , type_to, scale_to),
+    sprintf("%s_%i_se_boot", type_to, scale_to)
+  )
   return(out)
 
 }
@@ -386,7 +389,7 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
       lh <- plh
     }
 
-    theta_score <- numeric(n_score) # score table for EAP
+    theta       <- numeric(n_score) # score table for EAP
     theta_se    <- numeric(n_score) # SE for EAP
 
     prior       <- gen_prior(theta_grid, "normal", prior_mean, prior_sd)
@@ -396,22 +399,22 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
     posterior   <- posterior / den
 
     for (j in 1:n_score) {
-      theta_score[j] <- sum(posterior[, j] * theta_grid) / sum(posterior[, j])                   # EAP
-      theta_se[j] <- sqrt(sum(posterior[, j] * (theta_grid - theta_score[j])^2) / sum(posterior[, j])) # EAP
+      theta[j] <- sum(posterior[, j] * theta_grid) / sum(posterior[, j])                         # EAP
+      theta_se[j] <- sqrt(sum(posterior[, j] * (theta_grid - theta[j])^2) / sum(posterior[, j])) # EAP
     }
 
     if (!is_minscore_0) {
       raw_score <- raw_score + ni
     }
 
-    t_score <- theta_score * 10 + 50
-    t_se    <- theta_se * 10
+    tscore    <- theta    * 10 + 50
+    tscore_se <- theta_se * 10
 
     rsss_table <- data.frame(
       raw_sum     = raw_score,
-      t_score     = t_score,
-      t_se        = t_se,
-      theta_score = theta_score,
+      tscore      = tscore,
+      tscore_se   = tscore_se,
+      theta       = theta,
       theta_se    = theta_se
     )
 
@@ -438,7 +441,7 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
 
     for (s in 1:(n_scale + 1)) {
       for (d in 1:(n_scale + 1)) {
-        n_theta <- length(score_table[[s]]$theta_score)
+        n_theta <- length(score_table[[s]]$theta)
         e_theta <- rep(NA, n_theta)
         if (d != n_scale + 1) {
           ipar <- item_par_by_scale[[d]]
@@ -446,7 +449,7 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
           ipar <- item_par
         }
         for (i in 1:n_theta) {
-          e_theta[i] <- calc_escore(ipar, "grm", score_table[[s]]$theta_score[i], min_score[d] == 0)
+          e_theta[i] <- calc_escore(ipar, "grm", score_table[[s]]$theta[i], min_score[d] == 0)
         }
         if (d != n_scale + 1) {
           e_name <- sprintf("escore_%i", d)
