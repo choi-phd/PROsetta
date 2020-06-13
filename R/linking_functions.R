@@ -33,7 +33,7 @@ NULL
 runCalibration <- function(data, fixedpar = FALSE, ignore_nonconv = FALSE, ...) {
 
   if (!inherits(data, "PROsetta_data")) {
-    stop("data must be a 'PROsetta_data' class object")
+    stop("argument 'data': must be a 'PROsetta_data' class object")
   }
 
   resp_data <- data@response[data@itemmap[[data@item_id]]]
@@ -117,13 +117,13 @@ runCalibration <- function(data, fixedpar = FALSE, ignore_nonconv = FALSE, ...) 
 runLinking <- function(data, method, ...) {
 
   if (!inherits(data, "PROsetta_data")) {
-    stop("data must be a 'PROsetta_data' class object")
+    stop("argument 'data': must be a 'PROsetta_data' class object")
   }
   if (is.null(data@anchor)) {
-    stop("anchor must be supplied to perform scale linking")
+    stop("argument 'data': @anchor must be supplied for runLinking()")
   }
   if (!method %in% c("MM", "MS", "HB", "SL", "FIXEDPAR")) {
-    stop(sprintf("unrecognized value in 'method': %s", method))
+    stop(sprintf("argument 'method': unrecognized value '%s' (accepts 'MM', 'MS', 'HB', 'SL', 'FIXEDPAR')", method))
   }
 
   if (method == "FIXEDPAR") {
@@ -230,7 +230,7 @@ runLinking <- function(data, method, ...) {
 runEquateObserved <- function(data, scale_from = 2, scale_to = 1, type_to = "raw", rsss = NULL, eq_type = "equipercentile", smooth = "loglinear", degrees = list(3, 1), boot = TRUE, reps = 100, ...) {
 
   if (!inherits(data, "PROsetta_data")) {
-    stop("data must be a 'PROsetta_data' class object")
+    stop("argument 'data': must be a 'PROsetta_data' class object")
   }
 
   message("runEquateObserved requires complete data, attempting to remove cases\n")
@@ -269,7 +269,7 @@ runEquateObserved <- function(data, scale_from = 2, scale_to = 1, type_to = "raw
       tmp <- tmp[, c("tscore", "count")]
       freq_to <- equate::as.freqtab(tmp)
     } else {
-      stop("type_to = 'tscore' requires rsss to be able to map raw scores to t-scores")
+      stop("argument 'type_to': 'tscore' requires argument 'rsss' to be supplied to be able to map raw scores to t-scores")
     }
   }
   if (type_to == "theta") {
@@ -282,7 +282,7 @@ runEquateObserved <- function(data, scale_from = 2, scale_to = 1, type_to = "raw
       tmp <- tmp[, c("theta", "count")]
       freq_to <- equate::as.freqtab(tmp)
     } else {
-      stop("type_to = 'theta' requires rsss to be able to map raw scores to theta")
+      stop("argument 'type_to': 'theta' requires argument 'rsss' to be supplied to be able to map raw scores to theta")
     }
   }
   if (smooth != "none") {
@@ -328,7 +328,7 @@ runEquateObserved <- function(data, scale_from = 2, scale_to = 1, type_to = "raw
 runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_theta = -4.0, max_theta = 4.0, inc = 0.01, min_score = 1) {
 
   if (!inherits(data, "PROsetta_data")) {
-    stop("data must be a 'PROsetta_data' class object")
+    stop("argument 'data': must be a 'PROsetta_data' class object")
   }
   if (is.null(attr(class(ipar_linked), "package"))) {
     item_par <- ipar_linked$ipar_linked
@@ -340,14 +340,14 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
   n_scale <- length(item_par_by_scale)
 
   if (!all(min_score %in% c(0, 1))) {
-    stop("min_score must contain only 0 or 1")
+    stop("argument 'min_score': must contain only 0 or 1")
   }
   if (length(min_score) == 1) {
     if (n_scale > 1) {
       min_score <- rep(min_score, n_scale + 1)
     }
   } else if (length(min_score) != n_scale + 1) {
-    stop(sprintf("length of min_score must be either 1 or %i", n_scale + 1))
+    stop(sprintf("argument 'min_score': length(min_score) must be either 1 or %i", n_scale + 1))
   }
 
 

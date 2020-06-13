@@ -39,7 +39,7 @@ gen_prior <- function(theta_grid, dist_type, prior_mean, prior_sd) {
   } else if (dist_type == "unif") {
     prior <- rep(1, length(theta_grid))
   } else {
-    stop(sprintf("unrecognized prior dist_type: %s", dist_type))
+    stop(sprintf("argument 'dist_type': unrecognized value '%s'", dist_type))
   }
 
   return(prior)
@@ -94,7 +94,7 @@ prep_prob <- function(ipar, model, theta_grid) {
       }
     }
   } else {
-    stop(sprintf("unrecognized model: %s", model))
+    stop(sprintf("argument 'model': unrecognized value '%s'", model))
   }
 
   return(pp)
