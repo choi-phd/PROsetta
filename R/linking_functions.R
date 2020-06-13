@@ -170,7 +170,7 @@ runLinking <- function(data, method, ...) {
     out$ipar_anchor <- pars[[2]]
   }
 
-  out$method           <- method
+  out$method                <- method
   rownames(out$ipar_linked) <- id_new$ID
   rownames(out$ipar_anchor) <- id_old$ID
   colnames(out$ipar_linked) <- colnames(ipar)
@@ -290,7 +290,7 @@ runEquateObserved <- function(data, scale_from = 2, scale_to = 1, type_to = "raw
     freq_to   <- equate::presmoothing(freq_to  , smoothmethod = smooth, degrees = degrees)
   }
 
-  score_stat     <- rbind(From = summary(freq_from), To = summary(freq_to))
+  score_stat <- rbind(From = summary(freq_from), To = summary(freq_to))
 
   out <- equate::equate(freq_from, freq_to, type = eq_type, boot = boot, reps = reps, ...)
 
