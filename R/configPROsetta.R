@@ -43,26 +43,26 @@ setClass("PROsetta_data",
 
     msg_all <- c()
     if (!object@person_id %in% names(object@response)) {
-      msg <- sprintf("column '%s' for person ID does not exist in response data", object@person_id)
+      msg <- sprintf("@response: cannot find column '%s' from @person_id", object@person_id)
       msg_all <- c(msg_all, msg)
     }
     if (!(object@item_id %in% names(object@itemmap))) {
-      msg <- sprintf("column '%s' for item ID does not exist in item map", object@item_id)
+      msg <- sprintf("@itemmap: cannot find column '%s' from @item_id", object@item_id)
       msg_all <- c(msg_all, msg)
     }
     if (!(object@item_id %in% names(object@anchor))) {
-      msg <- sprintf("column '%s' for item ID does not exist in anchor data", object@item_id)
+      msg <- sprintf("@anchor: cannot find column '%s' from @item_id", object@item_id)
       msg_all <- c(msg_all, msg)
     }
     if (!is.null(object@itemmap) && !is.null(object@anchor)) {
       if (!all(object@anchor[[object@item_id]] %in% object@itemmap[[object@item_id]])) {
-        msg <- sprintf("column '%s' in anchor data contains items that are not in itemmap_file", object@item_id)
+        msg <- sprintf("@anchor: column '%s' contains extra items not in @itemmap", object@item_id)
         msg_all <- c(msg_all, msg)
       }
     }
     if (!is.null(object@itemmap) && !is.null(object@response)) {
       if (!all(object@itemmap[[object@item_id]] %in% names(object@response))) {
-        msg <- sprintf("column '%s' in item map contains items that are not in response data", object@item_id)
+        msg <- sprintf("@itemmap: column '%s' contains extra items not in @response", object@item_id)
         msg_all <- c(msg_all, msg)
       }
     }
@@ -84,32 +84,32 @@ loadData <- function(response, itemmap, anchor,
 
   if (inherits(response, "character")) {
     p <- check_fp(input_dir, response)
-    if (!p$exists) stop(sprintf("'response': cannot find the specified file %s", p$path))
+    if (!p$exists) stop(sprintf("argument 'response': cannot find the specified file %s", p$path))
     response <- read.csv(p$path, as.is = TRUE)
   } else if (inherits(response, "matrix")) {
     response <- as.data.frame(response)
   } else if (!inherits(response, "data.frame")) {
-    stop(sprintf("'response': unrecognized object type %s", class(response)))
+    stop(sprintf("argument 'response': unrecognized object class %s", class(response)))
   }
 
   if (inherits(itemmap, "character")) {
     p <- check_fp(input_dir, itemmap)
-    if (!p$exists) stop(sprintf("'itemmap': cannot find the specified file %s", p$path))
+    if (!p$exists) stop(sprintf("argument 'itemmap': cannot find the specified file %s", p$path))
     itemmap <- read.csv(p$path, as.is = TRUE)
   } else if (inherits(itemmap, "matrix")) {
     itemmap <- as.data.frame(itemmap)
   } else if (!inherits(itemmap, "data.frame")) {
-    stop(sprintf("'itemmap': unrecognized object type %s", class(itemmap)))
+    stop(sprintf("argument 'itemmap': unrecognized object class %s", class(itemmap)))
   }
 
   if (inherits(anchor, "character")) {
     p <- check_fp(input_dir, anchor)
-    if (!p$exists) stop(sprintf("'anchor': cannot find the specified file %s", p$path))
+    if (!p$exists) stop(sprintf("argument 'anchor': cannot find the specified file %s", p$path))
     anchor <- read.csv(p$path, as.is = TRUE)
   } else if (inherits(anchor, "matrix")) {
     anchor <- as.data.frame(anchor)
   } else if (!inherits(anchor, "data.frame")) {
-    stop(sprintf("'anchor': unrecognized object type %s", class(anchor)))
+    stop(sprintf("argument 'anchor': unrecognized object class %s", class(anchor)))
   }
 
 
@@ -121,10 +121,10 @@ loadData <- function(response, itemmap, anchor,
 
   if ("reverse" %in% tolower(names_itemmap)) {
     if (any(itemmap$reverse == 1)) {
-      message("some items were marked as reversed items in 'reverse' column in item map")
+      message("some items are marked as reversed items in 'reverse' column in item map")
       message("assuming the response data is already reverse coded")
     } else {
-      message("'reverse' column is present in item map and no items were marked as reversed")
+      message("'reverse' column is present in item map, and no items are marked as reversed")
     }
   }
 
@@ -134,7 +134,7 @@ loadData <- function(response, itemmap, anchor,
   n_ids <- sum(!is.null(item_id), !is.null(person_id), !is.null(scale_id))
 
   if (n_ids < 3 & n_ids > 0) {
-    stop("specify item_id, person_id, scale_id all three to override ID guessing.")
+    stop("supply 'item_id', 'person_id', 'scale_id' all three simultaneously to override ID guessing.")
   }
 
   if (n_ids == 0) {
@@ -195,7 +195,7 @@ loadData <- function(response, itemmap, anchor,
 checkFrequency <- function(data) {
 
   if (!inherits(data, "PROsetta_data")) {
-    stop("data must be a 'PROsetta_data' class object")
+    stop("argument 'data': must be a 'PROsetta_data' class object")
   }
 
   tmp <- runFrequency(data, check_frequency = FALSE)
@@ -254,7 +254,7 @@ checkFrequency <- function(data) {
 runFrequency <- function(data, check_frequency = TRUE) {
 
   if (!inherits(data, "PROsetta_data")) {
-    stop("data must be a 'PROsetta_data' class object")
+    stop("argument 'data': must be a 'PROsetta_data' class object")
   }
 
   tmp <- data@response[data@itemmap[[data@item_id]]]
@@ -300,7 +300,7 @@ runFrequency <- function(data, check_frequency = TRUE) {
 runDescriptive <- function(data = NULL) {
 
   if (!inherits(data, "PROsetta_data")) {
-    stop("data must be a 'PROsetta_data' class object")
+    stop("argument 'data': must be a 'PROsetta_data' class object")
   }
 
   desc      <- psych::describe(data@response[data@itemmap[[data@item_id]]])
@@ -332,7 +332,7 @@ runDescriptive <- function(data = NULL) {
 runClassical <- function(data, omega = FALSE, scalewise = FALSE, ...) {
 
   if (!inherits(data, "PROsetta_data")) {
-    stop("data must be a 'PROsetta_data' class object")
+    stop("argument 'data': must be a 'PROsetta_data' class object")
   }
 
   out_alpha = list()
@@ -388,7 +388,7 @@ runClassical <- function(data, omega = FALSE, scalewise = FALSE, ...) {
 runCFA <- function(data, estimator = "WLSMV", std.lv = TRUE, scalewise = FALSE, ...) {
 
   if (!inherits(data, "PROsetta_data")) {
-    stop("data must be a 'PROsetta_data' class object")
+    stop("argument 'data': must be a 'PROsetta_data' class object")
   }
 
   out <- list()
