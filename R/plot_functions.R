@@ -50,7 +50,7 @@ setMethod(
     if (scale_id != "combined") {
       item_names <- subset(x@itemmap, x@itemmap[[x@scale_id]] == scale_id)[[x@item_id]]
       if (length(item_names) == 0) {
-        stop(sprintf("unrecognized value in 'scale_id' argument: %s", scale_id))
+        stop(sprintf("argument 'scale_id': unrecognized value '%s'", scale_id))
       }
     }
 
@@ -97,7 +97,7 @@ setMethod(
         tiff(filename = paste0(filename, ".tif"),
              width = width, height = height, pointsize = pointsize, bg = bg)
       } else {
-        stop(sprintf("unrecognized 'filetype' argument: %s", filetype))
+        stop(sprintf("argument 'filetype': unrecognized value '%s' (accepts 'pdf', 'jpeg', 'png', 'tiff')", filetype))
       }
     }
 

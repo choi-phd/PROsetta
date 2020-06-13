@@ -13,15 +13,15 @@ NULL
 
 getCompleteData <- function(data) {
   if (!inherits(data, "PROsetta_data")) {
-    stop("unrecognized object class: %s", class(data))
+    stop("argument 'data': must be a 'PROsetta_data' class object")
   }
   resp_with_missing_values <- apply(is.na(data@response), 1, any)
   n_resp <- sum(resp_with_missing_values)
   if (any(resp_with_missing_values)) {
     data@response <- data@response[!resp_with_missing_values, ]
-    message(sprintf("filtered %s cases with one or more missing responses", n_resp))
+    message(sprintf("getCompleteData: filtered %s cases with one or more missing responses", n_resp))
   } else {
-    message(sprintf("no cases were removed, all %i responses were complete", dim(data@response)[1]))
+    message(sprintf("getCompleteData: no cases were removed, all %i responses are complete", dim(data@response)[1]))
   }
   return(data)
 }
