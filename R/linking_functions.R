@@ -62,7 +62,7 @@ runCalibration <- function(data, fixedpar = FALSE, ignore_nonconv = FALSE, ...) 
 
     calibration <- mirt::mirt(resp_data, 1, itemtype = "graded", pars = par_layout, ...)
   } else {
-    message("performing free calibration of all items, ignoring anchor data\n")
+    message("performing free calibration of all items, ignoring anchor data", appendLF = TRUE)
     calibration <- mirt::mirt(resp_data, 1, itemtype = "graded", ...)
   }
 
@@ -228,7 +228,7 @@ runEquateObserved <- function(data, scale_from = 2, scale_to = 1, type_to = "raw
 
   validate_data(data)
 
-  message("runEquateObserved requires complete data, attempting to remove cases\n")
+  message("runEquateObserved requires complete data, attempting to remove cases", appendLF = TRUE)
   data <- getCompleteData(data)
 
   scale_id       <- data@itemmap[[data@scale_id]]
