@@ -405,11 +405,11 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
     tscore_se <- round(theta_se * 10, 1)
 
     rsss_table <- data.frame(
-      raw_sum     = raw_score,
+      sum_score   = raw_score,
       tscore      = tscore,
       tscore_se   = tscore_se,
-      theta       = theta,
-      theta_se    = theta_se
+      eap         = theta,
+      eap_se      = theta_se
     )
 
     return(rsss_table)
