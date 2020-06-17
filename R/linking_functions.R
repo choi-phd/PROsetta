@@ -62,7 +62,7 @@ runCalibration <- function(data, fixedpar = FALSE, ignore_nonconv = FALSE, ...) 
 
     calibration <- mirt::mirt(resp_data, 1, itemtype = "graded", pars = par_layout, ...)
   } else {
-    message("performing free calibration of all items, ignoring anchor data")
+    message("performing free calibration of all items, ignoring anchor data\n")
     calibration <- mirt::mirt(resp_data, 1, itemtype = "graded", ...)
   }
 
@@ -228,7 +228,7 @@ runEquateObserved <- function(data, scale_from = 2, scale_to = 1, type_to = "raw
     stop("data must be a 'PROsetta_data' class object")
   }
 
-  message("runEquateObserved requires complete data, attempting to remove cases")
+  message("runEquateObserved requires complete data, attempting to remove cases\n")
   data <- getCompleteData(data)
 
   scale_id       <- data@itemmap[[data@scale_id]]
