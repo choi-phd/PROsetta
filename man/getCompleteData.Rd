@@ -4,10 +4,12 @@
 \alias{getCompleteData}
 \title{Get complete data}
 \usage{
-getCompleteData(data)
+getCompleteData(data, scale = NULL)
 }
 \arguments{
 \item{data}{a \code{\linkS4class{PROsetta_data}} object.}
+
+\item{scale}{the index of the scale to perform casewise deletion. Leave empty or set to "combined" to perform on all scales.}
 }
 \description{
 \code{\link{getCompleteData}} is a helper function to perform casewise deletion of missing values.

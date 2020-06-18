@@ -8,20 +8,31 @@ NULL
 #' \code{\link{getCompleteData}} is a helper function to perform casewise deletion of missing values.
 #'
 #' @param data a \code{\linkS4class{PROsetta_data}} object.
+#' @param scale the index of the scale to perform casewise deletion. Leave empty or set to "combined" to perform on all scales.
 #'
 #' @export
 
-getCompleteData <- function(data) {
+getCompleteData <- function(data, scale = NULL) {
 
   validate_data(data)
 
-  resp_with_missing_values <- apply(is.na(data@response), 1, any)
+  if (is.null(scale_id) | scale == "combined") {
+    items <- data@itemmap[[data@item_id]]
+    scale_text <- sprintf("all scales")
+  } else {
+    idx   <- data@itemmap[[data@scale_id]] == scale
+    items <- data@itemmap[[data@item_id]][idx]
+    scale_text <- sprintf("Scale %s", scale)
+  }
+
+  resp_with_missing_values <- apply(is.na(data@response[, items]), 1, any)
   n_resp <- sum(resp_with_missing_values)
+
   if (any(resp_with_missing_values)) {
     data@response <- data@response[!resp_with_missing_values, ]
-    message(sprintf("getCompleteData: filtered %s cases with one or more missing responses", n_resp))
+    message(sprintf("getCompleteData: filtered %s cases with missing responses in %s", n_resp, scale_text))
   } else {
-    message(sprintf("getCompleteData: no cases were removed, all %i responses are complete", dim(data@response)[1]))
+    message(sprintf("getCompleteData: no cases were removed, all %i responses are complete in %s", dim(data@response)[1], scale_text))
   }
   return(data)
 }
