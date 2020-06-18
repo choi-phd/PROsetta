@@ -435,7 +435,7 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
 
     for (s in 1:(n_scale + 1)) {
       for (d in 1:(n_scale + 1)) {
-        n_theta <- length(score_table[[s]]$theta)
+        n_theta <- length(score_table[[s]]$eap)
         e_theta <- rep(NA, n_theta)
         if (d != n_scale + 1) {
           ipar <- item_par_by_scale[[d]]
@@ -443,7 +443,7 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
           ipar <- item_par
         }
         for (i in 1:n_theta) {
-          e_theta[i] <- calc_escore(ipar, "grm", score_table[[s]]$theta[i], min_score[d] == 0)
+          e_theta[i] <- calc_escore(ipar, "grm", score_table[[s]]$eap[i], min_score[d] == 0)
         }
         if (d != n_scale + 1) {
           e_name <- sprintf("escore_%i", d)
