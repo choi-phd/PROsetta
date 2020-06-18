@@ -61,7 +61,7 @@ getTheta <- function(
   prior_mean = 0.0,
   prior_sd = 1.0) {
 
-  resp_data <- getCompleteData(data)@response
+  resp_data <- getCompleteData(data, scale)@response
 
   if (scale != "combined") {
     idx      <- data@itemmap[[data@scale_id]] == scale
