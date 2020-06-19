@@ -149,7 +149,7 @@ getScaleSum <- function(data, scale_idx) {
 #'
 #' @export
 
-compareScores <- function(left, right, type = c("corr", "mean", "sd", "rmsd")) {
+compareScores <- function(left, right, type = c("corr", "mean", "sd", "rmsd", "mad")) {
 
   out <- list()
   if ("corr" %in% type) {
@@ -163,6 +163,9 @@ compareScores <- function(left, right, type = c("corr", "mean", "sd", "rmsd")) {
   }
   if ("rmsd" %in% type) {
     out$rmsd <- sqrt(mean((left - right)**2))
+  }
+  if ("mad" %in% type) {
+    out$mad <- mean(abs(left - right))
   }
 
   return(as.data.frame(out))

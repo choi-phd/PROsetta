@@ -4,7 +4,7 @@
 \alias{compareScores}
 \title{Compare two sets of scores}
 \usage{
-compareScores(left, right, type = c("corr", "mean", "sd", "rmsd"))
+compareScores(left, right, type = c("corr", "mean", "sd", "rmsd", "mad"))
 }
 \arguments{
 \item{left}{scores on the left side of comparison.}
