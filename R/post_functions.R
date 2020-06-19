@@ -16,7 +16,11 @@ getCompleteData <- function(data, scale = NULL) {
 
   validate_data(data)
 
-  if (is.null(scale_id) | scale == "combined") {
+  if (is.null(scale)) {
+    scale <- "combined"
+  }
+
+  if (scale == "combined") {
     items <- data@itemmap[[data@item_id]]
     scale_text <- sprintf("all scales")
   } else {
