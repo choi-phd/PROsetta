@@ -41,7 +41,7 @@ d = loadData(
   input_dir = fp)
 ```
 
-* `response`: Contains item response data from both instruments. You can supply a .csv filename or a data frame. In this example, we supply a .csv filename "dat_DeCESD_v2.csv".
+* `response`: Contains item response data from both instruments. You can supply a .csv filename or a data frame. In this example, we supply a .csv filename `dat_DeCESD_v2.csv`.
 * `itemmap`: Specifies which items belong to which instruments. Can be a .csv filename or a data frame.
 * `anchor`: Contains tem parameters for anchor items (e.g., PROMIS Depression). Can be a .csv filename or a data frame.
 * `input_dir`: (Optional) The path of the directory to look for the input .csv files.
@@ -114,7 +114,7 @@ runFrequency(d)
 
 <br>
 
-The frequency distribution of the summed scores for the combined scale can be plotted as a histogram with `plot()`. The required argument is a "PROsetta" data object created with `loadData()`. The optional `scale` argument specifies for which scale the summed score should be created. Setting `scale = 'combined'` plots the summed score distribution for the combined scale.
+The frequency distribution of the summed scores for the combined scale can be plotted as a histogram with `plot()`. The required argument is a `PROsetta_data` object created with `loadData()`. The optional `scale` argument specifies for which scale the summed score should be created. Setting `scale = 'combined'` plots the summed score distribution for the combined scale.
 
 ```{r, fig.align = 'center', fig.width = 7, fig.height = 7}
 plot(d, scale = 'combined', title = "Combined scale")
@@ -208,18 +208,26 @@ lavaan::summary(out_cfa$`2`     , fit.measures = TRUE, standardized = TRUE, esti
 
 ## Item parameter calibration
 
-`runCalibration()` performs IRT calibration without anchoring.  `runCalibration()` calls `mirt::mirt()` internally. 
+`runCalibration()` performs IRT calibration without anchoring.  `runCalibration()` calls `mirt::mirt()` internally. Additional arguments can be passed onto `mirt`, e.g., to increase the number of EM cycles to 1000, as follows:
 
 ```{r calib, cache = TRUE, results = 'hide', error = TRUE, message = FALSE}
-out_calib = runCalibration(d)
+out_calib = runCalibration(d, technical = list(NCYCLES = 1000))
 ```
 
 <br>
 
-In case of nonconvergence, `runCalibration()` explicitly raises an error and does not return its results. Additional arguments can be passed onto `mirt`, e.g., to increase the number of EM cycles to 1000, as follows:
+In case of nonconvergence, `runCalibration()` explicitly raises an error and does not return its results:
 
 ```{r calib2, cache = TRUE, results = 'hide', error = TRUE, message = FALSE}
-out_calib = runCalibration(d, technical = list(NCYCLES = 1000))
+out_calib = runCalibration(d, technical = list(NCYCLES = 10))
+```
+
+<br>
+
+Also, specify `fixedpar = TRUE` to perform fixed parameter calibration using the anchor data.
+
+```{r calib3, cache = TRUE, results = 'hide', error = TRUE, message = FALSE}
+out_calib = runCalibration(d, fixedpar = TRUE)
 ```
 
 <br>
@@ -317,7 +325,7 @@ The output from `runRSSS()` includes three crosswalk tables (labeled as `1`, `2`
 ```{r}
 rsss_fixedpar = runRSSS(d, out_link_fixedpar)
 rsss_sl       = runRSSS(d, out_link_sl)
-rsss_fixedpar$`2`
+round(rsss_fixedpar$`2`, 3)
 ```
 
 <br>
@@ -331,7 +339,7 @@ The columns in the crosswalk tables include:
 * `eap_se`: standard error associated with each EAP estimate
 * `escore_1`: expected summed score (true score) for Scale 1 given the EAP estimate
 * `escore_2`: expected summed score (true score) for Scale 2 given the EAP estimate
-* `escore_3`: expected summed score (true score) for the combined scale given the EAP estimate
+* `escore_combined`: expected summed score (true score) for the combined scale given the EAP estimate
 
 <br>
 
@@ -345,7 +353,7 @@ This function requires four arguments:
 
 * `scale_from`: numeric index of the scale (as specified in the item map) to be linked
 * `scale_to`: numeric index of the scale (as specified in the item map) to serve as the anchor
-* `type`: the type of equating to be performed, `equipercentile` for this example. See `?equate::equate` for details.
+* `eq_type`: the type of equating to be performed, `equipercentile` for this example. See `?equate::equate` for details.
 * `smooth`: the type of presmoothing to perform
 
 By default, `runEquateObserved()` performs raw-raw equipercentile linking. In this example, each raw summed score in Scale 2 (CES-D, ranging from 20 to 80) is linked to a raw summed score equivalent in Scale 1 (PROMIS Depression, rangeing from 28 to 140) with loglinear presmoothing.
@@ -383,9 +391,17 @@ out_equate_tscore$concordance
 
 In what follows we display the linking relation obtained from the equipercentile method and compare it to that from the fixed-parameter calibration method.
 
-```{r}
-plot(rsss_fixedpar$`2`[["raw_2"]], rsss_fixedpar$`2`[["t_score"]], xlab = "CES-D Summed Score", ylab = "PROMIS Depression T-score", type = "l", col = "blue")
-lines(out_equate_tscore$concordance[["raw_2"]], out_equate_tscore$concordance[["equiv_1"]], lty = 2, col = "red")
+```{r, fig.align = 'center', fig.width = 7, fig.height = 7}
+plot(
+  rsss_fixedpar$`2`$raw_2,
+  rsss_fixedpar$`2`$tscore,
+  xlab = "CES-D Summed Score",
+  ylab = "PROMIS Depression T-score",
+  type = "l", col = "blue")
+lines(
+  out_equate_tscore$concordance$raw_2,
+  out_equate_tscore$concordance$tscore_1,
+  lty = 2, col = "red")
 grid()
 legend("topleft", c("Fixed-Parameter Calibration", "Equipercentile Linking"), lty = 1:2, col = c("blue", "red"), bg = "white")
 ```
@@ -400,7 +416,7 @@ The linking results produced so far are now evaluated. More specifically, we ass
 
 ## Raw scores from Scale 2
 
-To begin with, we create a variable, `sum_score_cesd`, using `getScaleSum()` to contain raw summed scores on Scale 2 (i.e., CES-D). `NA` will result for any respondents with one or more missing responses on Scale 2. We could also create a summed score variable for Scale 1 using the same function, e.g., `getScaleSum(d, 1)`.
+To begin with, we create an object `scores` using `getScaleSum()` to contain raw summed scores on Scale 2 (i.e., CES-D). `NA` will result for any respondents with one or more missing responses on Scale 2. We could also create a summed score variable for Scale 1 using the same function, e.g., `getScaleSum(d, 1)`.
 
 ```{r}
 scores = getScaleSum(d, 2)
@@ -421,14 +437,16 @@ head(eap_promis)
 The EAP esimates for PROMIS Depression will be converted to T-scores using a linear transformation.
 
 ```{r}
-tscore_promis = data.frame(prosettaid = eap_promis$prosettaid, tscore_promis = round(eap_promis$theta_eap * 10 + 50, 1))
-head(tscore_promis)
+t_promis = data.frame(
+  prosettaid = eap_promis$prosettaid,
+  t_promis = round(eap_promis$theta_eap * 10 + 50, 1))
+head(t_promis)
 ```
 
 We then merge the PROMIS Depression T-scores with the raw summed scores for CES-D calculated in the previous step.
 
 ```{r}
-scores = scores %>% inner_join(tscore_promis, by = "prosettaid")
+scores = scores %>% inner_join(t_promis, by = "prosettaid")
 head(scores)
 ```
 
@@ -444,12 +462,14 @@ The first two ways are based on the CES-D item parameters linked to the PROMIS D
 
 ## EAP estimates based on item responses patterns on Scale 2
 
-First, we get EAP estimates based on item response patterns on Scale 2 using the CES-D item parameters linked to the PROMIS Depression metric (via fixed-parameter calibration). We then linearly transform the EAP estimates to T-scores and add the T-scores (`tscore_cesd_pattern`) to the data frame object `scores`.
+First, we get EAP estimates based on item response patterns on Scale 2 using the CES-D item parameters linked to the PROMIS Depression metric (via fixed-parameter calibration). We then linearly transform the EAP estimates to T-scores and add the T-scores (`t_cesd_pattern`) to the data frame object `scores`.
 
 ```{r, message = FALSE}
 eap_cesd            = getTheta(d, out_link_fixedpar$ipar_linked, scale = 2)$theta
-tscore_cesd_pattern = data.frame(prosettaid = eap_cesd$prosettaid, tscore_cesd_pattern = round(eap_cesd$theta_eap * 10 + 50, 1))
-scores = scores %>% inner_join(tscore_cesd_pattern, by = "prosettaid")
+t_cesd_pattern = data.frame(
+  prosettaid = eap_cesd$prosettaid,
+  t_cesd_pattern = round(eap_cesd$theta_eap * 10 + 50, 1))
+scores = scores %>% inner_join(t_cesd_pattern, by = "prosettaid")
 head(scores)
 ```
 
@@ -457,10 +477,12 @@ head(scores)
 
 ## EAP estimates based on summed scores on Scale 2
 
-Second, we use the raw-score-to-scale-score (RSSS) crosswalk table obtained above using summed score EAP estimation to map each raw summed score on Scale 2 onto a T-score on the PROMIS Depression metric, `tscore_cesd_rsss`. 
+Second, we use the raw-score-to-scale-score (RSSS) crosswalk table obtained above using summed score EAP estimation to map each raw summed score on Scale 2 onto a T-score on the PROMIS Depression metric, `t_cesd_rsss`. 
 
 ```{r, message = FALSE}
-rsss_eap = data.frame(raw_2 = rsss_fixedpar$`2`[["raw_2"]], tscore_cesd_rsss = round(rsss_fixedpar$`2`[["t_score"]], 1))
+rsss_eap = data.frame(
+  raw_2 = rsss_fixedpar$`2`$raw_2,
+  t_cesd_rsss = round(rsss_fixedpar$`2`$tscore, 1))
 scores = scores %>% inner_join(rsss_eap, by = "raw_2")
 head(scores)
 ```
@@ -469,11 +491,13 @@ head(scores)
 
 ## Equipercentile linking of summed scores on Scale 2
 
-Third, we use the concordance table from equipercentile linking to map each raw summed score on Scale 2 onto a T-score on the PROMIS Depression metric, `tscore_cesd_eqp`.
+Third, we use the concordance table from equipercentile linking to map each raw summed score on Scale 2 onto a T-score on the PROMIS Depression metric, `t_cesd_eqp`.
 
 ```{r, message = FALSE}
-rsss_eqp = data.frame(raw_2 = out_equate_tscore$concordance[["raw_2"]], tscore_cesd_eqp = round(out_equate_tscore$concordance[["equiv_1"]], 1))
-scores    = scores %>% inner_join(rsss_eqp, by = "raw_2")
+rsss_eqp = data.frame(
+  raw_2 = out_equate_tscore$concordance$raw_2,
+  t_cesd_eqp = round(out_equate_tscore$concordance$tscore_1, 1))
+scores = scores %>% inner_join(rsss_eqp, by = "raw_2")
 head(scores)
 ```
 
@@ -485,11 +509,11 @@ Finally, use `compareScores()` to compare the obtained T-scores.
 
 ```{r}
 # Reference score: IRT pattern scoring of Scale 1
-stats_pattern   = compareScores(scores$tscore_promis, scores$tscore_cesd_pattern) ## IRT response pattern EAP to T-score
-stats_rsss      = compareScores(scores$tscore_promis, scores$tscore_cesd_rsss)    ## IRT summed score EAP to T-score
-stats_eqp       = compareScores(scores$tscore_promis, scores$tscore_cesd_eqp)     ## Equipercentile summed score to T-score
+c_pattern = compareScores(scores$t_promis, scores$t_cesd_pattern) ## IRT response pattern EAP to T-score
+c_rsss    = compareScores(scores$t_promis, scores$t_cesd_rsss)    ## IRT summed score EAP to T-score
+c_eqp     = compareScores(scores$t_promis, scores$t_cesd_eqp)     ## Equipercentile summed score to T-score
 
-stats           = rbind(stats_pattern, stats_rsss, stats_eqp)
+stats           = rbind(c_pattern, c_rsss, c_eqp)
 rownames(stats) = c("IRT Pattern", "IRT RSSS", "Equipercentile")
 stats
 ```
