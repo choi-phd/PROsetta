@@ -91,7 +91,7 @@ runCalibration <- function(data, fixedpar = FALSE, ignore_nonconv = FALSE, ...) 
 #'   \item{\code{SL} for Stocking-Lord method}
 #'   \item{\code{FIXEDPAR} for fixed parameter calibration}
 #' }
-#' Linear transformation methods are performed with \code{\link[plink]{plink}} in \href{https://CRAN.R-project.org/package=plink}{'plink'} package.
+#' Linear transformation methods are performed with \code{\link[plink:plink-methods]{plink}} in \href{https://CRAN.R-project.org/package=plink}{'plink'} package.
 #'
 #' @param ... additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{'mirt'} package.
 #'
