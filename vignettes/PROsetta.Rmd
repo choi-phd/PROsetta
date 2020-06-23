@@ -32,7 +32,11 @@ library(dplyr)
 
 First step is to load the input datasets comprised of three tables with `loadData()`. The PROMIS Depression – CES-D linking data are included in the *PROsetta* package directory under the folder labeled `data-raw`. 
 
-```{r cfg, results = 'hide', message = FALSE}
+```{r loadData, echo = FALSE}
+d = data_dep
+```
+
+```{r cfg, results = 'hide', message = FALSE, eval = FALSE}
 fp = system.file("data-raw", package = "PROsetta")
 d = loadData(
   response  = "dat_DeCESD_v2.csv",
@@ -108,8 +112,9 @@ file.edit(system.file("data-raw", "anchor_DeCESD.csv", package = "PROsetta"))
 
 The frequency distribution of each item in the response data is obtained by `runFrequency()`. 
 
-```{r freq, results = 'hide'}
-runFrequency(d)
+```{r freq}
+freq_table = runFrequency(d)
+head(freq_table)
 ```
 
 <br>
@@ -129,19 +134,27 @@ plot(d, scale = 2, title = "Scale 2") # not run
 
 <br>
 
-Basic descriptive statistics are obtained for each item by `runDescriptive()`. The statistics include `n`, `mean`, `sd`, `median`, `min`, `max`, `skew`, and `kurtosis`.
+Basic descriptive statistics are obtained for each item by `runDescriptive()`.
 
-```{r desc, results = 'hide'}
-runDescriptive(d)
+```{r desc}
+desc_table = runDescriptive(d)
+head(desc_table)
 ```
 
 <br>
 
 ## Classical reliability analysis
 
-Classical reliability statistics can be obtained by `runClassical()`. By default, the analysis is performed for the combined scale. The user can set `scalewise = TRUE` to request an analysis for each scale separately in addition to the combined scale.
+Classical reliability statistics can be obtained by `runClassical()`. By default, the analysis is performed for the combined scale.
 
-```{r alpha, cache = TRUE, eval = FALSE}
+```{r alpha, cache = TRUE}
+classical_table = runClassical(d)
+summary(classical_table$alpha$combined)
+```
+
+The user can set `scalewise = TRUE` to request an analysis for each scale separately in addition to the combined scale.
+ 
+```{r alpha2, cache = TRUE, eval = FALSE}
 classical_table = runClassical(d, scalewise = TRUE)
 classical_table$alpha$combined # alpha values for combined scale
 classical_table$alpha$`1`      # alpha values for each scale, created when scalewise = TRUE
