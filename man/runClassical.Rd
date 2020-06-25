@@ -4,14 +4,14 @@
 \alias{runClassical}
 \title{Run CTT-based reliability analysis}
 \usage{
-runClassical(data, omega = FALSE, scalewise = FALSE, ...)
+runClassical(data, omega = FALSE, scalewise = TRUE, ...)
 }
 \arguments{
 \item{data}{a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.}
 
-\item{omega}{if \code{TRUE}, also obtain McDonald's omega using \code{\link[psych]{omega}} in \href{https://CRAN.R-project.org/package=psych}{\code{psych}} package.}
+\item{omega}{if \code{TRUE}, also obtain McDonald's omega using \code{\link[psych]{omega}} in \href{https://CRAN.R-project.org/package=psych}{\code{psych}} package. (default = \code{FALSE})}
 
-\item{scalewise}{if \code{TRUE}, run analysis for each scale as well as for the combined scale. If \code{FALSE} (default), run analysis only for the combined scale.}
+\item{scalewise}{if \code{TRUE}, run analysis for each scale as well as for the combined scale. If \code{FALSE}, run analysis only for the combined scale. (default = \code{TRUE})}
 
 \item{...}{additional arguments to pass onto \code{\link[psych]{omega}}.}
 }
