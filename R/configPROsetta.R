@@ -311,8 +311,8 @@ runDescriptive <- function(data = NULL) {
 #' \code{\link{runClassical}} is a function to perform Classial Test Theory (CTT) based reliability analysis.
 #'
 #' @param data a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
-#' @param omega if \code{TRUE}, also obtain McDonald's omega using \code{\link[psych]{omega}} in \href{https://CRAN.R-project.org/package=psych}{\code{psych}} package.
-#' @param scalewise if \code{TRUE}, run analysis for each scale as well as for the combined scale. If \code{FALSE} (default), run analysis only for the combined scale.
+#' @param omega if \code{TRUE}, also obtain McDonald's omega using \code{\link[psych]{omega}} in \href{https://CRAN.R-project.org/package=psych}{\code{psych}} package. (default = \code{FALSE})
+#' @param scalewise if \code{TRUE}, run analysis for each scale as well as for the combined scale. If \code{FALSE}, run analysis only for the combined scale. (default = \code{TRUE})
 #' @param ... additional arguments to pass onto \code{\link[psych]{omega}}.
 #'
 #' @return \code{\link{runClassical}} returns a \code{\link{list}} containing reliability analysis results.
@@ -323,7 +323,7 @@ runDescriptive <- function(data = NULL) {
 #'
 #' @export
 
-runClassical <- function(data, omega = FALSE, scalewise = FALSE, ...) {
+runClassical <- function(data, omega = FALSE, scalewise = TRUE, ...) {
 
   validate_data(data)
 
