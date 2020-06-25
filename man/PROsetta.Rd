@@ -14,7 +14,7 @@ guiPROsetta()
 }
 \examples{
 \dontrun{
-guiPROsetta()
+PROsetta()
 }
 
 }

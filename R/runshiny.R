@@ -9,7 +9,7 @@ NULL
 #'
 #' @examples
 #' \dontrun{
-#' guiPROsetta()
+#' PROsetta()
 #' }
 #'
 #' @aliases guiPROsetta
