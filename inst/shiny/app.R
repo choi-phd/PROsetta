@@ -78,6 +78,17 @@ ui <- fluidPage(
 
       downloadButton("export_data", "Export visible tabs"),
 
+      dropdownButton(
+        label = "Close app", inputId = "closeapp_dropdown",
+        circle = FALSE, width = "100%", icon = icon("thumbtack"),
+        h3("Are you sure?"),
+        checkboxGroupButtons(
+          inputId = "closeapp",
+          choices = c("Yes", "No"),
+          justified = TRUE
+        )
+      ),
+
       width = 3
     ),
 
@@ -480,6 +491,20 @@ server <- function(input, output, session) {
       assignObject("shiny_itemfit", v$plot_itemfit, "Item fit plot tab")
       v$plot_iteminfo <- mirt::itemplot(v$calib, item = v$item_id_to_plot, type = "info")
       assignObject("shiny_iteminfo", v$plot_iteminfo, "Item info tab")
+    }
+  })
+
+  observeEvent(input$closeapp, {
+    if ("Yes" %in% input$closeapp) {
+      stopApp()
+    }
+    if ("No" %in% input$closeapp) {
+      updateCheckboxGroupButtons(
+        session = session,
+        inputId = "closeapp",
+        selected = character(0)
+      )
+      toggleDropdownButton(inputId = "closeapp_dropdown")
     }
   })
 
