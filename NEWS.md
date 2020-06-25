@@ -25,7 +25,7 @@
 
 # PROsetta 0.0.4
 
-* Added '`scalewise`' argument to `runClassical()` and `runCFA()`. When TRUE, analysis is performed for each scale.
+* Added `scalewise` argument to `runClassical()` and `runCFA()`. When `TRUE`, analysis is performed for each scale.
 * `runEquateObserved()` now removes missing values to produce correct raw sums.
 * `loadData()` now retains missing values.
 

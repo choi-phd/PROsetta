@@ -2,7 +2,7 @@ Package: PROsetta
 Type: Package
 Title: Linking Patient-Reported Outcomes Measures
 Version: 0.1.0
-Date: 2020-06-13
+Date: 2020-06-25
 Authors@R: c(
     person("Seung W.", "Choi",
         email = "schoi@austin.utexas.edu",
@@ -17,6 +17,9 @@ Authors@R: c(
         role = c("ctb")),
     person("Aaron", "Kaat",
         email = "aaron.kaat@northwestern.edu",
+        role = c("ctb")),
+    person("David", "Cella",
+        email = "d-cella@northwestern.edu",
         role = c("ctb")))
 Description: Perform scale linking to establish relationships between instruments
     that measure similar constructs according to the PROsetta Stone methodology.
