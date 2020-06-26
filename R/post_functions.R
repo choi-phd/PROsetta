@@ -163,7 +163,7 @@ compareScores <- function(left, right, type = c("corr", "mean", "sd", "rmsd", "m
     out$mean <- mean(left - right)
   }
   if ("sd" %in% type) {
-    out$sd   <- sd(left - right)
+    out$sd <- sqrt(mean((left - right)**2) - mean(left - right)**2)
   }
   if ("rmsd" %in% type) {
     out$rmsd <- sqrt(mean((left - right)**2))
