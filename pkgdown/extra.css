@@ -20,3 +20,9 @@ h4 {
   font-size: 1em;
   font-weight: 700;
 }
+
+html::-webkit-scrollbar {
+  width: 0 !important;
+  overflow: -moz-scrollbars-none;
+  -ms-overflow-style: none;
+}
