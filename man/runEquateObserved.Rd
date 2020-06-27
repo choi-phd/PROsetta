@@ -64,6 +64,7 @@ out_eq_raw <- runEquateObserved(data_asq,
 )
 out_eq_raw$concordance
 
+\donttest{
 out_link <- runLinking(data_asq, method = "FIXEDPAR")
 out_rsss <- runRSSS(data_asq, out_link)
 out_eq_tscore <- runEquateObserved(data_asq,
@@ -72,5 +73,5 @@ out_eq_tscore <- runEquateObserved(data_asq,
   eq_type = "equipercentile", smooth = "loglinear"
 )
 out_eq_tscore$concordance
-
+}
 }
