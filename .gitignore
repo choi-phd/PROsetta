@@ -12,3 +12,4 @@ vignettes/**/__packages
 inst/doc
 vignettes/debug.log
 docs
+docs/
