@@ -36,7 +36,8 @@ Suggests:
     kableExtra,
     testthat (>= 2.1.0),
     dplyr,
-    rmarkdown
+    rmarkdown,    
+    pkgdown
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
