@@ -1,6 +1,12 @@
 
 # PROsetta <img src="man/figures/logo.png" align="right" />
 
+<!-- badges: start -->
+
+[![Travis build
+status](https://travis-ci.com/choi-phd/PROsetta.svg?branch=main)](https://travis-ci.com/choi-phd/PROsetta)
+<!-- badges: end -->
+
 **PROsetta** package provides functions for metric-linking of item
 parameters and producing crosswalk tables as used in the [PROsetta Stone
 project](http://prosettastone.org/).
