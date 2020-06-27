@@ -213,6 +213,7 @@ runLinking <- function(data, method, ...) {
 #' )
 #' out_eq_raw$concordance
 #'
+#' \donttest{
 #' out_link <- runLinking(data_asq, method = "FIXEDPAR")
 #' out_rsss <- runRSSS(data_asq, out_link)
 #' out_eq_tscore <- runEquateObserved(data_asq,
@@ -221,7 +222,7 @@ runLinking <- function(data, method, ...) {
 #'   eq_type = "equipercentile", smooth = "loglinear"
 #' )
 #' out_eq_tscore$concordance
-#'
+#' }
 #' @export
 
 runEquateObserved <- function(data, scale_from = 2, scale_to = 1, type_to = "raw", rsss = NULL, eq_type = "equipercentile", smooth = "loglinear", degrees = list(3, 1), boot = TRUE, reps = 100, ...) {
