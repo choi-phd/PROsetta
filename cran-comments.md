@@ -1,4 +1,7 @@
-# PROsetta v0.1.0
+# PROsetta v0.1.1
+This is a resubmission. In this version:
+
+* Examples in runEquateObserved are wrapped with \donttest to reduce CPU time.
 
 ## Test environments
 
