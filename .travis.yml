@@ -7,7 +7,8 @@ env:
 
 matrix:
   include:
-    - r: release
+    - os: linux
+      r: release
       after_success:
         - Rscript -e 'pkgdown::build_site(examples = FALSE)'
       deploy:
@@ -19,4 +20,11 @@ matrix:
         on:
           branch: main
 
-    - r: devel
+    - os: linux
+      r: devel
+
+    - os: osx
+      r: release
+
+    - os: osx
+      r: devel
