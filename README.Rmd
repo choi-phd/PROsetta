@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 
 ```
 
-# PROsetta <img src="man/figures/logo.png" align="right" />
+# PROsetta <img src="man/figures/logo.png" align="right" width="120px"/>
 
 <!-- badges: start -->
 [![Travis build status](https://travis-ci.com/choi-phd/PROsetta.svg?branch=main)](https://travis-ci.com/choi-phd/PROsetta)
