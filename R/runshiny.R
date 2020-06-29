@@ -8,8 +8,8 @@ NULL
 #' \code{\link{PROsetta}} is a caller function to launch a Shiny app locally.
 #'
 #' @examples
-#' \dontrun{
-#' PROsetta()
+#' if (interactive()) {
+#'   PROsetta()
 #' }
 #'
 #' @aliases guiPROsetta
