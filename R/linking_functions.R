@@ -185,8 +185,8 @@ runLinking <- function(data, method, ...) {
 #' @param data a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
 #' @param scale_from the scale ID of the input scale. References to \code{itemmap} in \code{data} argument.
 #' @param scale_to the scale ID of the target scale to equate to. References to \code{itemmap} in \code{data} argument.
-#' @param type_to the type of score to use in the target scale frequency table. Accepts '\code{raw}' (default) and '\code{tscore}'. '\code{tscore}' requires RSSS table to be supplied.
-#' @param rsss the RSSS table to use to map each raw score level onto t-score. See \code{\link{runRSSS}}.
+#' @param type_to the type of score to use in the target scale frequency table. Accepts \code{raw}, \code{tscore}, and \code{theta}. \code{tscore} and \code{theta} require argument \code{rsss} to be supplied. (default = \code{raw})
+#' @param rsss the RSSS table to use to map each raw score level onto a t-score or a theta. See \code{\link{runRSSS}}.
 #' @param eq_type the type of equating to be passed onto \code{\link[equate]{equate}} in \href{https://CRAN.R-project.org/package=equate}{'equate'} package.
 #' @param smooth the type of smoothing method to be passed onto \code{\link[equate]{presmoothing}} in \href{https://CRAN.R-project.org/package=equate}{'equate'} package.
 #' @param degrees the degrees of smoothing to be passed onto \code{\link[equate]{presmoothing}}.

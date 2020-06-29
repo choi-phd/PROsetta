@@ -25,9 +25,9 @@ runEquateObserved(
 
 \item{scale_to}{the scale ID of the target scale to equate to. References to \code{itemmap} in \code{data} argument.}
 
-\item{type_to}{the type of score to use in the target scale frequency table. Accepts '\code{raw}' (default) and '\code{tscore}'. '\code{tscore}' requires RSSS table to be supplied.}
+\item{type_to}{the type of score to use in the target scale frequency table. Accepts \code{raw}, \code{tscore}, and \code{theta}. \code{tscore} and \code{theta} require argument \code{rsss} to be supplied. (default = \code{raw})}
 
-\item{rsss}{the RSSS table to use to map each raw score level onto t-score. See \code{\link{runRSSS}}.}
+\item{rsss}{the RSSS table to use to map each raw score level onto a t-score or a theta. See \code{\link{runRSSS}}.}
 
 \item{eq_type}{the type of equating to be passed onto \code{\link[equate]{equate}} in \href{https://CRAN.R-project.org/package=equate}{'equate'} package.}
 
