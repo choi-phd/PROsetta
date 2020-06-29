@@ -1,4 +1,4 @@
-# PROsetta 0.1.1
+# PROsetta 0.1.2
 
 * Initial public release.
 

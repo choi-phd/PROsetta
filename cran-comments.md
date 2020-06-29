@@ -1,7 +1,8 @@
-# PROsetta v0.1.1
+# PROsetta v0.1.2
 This is a resubmission. In this version:
 
-* Examples in runEquateObserved are wrapped with \donttest to reduce CPU time.
+* Examples in PROsetta() use if (interactive()).
+* Added a reference to the description field in the DESCRIPTION file.
 
 ## Test environments
 
