@@ -1,8 +1,8 @@
 Package: PROsetta
 Type: Package
 Title: Linking Patient-Reported Outcomes Measures
-Version: 0.1.1
-Date: 2020-06-27
+Version: 0.1.2
+Date: 2020-06-29
 Authors@R: c(
     person("Seung W.", "Choi",
         email = "schoi@austin.utexas.edu",
@@ -22,7 +22,7 @@ Authors@R: c(
         email = "d-cella@northwestern.edu",
         role = c("ctb")))
 Description: Perform scale linking to establish relationships between instruments
-    that measure similar constructs according to the PROsetta Stone methodology.
+    that measure similar constructs according to the PROsetta Stone methodology, as in Choi, Schalet, Cook, & Cella (2014) <doi:10.1037/a0035768>.
 URL: http://prosettastone.org
 BugReports: https://github.com/choi-phd/PROsetta/issues
 Imports: equate, lavaan, mirt, plink, psych, methods
