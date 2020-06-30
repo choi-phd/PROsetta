@@ -13,45 +13,46 @@ This dataset is associated with the following objects:
 }
 \details{
 \itemize{
-  \item \code{response_dep} Raw response matrix. A data frame with 747 rows and 49 variables.
+  \item \code{\link{response_dep}} a \code{\link{data.frame}} containing raw response data of 747 participants and 49 variables.
   \itemize{
-    \item \code{prosettaid}. Sample IDs.
-    \item \code{EDDEP04 -- EDDEP54}. Response to anchor items.
-    \item \code{CESD1 -- CESD20}. Response to development items.
+    \item \code{prosettaid}. participant IDs.
+    \item \code{EDDEP04 -- CESD20}. response to items.
   }
-  \item \code{itemmap_dep} Item map describing the items in each instrument. A data frame with 48 rows and 9 variables.
+  \item \code{\link{itemmap_dep}} a \code{\link{data.frame}} containing the item map, describing the items in each instrument.
   \itemize{
-    \item \code{item_order} Item index. Refers to column \code{item_order} in anchor item attributes.
-    \item \code{instrument} Instrument index.
-    \item \code{item_id} Item ID. Refers to column \code{prosettaid} in \code{response_asq} data.
-    \item \code{item_name} New item names to be used in mapping.
-    \item \code{ncat} The number of response categories.
-    \item \code{min_score} The minimum score of the item.
-    \item \code{reverse} 1 indicates a reverse-scored item.
-    \item \code{scores} A vector representing all possible score values from the item.
+    \item \code{item_order} item numeric IDs. This column refers to the column \code{item_order} in anchor item parameters.
+    \item \code{instrument} the instrument ID that each item belongs to.
+    \item \code{item_id} item ID strings. This column refers to column names in raw response data, excluding the participant ID column.
+    \item \code{item_name} new item ID strings to be used in the combined scale.
+    \item \code{ncat} the number of response categories.
+    \item \code{min_score} the minimum score of the item.
+    \item \code{reverse} whether the item data has been reverse-scored. \code{1} indicates the item has been reverse-scored, and \code{0} indicates the item has not been reverse-scored.
+    \item \code{scores} a comma-separated string representing all possible score values from the item.
   }
-  \item \code{anchor_dep} Anchor item attributes. A data frame with 28 rows and 8 variables.
+  \item \code{\link{anchor_dep}} a \code{\link{data.frame}} containing anchor item parameters for 28 items.
   \itemize{
-    \item \code{item_order} Item index.
-    \item \code{item_id} Item ID, same to those in the response data above.
-    \item \code{a} The discrimination (slope) parameter.
-    \item \code{cb1 - cb4} The boundaries between each category-pair.
-    \item \code{ncat} The number of response categories.
+    \item \code{item_order} item numeric IDs.
+    \item \code{item_id} item ID strings. This column refers to column names in raw response data, excluding the participant ID column.
+    \item \code{a} the discrimination (slope) parameter for the graded response model.
+    \item \code{cb1 - cb4} the boundaries between each category-pair for the graded response model.
+    \item \code{ncat} the number of response categories.
   }
+  \item \code{\link{data_dep}} a \code{\linkS4class{PROsetta_data}} object containing the datasets above. See \code{\link{loadData}} for creating \code{\linkS4class{PROsetta_data}} objects.
 }
 }
 \examples{
-\dontrun{
-response_dep
-itemmap_dep
-anchor_dep
-data_dep
-}
 
+## load datasets into a PROsetta_data object
 data_dep <- loadData(
   response = response_dep,
   itemmap  = itemmap_dep,
   anchor   = anchor_dep
 )
+
+## run descriptive statistics
+runDescriptive(data_dep)
+
+## run item parameter calibration on the response data, linking to the anchor item parameters
+runLinking(data_dep, method = "FIXEDPAR")
 }
 \keyword{datasets}
