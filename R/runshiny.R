@@ -1,8 +1,6 @@
 #' @include example.R
 NULL
 
-
-
 #' PROsetta
 #'
 #' \code{\link{PROsetta}} is a caller function to launch a Shiny app locally.

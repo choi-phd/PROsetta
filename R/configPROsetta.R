@@ -1,8 +1,6 @@
 #' @include import.R
 NULL
 
-
-
 #' Load data from supplied config
 #'
 #' \code{\link{loadData}} is a data loading function to create a \code{\linkS4class{PROsetta_data}} object, for scale linking/equating with 'PROsetta' package.
@@ -21,7 +19,6 @@ NULL
 NULL
 
 #' @rdname loadData
-
 setClass("PROsetta_data",
   slots = c(
     response = "list",
@@ -73,12 +70,8 @@ setClass("PROsetta_data",
   }
 )
 
-
-
 #' @rdname loadData
-#'
 #' @export
-
 loadData <- function(response, itemmap, anchor,
   item_id = NULL, person_id = NULL, scale_id = NULL, input_dir = getwd()) {
 
@@ -178,8 +171,6 @@ loadData <- function(response, itemmap, anchor,
   }
 }
 
-
-
 #' Check frequency table for unobserved response categories
 #'
 #' \code{\link{checkFrequency}} is a descriptive function to check whether all response categories in a frequency table have a frequency of at least 1.
@@ -191,7 +182,6 @@ loadData <- function(response, itemmap, anchor,
 #' Otherwise, the value is \code{FALSE}.
 #'
 #' @export
-
 checkFrequency <- function(data) {
 
   validate_data(data)
@@ -232,8 +222,6 @@ checkFrequency <- function(data) {
   }
 }
 
-
-
 #' Obtain a frequency table
 #'
 #' \code{\link{runFrequency}} is a descriptive function to obtain a frequency table from the dataset.
@@ -248,7 +236,6 @@ checkFrequency <- function(data) {
 #' freq_dep <- runFrequency(data_dep)
 #'
 #' @export
-
 runFrequency <- function(data, check_frequency = TRUE) {
 
   validate_data(data)
@@ -278,8 +265,6 @@ runFrequency <- function(data, check_frequency = TRUE) {
   return(freq)
 }
 
-
-
 #' Obtain a descriptive statistics table
 #'
 #' \code{\link{runDescriptive}} is a descriptive function to obtain descriptive statistics for each item in the dataset.
@@ -292,7 +277,6 @@ runFrequency <- function(data, check_frequency = TRUE) {
 #' out_desc <- runDescriptive(data_asq)
 #'
 #' @export
-
 runDescriptive <- function(data = NULL) {
 
   validate_data(data)
@@ -303,8 +287,6 @@ runDescriptive <- function(data = NULL) {
   return(desc)
 
 }
-
-
 
 #' Run CTT-based reliability analysis
 #'
@@ -322,7 +304,6 @@ runDescriptive <- function(data = NULL) {
 #' out_omega <- runClassical(data_asq, omega = TRUE) # also obtain omega
 #'
 #' @export
-
 runClassical <- function(data, omega = FALSE, scalewise = TRUE, ...) {
 
   validate_data(data)
@@ -354,8 +335,6 @@ runClassical <- function(data, omega = FALSE, scalewise = TRUE, ...) {
 
 }
 
-
-
 #' Run a confirmatory factor analysis
 #'
 #' \code{\link{runCFA}} is a function to perform a one-factor confirmatory factor analysis (CFA) to test unidimensionality.
@@ -376,7 +355,6 @@ runClassical <- function(data, omega = FALSE, scalewise = TRUE, ...) {
 #' lavaan::summary(out_cfa$`combined`, fit.measures = TRUE, standardized = TRUE, estimates = FALSE)
 #' }
 #' @export
-
 runCFA <- function(data, estimator = "WLSMV", std.lv = TRUE, scalewise = FALSE, ...) {
 
   validate_data(data)

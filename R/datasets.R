@@ -54,8 +54,6 @@ NULL
 #' runLinking(data_asq, method = "FIXEDPAR")
 NULL
 
-
-
 #' DEP dataset
 #'
 #' This dataset is associated with the following objects:
