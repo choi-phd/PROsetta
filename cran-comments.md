@@ -1,8 +1,9 @@
-# PROsetta v0.1.2
+# PROsetta v0.1.3
 This is a resubmission. In this version:
 
-* Examples in PROsetta() use if (interactive()).
-* Added a reference to the description field in the DESCRIPTION file.
+* Removed \dontrun blocks in the example sections of dataset_asq.Rd and dataset_dep.Rd
+* Rewrote dataset_asq.Rd and dataset_dep.Rd to use consistent documentation style
+* Removed newlines to make the code diff-friendly
 
 ## Test environments
 
