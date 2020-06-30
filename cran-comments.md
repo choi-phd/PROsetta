@@ -1,9 +1,10 @@
-# PROsetta v0.1.3
+# PROsetta v0.1.4
 This is a resubmission. In this version:
 
 * Removed \dontrun blocks in the example sections of dataset_asq.Rd and dataset_dep.Rd
 * Rewrote dataset_asq.Rd and dataset_dep.Rd to use consistent documentation style
 * Removed newlines to make the code diff-friendly
+* Examples in runRSSS now use \donttest to reduce CPU time
 
 ## Test environments
 
