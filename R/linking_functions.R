@@ -308,8 +308,10 @@ runEquateObserved <- function(data, scale_from = 2, scale_to = 1, type_to = "raw
 #' @return \code{\link{runRSSS}} returns a \code{\link{list}} containing crosswalk tables.
 #'
 #' @examples
+#' \donttest{
 #' out_link    <- runLinking(data_asq, method = "FIXEDPAR")
 #' score_table <- runRSSS(data_asq, out_link)
+#' }
 #'
 #' @export
 runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_theta = -4.0, max_theta = 4.0, inc = 0.01, min_score = 1) {

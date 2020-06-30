@@ -39,7 +39,9 @@ runRSSS(
 \code{\link{runRSSS}} is a function to generate raw-score to standard-score crosswalk tables from supplied calibrated item parameters.
 }
 \examples{
+\donttest{
 out_link    <- runLinking(data_asq, method = "FIXEDPAR")
 score_table <- runRSSS(data_asq, out_link)
+}
 
 }
