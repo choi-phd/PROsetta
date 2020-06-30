@@ -1,8 +1,6 @@
 #' @include configPROsetta.R
 NULL
 
-
-
 #' Run Calibration
 #'
 #' \code{\link{runCalibration}} is a function to perform item calibration on the response data.
@@ -29,7 +27,6 @@ NULL
 #' mirt::itemfit(out_calib, "S_X2", na.rm = TRUE)
 #' }
 #' @export
-
 runCalibration <- function(data, fixedpar = FALSE, ignore_nonconv = FALSE, ...) {
 
   validate_data(data)
@@ -96,7 +93,6 @@ runCalibration <- function(data, fixedpar = FALSE, ignore_nonconv = FALSE, ...) 
 #' @param ... additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{'mirt'} package.
 #'
 #' @return \code{\link{runLinking}} returns a \code{\link{list}} containing the scale linking results.
-
 #' \itemize{
 #'   \item{\code{constants}} linear transformation constants. \code{NA} if \code{method} argument was \code{FIXEDPAR}.
 #'   \item{\code{ipar_linked}} item parameters calibrated to the response data, and linked to the anchor item parameters.
@@ -111,7 +107,6 @@ runCalibration <- function(data, fixedpar = FALSE, ignore_nonconv = FALSE, ...) 
 #' out_link$ipar_linked # item parameters linked to anchor
 #' }
 #' @export
-
 runLinking <- function(data, method, ...) {
 
   validate_data(data)
@@ -176,8 +171,6 @@ runLinking <- function(data, method, ...) {
   return(out)
 }
 
-
-
 #' Run Test Equating
 #'
 #' \code{\link{runEquateObserved}} is a function to perform equipercentile test equating between two scales. A concordance table is produced, mapping the observed raw scores from one scale to the scores from another scale.
@@ -224,7 +217,6 @@ runLinking <- function(data, method, ...) {
 #' out_eq_tscore$concordance
 #' }
 #' @export
-
 runEquateObserved <- function(data, scale_from = 2, scale_to = 1, type_to = "raw", rsss = NULL, eq_type = "equipercentile", smooth = "loglinear", degrees = list(3, 1), boot = TRUE, reps = 100, ...) {
 
   validate_data(data)
@@ -320,7 +312,6 @@ runEquateObserved <- function(data, scale_from = 2, scale_to = 1, type_to = "raw
 #' score_table <- runRSSS(data_asq, out_link)
 #'
 #' @export
-
 runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_theta = -4.0, max_theta = 4.0, inc = 0.01, min_score = 1) {
 
   validate_data(data)
@@ -344,7 +335,6 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
   } else if (length(min_score) != n_scale + 1) {
     stop(sprintf("argument 'min_score': length(min_score) must be either 1 or %i", n_scale + 1))
   }
-
 
   rsss <- function(ipar, is_minscore_0) {
 

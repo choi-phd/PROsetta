@@ -1,8 +1,6 @@
 #' @include configPROsetta.R
 NULL
 
-
-
 #' Plot frequency distribution
 #'
 #' This is an extension of \code{\link{plot}} to visualize frequency distribution from \code{\linkS4class{PROsetta_data}} object.
@@ -31,7 +29,6 @@ NULL
 #' @docType methods
 #' @rdname plot-methods
 #' @export
-
 setMethod(
   f = "plot",
   signature = "PROsetta_data",
@@ -123,8 +120,6 @@ setMethod(
   }
 )
 
-
-
 #' Plot scale information
 #'
 #' \code{\link{plotInfo}} is a plotting function to visualize scale-level information.
@@ -146,7 +141,6 @@ setMethod(
 #' @docType methods
 #' @rdname plotInfo-methods
 #' @export
-
 setGeneric(
   name = "plotInfo",
   def = function(object, data, theta = seq(-4, 4, .1), t_score = FALSE, scale_label = c(1, 2, "Combined"), color = c("red", "blue", "black"), lty = c(3, 2, 1)) {
@@ -157,7 +151,6 @@ setGeneric(
 #' @docType methods
 #' @rdname plotInfo-methods
 #' @export
-
 setMethod(
   f = "plotInfo",
   signature = "SingleGroupClass",

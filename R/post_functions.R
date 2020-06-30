@@ -1,8 +1,6 @@
 #' @include configPROsetta.R
 NULL
 
-
-
 #' Get complete data
 #'
 #' \code{\link{getCompleteData}} is a helper function to perform casewise deletion of missing values.
@@ -11,7 +9,6 @@ NULL
 #' @param scale the index of the scale to perform casewise deletion. Leave empty or set to "combined" to perform on all scales.
 #'
 #' @export
-
 getCompleteData <- function(data, scale = NULL) {
 
   validate_data(data)
@@ -57,7 +54,6 @@ getCompleteData <- function(data, scale = NULL) {
 #' @return \code{\link{getTheta}} returns a \code{\link{list}} containing EAP estimates.
 #'
 #' @export
-
 getTheta <- function(
   data, ipar, scale = "combined", model = "grm",
   theta_grid = seq(-4, 4, .1),
@@ -95,8 +91,6 @@ getTheta <- function(
 
 }
 
-
-
 #' Calculate expected scores at theta
 #'
 #' \code{\link{getEscore}} is a helper function to calculate expected scores at supplied thetas.
@@ -109,14 +103,12 @@ getTheta <- function(
 #' @return \code{\link{getEscore}} returns a vector of expected scores.
 #'
 #' @export
-
 getEscore <- function(ipar, model, theta, is_minscore_0) {
 
   e <- rep(NA, length(theta))
   for (i in 1:length(theta)) {
     e[i] <- calc_escore(ipar, model, theta[i], is_minscore_0)
   }
-
   return(e)
 
 }
@@ -129,7 +121,6 @@ getEscore <- function(ipar, model, theta, is_minscore_0) {
 #' @param scale_idx the index of the scale to obtain the raw sum scores.
 #'
 #' @export
-
 getScaleSum <- function(data, scale_idx) {
   person_id <- data@response[[data@person_id]]
   item_id <- subset(data@itemmap[[data@item_id]], (data@itemmap[[data@scale_id]] == scale_idx))
@@ -138,8 +129,6 @@ getScaleSum <- function(data, scale_idx) {
   colnames(raw_sum) <- c(data@person_id, sprintf("raw_%i", scale_idx))
   return(raw_sum)
 }
-
-
 
 #' Compare two sets of scores
 #'
@@ -152,7 +141,6 @@ getScaleSum <- function(data, scale_idx) {
 #' @return \code{\link{compareScores}} returns a \code{\link{data.frame}} containing the comparison results.
 #'
 #' @export
-
 compareScores <- function(left, right, type = c("corr", "mean", "sd", "rmsd", "mad")) {
 
   out <- list()

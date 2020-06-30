@@ -1,10 +1,7 @@
 #' @include post_functions.R
 NULL
 
-
-
 #' @noRd
-
 check_fp <- function(fp, f) {
   p <- f
   if (file.exists(p)) {
@@ -17,29 +14,20 @@ check_fp <- function(fp, f) {
   return(list(path = normalizePath(p), exists = FALSE))
 }
 
-
-
 #' @noRd
-
 validate_data <- function(d) {
   if (!inherits(d, "PROsetta_data")) {
     stop("argument 'data': must be a 'PROsetta_data' class object")
   }
 }
 
-
-
 #' @noRd
-
 get_col <- function(d, cn) {
   idx <- which(tolower(names(d)) == cn)
   return(d[, idx])
 }
 
-
-
 #' @noRd
-
 gen_prior <- function(theta_grid, dist_type, prior_mean, prior_sd) {
 
   if (dist_type == "normal") {
@@ -57,10 +45,7 @@ gen_prior <- function(theta_grid, dist_type, prior_mean, prior_sd) {
   return(prior)
 }
 
-
-
 #' @noRd
-
 prep_prob <- function(ipar, model, theta_grid) {
 
   # returns theta * item * probability array
@@ -113,10 +98,7 @@ prep_prob <- function(ipar, model, theta_grid) {
 
 }
 
-
-
 #' @noRd
-
 calc_escore = function(ipar, model, theta, is_minscore_0) {
   pp <- prep_prob(ipar, "grm", theta)[1, , ]
   ni <- dim(pp)[1]
@@ -129,10 +111,7 @@ calc_escore = function(ipar, model, theta, is_minscore_0) {
   return(e)
 }
 
-
-
 #' @noRd
-
 calc_eap = function(theta_grid, prior, pp, resp_data) {
 
   n  <- dim(resp_data)[1]
