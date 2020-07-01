@@ -41,3 +41,14 @@ process of deriving equivalent scores has been used successfully in
 educational assessment to compare test scores obtained from parallel or
 alternate forms that measure the same characteristic with equal
 precision.
+
+# Installation
+
+Install the latest release from CRAN:
+
+``` r
+install.packages("PROsetta")
+```
+
+The documentation is available at
+(<https://choi-phd.github.io/PROsetta/index.html>)
