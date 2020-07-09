@@ -1,0 +1,21 @@
+citHeader("To cite PROsetta in publications use:")
+citEntry(
+  entry = "Manual",
+  title = "{PROsetta}: Linking Patient-Reported Outcomes Measures",
+  author = c(
+    person("Seung W.", "Choi"),
+    person("Sangdon", "Lim"),
+    person("Benjamin D.", "Schalet"),
+    person("Aaron J.", "Kaat"),
+    person("David", "Cella")
+  ),
+  year = 2020,
+  note = "R package version 0.1.4",
+  url = "https://CRAN.R-project.org/package=PROsetta",
+  textVersion = paste(
+    "Choi, S. W., Lim, S., Schalet, B. D., Kaat, A. J., Cella, D.",
+    "(2020).",
+    "PROsetta: Linking Patient-Reported Outcomes Measures. R package version 0.1.4.",
+    "https://CRAN.R-project.org/package=PROsetta"
+  )
+)
