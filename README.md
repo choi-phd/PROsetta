@@ -5,6 +5,8 @@
 
 [![Travis build
 status](https://travis-ci.com/choi-phd/PROsetta.svg?branch=main)](https://travis-ci.com/choi-phd/PROsetta)
+[![Number of
+downloads](https://cranlogs.r-pkg.org/badges/grand-total/PROsetta?color=lightgrey)](https://cran.r-project.org/package=PROsetta)
 <!-- badges: end -->
 
 **PROsetta** package provides functions for metric-linking of item
