@@ -323,80 +323,10 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
     stop(sprintf("argument 'min_score': length(min_score) must be either 1 or %i", n_scale + 1))
   }
 
-  rsss <- function(ipar, is_minscore_0) {
-
-    theta_grid <- seq(min_theta, max_theta, inc)
-    pp         <- getProb(ipar, "grm", theta_grid)
-
-    ni   <- dim(ipar)[1]
-    nq   <- length(theta_grid)
-    ncat <- apply(ipar, 1, function(x) sum(!is.na(x)))
-
-    min_raw_score <- 0                                 # minimum obtainable raw score
-    max_raw_score <- sum(ncat) - ni                    # maximum obtainable raw score
-    raw_score     <- min_raw_score:max_raw_score       # raw scores
-    n_score       <- length(raw_score)                 # number of score levels
-    inv_tcc       <- numeric(n_score)                  # initialize TCC scoring table
-    lh            <- matrix(0, nq, n_score)            # initialize distribution of summed scores
-
-    ncat_i    <- ncat[1]
-    max_score <- 0
-    lh[, 1:ncat_i] <- pp[, 1, 1:ncat_i]
-    idx <- ncat_i
-
-    for (i in 2:ni) {
-      ncat_i    <- ncat[i]                # number of categories for item i
-      max_score <- ncat_i - 1             # maximum score for item i
-      score     <- 0:max_score            # score values for item i
-      prob      <- pp[, i, 1:ncat_i]      # category probabilities for item i
-      plh       <- matrix(0, nq, n_score) # place holder for lh
-      for (k in 1:ncat_i) {
-        for (h in 1:idx) {
-          sco <- raw_score[h] + score[k]
-          position <- which(raw_score == sco)
-          plh[, position] <- plh[, position] + lh[, h] * prob[, k]
-        }
-      }
-      idx <- idx + max_score
-      lh <- plh
-    }
-
-    theta       <- numeric(n_score) # score table for EAP
-    theta_se    <- numeric(n_score) # SE for EAP
-
-    prior       <- genPrior(theta_grid, "normal", prior_mean, prior_sd)
-    posterior   <- lh * prior
-    den         <- colSums(posterior)
-    den         <- matrix(rep(den, rep(nq, n_score)), nq, n_score)
-    posterior   <- posterior / den
-
-    for (j in 1:n_score) {
-      theta[j] <- sum(posterior[, j] * theta_grid) / sum(posterior[, j])                         # EAP
-      theta_se[j] <- sqrt(sum(posterior[, j] * (theta_grid - theta[j])^2) / sum(posterior[, j])) # EAP
-    }
-
-    if (!is_minscore_0) {
-      raw_score <- raw_score + ni
-    }
-
-    tscore    <- round(theta    * 10 + 50, 1)
-    tscore_se <- round(theta_se * 10, 1)
-
-    rsss_table <- data.frame(
-      sum_score   = raw_score,
-      tscore      = tscore,
-      tscore_se   = tscore_se,
-      eap         = theta,
-      eap_se      = theta_se
-    )
-
-    return(rsss_table)
-  }
-
   is_minscore_0 = F
 
   if (n_scale == 1) {
-    score_table <- rsss(item_par, min_score == 0)
+    score_table <- getRSSS(item_par, min_score == 0)
     return(score_table)
   } else if (n_scale > 1) {
     score_table <- vector(mode = "list", length = n_scale + 1)
@@ -407,7 +337,7 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
       } else {
         ipar <- item_par
       }
-      score_table[[s]] <- rsss(ipar, min_score[s] == 0)
+      score_table[[s]] <- getRSSS(ipar, min_score[s] == 0)
       colnames(score_table[[s]])[1] <- sprintf("raw_%i", s)
     }
 
