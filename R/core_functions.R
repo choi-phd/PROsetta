@@ -134,6 +134,20 @@ getAnchorPar <- function(d) {
 }
 
 #' @noRd
+convertItemPar2Mirt <- function(ipar) {
+
+  is_traditional <- any(grepl("cb", names(ipar)))
+
+  if (is_traditional) {
+    new_ipar   <- traditional2mirt(ipar, "graded", dim(ipar)[2])
+    return(new_ipar)
+  }
+
+  stop("unrecognized parameterization: cannot find cb columns")
+
+}
+
+#' @noRd
 getColumn <- function(d, cn) {
   idx <- which(tolower(names(d)) == cn)
   return(d[, idx])
