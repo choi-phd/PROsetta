@@ -148,6 +148,19 @@ convertItemPar2Mirt <- function(ipar) {
 }
 
 #' @noRd
+getAnchorDimension <- function(d) {
+
+  anchor_items <- d@anchor[, d@item_id]
+  anchor_idx   <- which(d@itemmap[, d@item_id] %in% anchor_items)
+  anchor_scale <- unique(d@itemmap[anchor_idx, d@scale_id])
+  if (length(anchor_scale) == 1) {
+    return(anchor_scale)
+  }
+  stop("anchor items correspond to more than one scale")
+
+}
+
+#' @noRd
 getColumn <- function(d, cn) {
   idx <- which(tolower(names(d)) == cn)
   return(d[, idx])
