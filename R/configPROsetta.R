@@ -76,7 +76,7 @@ loadData <- function(response, itemmap, anchor,
   item_id = NULL, person_id = NULL, scale_id = NULL, input_dir = getwd()) {
 
   if (inherits(response, "character")) {
-    p <- check_fp(input_dir, response)
+    p <- checkFilePath(input_dir, response)
     if (!p$exists) stop(sprintf("argument 'response': cannot find the specified file %s", p$path))
     response <- read.csv(p$path, as.is = TRUE)
   } else if (inherits(response, "matrix")) {
@@ -86,7 +86,7 @@ loadData <- function(response, itemmap, anchor,
   }
 
   if (inherits(itemmap, "character")) {
-    p <- check_fp(input_dir, itemmap)
+    p <- checkFilePath(input_dir, itemmap)
     if (!p$exists) stop(sprintf("argument 'itemmap': cannot find the specified file %s", p$path))
     itemmap <- read.csv(p$path, as.is = TRUE)
   } else if (inherits(itemmap, "matrix")) {
@@ -96,7 +96,7 @@ loadData <- function(response, itemmap, anchor,
   }
 
   if (inherits(anchor, "character")) {
-    p <- check_fp(input_dir, anchor)
+    p <- checkFilePath(input_dir, anchor)
     if (!p$exists) stop(sprintf("argument 'anchor': cannot find the specified file %s", p$path))
     anchor <- read.csv(p$path, as.is = TRUE)
   } else if (inherits(anchor, "matrix")) {
