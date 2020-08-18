@@ -314,7 +314,7 @@ getRSSS <- function(ipar, theta_grid, is_minscore_0, prior_mean, prior_sd) {
 }
 
 #' @noRd
-appendEscore <- function(score_table, n_scale, item_par_by_scale) {
+appendEscore <- function(score_table, n_scale, item_par_by_scale, min_score) {
 
   for (s in 1:(n_scale + 1)) {
     for (d in 1:(n_scale + 1)) {
