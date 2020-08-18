@@ -8,7 +8,7 @@ test_that("runRSSS", {
 
   d <- loadData(response = f1, itemmap = f2, anchor = f3)
 
-  out_cfa     <- runCFA(d)
+  out_cfa     <- suppressWarnings(runCFA(d))
 
   solution    <- runLinking(d, method = "SL", technical = list(NCYCLES = 1000))
   score_table <- runRSSS(d, solution)
