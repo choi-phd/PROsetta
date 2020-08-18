@@ -329,9 +329,10 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
   }
 
   is_minscore_0 = F
+  theta_grid <- seq(min_theta, max_theta, inc)
 
   if (n_scale == 1) {
-    score_table <- getRSSS(item_par, min_score == 0)
+    score_table <- getRSSS(item_par, theta_grid, min_score == 0)
     return(score_table)
   } else if (n_scale > 1) {
     score_table <- vector(mode = "list", length = n_scale + 1)
@@ -342,7 +343,7 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
       } else {
         ipar <- item_par
       }
-      score_table[[s]] <- getRSSS(ipar, min_score[s] == 0)
+      score_table[[s]] <- getRSSS(ipar, theta_grid, min_score[s] == 0)
       colnames(score_table[[s]])[1] <- sprintf("raw_%i", s)
     }
 
