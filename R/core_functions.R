@@ -104,6 +104,36 @@ getParLayout <- function(d, dimensions, bound_cov) {
 }
 
 #' @noRd
+getAnchorPar <- function(d) {
+
+  idx <- c()
+  for (j in 1:dim(d@anchor)[2]) {
+    if (inherits(d@anchor[, j], "numeric")) {
+      if (all(d@anchor[, j] != round(d@anchor[, j]), na.rm = TRUE)) {
+        idx <- c(idx, j)
+      }
+    }
+  }
+
+  tmp <- d@anchor[, idx]
+
+  idx <- c(
+    grep("^a", names(tmp)),
+    grep("^b", names(tmp)),
+    grep("^c", names(tmp)),
+    grep("^d", names(tmp)),
+    grep("^a[1-9]", names(tmp)),
+    grep("^cb[1-9]", names(tmp))
+  )
+  ipar <- tmp[, unique(idx)]
+
+  message(sprintf("anchor has %s items * %s parameters = %s parameters", dim(ipar)[1], dim(ipar)[2], prod(dim(ipar))))
+
+  return(ipar)
+
+}
+
+#' @noRd
 getColumn <- function(d, cn) {
   idx <- which(tolower(names(d)) == cn)
   return(d[, idx])
