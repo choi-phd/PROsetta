@@ -184,7 +184,7 @@ loadData <- function(response, itemmap, anchor,
 #' @export
 checkFrequency <- function(data) {
 
-  validate_data(data)
+  validateData(data)
 
   tmp <- runFrequency(data, check_frequency = FALSE)
   ni <- dim(tmp)[1]
@@ -238,7 +238,7 @@ checkFrequency <- function(data) {
 #' @export
 runFrequency <- function(data, check_frequency = TRUE) {
 
-  validate_data(data)
+  validateData(data)
 
   tmp <- data@response[data@itemmap[[data@item_id]]]
   tmp <- apply(tmp, 2, table)
@@ -279,7 +279,7 @@ runFrequency <- function(data, check_frequency = TRUE) {
 #' @export
 runDescriptive <- function(data = NULL) {
 
-  validate_data(data)
+  validateData(data)
 
   desc      <- psych::describe(data@response[data@itemmap[[data@item_id]]])
   desc$vars <- NULL
@@ -306,7 +306,7 @@ runDescriptive <- function(data = NULL) {
 #' @export
 runClassical <- function(data, omega = FALSE, scalewise = TRUE, ...) {
 
-  validate_data(data)
+  validateData(data)
 
   out_alpha = list()
   out_omega = list()
@@ -357,7 +357,7 @@ runClassical <- function(data, omega = FALSE, scalewise = TRUE, ...) {
 #' @export
 runCFA <- function(data, estimator = "WLSMV", std.lv = TRUE, scalewise = FALSE, ...) {
 
-  validate_data(data)
+  validateData(data)
 
   out <- list()
 

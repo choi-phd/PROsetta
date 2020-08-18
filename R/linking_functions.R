@@ -29,10 +29,10 @@ NULL
 #' @export
 runCalibration <- function(data, fixedpar = FALSE, ignore_nonconv = FALSE, ...) {
 
-  validate_data(data)
 
   resp_data <- data@response[data@itemmap[[data@item_id]]]
   ni <- dim(resp_data)[2]
+  validateData(data)
 
   message(sprintf("response data has %i items", ni))
 
@@ -109,7 +109,7 @@ runCalibration <- function(data, fixedpar = FALSE, ignore_nonconv = FALSE, ...) 
 #' @export
 runLinking <- function(data, method, ...) {
 
-  validate_data(data)
+  validateData(data)
 
   if (is.null(data@anchor)) {
     stop("argument 'data': @anchor must be supplied for runLinking()")
@@ -219,7 +219,7 @@ runLinking <- function(data, method, ...) {
 #' @export
 runEquateObserved <- function(data, scale_from = 2, scale_to = 1, type_to = "raw", rsss = NULL, eq_type = "equipercentile", smooth = "loglinear", degrees = list(3, 1), boot = TRUE, reps = 100, ...) {
 
-  validate_data(data)
+  validateData(data)
 
   message("runEquateObserved requires complete data, attempting to remove cases", appendLF = TRUE)
   data <- getCompleteData(data)
@@ -316,7 +316,7 @@ runEquateObserved <- function(data, scale_from = 2, scale_to = 1, type_to = "raw
 #' @export
 runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_theta = -4.0, max_theta = 4.0, inc = 0.01, min_score = 1) {
 
-  validate_data(data)
+  validateData(data)
 
   if (is.null(attr(class(ipar_linked), "package"))) {
     item_par <- ipar_linked$ipar_linked
