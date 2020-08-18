@@ -234,7 +234,7 @@ fixParLayout <- function(par_layout, d) {
 }
 
 #' @noRd
-getRSSS <- function(ipar, theta_grid, is_minscore_0) {
+getRSSS <- function(ipar, theta_grid, is_minscore_0, prior_mean, prior_sd) {
 
   if (is.vector(theta_grid)) {
     theta_grid <- matrix(theta_grid)
