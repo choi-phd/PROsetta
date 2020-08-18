@@ -379,7 +379,7 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
     theta       <- numeric(n_score) # score table for EAP
     theta_se    <- numeric(n_score) # SE for EAP
 
-    prior       <- gen_prior(theta_grid, "normal", prior_mean, prior_sd)
+    prior       <- genPrior(theta_grid, "normal", prior_mean, prior_sd)
     posterior   <- lh * prior
     den         <- colSums(posterior)
     den         <- matrix(rep(den, rep(nq, n_score)), nq, n_score)

@@ -76,7 +76,7 @@ getTheta <- function(
   resp_data <- resp_data[item_idx]
   ipar      <- ipar[item_idx, ]
 
-  prior <- gen_prior(theta_grid, prior_dist, prior_mean, prior_sd)
+  prior <- genPrior(theta_grid, prior_dist, prior_mean, prior_sd)
   pp    <- prep_prob(ipar, model, theta_grid)
   eap   <- calc_eap(theta_grid, prior, pp, resp_data)
   eap   <- cbind(person_id, eap)
