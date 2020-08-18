@@ -112,7 +112,7 @@ getEscoreTheta = function(ipar, model, theta, is_minscore_0) {
 }
 
 #' @noRd
-calc_eap = function(theta_grid, prior, pp, resp_data) {
+getEAP = function(theta_grid, prior, pp, resp_data) {
 
   n  <- dim(resp_data)[1]
   ni <- dim(resp_data)[2]
