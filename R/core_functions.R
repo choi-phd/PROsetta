@@ -46,7 +46,7 @@ genPrior <- function(theta_grid, dist_type, prior_mean, prior_sd) {
 }
 
 #' @noRd
-prep_prob <- function(ipar, model, theta_grid) {
+getProb <- function(ipar, model, theta_grid) {
 
   # returns theta * item * probability array
 
@@ -100,7 +100,7 @@ prep_prob <- function(ipar, model, theta_grid) {
 
 #' @noRd
 calc_escore = function(ipar, model, theta, is_minscore_0) {
-  pp <- prep_prob(ipar, "grm", theta)[1, , ]
+  pp <- getProb(ipar, "grm", theta)[1, , ]
   ni <- dim(pp)[1]
   nc <- dim(pp)[2]
   w  <- matrix(rep(1:nc - 1, ni), ni, nc, byrow = TRUE)
