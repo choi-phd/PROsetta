@@ -28,7 +28,7 @@ getColumn <- function(d, cn) {
 }
 
 #' @noRd
-gen_prior <- function(theta_grid, dist_type, prior_mean, prior_sd) {
+genPrior <- function(theta_grid, dist_type, prior_mean, prior_sd) {
 
   if (dist_type == "normal") {
     prior <- dnorm((theta_grid - prior_mean) / prior_sd)
