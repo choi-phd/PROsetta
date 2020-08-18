@@ -306,6 +306,36 @@ getRSSS <- function(ipar, is_minscore_0) {
 }
 
 #' @noRd
+appendEscore <- function(score_table) {
+
+  for (s in 1:(n_scale + 1)) {
+    for (d in 1:(n_scale + 1)) {
+      n_theta <- length(score_table[[s]]$eap)
+      e_theta <- rep(NA, n_theta)
+      if (d != n_scale + 1) {
+        ipar <- item_par_by_scale[[d]]
+      } else {
+        ipar <- item_par
+      }
+      for (i in 1:n_theta) {
+        e_theta[i] <- getEscoreTheta(ipar, "grm", score_table[[s]]$eap[i], min_score[d] == 0)
+      }
+      if (d != n_scale + 1) {
+        e_name <- sprintf("escore_%i", d)
+      } else {
+        e_name <- sprintf("escore_combined")
+      }
+      score_table[[s]][[e_name]] <- e_theta
+    }
+  }
+
+  names(score_table) <- c(names(item_par_by_scale), "combined")
+
+  return(score_table)
+
+}
+
+#' @noRd
 getColumn <- function(d, cn) {
   idx <- which(tolower(names(d)) == cn)
   return(d[, idx])
