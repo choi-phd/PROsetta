@@ -22,6 +22,16 @@ validateData <- function(d) {
 }
 
 #' @noRd
+getResponse <- function(d) {
+
+  item_id   <- d@itemmap[, d@item_id]
+  resp_data <- d@response[, item_id]
+
+  return(resp_data)
+
+}
+
+#' @noRd
 getColumn <- function(d, cn) {
   idx <- which(tolower(names(d)) == cn)
   return(d[, idx])
