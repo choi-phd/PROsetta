@@ -15,7 +15,7 @@ check_fp <- function(fp, f) {
 }
 
 #' @noRd
-validate_data <- function(d) {
+validateData <- function(d) {
   if (!inherits(d, "PROsetta_data")) {
     stop("argument 'data': must be a 'PROsetta_data' class object")
   }
