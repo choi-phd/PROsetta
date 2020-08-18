@@ -341,7 +341,7 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
   rsss <- function(ipar, is_minscore_0) {
 
     theta_grid <- seq(min_theta, max_theta, inc)
-    pp         <- prep_prob(ipar, "grm", theta_grid)
+    pp         <- getProb(ipar, "grm", theta_grid)
 
     ni   <- dim(ipar)[1]
     nq   <- length(theta_grid)
