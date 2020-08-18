@@ -11,7 +11,7 @@ NULL
 #' @export
 getCompleteData <- function(data, scale = NULL) {
 
-  validate_data(data)
+  validateData(data)
 
   if (is.null(scale)) {
     scale <- "combined"
