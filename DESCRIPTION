@@ -12,19 +12,23 @@ Description: Performs scale linking to establish relationships between instrumen
     that measure similar constructs according to the PROsetta Stone methodology.
 URL: http://www.prosettastone.org
 Imports: equate, lavaan, mirt, plink, psych, methods
-Depends: R (>= 2.10.0)
+Depends: R (>= 3.5.0)
 Suggests:
     shiny,
     shinythemes,
     shinyWidgets,
     shinyjs,
     DT,
-    testthat (>= 2.1.0)
+    knitr,
+    kableExtra,
+    testthat (>= 2.1.0),
+    rmarkdown
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.0.2
-Collate: 
+RoxygenNote: 7.1.0
+VignetteBuilder: knitr
+Collate:
     'import.R'
     'configPROsetta.R'
     'post_functions.R'
