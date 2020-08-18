@@ -107,7 +107,7 @@ getEscore <- function(ipar, model, theta, is_minscore_0) {
 
   e <- rep(NA, length(theta))
   for (i in 1:length(theta)) {
-    e[i] <- calc_escore(ipar, model, theta[i], is_minscore_0)
+    e[i] <- getEscoreTheta(ipar, model, theta[i], is_minscore_0)
   }
   return(e)
 
