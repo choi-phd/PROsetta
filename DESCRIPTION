@@ -11,7 +11,7 @@ Authors@R: c(
     person("Benjamin D.", "Schalet",
         email = "b-schalet@northwewstern.edu",
         role = c("ctb")),
-    person("Aaron J.", "Kaat",
+    person("Aaron", "Kaat",
         email = "aaron.kaat@northwestern.edu",
         role = c("ctb")),
     person("Ryne", "Eastbrook",
