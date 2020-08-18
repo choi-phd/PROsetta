@@ -6,6 +6,7 @@ NULL
 #' \code{\link{runCalibration}} is a function to perform item calibration on the response data.
 #'
 #' @param data a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
+#' @param dimensions number of dimensions to use. Must be 1 or 2. If 1, use one underlying dimension for all instruments combined. If 2, use each dimension separately for the anchor instrument and the developing instrument. Covariance between dimensions is freely estimated. (default = `1`)
 #' @param fixedpar if \code{TRUE} (default), perform fixed parameter calibration using anchor data.
 #' @param ignore_nonconv if \code{TRUE}, return results even when calibration did not converge. Defaults to \code{FALSE}.
 #' @param ... additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{'mirt'} package.
@@ -27,7 +28,7 @@ NULL
 #' mirt::itemfit(out_calib, "S_X2", na.rm = TRUE)
 #' }
 #' @export
-runCalibration <- function(data, fixedpar = FALSE, ignore_nonconv = FALSE, ...) {
+runCalibration <- function(data, dimensions = 1, fixedpar = FALSE, ignore_nonconv = FALSE, ...) {
 
   validateData(data)
 
@@ -37,14 +38,18 @@ runCalibration <- function(data, fixedpar = FALSE, ignore_nonconv = FALSE, ...) 
 
   if (fixedpar) {
     message("performing fixed parameter calibration, using anchor data", appendLF = TRUE)
-    par_layout  <- getParLayout(data, 1, FALSE)
+    bound_cov   <- FALSE
+    par_layout  <- getParLayout(data, dimensions, bound_cov)
     par_layout  <- fixParLayout(par_layout, data)
-    model_specs <- getModel(data, dimensions = 1, bound_cov = FALSE)
+    model_specs <- getModel(data, dimensions, bound_cov)
     calibration <- mirt::mirt(resp_data, model_specs, itemtype = "graded", pars = par_layout, ...)
   } else {
     message("performing free calibration of all items, ignoring anchor data", appendLF = TRUE)
-    par_layout  <- getParLayout(data, 1, FALSE)
-    model_specs <- getModel(data, dimensions = 1, bound_cov = FALSE)
+    # Free calibration uses standardized factors
+    # so it makes sense to bound covariance (which is just correlation here) to be below 1
+    bound_cov   <- TRUE
+    par_layout  <- getParLayout(data, dimensions, bound_cov)
+    model_specs <- getModel(data, dimensions, bound_cov)
     calibration <- mirt::mirt(resp_data, model_specs, itemtype = "graded", pars = par_layout, ...)
   }
 
