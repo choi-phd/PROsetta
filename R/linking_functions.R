@@ -316,6 +316,7 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
 
   item_par_by_scale <- split(data.frame(item_par), data@itemmap[[data@scale_id]])
   n_scale <- length(item_par_by_scale)
+  item_par_by_scale$combined <- item_par
 
   if (!all(min_score %in% c(0, 1))) {
     stop("argument 'min_score': must contain only 0 or 1")
@@ -331,19 +332,16 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
   is_minscore_0 = F
   theta_grid <- seq(min_theta, max_theta, inc)
 
+  # the last item_par_by_scale is the combined scale
+
   if (n_scale == 1) {
-    score_table <- getRSSS(item_par, theta_grid, min_score == 0, prior_mean, prior_sd)
+    score_table <- getRSSS(item_par_by_scale[[n_scale + 1]], theta_grid, min_score == 0, prior_mean, prior_sd)
     return(score_table)
   } else if (n_scale > 1) {
     score_table <- vector(mode = "list", length = n_scale + 1)
 
     for (s in 1:(n_scale + 1)) {
-      if (s != n_scale + 1) {
-        ipar <- item_par_by_scale[[s]]
-      } else {
-        ipar <- item_par
-      }
-      score_table[[s]] <- getRSSS(ipar, theta_grid, min_score[s] == 0, prior_mean, prior_sd)
+      score_table[[s]] <- getRSSS(item_par_by_scale[[s]], theta_grid, min_score[s] == 0, prior_mean, prior_sd)
       colnames(score_table[[s]])[1] <- sprintf("raw_%i", s)
     }
 

@@ -320,24 +320,15 @@ appendEscore <- function(score_table, n_scale) {
     for (d in 1:(n_scale + 1)) {
       n_theta <- length(score_table[[s]]$eap)
       e_theta <- rep(NA, n_theta)
-      if (d != n_scale + 1) {
-        ipar <- item_par_by_scale[[d]]
-      } else {
-        ipar <- item_par
-      }
       for (i in 1:n_theta) {
-        e_theta[i] <- getEscoreTheta(ipar, "grm", score_table[[s]]$eap[i], min_score[d] == 0)
+        e_theta[i] <- getEscoreTheta(item_par_by_scale[[d]], "grm", score_table[[s]]$eap[i], min_score[d] == 0)
       }
-      if (d != n_scale + 1) {
-        e_name <- sprintf("escore_%i", d)
-      } else {
-        e_name <- sprintf("escore_combined")
-      }
+      e_name <- sprintf("escore_%s", d)
       score_table[[s]][[e_name]] <- e_theta
     }
   }
 
-  names(score_table) <- c(names(item_par_by_scale), "combined")
+  names(score_table) <- names(item_par_by_scale)
 
   return(score_table)
 
