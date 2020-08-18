@@ -279,7 +279,12 @@ getRSSS <- function(ipar, theta_grid, is_minscore_0, prior_mean, prior_sd) {
   theta_se    <- numeric(n_score) # SE for EAP
 
   prior       <- genPrior(theta_grid, "normal", prior_mean, prior_sd)
-  posterior   <- lh * prior
+
+  posterior   <- lh * NA
+  for (s in 1:dim(posterior)[2]) {
+    posterior[, s] <- lh[, s] * prior
+  }
+
   den         <- colSums(posterior)
   den         <- matrix(rep(den, rep(nq, n_score)), nq, n_score)
   posterior   <- posterior / den
