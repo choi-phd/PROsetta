@@ -104,7 +104,7 @@ getParLayout <- function(d, dimensions, bound_cov) {
 }
 
 #' @noRd
-getAnchorPar <- function(d) {
+getAnchorPar <- function(d, as_mirt) {
 
   idx <- c()
   for (j in 1:dim(d@anchor)[2]) {
@@ -128,6 +128,14 @@ getAnchorPar <- function(d) {
   ipar <- tmp[, unique(idx)]
 
   message(sprintf("anchor has %s items * %s parameters = %s parameters", dim(ipar)[1], dim(ipar)[2], prod(dim(ipar))))
+
+  if (as_mirt) {
+    ipar              <- convertItemPar2Mirt(ipar)
+    anchor_dim        <- getAnchorDimension(d)
+    colnames(ipar)[1] <- sprintf("a%s", anchor_dim)
+  }
+
+  rownames(ipar) <- d@anchor[, d@item_id]
 
   return(ipar)
 
