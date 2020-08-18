@@ -169,6 +169,71 @@ getAnchorDimension <- function(d) {
 }
 
 #' @noRd
+fixParLayout <- function(par_layout, d) {
+
+  if (any("a2" %in% par_layout$name)) {
+    dimensions <- 2
+  } else {
+    dimensions <- 1
+  }
+
+  ipar_anchor    <- getAnchorPar(d, TRUE)
+  par_to_fix     <- which(par_layout$item %in% rownames(ipar_anchor))
+  n_items_to_fix <- length(unique(par_layout$item[par_to_fix]))
+  par_layout$est[par_to_fix] <- FALSE
+
+  for (i in 1:dim(ipar_anchor)[1]) {
+    item_name <- rownames(ipar_anchor)[i]
+    for (j in 1:dim(ipar_anchor)[2]) {
+      par_name <- colnames(ipar_anchor)[j]
+      idx <-
+        par_layout$item == item_name &
+        par_layout$name == par_name
+      if (length(which(idx)) == 0) {
+        stop(sprintf("@anchor: %s %s does not correspond to par_layout", item_name, par_name))
+      }
+      if (length(which(idx)) > 2) {
+        stop(sprintf("@anchor: %s %s has multiple matches in par_layout", item_name, par_name))
+      }
+      par_layout[idx, "value"] <- ipar_anchor[i, j]
+    }
+  }
+
+  if (dimensions == 1) {
+
+    par_to_free <- which(par_layout$class == "GroupPars")
+    par_layout[par_to_free, "est"] <- TRUE
+
+    message(sprintf("anchor parameters applied to par_layout"))
+
+    return(par_layout)
+
+  }
+
+  if (dimensions == 2) {
+
+    # Freely estimate mean and variance of anchor dimension
+    # to capture the difference relative to anchor
+    anchor_dim  <- getAnchorDimension(d)
+    par_to_free <- which(
+      par_layout$class == "GroupPars" &
+      par_layout$name %in% c(
+        sprintf("MEAN_%s", anchor_dim),
+        sprintf("COV_%s%s", anchor_dim, anchor_dim)
+      )
+    )
+
+    par_layout[par_to_free, "est"] <- TRUE
+
+    message(sprintf("anchor parameters applied to par_layout"))
+
+    return(par_layout)
+
+  }
+
+}
+
+#' @noRd
 getColumn <- function(d, cn) {
   idx <- which(tolower(names(d)) == cn)
   return(d[, idx])

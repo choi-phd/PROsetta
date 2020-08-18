@@ -36,27 +36,9 @@ runCalibration <- function(data, fixedpar = FALSE, ignore_nonconv = FALSE, ...) 
   message(sprintf("response data has %i items", ni))
 
   if (fixedpar) {
-
-    par_layout <- getParLayout(data, 1, FALSE)
-
-    fixed <- which(par_layout$item %in% data@anchor[[data@item_id]])
-    ni_fixed <- length(unique(par_layout[fixed, "item"]))
-    message(sprintf("performing fixed parameter calibration, fixing %i items from anchor data", ni_fixed))
-
-    par_layout[fixed, "est"] <- FALSE
-    par_layout[which(par_layout$class == "GroupPars"), "est"] <- TRUE
-
-    for (i in fixed) {
-      item <- which(data@anchor[[data@item_id]] == par_layout$item[i])
-
-      if (substr(par_layout$name[i], 1, 1) == "a") {
-        par_layout[i, "value"] <- data@anchor[item, "a"]
-      } else {
-        k <- as.numeric(gsub("[[:alpha:]]", "", par_layout$name[i]))
-        par_layout[i, "value"] <- -data@anchor[item, "a"] * data@anchor[item, paste0("cb", k)]
-      }
-    }
-
+    message("performing fixed parameter calibration, using anchor data", appendLF = TRUE)
+    par_layout  <- getParLayout(data, 1, FALSE)
+    par_layout  <- fixParLayout(par_layout, data)
     model_specs <- getModel(data, dimensions = 1, bound_cov = FALSE)
     calibration <- mirt::mirt(resp_data, model_specs, itemtype = "graded", pars = par_layout, ...)
   } else {
