@@ -234,9 +234,12 @@ fixParLayout <- function(par_layout, d) {
 }
 
 #' @noRd
-getRSSS <- function(ipar, is_minscore_0) {
+getRSSS <- function(ipar, theta_grid, is_minscore_0) {
 
-  theta_grid <- seq(min_theta, max_theta, inc)
+  if (is.vector(theta_grid)) {
+    theta_grid <- matrix(theta_grid)
+  }
+
   pp         <- getProb(ipar, "grm", theta_grid)
 
   ni   <- dim(ipar)[1]
