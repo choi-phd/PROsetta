@@ -347,7 +347,7 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
       colnames(score_table[[s]])[1] <- sprintf("raw_%i", s)
     }
 
-    score_table <- appendEscore(score_table)
+    score_table <- appendEscore(score_table, n_scale)
 
     return(score_table)
 
