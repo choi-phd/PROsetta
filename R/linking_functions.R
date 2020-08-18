@@ -29,11 +29,10 @@ NULL
 #' @export
 runCalibration <- function(data, fixedpar = FALSE, ignore_nonconv = FALSE, ...) {
 
-
-  resp_data <- data@response[data@itemmap[[data@item_id]]]
-  ni <- dim(resp_data)[2]
   validateData(data)
 
+  resp_data   <- getResponse(data)
+  ni          <- dim(resp_data)[2]
   message(sprintf("response data has %i items", ni))
 
   if (fixedpar) {

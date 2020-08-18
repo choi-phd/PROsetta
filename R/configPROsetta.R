@@ -240,8 +240,8 @@ runFrequency <- function(data, check_frequency = TRUE) {
 
   validateData(data)
 
-  tmp <- data@response[data@itemmap[[data@item_id]]]
-  tmp <- apply(tmp, 2, table)
+  resp_data <- getResponse(data)
+  tmp <- apply(resp_data, 2, table)
 
   if (inherits(tmp, "list")) {
     catnames <- sort(unique(do.call(c, lapply(tmp, names))))
@@ -281,7 +281,8 @@ runDescriptive <- function(data = NULL) {
 
   validateData(data)
 
-  desc      <- psych::describe(data@response[data@itemmap[[data@item_id]]])
+  resp_data <- getResponse(data)
+  desc      <- psych::describe(resp_data)
   desc$vars <- NULL
 
   return(desc)
