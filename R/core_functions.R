@@ -22,7 +22,7 @@ validateData <- function(d) {
 }
 
 #' @noRd
-get_col <- function(d, cn) {
+getColumn <- function(d, cn) {
   idx <- which(tolower(names(d)) == cn)
   return(d[, idx])
 }

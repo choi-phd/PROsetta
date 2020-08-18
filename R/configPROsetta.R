@@ -199,7 +199,7 @@ checkFrequency <- function(data) {
       if (nm > 0) {
         item_id   <- rownames(tmp[i, ])
         idx       <- which(data@itemmap[[data@item_id]] == item_id)
-        ncats_exp <- get_col(data@itemmap, "ncat")[idx]
+        ncats_exp <- getColumn(data@itemmap, "ncat")[idx]
 
         if (ncats_exp != ncats_obs) {
           cats <- colnames(tmp[i, ])
