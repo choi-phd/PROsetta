@@ -2,7 +2,7 @@
 NULL
 
 #' @noRd
-check_fp <- function(fp, f) {
+checkFilePath <- function(fp, f) {
   p <- f
   if (file.exists(p)) {
     return(list(path = normalizePath(p), exists = TRUE))
