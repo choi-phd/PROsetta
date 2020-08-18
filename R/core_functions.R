@@ -99,7 +99,7 @@ getProb <- function(ipar, model, theta_grid) {
 }
 
 #' @noRd
-calc_escore = function(ipar, model, theta, is_minscore_0) {
+getEscoreTheta = function(ipar, model, theta, is_minscore_0) {
   pp <- getProb(ipar, "grm", theta)[1, , ]
   ni <- dim(pp)[1]
   nc <- dim(pp)[2]
