@@ -240,7 +240,7 @@ getRSSS <- function(ipar, theta_grid, is_minscore_0) {
     theta_grid <- matrix(theta_grid)
   }
 
-  pp         <- getProb(ipar, "grm", theta_grid)
+  pp   <- getProb(ipar, "grm", theta_grid)
 
   ni   <- dim(ipar)[1]
   nq   <- length(theta_grid)
@@ -255,14 +255,14 @@ getRSSS <- function(ipar, theta_grid, is_minscore_0) {
 
   ncat_i    <- ncat[1]
   max_score <- 0
-  lh[, 1:ncat_i] <- pp[, 1, 1:ncat_i]
+  lh[, 1:ncat_i] <- pp[[1]][, 1:ncat_i]
   idx <- ncat_i
 
   for (i in 2:ni) {
     ncat_i    <- ncat[i]                # number of categories for item i
     max_score <- ncat_i - 1             # maximum score for item i
     score     <- 0:max_score            # score values for item i
-    prob      <- pp[, i, 1:ncat_i]      # category probabilities for item i
+    prob      <- pp[[i]][, 1:ncat_i]    # category probabilities for item i
     plh       <- matrix(0, nq, n_score) # place holder for lh
     for (k in 1:ncat_i) {
       for (h in 1:idx) {
@@ -365,33 +365,50 @@ genPrior <- function(theta_grid, dist_type, prior_mean, prior_sd) {
 #' @noRd
 getProb <- function(ipar, model, theta_grid) {
 
-  # returns theta * item * probability array
+  if (is.vector(theta_grid)) {
+    theta_grid <- matrix(theta_grid)
+  }
+
+  # returns item-wise list of theta * category matrix
 
   ni      <- nrow(ipar)
   max_cat <- dim(ipar)[2]
-  nq      <- length(theta_grid)
+  nq      <- nrow(theta_grid)
 
   par_disc <- ipar[, 'a']
   par_cb   <- ipar[, paste0("b", 1:(max_cat - 1))]
 
   ncat <- apply(par_cb, 1, function(x) sum(!is.na(x)) + 1)
 
-  pp <- array(0, c(nq, ni, max_cat))
+  pp <- list()
+  for (i in 1:ni) {
+    pp[[i]] <- matrix(NA, nq, max_cat)
+  }
 
   if (model == "grm") {
+
     for (i in 1:ni) {
+
       ps <- matrix(0, nq, ncat[i] + 1)
       ps[, 1] <- 1
       ps[, ncat[i] + 1] <- 0
+
       for (k in 1:(ncat[i] - 1)) {
         ps[, k + 1] <- 1 / (1 + exp(-par_disc[i] * (theta_grid - par_cb[i, k])))
       }
       for (k in 1:ncat[i]) {
-        pp[, i, k] <- ps[, k] - ps[, k + 1];
+        pp[[i]][, k] <- ps[, k] - ps[, k + 1];
       }
+
     }
-  } else if (model == "gpcm") {
+
+    return(pp)
+  }
+
+  if (model == "gpcm") {
+
     for (i in 1:ni) {
+
       cb <- unlist(par_cb[i, ])
       cb <- c(0, cb)
       zz <- matrix(0, nq, ncat[i])
@@ -406,18 +423,21 @@ getProb <- function(ipar, model, theta_grid) {
       for (k in 1:ncat[i]) {
         pp[, i, k] <- zz[, k] / den
       }
+
     }
-  } else {
-    stop(sprintf("argument 'model': unrecognized value '%s'", model))
+
+    return(pp)
+
   }
 
-  return(pp)
+  stop(sprintf("argument 'model': unrecognized value '%s'", model))
 
 }
 
 #' @noRd
 getEscoreTheta = function(ipar, model, theta, is_minscore_0) {
-  pp <- getProb(ipar, "grm", theta)[1, , ]
+  pp <- getProb(ipar, "grm", theta)
+  pp <- do.call(rbind, pp)
   ni <- dim(pp)[1]
   nc <- dim(pp)[2]
   w  <- matrix(rep(1:nc - 1, ni), ni, nc, byrow = TRUE)
@@ -438,7 +458,7 @@ getEAP = function(theta_grid, prior, pp, resp_data) {
 
   for (i in 1:ni) {
     resp <- matrix(resp_data[, i], n, 1)
-    prob <- t(pp[, i, resp])
+    prob <- t(pp[[i]][, resp])
     prob[is.na(prob)] <- 1.0
     posterior <- posterior*prob
   }
