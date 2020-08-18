@@ -32,6 +32,67 @@ getResponse <- function(d) {
 }
 
 #' @noRd
+getModel <- function(d, dimensions, bound_cov) {
+
+  resp_data  <- getResponse(d)
+  model_text <- c()
+  scale_id   <- unique(d@itemmap[, d@scale_id])
+
+  if (dimensions == 1) {
+
+    item_id <- d@itemmap[, d@item_id]
+    item_idx <- c()
+
+    for (j in item_id) {
+      item_idx <- c(item_idx, which(names(resp_data) == j))
+    }
+
+    model_text <- c(
+      model_text,
+      sprintf("F1 = %s", paste0(item_idx, collapse = ","))
+    )
+
+    m <- mirt.model(model_text)
+
+    return(m)
+
+  }
+
+  if (dimensions == 2) {
+
+    for (i in scale_id) {
+      item_idx <- which(d@itemmap[, d@scale_id] == i)
+      item_id  <- d@itemmap[item_idx, d@item_id]
+      item_idx <- c()
+      for (j in item_id) {
+        item_idx <- c(item_idx, which(names(resp_data) == j))
+      }
+
+      model_text <- c(
+        model_text,
+        sprintf("F%s = %s", i, paste0(item_idx, collapse = ",")))
+    }
+
+    model_text <- c(
+      model_text,
+      sprintf("COV = %s", paste0(sprintf("F%s", scale_id), collapse = "*")))
+
+    if (bound_cov) {
+      model_text <- c(
+        model_text,
+        "UBOUND = (GROUP, COV_21, .999)")
+    }
+
+    model_text <- paste0(model_text, collapse = "\n")
+    m <- mirt.model(model_text)
+
+    return(m)
+
+  }
+
+}
+
+#' @noRd
 getColumn <- function(d, cn) {
   idx <- which(tolower(names(d)) == cn)
   return(d[, idx])
