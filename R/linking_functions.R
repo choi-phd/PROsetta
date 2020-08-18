@@ -37,7 +37,8 @@ runCalibration <- function(data, fixedpar = FALSE, ignore_nonconv = FALSE, ...) 
 
   if (fixedpar) {
 
-    par_layout <- mirt::mirt(resp_data, 1, itemtype = "graded", pars = "values")
+    par_layout <- getParLayout(data, 1, FALSE)
+
     fixed <- which(par_layout$item %in% data@anchor[[data@item_id]])
     ni_fixed <- length(unique(par_layout[fixed, "item"]))
     message(sprintf("performing fixed parameter calibration, fixing %i items from anchor data", ni_fixed))
@@ -60,8 +61,9 @@ runCalibration <- function(data, fixedpar = FALSE, ignore_nonconv = FALSE, ...) 
     calibration <- mirt::mirt(resp_data, model_specs, itemtype = "graded", pars = par_layout, ...)
   } else {
     message("performing free calibration of all items, ignoring anchor data", appendLF = TRUE)
+    par_layout  <- getParLayout(data, 1, FALSE)
     model_specs <- getModel(data, dimensions = 1, bound_cov = FALSE)
-    calibration <- mirt::mirt(resp_data, model_specs, itemtype = "graded", ...)
+    calibration <- mirt::mirt(resp_data, model_specs, itemtype = "graded", pars = par_layout, ...)
   }
 
   if (calibration@OptimInfo$iter == calibration@Options$NCYCLES) {

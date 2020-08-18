@@ -93,6 +93,17 @@ getModel <- function(d, dimensions, bound_cov) {
 }
 
 #' @noRd
+getParLayout <- function(d, dimensions, bound_cov) {
+
+  resp_data  <- getResponse(d)
+  m          <- getModel(d, dimensions, bound_cov)
+  par_layout <- mirt(resp_data, m, itemtype = "graded", pars = "values")
+
+  return(par_layout)
+
+}
+
+#' @noRd
 getColumn <- function(d, cn) {
   idx <- which(tolower(names(d)) == cn)
   return(d[, idx])
