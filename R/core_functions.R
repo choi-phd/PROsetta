@@ -414,7 +414,7 @@ getProb <- function(ipar, model, theta_grid) {
 
     if (model == "grm") {
 
-      o <- mirtCAT::generate.mirt_object(ipar, "graded")
+      o <- generate.mirt_object(ipar, "graded")
 
       for (i in 1:ni) {
         tmp <- mirt::extract.item(o, i)
