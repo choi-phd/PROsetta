@@ -368,7 +368,7 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
 
   is_minscore_0 <- F
   dimensions <- detectDimensions(item_par)
-  theta_grid <- seq(min_theta, max_theta, inc)
+  theta_grid <- getThetaGrid(dimensions, min_theta, max_theta, inc)
 
   # the last item_par_by_scale is the combined scale
 

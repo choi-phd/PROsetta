@@ -508,3 +508,22 @@ detectDimensions <- function(item_par_matrix) {
     return(1)
   }
 }
+
+#' @noRd
+getThetaGrid <- function(dimensions, min_theta, max_theta, inc) {
+
+  theta_grid <- seq(min_theta, max_theta, inc)
+  if (dimensions == 1) {
+    theta_grid <- expand.grid(theta_grid)
+    theta_grid <- as.matrix(theta_grid)
+    return(theta_grid)
+  }
+  if (dimensions == 2) {
+    theta_grid <- expand.grid(theta_grid, theta_grid)
+    theta_grid <- as.matrix(theta_grid)
+    return(theta_grid)
+  }
+
+  stop(sprintf("unexpected value %s in 'dimensions': must be 1 or 2", dimensions))
+
+}
