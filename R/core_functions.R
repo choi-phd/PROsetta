@@ -552,26 +552,38 @@ LWrecursion <- function(prob_list, ncat, theta_grid, is_minscore_0) {
   inv_tcc       <- numeric(n_score)                  # initialize TCC scoring table
   lh            <- matrix(0, nq, n_score)            # initialize distribution of summed scores
 
-  ncat_i    <- ncat[1]
-  max_score <- 0
-  lh[, 1:ncat_i] <- prob_list[[1]][, 1:ncat_i]
-  idx <- ncat_i
+  for (i in 1:ni) {
 
-  for (i in 2:ni) {
-    ncat_i    <- ncat[i]                # number of categories for item i
-    max_score <- ncat_i - 1             # maximum score for item i
-    score     <- 0:max_score            # score values for item i
-    prob      <- prob_list[[i]][, 1:ncat_i]    # category probabilities for item i
-    plh       <- matrix(0, nq, n_score) # place holder for lh
-    for (k in 1:ncat_i) {
-      for (h in 1:idx) {
-        sco <- raw_score[h] + score[k]
-        position <- which(raw_score == sco)
-        plh[, position] <- plh[, position] + lh[, h] * prob[, k]
-      }
+    if (i == 1) {
+
+      ncat_i    <- ncat[1]
+      max_score <- 0
+      lh[, 1:ncat_i] <- prob_list[[1]][, 1:ncat_i]
+      idx <- ncat_i
+
     }
-    idx <- idx + max_score
-    lh <- plh
+
+    if (i > 1) {
+
+      ncat_i    <- ncat[i]                    # number of categories for item i
+      max_score <- ncat_i - 1                 # maximum score for item i
+      score     <- 0:max_score                # score values for item i
+      prob      <- prob_list[[i]][, 1:ncat_i] # category probabilities for item i
+      plh       <- matrix(0, nq, n_score)     # place holder for lh
+
+      for (k in 1:ncat_i) {
+        for (h in 1:idx) {
+          sco <- raw_score[h] + score[k]
+          position <- which(raw_score == sco)
+          plh[, position] <- plh[, position] + lh[, h] * prob[, k]
+        }
+      }
+
+      idx <- idx + max_score
+      lh <- plh
+
+    }
+
   }
 
   if (!is_minscore_0) {
