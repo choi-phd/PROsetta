@@ -77,6 +77,7 @@ runCalibration <- function(data, dimensions = 1, fixedpar = FALSE, ignore_noncon
 #'   \item{\code{HB} for Haebara method}
 #'   \item{\code{SL} for Stocking-Lord method}
 #'   \item{\code{FIXEDPAR} for fixed parameter calibration}
+#'   \item{\code{CP} for calibrated projection using fixed parameter calibration on the anchor dimension}
 #' }
 #' Linear transformation methods are performed with \code{\link[plink:plink-methods]{plink}} in \href{https://CRAN.R-project.org/package=plink}{'plink'} package.
 #'
@@ -104,8 +105,14 @@ runLinking <- function(data, method, ...) {
   if (is.null(data@anchor)) {
     stop("argument 'data': @anchor must be supplied for runLinking()")
   }
-  if (!method %in% c("MM", "MS", "HB", "SL", "FIXEDPAR")) {
-    stop(sprintf("argument 'method': unrecognized value '%s' (accepts 'MM', 'MS', 'HB', 'SL', 'FIXEDPAR')", method))
+  if (!method %in% c("MM", "MS", "HB", "SL", "FIXEDPAR", "CP")) {
+    stop(sprintf("argument 'method': unrecognized value '%s' (accepts 'MM', 'MS', 'HB', 'SL', 'FIXEDPAR', 'CP')", method))
+  }
+
+  if (method %in% c("CP")) {
+    dimensions <- 2
+  } else {
+    dimensions <- 1
   }
 
   if (method == "FIXEDPAR") {
@@ -114,51 +121,70 @@ runLinking <- function(data, method, ...) {
     do_fixedpar <- FALSE
   }
 
-  calibration <- runCalibration(data, fixedpar = do_fixedpar, ...)
+  calibration <- runCalibration(data, dimensions = dimensions, fixedpar = do_fixedpar, ...)
 
-  ipar      <- mirt::coef(calibration, IRTpars = TRUE, simplify = TRUE)$items
-  ni_all    <- nrow(ipar)
-  ni_anchor <- nrow(data@anchor)
-  max_cat   <- max(getColumn(data@anchor, "ncat"))
+  if (dimensions == 1) {
 
-  id_new <- data.frame(New = 1:ni_all   , ID = data@itemmap[[data@item_id]])
-  id_old <- data.frame(Old = 1:ni_anchor, ID = data@anchor[[data@item_id]])
-  common <- merge(id_new, id_old, by = "ID", sort = FALSE)[c("New", "Old")]
-  pars <- vector("list", 2)
-  pars[[1]] <- ipar
-  pars[[2]] <- data@anchor[c("a", paste0("cb", 1:(max_cat - 1)))]
+    ipar      <- mirt::coef(calibration, IRTpars = TRUE, simplify = TRUE)$items
+    ni_all    <- nrow(ipar)
+    ni_anchor <- nrow(data@anchor)
+    max_cat   <- max(getColumn(data@anchor, "ncat"))
+    id_new <- data.frame(New = 1:ni_all   , ID = data@itemmap[[data@item_id]])
+    id_old <- data.frame(Old = 1:ni_anchor, ID = data@anchor[[data@item_id]])
+    common <- merge(id_new, id_old, by = "ID", sort = FALSE)[c("New", "Old")]
+    pars <- vector("list", 2)
+    pars[[1]] <- ipar
+    pars[[2]] <- data@anchor[c("a", paste0("cb", 1:(max_cat - 1)))]
 
-  if (!do_fixedpar) {
-    message(sprintf("now performing linear transformation to match anchor with %s method", method))
-    pm_all    <- plink::as.poly.mod(ni_all   , "grm", 1:ni_all)
-    pm_anchor <- plink::as.poly.mod(ni_anchor, "grm", 1:ni_anchor)
-    ncat <- list(
-      getColumn(data@itemmap, "ncat"),
-      getColumn(data@anchor, "ncat")
-    )
-    plink_pars <- plink::as.irt.pars(
-      pars, common, cat = ncat,
-      list(pm_all, pm_anchor),
-      grp.names = c("From", "To")
-    )
-    out <- plink::plink(plink_pars, rescale = method, base.grp = 2)
-    out$constants <- out$link@constants[[method]]
-    out$ipar_linked <- out$pars@pars$From
-    out$ipar_anchor <- out$pars@pars$To
-  } else {
-    out <- list()
-    out$constants <- NA
-    out$ipar_linked <- pars[[1]]
-    out$ipar_anchor <- pars[[2]]
+    if (!do_fixedpar) {
+      message(sprintf("now performing linear transformation to match anchor with %s method", method))
+      pm_all    <- plink::as.poly.mod(ni_all   , "grm", 1:ni_all)
+      pm_anchor <- plink::as.poly.mod(ni_anchor, "grm", 1:ni_anchor)
+      ncat <- list(
+        getColumn(data@itemmap, "ncat"),
+        getColumn(data@anchor, "ncat")
+      )
+      plink_pars <- plink::as.irt.pars(
+        pars, common, cat = ncat,
+        list(pm_all, pm_anchor),
+        grp.names = c("From", "To")
+      )
+      out <- plink::plink(plink_pars, rescale = method, base.grp = 2)
+      out$constants <- out$link@constants[[method]]
+      out$ipar_linked <- out$pars@pars$From
+      out$ipar_anchor <- out$pars@pars$To
+    } else {
+      out <- list()
+      out$constants <- NA
+      out$ipar_linked <- pars[[1]]
+      out$ipar_anchor <- pars[[2]]
+    }
+
+    out$method      <- method
+    rownames(out$ipar_linked) <- id_new$ID
+    rownames(out$ipar_anchor) <- id_old$ID
+    colnames(out$ipar_linked) <- colnames(ipar)
+    colnames(out$ipar_anchor) <- colnames(ipar)
+
+    return(out)
+
   }
 
-  out$method                <- method
-  rownames(out$ipar_linked) <- id_new$ID
-  rownames(out$ipar_anchor) <- id_old$ID
-  colnames(out$ipar_linked) <- colnames(ipar)
-  colnames(out$ipar_anchor) <- colnames(ipar)
+  if (dimensions == 2) {
 
-  return(out)
+    pars <- mirt::coef(calibration, IRTpars = FALSE, simplify = TRUE)
+
+    out <- list()
+    out$constants   <- NA
+    out$ipar_linked <- pars$items
+    out$ipar_anchor <- getAnchorPar(data, as_mirt = TRUE)
+    out$mu_sigma    <- getMuSigma(calibration)
+    out$method      <- method
+
+    return(out)
+
+  }
+
 }
 
 #' Run Test Equating
