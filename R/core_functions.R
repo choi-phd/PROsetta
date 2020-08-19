@@ -234,7 +234,7 @@ fixParLayout <- function(par_layout, d) {
 }
 
 #' @noRd
-getRSSS <- function(ipar, theta_grid, is_minscore_0, prior_mean, prior_sd) {
+getRSSS <- function(ipar, theta_grid, is_minscore_0, prior_mu_sigma) {
 
   if (is.vector(theta_grid)) {
     theta_grid <- matrix(theta_grid)
@@ -255,7 +255,7 @@ getRSSS <- function(ipar, theta_grid, is_minscore_0, prior_mean, prior_sd) {
   theta       <- numeric(n_score) # score table for EAP
   theta_se    <- numeric(n_score) # SE for EAP
 
-  prior       <- genPrior(theta_grid, "normal", prior_mean, prior_sd)
+  prior       <- genPrior(theta_grid, "normal", prior_mu_sigma)
 
   posterior   <- lh * NA
   for (s in 1:dim(posterior)[2]) {
@@ -312,16 +312,20 @@ getColumn <- function(d, cn) {
 }
 
 #' @noRd
-genPrior <- function(theta_grid, dist_type, prior_mean, prior_sd) {
+genPrior <- function(theta_grid, dist_type, prior_mu_sigma) {
 
   if (dist_type == "normal") {
-    prior <- dnorm((theta_grid - prior_mean) / prior_sd)
+    prior <- dmvn(theta_grid, prior_mu_sigma$mu, prior_mu_sigma$sigma)
   } else if (dist_type == "logistic") {
-    num   <- exp((theta_grid - prior_mean) / prior_sd)
-    denom <- (1 + num)^2
-    prior <- num / denom
+    if (dim(theta_grid)[2] == 1) {
+      num   <- exp((theta_grid - prior_mu_sigma$mu) / sqrt(prior_mu_sigma$sigma))
+      denom <- (1 + num)^2
+      prior <- num / denom
+    }
   } else if (dist_type == "unif") {
-    prior <- rep(1, length(theta_grid))
+    if (dim(theta_grid)[2] == 1) {
+      prior <- rep(1, length(theta_grid))
+    }
   } else {
     stop(sprintf("argument 'dist_type': unrecognized value '%s'", dist_type))
   }
