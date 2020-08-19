@@ -365,62 +365,103 @@ getProb <- function(ipar, model, theta_grid) {
 
   # returns item-wise list of theta * category matrix
 
-  ni      <- nrow(ipar)
-  max_cat <- dim(ipar)[2]
-  nq      <- nrow(theta_grid)
+  dimensions <- detectDimensions(ipar)
+  ni         <- nrow(ipar)
+  max_cat    <- dim(ipar)[2] - dimensions + 1
+  nq         <- nrow(theta_grid)
 
-  par_disc <- ipar[, 'a']
-  par_cb   <- ipar[, paste0("b", 1:(max_cat - 1))]
+  if (dimensions == 1) {
+    par_disc <- ipar[, 'a']
+    par_cb   <- ipar[, paste0("b", 1:(max_cat - 1))]
 
-  ncat <- apply(par_cb, 1, function(x) sum(!is.na(x)) + 1)
+    ncat <- apply(par_cb, 1, function(x) sum(!is.na(x)) + 1)
 
-  pp <- list()
-  for (i in 1:ni) {
-    pp[[i]] <- matrix(NA, nq, max_cat)
-  }
-
-  if (model == "grm") {
-
+    pp <- list()
     for (i in 1:ni) {
+      pp[[i]] <- matrix(NA, nq, max_cat)
+    }
 
-      ps <- matrix(0, nq, ncat[i] + 1)
-      ps[, 1] <- 1
-      ps[, ncat[i] + 1] <- 0
+    if (model == "grm") {
 
-      for (k in 1:(ncat[i] - 1)) {
-        ps[, k + 1] <- 1 / (1 + exp(-par_disc[i] * (theta_grid - par_cb[i, k])))
+      for (i in 1:ni) {
+
+        ps <- matrix(0, nq, ncat[i] + 1)
+        ps[, 1] <- 1
+        ps[, ncat[i] + 1] <- 0
+
+        for (k in 1:(ncat[i] - 1)) {
+          ps[, k + 1] <- 1 / (1 + exp(-par_disc[i] * (theta_grid - par_cb[i, k])))
+        }
+        for (k in 1:ncat[i]) {
+          pp[[i]][, k] <- ps[, k] - ps[, k + 1];
+        }
+
       }
-      for (k in 1:ncat[i]) {
-        pp[[i]][, k] <- ps[, k] - ps[, k + 1];
+
+      return(pp)
+    }
+
+    if (model == "gpcm") {
+
+      for (i in 1:ni) {
+
+        cb <- unlist(par_cb[i, ])
+        cb <- c(0, cb)
+        zz <- matrix(0, nq, ncat[i])
+        sdsum <- 0
+        den <- rep(0, nq)
+
+        for (k in 1:ncat[i]) {
+          sdsum <- sdsum + cb[k]
+          zz[, k] <- exp(par_disc[i] * (k * theta_grid - sdsum))
+          den <- den + zz[, k]
+        }
+        for (k in 1:ncat[i]) {
+          pp[, i, k] <- zz[, k] / den
+        }
+
       }
+
+      return(pp)
 
     }
 
-    return(pp)
   }
 
-  if (model == "gpcm") {
+  if (dimensions == 2) {
 
+    pp <- list()
     for (i in 1:ni) {
+      pp[[i]] <- matrix(NA, nq, max_cat)
+    }
 
-      cb <- unlist(par_cb[i, ])
-      cb <- c(0, cb)
-      zz <- matrix(0, nq, ncat[i])
-      sdsum <- 0
-      den <- rep(0, nq)
+    if (model == "grm") {
 
-      for (k in 1:ncat[i]) {
-        sdsum <- sdsum + cb[k]
-        zz[, k] <- exp(par_disc[i] * (k * theta_grid - sdsum))
-        den <- den + zz[, k]
+      o <- mirtCAT::generate.mirt_object(ipar, "graded")
+
+      for (i in 1:ni) {
+        tmp <- mirt::extract.item(o, i)
+        p <- mirt::probtrace(tmp, theta_grid)
+        pp[[i]] <- p
       }
-      for (k in 1:ncat[i]) {
-        pp[, i, k] <- zz[, k] / den
-      }
+
+      return(pp)
 
     }
 
-    return(pp)
+    if (model == "gpcm") {
+
+      o <- mirtCAT::generate.mirt_object(ipar, "gpcm")
+
+      for (i in 1:ni) {
+        tmp <- mirt::extract.item(o, i)
+        p <- mirt::probtrace(tmp, theta_grid)
+        pp[[i]] <- p
+      }
+
+      return(pp)
+
+    }
 
   }
 
