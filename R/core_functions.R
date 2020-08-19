@@ -246,8 +246,9 @@ getRSSS <- function(ipar, theta_grid, is_minscore_0, prior_mean, prior_sd) {
   nq   <- length(theta_grid)
   ncat <- apply(ipar, 1, function(x) sum(!is.na(x)))
 
-  lh <- LWrecursion(pp, ncat, theta_grid)
+  lh <- LWrecursion(pp, ncat, theta_grid, is_minscore_0)
 
+  n_score     <- dim(lh)[2]
   theta       <- numeric(n_score) # score table for EAP
   theta_se    <- numeric(n_score) # SE for EAP
 
@@ -267,15 +268,11 @@ getRSSS <- function(ipar, theta_grid, is_minscore_0, prior_mean, prior_sd) {
     theta_se[j] <- sqrt(sum(posterior[, j] * (theta_grid - theta[j])^2) / sum(posterior[, j])) # EAP
   }
 
-  if (!is_minscore_0) {
-    raw_score <- raw_score + ni
-  }
-
   tscore    <- round(theta    * 10 + 50, 1)
   tscore_se <- round(theta_se * 10, 1)
 
   rsss_table <- data.frame(
-    sum_score   = raw_score,
+    sum_score   = as.numeric(colnames(lh)),
     tscore      = tscore,
     tscore_se   = tscore_se,
     eap         = theta,
@@ -543,7 +540,7 @@ getThetaGrid <- function(dimensions, min_theta, max_theta, inc) {
 }
 
 #' @noRd
-LWrecursion <- function(prob_list, ncat, theta_grid) {
+LWrecursion <- function(prob_list, ncat, theta_grid, is_minscore_0) {
 
   ni <- length(prob_list)
   nq <- dim(theta_grid)[1]
@@ -576,6 +573,12 @@ LWrecursion <- function(prob_list, ncat, theta_grid) {
     idx <- idx + max_score
     lh <- plh
   }
+
+  if (!is_minscore_0) {
+    raw_score <- raw_score + ni
+  }
+
+  colnames(lh) <- raw_score
 
   return(lh)
 
