@@ -110,14 +110,13 @@ runLinking <- function(data, method, ...) {
   }
 
   if (method %in% c("CP")) {
-    dimensions <- 2
-  } else {
-    dimensions <- 1
-  }
-
-  if (method == "FIXEDPAR") {
+    dimensions  <- 2
+    do_fixedpar <- TRUE
+  } else if (method == "FIXEDPAR") {
+    dimensions  <- 1
     do_fixedpar <- TRUE
   } else {
+    dimensions  <- 1
     do_fixedpar <- FALSE
   }
 
