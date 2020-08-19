@@ -323,7 +323,7 @@ appendEscore <- function(score_table, n_scale, item_par_by_scale, min_score) {
       for (i in 1:n_theta) {
         e_theta[i] <- getEscoreTheta(item_par_by_scale[[d]], "grm", score_table[[s]]$eap[i], min_score[d] == 0)
       }
-      e_name <- sprintf("escore_%s", d)
+      e_name <- sprintf("escore_%s", names(score_table)[d])
       score_table[[s]][[e_name]] <- e_theta
     }
   }
