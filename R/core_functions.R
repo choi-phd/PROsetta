@@ -328,8 +328,6 @@ appendEscore <- function(score_table, n_scale, item_par_by_scale, min_score) {
     }
   }
 
-  names(score_table) <- names(item_par_by_scale)
-
   return(score_table)
 
 }
