@@ -477,3 +477,27 @@ getEAP = function(theta_grid, prior, pp, resp_data) {
     theta_eap = theta_eap,
     theta_se = theta_se))
 }
+
+#' @noRd
+getMuSigma <- function(calib) {
+
+  pars  <- mirt::coef(calib, simplify = TRUE)
+  mu    <- pars$means
+  sigma <- pars$cov
+  nd    <- length(mu)
+
+  sd_sigma <- sqrt(diag(sigma))
+  sd_inv   <- 1 / sd_sigma
+  corr     <- sigma
+  corr[]   <- sd_inv * sigma * rep(sd_inv, each = nd)
+  corr[cbind(1:nd, 1:nd)] <- 1
+
+  o <- list(
+    mu    = mu,
+    sigma = sigma,
+    sd    = sd_sigma,
+    corr  = corr)
+
+  return(o)
+
+}
