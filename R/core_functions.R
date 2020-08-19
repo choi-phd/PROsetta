@@ -242,9 +242,12 @@ getRSSS <- function(ipar, theta_grid, is_minscore_0, prior_mean, prior_sd) {
 
   pp   <- getProb(ipar, "grm", theta_grid)
 
-  ni   <- dim(ipar)[1]
-  nq   <- length(theta_grid)
-  ncat <- apply(ipar, 1, function(x) sum(!is.na(x)))
+  dimensions <- detectDimensions(ipar)
+  ni         <- dim(ipar)[1]
+  nq         <- length(theta_grid)
+  ncat       <- apply(ipar, 1, function(x) {
+    sum(!is.na(x)) - dimensions + 1
+  })
 
   lh <- LWrecursion(pp, ncat, theta_grid, is_minscore_0)
 
