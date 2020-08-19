@@ -372,14 +372,23 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
 
   # the last item_par_by_scale is the combined scale
 
+  if (dimensions == 1) {
+    prior_mu_sigma <- list()
+    prior_mu_sigma$mu    <- 0
+    prior_mu_sigma$sigma <- 1
+  }
+  if (dimensions == 2) {
+    prior_mu_sigma <- ipar_linked$mu_sigma
+  }
+
   if (n_scale == 1) {
-    score_table <- getRSSS(item_par_by_scale[[n_scale + 1]], theta_grid, min_score == 0, prior_mean, prior_sd)
+    score_table <- getRSSS(item_par_by_scale[[n_scale + 1]], theta_grid, min_score == 0, prior_mu_sigma)
     return(score_table)
   } else if (n_scale > 1) {
     score_table <- vector(mode = "list", length = n_scale + 1)
 
     for (s in 1:(n_scale + 1)) {
-      score_table[[s]] <- getRSSS(item_par_by_scale[[s]], theta_grid, min_score[s] == 0, prior_mean, prior_sd)
+      score_table[[s]] <- getRSSS(item_par_by_scale[[s]], theta_grid, min_score[s] == 0, prior_mu_sigma)
       colnames(score_table[[s]])[1] <- sprintf("raw_%i", s)
     }
 
