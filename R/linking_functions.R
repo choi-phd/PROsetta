@@ -37,14 +37,26 @@ runCalibration <- function(data, dimensions = 1, fixedpar = FALSE, ignore_noncon
   message(sprintf("response data has %i items", ni))
 
   if (fixedpar) {
-    message("performing fixed parameter calibration, using anchor data", appendLF = TRUE)
+    message(
+      sprintf(
+        "performing %sD fixed parameter calibration, using anchor data",
+        dimensions
+      ),
+      appendLF = TRUE
+    )
     bound_cov   <- FALSE
     par_layout  <- getParLayout(data, dimensions, bound_cov)
     par_layout  <- fixParLayout(par_layout, data)
     model_specs <- getModel(data, dimensions, bound_cov)
     calibration <- mirt::mirt(resp_data, model_specs, itemtype = "graded", pars = par_layout, ...)
   } else {
-    message("performing free calibration of all items, ignoring anchor data", appendLF = TRUE)
+    message(
+      sprintf(
+        "performing %sD free calibration of all items, ignoring anchor data",
+        dimensions
+      ),
+      appendLF = TRUE
+    )
     # Free calibration uses standardized factors
     # so it makes sense to bound covariance (which is just correlation here) to be below 1
     bound_cov   <- TRUE
