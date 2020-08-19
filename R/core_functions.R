@@ -499,3 +499,12 @@ getMuSigma <- function(calib) {
   return(o)
 
 }
+
+#' @noRd
+detectDimensions <- function(item_par_matrix) {
+  if ("a2" %in% colnames(item_par_matrix)) {
+    return(2)
+  } else {
+    return(1)
+  }
+}
