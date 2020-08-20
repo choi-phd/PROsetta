@@ -394,7 +394,9 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
 
     names(score_table) <- names(item_par_by_scale)
 
-    score_table <- appendEscore(score_table, n_scale, item_par_by_scale, min_score)
+    if (dimensions == 1) {
+      score_table <- appendEscore(score_table, n_scale, item_par_by_scale, min_score)
+    }
 
     return(score_table)
 
