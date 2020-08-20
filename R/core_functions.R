@@ -244,7 +244,7 @@ getRSSS <- function(ipar, theta_grid, is_minscore_0, prior_mu_sigma) {
 
   dimensions <- detectDimensions(ipar)
   ni         <- dim(ipar)[1]
-  nq         <- length(theta_grid)
+  nq         <- dim(theta_grid)[1]
   ncat       <- apply(ipar, 1, function(x) {
     sum(!is.na(x)) - dimensions + 1
   })
@@ -262,24 +262,65 @@ getRSSS <- function(ipar, theta_grid, is_minscore_0, prior_mu_sigma) {
     posterior[, s] <- lh[, s] * prior
   }
 
-  den         <- colSums(posterior)
-  den         <- matrix(rep(den, rep(nq, n_score)), nq, n_score)
-  posterior   <- posterior / den
+  o <- vector("list", n_score)
 
-  for (j in 1:n_score) {
-    theta[j] <- sum(posterior[, j] * theta_grid) / sum(posterior[, j])                         # EAP
-    theta_se[j] <- sqrt(sum(posterior[, j] * (theta_grid - theta[j])^2) / sum(posterior[, j])) # EAP
+  for (s in 1:n_score) {
+
+    num <- theta_grid
+    for (d in 1:dimensions) {
+      num[, d] <- num[, d] * lh[, s] * prior
+    }
+    denom <- lh[, s] * prior
+
+    EAP <- colSums(num) / sum(denom)
+
+    num   <- matrix(0, dimensions, dimensions)
+    denom <- 0
+
+    tmp <- matrix(EAP, nq, dimensions, byrow = TRUE)
+    tmp <- theta_grid - tmp
+
+    for (q in 1:nq) {
+      term_C <- tmp[q, , drop = FALSE]
+      term_V <- t(term_C) %*% term_C
+      term_L <- lh[q, s]
+      num   <- num + (term_V * term_L * prior[q])
+      denom <- denom + (term_L * prior[q])
+    }
+
+    COV <- num / denom
+
+    o[[s]]$EAP <- EAP
+    o[[s]]$COV <- COV
+
   }
 
-  tscore    <- round(theta    * 10 + 50, 1)
+  theta     <- lapply(o, function(x) x$EAP)
+  theta     <- do.call(rbind, theta)
+  theta_se  <- lapply(o, function(x) sqrt(diag(x$COV)))
+  theta_se  <- do.call(rbind, theta_se)
+  tscore    <- round(theta * 10 + 50, 1)
   tscore_se <- round(theta_se * 10, 1)
 
+  if (dimensions > 1) {
+    colnames(theta)     <- sprintf("eap_dim%s", 1:dimensions)
+    colnames(theta_se)  <- sprintf("eap_se_dim%s", 1:dimensions)
+    colnames(tscore)    <- sprintf("tscore_dim%s", 1:dimensions)
+    colnames(tscore_se) <- sprintf("tscore_se_dim%s", 1:dimensions)
+  } else {
+    colnames(theta)     <- sprintf("eap")
+    colnames(theta_se)  <- sprintf("eap_se")
+    colnames(tscore)    <- sprintf("tscore")
+    colnames(tscore_se) <- sprintf("tscore_se")
+  }
+
   rsss_table <- data.frame(
-    sum_score   = as.numeric(colnames(lh)),
-    tscore      = tscore,
-    tscore_se   = tscore_se,
-    eap         = theta,
-    eap_se      = theta_se
+    sum_score = as.numeric(colnames(lh))
+  )
+  rsss_table <- cbind(
+    rsss_table,
+    tscore, tscore_se,
+    theta, theta_se
   )
 
   return(rsss_table)
