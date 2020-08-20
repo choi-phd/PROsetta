@@ -255,45 +255,7 @@ getRSSS <- function(ipar, theta_grid, is_minscore_0, prior_mu_sigma) {
   theta       <- numeric(n_score) # score table for EAP
   theta_se    <- numeric(n_score) # SE for EAP
 
-  prior       <- genPrior(theta_grid, "normal", prior_mu_sigma)
-
-  posterior   <- lh * NA
-  for (s in 1:dim(posterior)[2]) {
-    posterior[, s] <- lh[, s] * prior
-  }
-
-  o <- vector("list", n_score)
-
-  for (s in 1:n_score) {
-
-    num <- theta_grid
-    for (d in 1:dimensions) {
-      num[, d] <- num[, d] * lh[, s] * prior
-    }
-    denom <- lh[, s] * prior
-
-    EAP <- colSums(num) / sum(denom)
-
-    num   <- matrix(0, dimensions, dimensions)
-    denom <- 0
-
-    tmp <- matrix(EAP, nq, dimensions, byrow = TRUE)
-    tmp <- theta_grid - tmp
-
-    for (q in 1:nq) {
-      term_C <- tmp[q, , drop = FALSE]
-      term_V <- t(term_C) %*% term_C
-      term_L <- lh[q, s]
-      num   <- num + (term_V * term_L * prior[q])
-      denom <- denom + (term_L * prior[q])
-    }
-
-    COV <- num / denom
-
-    o[[s]]$EAP <- EAP
-    o[[s]]$COV <- COV
-
-  }
+  o <- LtoEAP(lh, theta_grid, prior_mu_sigma)
 
   theta     <- lapply(o, function(x) x$EAP)
   theta     <- do.call(rbind, theta)
@@ -643,3 +605,57 @@ LWrecursion <- function(prob_list, ncat, theta_grid, is_minscore_0) {
   return(lh)
 
 }
+
+#' @noRd
+LtoEAP <- function(L, theta_grid, prior_mu_sigma) {
+
+  dimensions <- dim(theta_grid)[2]
+  nq         <- dim(theta_grid)[1]
+
+  prior      <- genPrior(theta_grid, "normal", prior_mu_sigma)
+  n_score    <- dim(L)[2]
+  o          <- vector("list", n_score)
+
+  for (s in 1:n_score) {
+
+    num <- lapply(seq(1:nq), function(q) {
+      term_T <- theta_grid[q, ]
+      term_L <- L[q, s]
+      x <- term_T * term_L * prior[q]
+      return(x)
+    })
+    denom <- lapply(seq(1:nq), function(q) {
+      term_L <- L[q, s]
+      x <- term_L * prior[q]
+      return(x)
+    })
+    num   <- Reduce('+', num)
+    denom <- Reduce('+', denom)
+    EAP   <- num / denom
+
+    diff <- theta_grid - matrix(EAP, nq, dimensions, byrow = TRUE)
+    num <- lapply(seq(1:nq), function(q) {
+      term_C <- diff[q, ]
+      term_V <- outer(term_C, term_C)
+      term_L <- L[q, s]
+      x <- term_V * term_L * prior[q]
+      return(x)
+    })
+    denom <- lapply(seq(1:nq), function(q) {
+      term_L <- L[q, s]
+      x <- term_L * prior[q]
+      return(x)
+    })
+    num   <- Reduce('+', num)
+    denom <- Reduce('+', denom)
+    COV   <- num / denom
+
+    o[[s]]$EAP <- EAP
+    o[[s]]$COV <- COV
+
+  }
+
+  return(o)
+
+}
+
