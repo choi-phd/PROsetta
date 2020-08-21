@@ -32,4 +32,24 @@ test_that("runRSSS", {
   expect_equal(sum(log(score_table$`combined`$escore_2))       , 531.1623, tolerance = 1e-04)
   expect_equal(sum(log(score_table$`combined`$escore_combined)), 755.0878, tolerance = 1e-04)
 
+  set.seed(1)
+  calib <- runLinking(d, method = "CP", technical = list(NCYCLES = 1000))
+
+  score_table <- runRSSS(d, calib, inc = 0.2)
+
+  expect_equal(sum(score_table$`1`$eap_dim1    ** 2), 415.6739, tolerance = 1e-04)
+  expect_equal(sum(score_table$`1`$eap_dim2    ** 2), 373.2189, tolerance = 1e-04)
+  expect_equal(sum(score_table$`1`$eap_se_dim1 ** 2), 3.636858, tolerance = 1e-04)
+  expect_equal(sum(score_table$`1`$eap_se_dim2 ** 2), 18.59797, tolerance = 1e-04)
+
+  expect_equal(sum(score_table$`2`$eap_dim1    ** 2), 182.6433, tolerance = 1e-04)
+  expect_equal(sum(score_table$`2`$eap_dim2    ** 2), 222.8172, tolerance = 1e-04)
+  expect_equal(sum(score_table$`2`$eap_se_dim1 ** 2), 10.82769, tolerance = 1e-04)
+  expect_equal(sum(score_table$`2`$eap_se_dim2 ** 2), 4.788995, tolerance = 1e-04)
+
+  expect_equal(sum(score_table$`combined`$eap_dim1    ** 2), 675.0856, tolerance = 1e-04)
+  expect_equal(sum(score_table$`combined`$eap_dim2    ** 2), 658.0294, tolerance = 1e-04)
+  expect_equal(sum(score_table$`combined`$eap_se_dim1 ** 2), 5.927989, tolerance = 1e-04)
+  expect_equal(sum(score_table$`combined`$eap_se_dim2 ** 2), 16.02533, tolerance = 1e-04)
+
 })

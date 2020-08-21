@@ -31,8 +31,15 @@ test_that("runLinking", {
   set.seed(1)
   calib <- runLinking(d, method = "FIXEDPAR", technical = list(NCYCLES = 1000))
   n_anchor_items <- dim(calib$ipar_anchor)[1]
-  d <- calib$ipar_linked[1:n_anchor_items, ] - calib$ipar_anchor
-  expect_equal(sum(d), 0, tolerance = 1e-08)
+  par_diff <- calib$ipar_linked[1:n_anchor_items, ] - calib$ipar_anchor
+  expect_equal(sum(par_diff), 0, tolerance = 1e-08)
   expect_equal(sum(calib$ipar_linked), 364.7372, tolerance = 1e-03)
+
+  set.seed(1)
+  calib <- runLinking(d, method = "CP", technical = list(NCYCLES = 1000))
+  n_anchor_items <- dim(calib$ipar_anchor)[1]
+  par_diff <- calib$ipar_linked[1:n_anchor_items, -2] - calib$ipar_anchor
+  expect_equal(sum(par_diff), 0, tolerance = 1e-08)
+  expect_equal(sum(calib$ipar_linked), -526.696, tolerance = 1e-03)
 
 })
