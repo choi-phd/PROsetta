@@ -142,16 +142,30 @@ getAnchorPar <- function(d, as_mirt) {
 }
 
 #' @noRd
-convertItemPar2Mirt <- function(ipar) {
+convertABtoAD <- function(ipar) {
 
-  is_traditional <- any(grepl("cb", names(ipar)))
+  p_type <- detectParameterization(ipar)
 
-  if (is_traditional) {
-    new_ipar   <- traditional2mirt(ipar, "graded", dim(ipar)[2])
-    return(new_ipar)
+  if (p_type == "ab") {
+
+    dimensions <- detectDimensions(ipar)
+
+    ipar_a <- ipar[, 1:dimensions, drop = FALSE]
+    ipar_b <- ipar[, (dimensions + 1):dim(ipar)[2], drop = FALSE]
+
+    ipar_d <- ipar_b * NA
+    for (k in 1:dim(ipar_b)[2]) {
+      ipar_d[, k] <- -ipar_a * ipar_b[, k]
+    }
+    colnames(ipar_d) <- sprintf("d%s", 1:dim(ipar_d)[2])
+
+    ipar_ad <- cbind(ipar_a, ipar_d)
+
+    return(ipar_ad)
+
   }
 
-  stop("unrecognized parameterization: cannot find cb columns")
+  stop("unrecognized parameterization: cannot find cb* or b* columns")
 
 }
 
