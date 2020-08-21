@@ -337,6 +337,19 @@ genPrior <- function(theta_grid, dist_type, prior_mu_sigma) {
 }
 
 #' @noRd
+detectParameterization <- function(ipar) {
+  if ("b1" %in% colnames(ipar)) {
+    return("ab")
+  }
+  if ("cb1" %in% colnames(ipar)) {
+    return("ab")
+  }
+  if ("d1" %in% colnames(ipar)) {
+    return("ad")
+  }
+}
+
+#' @noRd
 getProb <- function(ipar, model, theta_grid) {
 
   if (is.vector(theta_grid)) {
