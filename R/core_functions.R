@@ -691,37 +691,27 @@ LtoEAP <- function(L, theta_grid, prior_mu_sigma) {
 
   for (s in 1:n_score) {
 
-    num <- lapply(seq(1:nq), function(q) {
-      term_T <- theta_grid[q, ]
-      term_L <- L[q, s]
-      x <- term_T * term_L * prior[q]
-      return(x)
-    })
-    denom <- lapply(seq(1:nq), function(q) {
-      term_L <- L[q, s]
-      x <- term_L * prior[q]
-      return(x)
-    })
-    num   <- Reduce('+', num)
-    denom <- Reduce('+', denom)
-    EAP   <- num / denom
+    # common
+    denom <- sum(L[, s] * prior)
 
-    diff <- theta_grid - matrix(EAP, nq, dimensions, byrow = TRUE)
-    num <- lapply(seq(1:nq), function(q) {
-      term_C <- diff[q, ]
-      term_V <- outer(term_C, term_C)
-      term_L <- L[q, s]
-      x <- term_V * term_L * prior[q]
-      return(x)
+    # EAP
+    num <- t(t(theta_grid) %*% (L[, s] * prior))
+    EAP <- num / denom
+
+    # COV
+    diff_grid <- theta_grid - matrix(EAP, nq, dimensions, byrow = TRUE)
+
+    diff_grid <- split(diff_grid, 1:nq)
+    term_V <- lapply(diff_grid, function(x) {
+      outer(x, x)
     })
-    denom <- lapply(seq(1:nq), function(q) {
-      term_L <- L[q, s]
-      x <- term_L * prior[q]
-      return(x)
-    })
-    num   <- Reduce('+', num)
-    denom <- Reduce('+', denom)
-    COV   <- num / denom
+    num <- mapply(
+      function(V, w) {V * w},
+      term_V, L[, s] * prior,
+      SIMPLIFY = FALSE
+    )
+    num <- Reduce('+', num)
+    COV <- num / denom
 
     o[[s]]$EAP <- EAP
     o[[s]]$COV <- COV
