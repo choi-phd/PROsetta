@@ -292,11 +292,6 @@ getRSSS <- function(ipar, theta_grid, is_minscore_0, prior_mu_sigma) {
   })
 
   L <- LWrecursion(pp, ncat, theta_grid, is_minscore_0)
-
-  n_score     <- dim(L)[2]
-  theta       <- numeric(n_score) # score table for EAP
-  theta_se    <- numeric(n_score) # SE for EAP
-
   o <- LtoEAP(L, theta_grid, prior_mu_sigma)
 
   theta     <- lapply(o, function(x) x$EAP)
