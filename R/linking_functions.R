@@ -188,7 +188,7 @@ runLinking <- function(data, method, ...) {
     out <- list()
     out$constants   <- NA
     out$ipar_linked <- pars$items
-    out$ipar_anchor <- getAnchorPar(data, as_mirt = TRUE)
+    out$ipar_anchor <- getAnchorPar(data, as_AD = TRUE)
     out$mu_sigma    <- getMuSigma(calibration)
     out$method      <- method
 

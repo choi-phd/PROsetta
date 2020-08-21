@@ -104,7 +104,7 @@ getParLayout <- function(d, dimensions, bound_cov) {
 }
 
 #' @noRd
-getAnchorPar <- function(d, as_mirt) {
+getAnchorPar <- function(d, as_AD) {
 
   idx <- c()
   for (j in 1:dim(d@anchor)[2]) {
@@ -129,8 +129,8 @@ getAnchorPar <- function(d, as_mirt) {
 
   message(sprintf("anchor has %s items * %s parameters = %s parameters", dim(ipar)[1], dim(ipar)[2], prod(dim(ipar))))
 
-  if (as_mirt) {
-    ipar              <- convertItemPar2Mirt(ipar)
+  if (as_AD) {
+    ipar              <- convertABtoAD(ipar)
     anchor_dim        <- getAnchorDimension(d)
     colnames(ipar)[1] <- sprintf("a%s", anchor_dim)
   }
@@ -191,7 +191,7 @@ fixParLayout <- function(par_layout, d) {
     dimensions <- 1
   }
 
-  ipar_anchor    <- getAnchorPar(d, TRUE)
+  ipar_anchor    <- getAnchorPar(d, as_AD = TRUE)
   par_to_fix     <- which(par_layout$item %in% rownames(ipar_anchor))
   n_items_to_fix <- length(unique(par_layout$item[par_to_fix]))
   par_layout$est[par_to_fix] <- FALSE
