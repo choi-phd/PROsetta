@@ -170,6 +170,34 @@ convertABtoAD <- function(ipar) {
 }
 
 #' @noRd
+convertADtoAB <- function(ipar) {
+
+  p_type <- detectParameterization(ipar)
+
+  if (p_type == "ad") {
+
+    dimensions <- detectDimensions(ipar)
+
+    ipar_a <- ipar[, 1:dimensions, drop = FALSE]
+    ipar_d <- ipar[, (dimensions + 1):dim(ipar)[2], drop = FALSE]
+
+    ipar_b <- ipar_d * NA
+    for (k in 1:dim(ipar_d)[2]) {
+      ipar_b[, k] <- -ipar_d[, k] / ipar_a
+    }
+    colnames(ipar_b) <- sprintf("b%s", 1:dim(ipar_b)[2])
+
+    ipar_ab <- cbind(ipar_a, ipar_b)
+
+    return(ipar_ab)
+
+  }
+
+  stop("unrecognized parameterization: cannot find d* columns")
+
+}
+
+#' @noRd
 getAnchorDimension <- function(d) {
 
   anchor_items <- d@anchor[, d@item_id]
