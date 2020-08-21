@@ -117,11 +117,11 @@ runLinking <- function(data, method, ...) {
   if (is.null(data@anchor)) {
     stop("argument 'data': @anchor must be supplied for runLinking()")
   }
-  if (!method %in% c("MM", "MS", "HB", "SL", "FIXEDPAR", "CP")) {
-    stop(sprintf("argument 'method': unrecognized value '%s' (accepts 'MM', 'MS', 'HB', 'SL', 'FIXEDPAR', 'CP')", method))
+  if (!method %in% c("MM", "MS", "HB", "SL", "FIXEDPAR", "CP", "CPLA")) {
+    stop(sprintf("argument 'method': unrecognized value '%s' (accepts 'MM', 'MS', 'HB', 'SL', 'FIXEDPAR', 'CP', 'CPLA')", method))
   }
 
-  if (method %in% c("CP")) {
+  if (method %in% c("CP", "CPLA")) {
     dimensions  <- 2
     do_fixedpar <- TRUE
   } else if (method == "FIXEDPAR") {
@@ -351,6 +351,13 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
     item_par <- mirt::coef(ipar_linked, IRTpars = TRUE, simplify = TRUE)$items
   }
 
+  dimensions <- detectDimensions(item_par)
+  if (ipar_linked$method == "CPLA") {
+    item_par[, 1] <- rowSums(item_par[, 1:dimensions])
+    item_par <- item_par[, -2]
+    dimensions <- 1
+  }
+
   item_par_by_scale <- split(data.frame(item_par), data@itemmap[[data@scale_id]])
   n_scale <- length(item_par_by_scale)
   item_par_by_scale$combined <- item_par
@@ -367,7 +374,6 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
   }
 
   is_minscore_0 <- F
-  dimensions <- detectDimensions(item_par)
   theta_grid <- getThetaGrid(dimensions, min_theta, max_theta, inc)
 
   # the last item_par_by_scale is the combined scale
