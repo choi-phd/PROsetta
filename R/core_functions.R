@@ -682,3 +682,30 @@ LtoEAP <- function(L, theta_grid, prior_mu_sigma) {
 
 }
 
+#' @noRd
+getBetaFromMuSigma <- function(mu_sigma, source_dim, target_dim) {
+
+  # get linear coefficients for CPLA
+
+  mu    <- mu_sigma$mu
+  sigma <- mu_sigma$sigma
+
+  rho   <- cov2cor(sigma)[1, 2]
+
+  sd_source <- sqrt(diag(sigma)[source_dim])
+  sd_target <- sqrt(diag(sigma)[target_dim])
+
+  beta_1 <- rho * sd_target / sd_source
+
+  mu_source <- mu[source_dim]
+  mu_target <- mu[target_dim]
+
+  beta_0 <- mu_target - (beta_1 * mu_source)
+
+  o <- list()
+  o$beta_0 <- beta_0
+  o$beta_1 <- beta_1
+
+  return(o)
+
+}
