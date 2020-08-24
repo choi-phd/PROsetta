@@ -355,6 +355,7 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
   if (ipar_linked$method == "CPLA") {
     item_par[, 1] <- rowSums(item_par[, 1:dimensions])
     item_par <- item_par[, -2]
+    item_par <- convertADtoAB(item_par)
     dimensions <- 1
   }
 
