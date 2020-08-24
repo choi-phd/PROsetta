@@ -17,6 +17,7 @@ runLinking(data, method, ...)
   \item{\code{SL} for Stocking-Lord method}
   \item{\code{FIXEDPAR} for fixed parameter calibration}
   \item{\code{CP} for calibrated projection using fixed parameter calibration on the anchor dimension}
+  \item{\code{CPLA} for linear approximation of calibrated projection. This is identical to 'CP' in \code{\link{runLinking}} but uses approximation in \code{\link{runRSSS}}}
 }
 Linear transformation methods are performed with \code{\link[plink:plink-methods]{plink}} in \href{https://CRAN.R-project.org/package=plink}{'plink'} package.}
 
