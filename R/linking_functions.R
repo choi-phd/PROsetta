@@ -382,7 +382,7 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
   if (dimensions == 1) {
     prior_mu_sigma <- list()
     prior_mu_sigma$mu    <- 0
-    prior_mu_sigma$sigma <- 1
+    prior_mu_sigma$sigma <- matrix(1, 1, 1)
   }
   if (dimensions == 2) {
     prior_mu_sigma <- ipar_linked$mu_sigma
@@ -401,7 +401,7 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
 
     names(score_table) <- names(item_par_by_scale)
 
-    if (dimensions == 1) {
+    if (dimensions == 1 & ipar_linked$method != "CPLA") {
       score_table <- appendEscore(score_table, n_scale, item_par_by_scale, min_score)
     }
 
