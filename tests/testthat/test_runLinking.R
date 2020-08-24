@@ -5,6 +5,7 @@ test_that("runLinking", {
   d <- data_asq
 
   skip_on_cran()
+  skip_on_travis()
 
   # Hard-coded values are from Windows
 
