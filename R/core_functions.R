@@ -754,3 +754,54 @@ getBetaFromMuSigma <- function(mu_sigma, source_dim, target_dim) {
   return(o)
 
 }
+
+#' @noRd
+appendCPLA <- function(score_table, n_scale, mu_sigma) {
+
+  for (source_dim in 1:n_scale) {
+
+    target_dim   <- setdiff(1:n_scale, source_dim)
+
+    beta_CPLA    <- getBetaFromMuSigma(mu_sigma, source_dim, target_dim)
+    rho_CPLA     <- mu_sigma$corr[source_dim, target_dim]
+
+    sigma_target <- mu_sigma$sigma[target_dim, target_dim]
+    V_residual   <- (1 - (rho_CPLA ** 2)) * sigma_target
+
+    theta <- cbind(
+      score_table[[source_dim]]$eap,
+      beta_CPLA$beta_0 + beta_CPLA$beta_1 * score_table[[source_dim]]$eap
+    )
+    theta_se <- cbind(
+      score_table[[source_dim]]$eap_se,
+      sqrt(
+        ((beta_CPLA$beta_1 ** 2) * (score_table[[source_dim]]$eap_se ** 2)) + V_residual
+      )
+    )
+
+    tscore    <- round(theta * 10 + 50, 1)
+    tscore_se <- round(theta_se * 10, 1)
+
+    colnames(theta)     <- sprintf("eap_dim%s", 1:n_scale)
+    colnames(theta_se)  <- sprintf("eap_se_dim%s", 1:n_scale)
+    colnames(tscore)    <- sprintf("tscore_dim%s", 1:n_scale)
+    colnames(tscore_se) <- sprintf("tscore_se_dim%s", 1:n_scale)
+
+    raw_name <- sprintf("raw_%s", source_dim)
+
+    o <- cbind(
+      score_table[[source_dim]][, raw_name],
+      tscore, tscore_se,
+      theta, theta_se
+    )
+    o <- as.data.frame(o)
+
+    colnames(o)[1] <- raw_name
+
+    score_table[[source_dim]] <- o
+
+  }
+
+  return(score_table)
+
+}

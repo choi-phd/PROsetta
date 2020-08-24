@@ -404,6 +404,9 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
     if (dimensions == 1 & ipar_linked$method != "CPLA") {
       score_table <- appendEscore(score_table, n_scale, item_par_by_scale, min_score)
     }
+    if (dimensions == 1 & ipar_linked$method == "CPLA") {
+      score_table <- appendCPLA(score_table, n_scale, ipar_linked$mu_sigma)
+    }
 
     return(score_table)
 
