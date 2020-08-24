@@ -400,11 +400,15 @@ getProb <- function(ipar, model, theta_grid) {
   max_cat    <- dim(ipar)[2] - dimensions + 1
   nq         <- nrow(theta_grid)
 
+  p_type     <- detectParameterization(ipar)
+
   if (dimensions == 1) {
 
     # a/b parameterization
-    par_a <- ipar[, 1:dimensions]
-    par_b <- ipar[, dimensions + 1:(max_cat - 1)]
+    if (p_type == "ab") {
+      par_a <- ipar[, 1:dimensions]
+      par_b <- ipar[, dimensions + 1:(max_cat - 1)]
+    }
 
     ncat <- apply(par_b, 1, function(x) {
       sum(!is.na(x)) + 1
@@ -465,6 +469,7 @@ getProb <- function(ipar, model, theta_grid) {
   if (dimensions == 2) {
 
     # a/d parameterization
+
     par_a <- ipar[, 1:dimensions, drop = FALSE]
     par_d <- ipar[, dimensions + 1:(max_cat - 1), drop = FALSE]
 
