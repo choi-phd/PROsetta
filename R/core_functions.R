@@ -509,15 +509,7 @@ getProb <- function(ipar, model, theta_grid) {
 
     if (model == "gpcm") {
 
-      o <- mirtCAT::generate.mirt_object(ipar, "gpcm")
-
-      for (i in 1:ni) {
-        tmp <- mirt::extract.item(o, i)
-        p <- mirt::probtrace(tmp, theta_grid)
-        pp[[i]] <- p
-      }
-
-      return(pp)
+      stop("multidimensional GPCM is not yet supported")
 
     }
 
