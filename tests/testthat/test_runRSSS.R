@@ -5,6 +5,7 @@ test_that("runRSSS", {
   d <- data_asq
 
   skip_on_cran()
+  skip_on_travis()
 
   set.seed(1)
   calib <- runLinking(d, method = "FIXEDPAR", technical = list(NCYCLES = 1000))
