@@ -1,10 +1,4 @@
-# PROsetta v0.1.4
-This is a resubmission. In this version:
-
-* Removed \dontrun blocks in the example sections of dataset_asq.Rd and dataset_dep.Rd
-* Rewrote dataset_asq.Rd and dataset_dep.Rd to use consistent documentation style
-* Removed newlines to make the code diff-friendly
-* Examples in runRSSS now use \donttest to reduce CPU time
+# PROsetta 0.2.0
 
 ## Test environments
 
@@ -16,10 +10,8 @@ This is a resubmission. In this version:
 ## R CMD check results
 
 ```
-Status: 1 NOTE
+Status: OK
 
-* checking CRAN incoming feasibility ... NOTE
+* checking CRAN incoming feasibility ... Note_to_CRAN_maintainers
 Maintainer: 'Seung W. Choi <schoi@austin.utexas.edu>'
-
-New submission
 ```

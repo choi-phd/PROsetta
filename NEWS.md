@@ -1,3 +1,13 @@
+# PROsetta 0.2.0
+
+## New features
+
+* `runLinking()` now supports `method = 'CP'` to perform two-dimensional calibration, for use in performing calibrated projection ([Thissen et al., 2011](https://doi.org/10.1007/s11136-011-9874-y)).
+* `runLinking()` now supports `method = 'CPLA'` to perform two-dimensional calibration, for use in performing linear approximation of calibrated projection ([Thissen et al., 2015](https://doi.org/10.1007/978-3-319-19977-1_1)).
+* `runRSSS()` now performs two-dimensional Lord-Wingersky recursion with numerical integration, when the output from `runLinking(method = 'CP')` is supplied.
+* `runRSSS()` now performs linear approximation of calibrated projection, when the output from `runLinking(method = 'CPLA')` is supplied.
+* Shiny application `PROsetta()` now supports calibrated projection and its linear approximation.
+
 # PROsetta 0.1.4
 
 * Initial public release.
