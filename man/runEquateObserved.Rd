@@ -21,23 +21,23 @@ runEquateObserved(
 \arguments{
 \item{data}{a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.}
 
-\item{scale_from}{the scale ID of the input scale. References to \code{itemmap} in \code{data} argument.}
+\item{scale_from}{the scale ID of the input scale. References to \code{itemmap} in \code{data} argument. (default = \code{2})}
 
-\item{scale_to}{the scale ID of the target scale to equate to. References to \code{itemmap} in \code{data} argument.}
+\item{scale_to}{the scale ID of the target scale to equate to. References to \code{itemmap} in \code{data} argument. (default = \code{1})}
 
 \item{type_to}{the type of score to use in the target scale frequency table. Accepts \code{raw}, \code{tscore}, and \code{theta}. \code{tscore} and \code{theta} require argument \code{rsss} to be supplied. (default = \code{raw})}
 
 \item{rsss}{the RSSS table to use to map each raw score level onto a t-score or a theta. See \code{\link{runRSSS}}.}
 
-\item{eq_type}{the type of equating to be passed onto \code{\link[equate]{equate}} in \href{https://CRAN.R-project.org/package=equate}{'equate'} package.}
+\item{eq_type}{the type of equating to be passed onto \code{\link[equate]{equate}} in \href{https://CRAN.R-project.org/package=equate}{'equate'} package. (default = \code{equipercentile})}
 
-\item{smooth}{the type of smoothing method to be passed onto \code{\link[equate]{presmoothing}} in \href{https://CRAN.R-project.org/package=equate}{'equate'} package.}
+\item{smooth}{the type of smoothing method to be passed onto \code{\link[equate]{presmoothing}} in \href{https://CRAN.R-project.org/package=equate}{'equate'} package. (default = \code{loglinear})}
 
-\item{degrees}{the degrees of smoothing to be passed onto \code{\link[equate]{presmoothing}}.}
+\item{degrees}{the degrees of smoothing to be passed onto \code{\link[equate]{presmoothing}}. (default = \code{list(3, 1)})}
 
-\item{boot}{performs bootstrapping if \code{TRUE}.}
+\item{boot}{performs bootstrapping if \code{TRUE}. (default = \code{TRUE})}
 
-\item{reps}{the number of replications to perform in bootsrapping.}
+\item{reps}{the number of replications to perform in bootstrapping. (default = \code{100})}
 
 \item{...}{other arguments to pass onto \code{\link[equate]{equate}}.}
 }
