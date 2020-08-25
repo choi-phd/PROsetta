@@ -347,13 +347,19 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
   validateData(data)
 
   if (is.null(attr(class(ipar_linked), "package"))) {
-    item_par <- ipar_linked$ipar_linked
+
+    item_par    <- ipar_linked$ipar_linked
+    link_method <- ipar_linked$method
+
   } else if (isS4(ipar_linked) && attr(class(ipar_linked), "package") == "mirt") {
-    item_par <- mirt::coef(ipar_linked, IRTpars = TRUE, simplify = TRUE)$items
+
+    item_par    <- mirt::coef(ipar_linked, IRTpars = TRUE, simplify = TRUE)$items
+    link_method <- "FREE"
+
   }
 
   dimensions <- detectDimensions(item_par)
-  if (ipar_linked$method == "CPLA") {
+  if (link_method == "CPLA") {
     item_par[, 1] <- rowSums(item_par[, 1:dimensions])
     item_par <- item_par[, -2]
     item_par <- convertADtoAB(item_par)
@@ -402,10 +408,10 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
 
     names(score_table) <- names(item_par_by_scale)
 
-    if (dimensions == 1 & ipar_linked$method != "CPLA") {
+    if (dimensions == 1 & link_method != "CPLA") {
       score_table <- appendEscore(score_table, n_scale, item_par_by_scale, min_score)
     }
-    if (dimensions == 1 & ipar_linked$method == "CPLA") {
+    if (dimensions == 1 & link_method == "CPLA") {
       score_table <- appendCPLA(score_table, n_scale, ipar_linked$mu_sigma)
     }
 
