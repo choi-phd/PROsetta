@@ -37,10 +37,9 @@ ui <- fluidPage(
 
       h3("Linking method"),
 
-      radioGroupButtons(
+      pickerInput(
         inputId = "linking_type",
-        choices = c("MM", "MS", "HB", "SL", "FIXEDPAR", "NONE"),
-        justified = TRUE
+        choices = c("MM", "MS", "HB", "SL", "FIXEDPAR", "CP", "CPLA", "NONE")
       ),
 
       h3(""),
@@ -73,14 +72,14 @@ ui <- fluidPage(
           selected = c(1,2)
         ),
         textInput(label = "Item ID to plot", inputId = "item_id_to_plot", value = "1"),
-        textInput(label = "Scale ID to display crosswalk tables", inputId = "id_cross", value = "1")
+        textInput(label = "Scale ID to display crosswalk tables (also accepts 'combined')", inputId = "id_cross", value = "1")
       ),
 
       downloadButton("export_data", "Export visible tabs"),
 
       dropdownButton(
         label = "Close app", inputId = "closeapp_dropdown",
-        circle = FALSE, width = "100%", icon = icon("thumbtack"),
+        circle = FALSE, width = "100%", icon = icon("times-circle"),
         h3("Are you sure?"),
         checkboxGroupButtons(
           inputId = "closeapp",
@@ -341,8 +340,8 @@ server <- function(input, output, session) {
     v$classical2 <- tmp$omega$combined
     assignObject("shiny_omega", v$classical2, "Classical (omega) tab")
 
-    v$time <- Sys.time() - v$time
-    v <- updateLogs(v, sprintf("Done in %7.3fs : run descriptives", v$time))
+    v$time <- difftime(Sys.time(), v$time, units = "secs")
+    v <- updateLogs(v, sprintf("Done in %5.1fs : run descriptives", v$time))
 
     v$active_tabset <- updateTabSet(v$active_tabset, add_tabset = 2, session = session)
     toggleSolverButtons(TRUE, session)
@@ -401,8 +400,8 @@ server <- function(input, output, session) {
     v$crosswalk_calibration <- runRSSS(v$inputdata, v$calib)
     assignObject("shiny_crosswalk_calibration", v$crosswalk_calibration, "Crosswalk (calibration) tab")
 
-    v$time <- Sys.time() - v$time
-    v <- updateLogs(v, sprintf("Done in %7.3fs : run calibration (%s)", v$time, calib_type))
+    v$time <- difftime(Sys.time(), v$time, units = "secs")
+    v <- updateLogs(v, sprintf("Done in %5.1fs : run calibration (%s)", v$time, calib_type))
 
     v$active_tabset <- updateTabSet(v$active_tabset, add_tabset = 3, session = session)
     toggleSolverButtons(TRUE, session)
@@ -415,8 +414,8 @@ server <- function(input, output, session) {
 
     toggleSolverButtons(FALSE, session)
 
-    if (!(input$linking_type %in% c("MM", "MS", "HB", "SL", "FIXEDPAR"))) {
-      v <- updateLogs(v, "Linking method must be one of the following: 'MM', 'MS', 'HB', 'SL', 'FIXEDPAR'.")
+    if (!(input$linking_type %in% c("MM", "MS", "HB", "SL", "FIXEDPAR", "CP", "CPLA"))) {
+      v <- updateLogs(v, "Linking method must be one of the following: 'MM', 'MS', 'HB', 'SL', 'FIXEDPAR', 'CP', 'CPLA'.")
       break
     }
 
@@ -443,8 +442,8 @@ server <- function(input, output, session) {
     v$crosswalk_linking <- runRSSS(v$inputdata, v$linking)
     assignObject("shiny_crosswalk_linking", v$crosswalk_linking, "Crosswalk (linking) tab")
 
-    v$time <- Sys.time() - v$time
-    v <- updateLogs(v, sprintf("Done in %7.3fs : run parameter linking (%s)", v$time, input$linking_type))
+    v$time <- difftime(Sys.time(), v$time, units = "secs")
+    v <- updateLogs(v, sprintf("Done in %5.1fs : run parameter linking (%s)", v$time, input$linking_type))
 
     v$active_tabset <- updateTabSet(v$active_tabset, add_tabset = 4, session = session)
     toggleSolverButtons(TRUE, session)
@@ -468,8 +467,8 @@ server <- function(input, output, session) {
     v$concordance <- v$out_equ$concordance
     assignObject("shiny_concordance", v$concordance, "Concordance table")
 
-    v$time <- Sys.time() - v$time
-    v <- updateLogs(v, sprintf("Done in %7.3fs : run equating", v$time))
+    v$time <- difftime(Sys.time(), v$time, units = "secs")
+    v <- updateLogs(v, sprintf("Done in %5.1fs : run equating", v$time))
 
     v$active_tabset <- updateTabSet(v$active_tabset, add_tabset = 5, session = session)
     toggleSolverButtons(TRUE, session)
