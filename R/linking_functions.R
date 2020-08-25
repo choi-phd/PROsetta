@@ -342,7 +342,7 @@ runEquateObserved <- function(data, scale_from = 2, scale_to = 1, type_to = "raw
 #' }
 #'
 #' @export
-runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_theta = -4.0, max_theta = 4.0, inc = 0.01, min_score = 1) {
+runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_theta = -4.0, max_theta = 4.0, inc = 0.05, min_score = 1) {
 
   validateData(data)
 
