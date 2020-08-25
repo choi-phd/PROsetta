@@ -20,17 +20,17 @@ runRSSS(
 
 \item{ipar_linked}{an object returned from \code{\link{runLinking}} or \code{\link{runCalibration}}.}
 
-\item{prior_mean}{prior mean.}
+\item{prior_mean}{prior mean. (default = \code{0.0})}
 
-\item{prior_sd}{prior standard deviation.}
+\item{prior_sd}{prior standard deviation. (default = \code{1.0})}
 
-\item{min_theta}{the lower limit of theta grid.}
+\item{min_theta}{the lower limit of theta grid. (default = \code{-4})}
 
-\item{max_theta}{the upper limit of theta grid.}
+\item{max_theta}{the upper limit of theta grid. (default = \code{4})}
 
-\item{inc}{the increment to use in theta grid.}
+\item{inc}{the increment to use in theta grid. (default = \code{0.05})}
 
-\item{min_score}{minimum item score (0 or 1).}
+\item{min_score}{minimum item score (0 or 1) for each scale (1, 2, and combined). If a single value is supplied, the value is applied to all scales. (default = \code{1})}
 }
 \value{
 \code{\link{runRSSS}} returns a \code{\link{list}} containing crosswalk tables.

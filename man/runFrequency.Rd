@@ -9,7 +9,7 @@ runFrequency(data, check_frequency = TRUE)
 \arguments{
 \item{data}{a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.}
 
-\item{check_frequency}{Logical. If \code{TRUE}, check the frequency table for missing response categories, and display warning message if any is missing.}
+\item{check_frequency}{Logical. If \code{TRUE}, check the frequency table for missing response categories, and display warning message if any is missing. (default = \code{TRUE})}
 }
 \value{
 \code{\link{runFrequency}} returns a \code{\link{data.frame}} containing the frequency table.
