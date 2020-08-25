@@ -6,9 +6,9 @@ NULL
 #' \code{\link{runCalibration}} is a function to perform item calibration on the response data.
 #'
 #' @param data a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
-#' @param dimensions number of dimensions to use. Must be 1 or 2. If 1, use one underlying dimension for all instruments combined. If 2, use each dimension separately for the anchor instrument and the developing instrument. Covariance between dimensions is freely estimated. (default = `1`)
-#' @param fixedpar if \code{TRUE} (default), perform fixed parameter calibration using anchor data.
-#' @param ignore_nonconv if \code{TRUE}, return results even when calibration did not converge. Defaults to \code{FALSE}.
+#' @param dimensions number of dimensions to use. Must be 1 or 2. If 1, use one underlying dimension for all instruments combined. If 2, use each dimension separately for the anchor instrument and the developing instrument. Covariance between dimensions is freely estimated. (default = \code{1})
+#' @param fixedpar if \code{TRUE}, perform fixed parameter calibration using anchor data. If \code{FALSE}, perform free calibration. (default = \code{TRUE})
+#' @param ignore_nonconv if \code{TRUE}, return results even when calibration does not converge. If \code{FALSE}, raise an error when calibration does not converge. (default = \code{FALSE})
 #' @param ... additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{'mirt'} package.
 #'
 #' @return \code{\link{runCalibration}} returns a \code{\linkS4class{SingleGroupClass}} object containing item calibration results.
@@ -204,15 +204,15 @@ runLinking <- function(data, method, ...) {
 #' \code{\link{runEquateObserved}} is a function to perform equipercentile test equating between two scales. A concordance table is produced, mapping the observed raw scores from one scale to the scores from another scale.
 #'
 #' @param data a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
-#' @param scale_from the scale ID of the input scale. References to \code{itemmap} in \code{data} argument.
-#' @param scale_to the scale ID of the target scale to equate to. References to \code{itemmap} in \code{data} argument.
+#' @param scale_from the scale ID of the input scale. References to \code{itemmap} in \code{data} argument. (default = \code{2})
+#' @param scale_to the scale ID of the target scale to equate to. References to \code{itemmap} in \code{data} argument. (default = \code{1})
 #' @param type_to the type of score to use in the target scale frequency table. Accepts \code{raw}, \code{tscore}, and \code{theta}. \code{tscore} and \code{theta} require argument \code{rsss} to be supplied. (default = \code{raw})
 #' @param rsss the RSSS table to use to map each raw score level onto a t-score or a theta. See \code{\link{runRSSS}}.
-#' @param eq_type the type of equating to be passed onto \code{\link[equate]{equate}} in \href{https://CRAN.R-project.org/package=equate}{'equate'} package.
-#' @param smooth the type of smoothing method to be passed onto \code{\link[equate]{presmoothing}} in \href{https://CRAN.R-project.org/package=equate}{'equate'} package.
-#' @param degrees the degrees of smoothing to be passed onto \code{\link[equate]{presmoothing}}.
-#' @param boot performs bootstrapping if \code{TRUE}.
-#' @param reps the number of replications to perform in bootsrapping.
+#' @param eq_type the type of equating to be passed onto \code{\link[equate]{equate}} in \href{https://CRAN.R-project.org/package=equate}{'equate'} package. (default = \code{equipercentile})
+#' @param smooth the type of smoothing method to be passed onto \code{\link[equate]{presmoothing}} in \href{https://CRAN.R-project.org/package=equate}{'equate'} package. (default = \code{loglinear})
+#' @param degrees the degrees of smoothing to be passed onto \code{\link[equate]{presmoothing}}. (default = \code{list(3, 1)})
+#' @param boot performs bootstrapping if \code{TRUE}. (default = \code{TRUE})
+#' @param reps the number of replications to perform in bootstrapping. (default = \code{100})
 #' @param ... other arguments to pass onto \code{\link[equate]{equate}}.
 #'
 #' @return \code{\link{runEquateObserved}} returns an \code{\link{equate}} object containing the test equating result.
@@ -326,12 +326,12 @@ runEquateObserved <- function(data, scale_from = 2, scale_to = 1, type_to = "raw
 #'
 #' @param data a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
 #' @param ipar_linked an object returned from \code{\link{runLinking}} or \code{\link{runCalibration}}.
-#' @param prior_mean prior mean.
-#' @param prior_sd prior standard deviation.
-#' @param min_theta the lower limit of theta grid.
-#' @param max_theta the upper limit of theta grid.
-#' @param inc the increment to use in theta grid.
-#' @param min_score minimum item score (0 or 1).
+#' @param prior_mean prior mean. (default = \code{0.0})
+#' @param prior_sd prior standard deviation. (default = \code{1.0})
+#' @param min_theta the lower limit of theta grid. (default = \code{-4})
+#' @param max_theta the upper limit of theta grid. (default = \code{4})
+#' @param inc the increment to use in theta grid. (default = \code{0.05})
+#' @param min_score minimum item score (0 or 1) for each scale (1, 2, and combined). If a single value is supplied, the value is applied to all scales. (default = \code{1})
 #'
 #' @return \code{\link{runRSSS}} returns a \code{\link{list}} containing crosswalk tables.
 #'

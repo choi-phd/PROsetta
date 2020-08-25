@@ -9,11 +9,11 @@ runCFA(data, estimator = "WLSMV", std.lv = TRUE, scalewise = FALSE, ...)
 \arguments{
 \item{data}{a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.}
 
-\item{estimator}{the estimator to be used. Passed onto \code{\link[lavaan]{cfa}} in \href{https://CRAN.R-project.org/package=lavaan}{'lavaan'} package.}
+\item{estimator}{the estimator to be used. Passed onto \code{\link[lavaan]{cfa}} in \href{https://CRAN.R-project.org/package=lavaan}{'lavaan'} package. (default = \code{WLSMV})}
 
-\item{std.lv}{if \code{TRUE}, the metric of the latent variable is determined by fixing their (residual) variances to 1.0. If \code{FALSE}, the metric of each latent variable is determined by fixing the factor loading of the first indicator to 1.0. Passed onto \code{\link[lavaan]{cfa}}.}
+\item{std.lv}{if \code{TRUE}, the metric of the latent variable is determined by fixing their (residual) variances to 1.0. If \code{FALSE}, the metric of each latent variable is determined by fixing the factor loading of the first indicator to 1.0. Passed onto \code{\link[lavaan]{cfa}}. (default = \code{TRUE})}
 
-\item{scalewise}{if TRUE, run analysis for each scale as well as for the combined scale. If FALSE (default), run analysis only for the combined scale.}
+\item{scalewise}{if \code{TRUE}, run analysis for each scale as well as for the combined scale. If \code{FALSE}, run analysis only for the combined scale. (default = \code{FALSE})}
 
 \item{...}{additional arguments to pass onto \code{\link[lavaan]{cfa}}.}
 }
