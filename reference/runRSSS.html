@@ -82,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">PROsetta</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -140,7 +140,7 @@
   <span class='kw'>prior_sd</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>min_theta</span> <span class='kw'>=</span> -<span class='fl'>4</span>,
   <span class='kw'>max_theta</span> <span class='kw'>=</span> <span class='fl'>4</span>,
-  <span class='kw'>inc</span> <span class='kw'>=</span> <span class='fl'>0.01</span>,
+  <span class='kw'>inc</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
   <span class='kw'>min_score</span> <span class='kw'>=</span> <span class='fl'>1</span>
 )</pre>
 
@@ -157,27 +157,27 @@
     </tr>
     <tr>
       <th>prior_mean</th>
-      <td><p>prior mean.</p></td>
+      <td><p>prior mean. (default = <code>0.0</code>)</p></td>
     </tr>
     <tr>
       <th>prior_sd</th>
-      <td><p>prior standard deviation.</p></td>
+      <td><p>prior standard deviation. (default = <code>1.0</code>)</p></td>
     </tr>
     <tr>
       <th>min_theta</th>
-      <td><p>the lower limit of theta grid.</p></td>
+      <td><p>the lower limit of theta grid. (default = <code>-4</code>)</p></td>
     </tr>
     <tr>
       <th>max_theta</th>
-      <td><p>the upper limit of theta grid.</p></td>
+      <td><p>the upper limit of theta grid. (default = <code>4</code>)</p></td>
     </tr>
     <tr>
       <th>inc</th>
-      <td><p>the increment to use in theta grid.</p></td>
+      <td><p>the increment to use in theta grid. (default = <code>0.05</code>)</p></td>
     </tr>
     <tr>
       <th>min_score</th>
-      <td><p>minimum item score (0 or 1).</p></td>
+      <td><p>minimum item score (0 or 1) for each scale (1, 2, and combined). If a single value is supplied, the value is applied to all scales. (default = <code>1</code>)</p></td>
     </tr>
     </table>
 

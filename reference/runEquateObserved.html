@@ -82,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">PROsetta</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -156,11 +156,11 @@
     </tr>
     <tr>
       <th>scale_from</th>
-      <td><p>the scale ID of the input scale. References to <code>itemmap</code> in <code>data</code> argument.</p></td>
+      <td><p>the scale ID of the input scale. References to <code>itemmap</code> in <code>data</code> argument. (default = <code>2</code>)</p></td>
     </tr>
     <tr>
       <th>scale_to</th>
-      <td><p>the scale ID of the target scale to equate to. References to <code>itemmap</code> in <code>data</code> argument.</p></td>
+      <td><p>the scale ID of the target scale to equate to. References to <code>itemmap</code> in <code>data</code> argument. (default = <code>1</code>)</p></td>
     </tr>
     <tr>
       <th>type_to</th>
@@ -172,23 +172,23 @@
     </tr>
     <tr>
       <th>eq_type</th>
-      <td><p>the type of equating to be passed onto <code><a href='https://rdrr.io/pkg/equate/man/equate.html'>equate</a></code> in <a href='https://CRAN.R-project.org/package=equate'>'equate'</a> package.</p></td>
+      <td><p>the type of equating to be passed onto <code><a href='https://rdrr.io/pkg/equate/man/equate.html'>equate</a></code> in <a href='https://CRAN.R-project.org/package=equate'>'equate'</a> package. (default = <code>equipercentile</code>)</p></td>
     </tr>
     <tr>
       <th>smooth</th>
-      <td><p>the type of smoothing method to be passed onto <code><a href='https://rdrr.io/pkg/equate/man/presmoothing.html'>presmoothing</a></code> in <a href='https://CRAN.R-project.org/package=equate'>'equate'</a> package.</p></td>
+      <td><p>the type of smoothing method to be passed onto <code><a href='https://rdrr.io/pkg/equate/man/presmoothing.html'>presmoothing</a></code> in <a href='https://CRAN.R-project.org/package=equate'>'equate'</a> package. (default = <code>loglinear</code>)</p></td>
     </tr>
     <tr>
       <th>degrees</th>
-      <td><p>the degrees of smoothing to be passed onto <code><a href='https://rdrr.io/pkg/equate/man/presmoothing.html'>presmoothing</a></code>.</p></td>
+      <td><p>the degrees of smoothing to be passed onto <code><a href='https://rdrr.io/pkg/equate/man/presmoothing.html'>presmoothing</a></code>. (default = <code><a href='https://rdrr.io/r/base/list.html'>list(3, 1)</a></code>)</p></td>
     </tr>
     <tr>
       <th>boot</th>
-      <td><p>performs bootstrapping if <code>TRUE</code>.</p></td>
+      <td><p>performs bootstrapping if <code>TRUE</code>. (default = <code>TRUE</code>)</p></td>
     </tr>
     <tr>
       <th>reps</th>
-      <td><p>the number of replications to perform in bootsrapping.</p></td>
+      <td><p>the number of replications to perform in bootstrapping. (default = <code>100</code>)</p></td>
     </tr>
     <tr>
       <th>...</th>

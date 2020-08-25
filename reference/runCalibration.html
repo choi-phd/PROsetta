@@ -82,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">PROsetta</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -133,7 +133,13 @@
     <p><code>runCalibration</code> is a function to perform item calibration on the response data.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>runCalibration</span>(<span class='no'>data</span>, <span class='kw'>fixedpar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>ignore_nonconv</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>runCalibration</span>(
+  <span class='no'>data</span>,
+  <span class='kw'>dimensions</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>fixedpar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>ignore_nonconv</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='no'>...</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -143,12 +149,16 @@
       <td><p>a <code>PROsetta_data</code> object. See <code>loadData</code> for loading a dataset.</p></td>
     </tr>
     <tr>
+      <th>dimensions</th>
+      <td><p>number of dimensions to use. Must be 1 or 2. If 1, use one underlying dimension for all instruments combined. If 2, use each dimension separately for the anchor instrument and the developing instrument. Covariance between dimensions is freely estimated. (default = <code>1</code>)</p></td>
+    </tr>
+    <tr>
       <th>fixedpar</th>
-      <td><p>if <code>TRUE</code> (default), perform fixed parameter calibration using anchor data.</p></td>
+      <td><p>if <code>TRUE</code>, perform fixed parameter calibration using anchor data. If <code>FALSE</code>, perform free calibration. (default = <code>TRUE</code>)</p></td>
     </tr>
     <tr>
       <th>ignore_nonconv</th>
-      <td><p>if <code>TRUE</code>, return results even when calibration did not converge. Defaults to <code>FALSE</code>.</p></td>
+      <td><p>if <code>TRUE</code>, return results even when calibration does not converge. If <code>FALSE</code>, raise an error when calibration does not converge. (default = <code>FALSE</code>)</p></td>
     </tr>
     <tr>
       <th>...</th>

@@ -82,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">PROsetta</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -144,15 +144,15 @@
     </tr>
     <tr>
       <th>estimator</th>
-      <td><p>the estimator to be used. Passed onto <code><a href='https://rdrr.io/pkg/lavaan/man/cfa.html'>cfa</a></code> in <a href='https://CRAN.R-project.org/package=lavaan'>'lavaan'</a> package.</p></td>
+      <td><p>the estimator to be used. Passed onto <code><a href='https://rdrr.io/pkg/lavaan/man/cfa.html'>cfa</a></code> in <a href='https://CRAN.R-project.org/package=lavaan'>'lavaan'</a> package. (default = <code>WLSMV</code>)</p></td>
     </tr>
     <tr>
       <th>std.lv</th>
-      <td><p>if <code>TRUE</code>, the metric of the latent variable is determined by fixing their (residual) variances to 1.0. If <code>FALSE</code>, the metric of each latent variable is determined by fixing the factor loading of the first indicator to 1.0. Passed onto <code><a href='https://rdrr.io/pkg/lavaan/man/cfa.html'>cfa</a></code>.</p></td>
+      <td><p>if <code>TRUE</code>, the metric of the latent variable is determined by fixing their (residual) variances to 1.0. If <code>FALSE</code>, the metric of each latent variable is determined by fixing the factor loading of the first indicator to 1.0. Passed onto <code><a href='https://rdrr.io/pkg/lavaan/man/cfa.html'>cfa</a></code>. (default = <code>TRUE</code>)</p></td>
     </tr>
     <tr>
       <th>scalewise</th>
-      <td><p>if TRUE, run analysis for each scale as well as for the combined scale. If FALSE (default), run analysis only for the combined scale.</p></td>
+      <td><p>if <code>TRUE</code>, run analysis for each scale as well as for the combined scale. If <code>FALSE</code>, run analysis only for the combined scale. (default = <code>FALSE</code>)</p></td>
     </tr>
     <tr>
       <th>...</th>
