@@ -11,7 +11,7 @@ runRSSS(
   prior_sd = 1,
   min_theta = -4,
   max_theta = 4,
-  inc = 0.01,
+  inc = 0.05,
   min_score = 1
 )
 }
