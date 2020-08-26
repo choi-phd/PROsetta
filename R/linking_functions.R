@@ -295,7 +295,7 @@ runEquateObserved <- function(data, scale_from = 2, scale_to = 1, type_to = "raw
       tmp <- merge(
         tmp, rsss[[as.character(scale_to)]],
         by.x = "total", by.y = sprintf("raw_%i", scale_to))
-      tmp <- tmp[, c("theta", "count")]
+      tmp <- tmp[, c("eap", "count")]
       freq_to <- equate::as.freqtab(tmp)
     } else {
       stop("argument 'type_to': 'theta' requires argument 'rsss' to be supplied to be able to map raw scores to theta")
