@@ -397,7 +397,10 @@ getProb <- function(ipar, model, theta_grid) {
 
   dimensions <- detectDimensions(ipar)
   ni         <- nrow(ipar)
-  max_cat    <- dim(ipar)[2] - dimensions + 1
+  ncat       <- apply(ipar, 1, function(x) {
+    sum(!is.na(x)) - dimensions + 1
+  })
+  max_cat    <- max(ncat)
   nq         <- nrow(theta_grid)
 
   p_type     <- detectParameterization(ipar)
@@ -410,13 +413,9 @@ getProb <- function(ipar, model, theta_grid) {
       par_b <- ipar[, dimensions + 1:(max_cat - 1)]
     }
 
-    ncat <- apply(par_b, 1, function(x) {
-      sum(!is.na(x)) + 1
-    })
-
     pp <- list()
     for (i in 1:ni) {
-      pp[[i]] <- matrix(NA, nq, max_cat)
+      pp[[i]] <- matrix(NA, nq, ncat[i])
     }
 
     if (model == "grm") {
@@ -476,6 +475,7 @@ getProb <- function(ipar, model, theta_grid) {
     ncat <- apply(par_d, 1, function(x) {
       sum(!is.na(x)) + 1
     })
+    max_cat <- max(ncat)
 
     pp <- list()
     for (i in 1:ni) {
