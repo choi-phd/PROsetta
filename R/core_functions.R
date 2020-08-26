@@ -521,16 +521,23 @@ getProb <- function(ipar, model, theta_grid) {
 
 #' @noRd
 getEscoreTheta = function(ipar, model, theta, is_minscore_0) {
+
   pp <- getProb(ipar, "grm", theta)
-  pp <- do.call(rbind, pp)
-  ni <- dim(pp)[1]
-  nc <- dim(pp)[2]
-  w  <- matrix(rep(1:nc - 1, ni), ni, nc, byrow = TRUE)
-  e  <- sum(pp * w)
+
+  e  <- lapply(pp, function(x) {
+    sum(x * 0:(length(x) - 1))
+  })
+
+  e  <- do.call(c, e)
+  ni <- length(e)
+  e  <- sum(e)
+
   if (!is_minscore_0) {
     e <- e + ni
   }
+
   return(e)
+
 }
 
 #' @noRd

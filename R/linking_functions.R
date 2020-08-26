@@ -381,7 +381,6 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
     stop(sprintf("argument 'min_score': length(min_score) must be either 1 or %i", n_scale + 1))
   }
 
-  is_minscore_0 <- F
   theta_grid <- getThetaGrid(dimensions, min_theta, max_theta, inc)
 
   # the last item_par_by_scale is the combined scale
