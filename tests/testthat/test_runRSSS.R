@@ -6,6 +6,9 @@ test_that("runRSSS", {
 
   skip_on_cran()
   skip_on_travis()
+  skip_on_os("mac")
+  skip_on_os("linux")
+  skip_on_os("solaris")
 
   set.seed(1)
   calib <- runLinking(d, method = "FIXEDPAR", technical = list(NCYCLES = 1000))

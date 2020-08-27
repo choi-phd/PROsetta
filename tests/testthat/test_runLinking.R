@@ -6,6 +6,9 @@ test_that("runLinking", {
 
   skip_on_cran()
   skip_on_travis()
+  skip_on_os("mac")
+  skip_on_os("linux")
+  skip_on_os("solaris")
 
   # Hard-coded values are from Windows
 
