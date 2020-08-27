@@ -349,21 +349,41 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
   if (is.null(attr(class(ipar_linked), "package"))) {
 
     item_par    <- ipar_linked$ipar_linked
+    mu_sigma    <- ipar_linked$mu_sigma
     link_method <- ipar_linked$method
 
   } else if (isS4(ipar_linked) && attr(class(ipar_linked), "package") == "mirt") {
 
-    item_par    <- mirt::coef(ipar_linked, IRTpars = TRUE, simplify = TRUE)$items
+    item_par    <- mirt::coef(ipar_linked, IRTpars = FALSE, simplify = TRUE)$items
+    mu_sigma    <- getMuSigma(ipar_linked)
     link_method <- "FREE"
 
   }
 
   dimensions <- detectDimensions(item_par)
+  ipar_type  <- detectParameterization(item_par)
+
+  if (dimensions == 1 & ipar_type == "ad") {
+    item_par <- convertADtoAB(item_par)
+  }
+  if (dimensions == 2 & ipar_type == "ab") {
+    item_par <- convertABtoAD(item_par)
+  }
+
   if (link_method == "CPLA") {
     item_par[, 1] <- rowSums(item_par[, 1:dimensions])
     item_par <- item_par[, -2]
     item_par <- convertADtoAB(item_par)
     dimensions <- 1
+  }
+
+  if (dimensions == 1) {
+    prior_mu_sigma <- list()
+    prior_mu_sigma$mu    <- 0
+    prior_mu_sigma$sigma <- matrix(1, 1, 1)
+  }
+  if (dimensions == 2) {
+    prior_mu_sigma <- mu_sigma
   }
 
   item_par_by_scale <- split(data.frame(item_par), data@itemmap[[data@scale_id]])
@@ -384,15 +404,6 @@ runRSSS <- function(data, ipar_linked, prior_mean = 0.0, prior_sd = 1.0, min_the
   theta_grid <- getThetaGrid(dimensions, min_theta, max_theta, inc)
 
   # the last item_par_by_scale is the combined scale
-
-  if (dimensions == 1) {
-    prior_mu_sigma <- list()
-    prior_mu_sigma$mu    <- 0
-    prior_mu_sigma$sigma <- matrix(1, 1, 1)
-  }
-  if (dimensions == 2) {
-    prior_mu_sigma <- ipar_linked$mu_sigma
-  }
 
   if (n_scale == 1) {
     score_table <- getRSSS(item_par_by_scale[[n_scale + 1]], theta_grid, min_score == 0, prior_mu_sigma)
