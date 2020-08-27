@@ -51,6 +51,10 @@ setClass("PROsetta_data",
       msg <- sprintf("@anchor: cannot find column '%s' from @item_id", object@item_id)
       msg_all <- c(msg_all, msg)
     }
+    if (!(object@scale_id %in% names(object@itemmap))) {
+      msg <- sprintf("@itemmap: cannot find column '%s' from @scale_id", object@scale_id)
+      msg_all <- c(msg_all, msg)
+    }
     if (!is.null(object@itemmap) && !is.null(object@anchor)) {
       if (!all(object@anchor[[object@item_id]] %in% object@itemmap[[object@item_id]])) {
         msg <- sprintf("@anchor: column '%s' contains extra items not in @itemmap", object@item_id)
@@ -150,6 +154,9 @@ loadData <- function(response, itemmap, anchor,
     }
 
     idx <- which((n_unique != max(n_unique)) & (n_unique != 1))[1]
+    if (is.na(idx)) {
+      idx <- which(n_unique == 1)[1]
+    }
     scale_id <- names_itemmap[idx]
     cat(sprintf("scale_id guessed as  : %s\n", scale_id))
 
