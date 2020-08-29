@@ -781,10 +781,15 @@ appendCPLA <- function(score_table, n_scale, mu_sigma) {
     tscore    <- round(theta * 10 + 50, 1)
     tscore_se <- round(theta_se * 10, 1)
 
-    colnames(theta)     <- sprintf("eap_dim%s", 1:n_scale)
-    colnames(theta_se)  <- sprintf("eap_se_dim%s", 1:n_scale)
-    colnames(tscore)    <- sprintf("tscore_dim%s", 1:n_scale)
-    colnames(tscore_se) <- sprintf("tscore_se_dim%s", 1:n_scale)
+    colnames(theta)     <- sprintf("eap_dim%s", c(source_dim, target_dim))
+    colnames(theta_se)  <- sprintf("eap_se_dim%s", c(source_dim, target_dim))
+    colnames(tscore)    <- sprintf("tscore_dim%s", c(source_dim, target_dim))
+    colnames(tscore_se) <- sprintf("tscore_se_dim%s", c(source_dim, target_dim))
+
+    theta     <- theta[, sort(colnames(theta))]
+    theta_se  <- theta_se[, sort(colnames(theta_se))]
+    tscore    <- tscore[, sort(colnames(tscore))]
+    tscore_se <- tscore_se[, sort(colnames(tscore_se))]
 
     raw_name <- sprintf("raw_%s", source_dim)
 
