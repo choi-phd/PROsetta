@@ -160,24 +160,25 @@
 <li><p><code>cb1 - cb4</code> the boundaries between each category-pair for the graded response model.</p></li>
 <li><p><code>ncat</code> the number of response categories.</p></li>
 </ul></li>
-<li><p><code>data_asq</code> a <code>PROsetta_data</code> object containing the datasets above. See <code>loadData</code> for creating <code>PROsetta_data</code> objects.</p></li>
+<li><p><code>data_asq</code> a <code><a href='loadData.html'>PROsetta_data</a></code> object containing the datasets above. See <code><a href='loadData.html'>loadData</a></code> for creating <code><a href='loadData.html'>PROsetta_data</a></code> objects.</p></li>
 </ul>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples">
 <span class='co'>## load datasets into a PROsetta_data object</span>
-<span class='no'>data_asq</span> <span class='kw'>&lt;-</span> <span class='fu'>loadData</span>(
-  <span class='kw'>response</span> <span class='kw'>=</span> <span class='no'>response_asq</span>,
-  <span class='kw'>itemmap</span>  <span class='kw'>=</span> <span class='no'>itemmap_asq</span>,
-  <span class='kw'>anchor</span>   <span class='kw'>=</span> <span class='no'>anchor_asq</span>
+<span class='kw'>data_asq</span> <span class='op'>&lt;-</span> <span class='fu'><a href='loadData.html'>loadData</a></span>(
+  response = <span class='kw'>response_asq</span>,
+  itemmap  = <span class='kw'>itemmap_asq</span>,
+  anchor   = <span class='kw'>anchor_asq</span>
 )
 
 <span class='co'>## run descriptive statistics</span>
-<span class='fu'>runDescriptive</span>(<span class='no'>data_asq</span>)
+<span class='fu'><a href='runDescriptive.html'>runDescriptive</a></span>(<span class='kw'>data_asq</span>)
 
 <span class='co'>## run item parameter calibration on the response data, linking to the anchor item parameters</span>
-<span class='fu'>runLinking</span>(<span class='no'>data_asq</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"FIXEDPAR"</span>)</pre>
+<span class='fu'><a href='runLinking.html'>runLinking</a></span>(<span class='kw'>data_asq</span>, method = <span class='st'>"FIXEDPAR"</span>)
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -193,7 +194,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

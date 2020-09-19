@@ -133,14 +133,14 @@
     <p><code>runFrequency</code> is a descriptive function to obtain a frequency table from the dataset.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>runFrequency</span>(<span class='no'>data</span>, <span class='kw'>check_frequency</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>runFrequency</span>(<span class='kw'>data</span>, check_frequency = <span class='fl'>TRUE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>a <code>PROsetta_data</code> object. See <code>loadData</code> for loading a dataset.</p></td>
+      <td><p>a <code><a href='loadData.html'>PROsetta_data</a></code> object. See <code><a href='loadData.html'>loadData</a></code> for loading a dataset.</p></td>
     </tr>
     <tr>
       <th>check_frequency</th>
@@ -153,8 +153,10 @@
     <p><code>runFrequency</code> returns a <code><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></code> containing the frequency table.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='no'>freq_asq</span> <span class='kw'>&lt;-</span> <span class='fu'>runFrequency</span>(<span class='no'>data_asq</span>)
-<span class='no'>freq_dep</span> <span class='kw'>&lt;-</span> <span class='fu'>runFrequency</span>(<span class='no'>data_dep</span>)</pre>
+    <pre class="examples"><span class='kw'>freq_asq</span> <span class='op'>&lt;-</span> <span class='fu'>runFrequency</span>(<span class='kw'>data_asq</span>)
+<span class='kw'>freq_dep</span> <span class='op'>&lt;-</span> <span class='fu'>runFrequency</span>(<span class='kw'>data_dep</span>)
+
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -170,7 +172,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

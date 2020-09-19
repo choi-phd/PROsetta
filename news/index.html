@@ -136,14 +136,14 @@
 <a href="#new-features" class="anchor"></a>New features</h2>
 <ul>
 <li>
-<code>runLinking()</code> now supports <code>method = 'CP'</code> to perform two-dimensional calibration, for use in performing calibrated projection (<a href="https://doi.org/10.1007/s11136-011-9874-y">Thissen et al., 2011</a>).</li>
+<code><a href="../reference/runLinking.html">runLinking()</a></code> now supports <code>method = 'CP'</code> to perform two-dimensional calibration, for use in performing calibrated projection (<a href="https://doi.org/10.1007/s11136-011-9874-y">Thissen et al., 2011</a>).</li>
 <li>
-<code>runLinking()</code> now supports <code>method = 'CPLA'</code> to perform two-dimensional calibration, for use in performing linear approximation of calibrated projection (<a href="https://doi.org/10.1007/978-3-319-19977-1_1">Thissen et al., 2015</a>).</li>
+<code><a href="../reference/runLinking.html">runLinking()</a></code> now supports <code>method = 'CPLA'</code> to perform two-dimensional calibration, for use in performing linear approximation of calibrated projection (<a href="https://doi.org/10.1007/978-3-319-19977-1_1">Thissen et al., 2015</a>).</li>
 <li>
-<code>runRSSS()</code> now performs two-dimensional Lord-Wingersky recursion with numerical integration, when the output from <code>runLinking(method = 'CP')</code> is supplied.</li>
+<code><a href="../reference/runRSSS.html">runRSSS()</a></code> now performs two-dimensional Lord-Wingersky recursion with numerical integration, when the output from <code><a href="../reference/runLinking.html">runLinking(method = 'CP')</a></code> is supplied.</li>
 <li>
-<code>runRSSS()</code> now performs linear approximation of calibrated projection, when the output from <code>runLinking(method = 'CPLA')</code> is supplied.</li>
-<li>Shiny application <code>PROsetta()</code> now supports calibrated projection and its linear approximation.</li>
+<code><a href="../reference/runRSSS.html">runRSSS()</a></code> now performs linear approximation of calibrated projection, when the output from <code><a href="../reference/runLinking.html">runLinking(method = 'CPLA')</a></code> is supplied.</li>
+<li>Shiny application <code><a href="../reference/PROsetta.html">PROsetta()</a></code> now supports calibrated projection and its linear approximation.</li>
 </ul>
 </div>
 <div id="bug-fixes" class="section level2">
@@ -151,9 +151,9 @@
 <a href="#bug-fixes" class="anchor"></a>Bug fixes</h2>
 <ul>
 <li>
-<code>runEquateObserved(type_to = "theta")</code> now works.</li>
+<code><a href="../reference/runEquateObserved.html">runEquateObserved(type_to = "theta")</a></code> now works.</li>
 <li>
-<code>loadData()</code> now checks for a valid <code>@scale_id</code>.</li>
+<code><a href="../reference/loadData.html">loadData()</a></code> now checks for a valid <code>@scale_id</code>.</li>
 </ul>
 </div>
 </div>
@@ -169,11 +169,11 @@
 <a href="#structural-changes" class="anchor"></a>Structural changes</h2>
 <ul>
 <li>
-<code>PROsetta_config</code> class and <code>createConfig()</code> are now deprecated. The functionalities are merged to <code>PROsetta_data</code> class and <code>loadData()</code>.</li>
+<code>PROsetta_config</code> class and <code>createConfig()</code> are now deprecated. The functionalities are merged to <code>PROsetta_data</code> class and <code><a href="../reference/loadData.html">loadData()</a></code>.</li>
 <li>
 <code>run*()</code> functions now require <code>PROsetta_data</code> objects instead of <code>PROsetta_config</code> objects.</li>
 <li>
-<code>runLinking()</code> now has <code>method</code> argument to specify the type of linking to perform. Accepts <code>MM</code>, <code>MS</code>, <code>HB</code>, <code>SL</code>, and <code>FIXEDPAR</code>.</li>
+<code><a href="../reference/runLinking.html">runLinking()</a></code> now has <code>method</code> argument to specify the type of linking to perform. Accepts <code>MM</code>, <code>MS</code>, <code>HB</code>, <code>SL</code>, and <code>FIXEDPAR</code>.</li>
 </ul>
 </div>
 <div id="updates" class="section level2">
@@ -181,19 +181,19 @@
 <a href="#updates" class="anchor"></a>Updates</h2>
 <ul>
 <li>
-<code>runLinking()</code> is now capable of performing fixed calibration.</li>
+<code><a href="../reference/runLinking.html">runLinking()</a></code> is now capable of performing fixed calibration.</li>
 <li>
-<code>runCalibration()</code> now performs free calibration by default.</li>
+<code><a href="../reference/runCalibration.html">runCalibration()</a></code> now performs free calibration by default.</li>
 <li>
-<code>runCalibration()</code> and <code>runLinking()</code> now errors when iteration limit is reached, without returning results.</li>
+<code><a href="../reference/runCalibration.html">runCalibration()</a></code> and <code><a href="../reference/runLinking.html">runLinking()</a></code> now errors when iteration limit is reached, without returning results.</li>
 <li>
-<code>runRSSS()</code> now returns thetas in addition to T-scores, and also expected scores in each scale.</li>
+<code><a href="../reference/runRSSS.html">runRSSS()</a></code> now returns thetas in addition to T-scores, and also expected scores in each scale.</li>
 <li>
-<code>runEquateObserved()</code> now has <code>type_to</code> argument to specify direct raw -&gt; T-score equating or regular raw -&gt; raw equating.</li>
+<code><a href="../reference/runEquateObserved.html">runEquateObserved()</a></code> now has <code>type_to</code> argument to specify direct raw -&gt; T-score equating or regular raw -&gt; raw equating.</li>
 <li>Functions are now more verbose.</li>
 <li>Added PROMIS Depression - CES-D linking dataset <code>data_dep</code>.</li>
-<li>Added <code><a href="https://rdrr.io/r/base/plot.html">plot()</a></code> for drawing raw score distribution histograms.</li>
-<li>Added <code>plotInfo()</code> for drawing scale information plots.</li>
+<li>Added <code><a href="https://rdrr.io/r/graphics/plot.default.html">plot()</a></code> for drawing raw score distribution histograms.</li>
+<li>Added <code><a href="../reference/plotInfo.html">plotInfo()</a></code> for drawing scale information plots.</li>
 <li>Added several helper functions.</li>
 <li>Made cosmetic improvements on Shiny app.</li>
 </ul>
@@ -211,11 +211,11 @@
 <a href="#prosetta-0-0-4" class="anchor"></a>PROsetta 0.0.4<small> Unreleased </small>
 </h1>
 <ul>
-<li>Added <code>scalewise</code> argument to <code>runClassical()</code> and <code>runCFA()</code>. When <code>TRUE</code>, analysis is performed for each scale.</li>
+<li>Added <code>scalewise</code> argument to <code><a href="../reference/runClassical.html">runClassical()</a></code> and <code><a href="../reference/runCFA.html">runCFA()</a></code>. When <code>TRUE</code>, analysis is performed for each scale.</li>
 <li>
-<code>runEquateObserved()</code> now removes missing values to produce correct raw sums.</li>
+<code><a href="../reference/runEquateObserved.html">runEquateObserved()</a></code> now removes missing values to produce correct raw sums.</li>
 <li>
-<code>loadData()</code> now retains missing values.</li>
+<code><a href="../reference/loadData.html">loadData()</a></code> now retains missing values.</li>
 </ul>
 </div>
     <div id="prosetta-0-0-3" class="section level1">
@@ -224,7 +224,7 @@
 </h1>
 <ul>
 <li>
-<code>loadData()</code> now removes missing values.</li>
+<code><a href="../reference/loadData.html">loadData()</a></code> now removes missing values.</li>
 </ul>
 </div>
   </div>
@@ -244,7 +244,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
