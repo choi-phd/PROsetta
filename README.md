@@ -53,4 +53,4 @@ install.packages("PROsetta")
 ```
 
 The documentation is available at
-(<https://choi-phd.github.io/PROsetta/index.html>)
+(<https://choi-phd.github.io/PROsetta>)
