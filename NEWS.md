@@ -1,6 +1,20 @@
+# PROsetta 0.2.0
+
+## New features
+
+* `runLinking()` now supports `method = 'CP'` to perform two-dimensional calibration, for use in performing calibrated projection ([Thissen et al., 2011](https://doi.org/10.1007/s11136-011-9874-y)).
+* `runLinking()` now supports `method = 'CPLA'` to perform two-dimensional calibration, for use in performing linear approximation of calibrated projection ([Thissen et al., 2015](https://doi.org/10.1007/978-3-319-19977-1_1)).
+* `runRSSS()` now performs two-dimensional Lord-Wingersky recursion with numerical integration, when the output from `runLinking(method = 'CP')` is supplied.
+* `runRSSS()` now performs linear approximation of calibrated projection, when the output from `runLinking(method = 'CPLA')` is supplied.
+* Shiny application `PROsetta()` now supports calibrated projection and its linear approximation.
+
+## Bug fixes
+* `runEquateObserved(type_to = "theta")` now works.
+* `loadData()` now checks for a valid `@scale_id`.
+
 # PROsetta 0.1.4
 
-* Initial public release.
+* First public release.
 
 ## Structural changes
 * `PROsetta_config` class and `createConfig()` are now deprecated. The functionalities are merged to `PROsetta_data` class and `loadData()`.
@@ -20,7 +34,7 @@
 * Added several helper functions.
 * Made cosmetic improvements on Shiny app.
 
-## Fixes
+## Bug fixes
 * Fixed where Shiny app was displaying SL method linear transformation constants regardless of specified linking method.
 
 # PROsetta 0.0.4

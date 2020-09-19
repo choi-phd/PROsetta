@@ -42,4 +42,4 @@ Install the latest release from CRAN:
 install.packages("PROsetta")
 ```
 
-The documentation is available at (https://choi-phd.github.io/PROsetta/index.html)
+The documentation is available at (https://choi-phd.github.io/PROsetta)

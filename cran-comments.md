@@ -1,10 +1,4 @@
-# PROsetta v0.1.4
-This is a resubmission. In this version:
-
-* Removed \dontrun blocks in the example sections of dataset_asq.Rd and dataset_dep.Rd
-* Rewrote dataset_asq.Rd and dataset_dep.Rd to use consistent documentation style
-* Removed newlines to make the code diff-friendly
-* Examples in runRSSS now use \donttest to reduce CPU time
+# PROsetta 0.2.0
 
 ## Test environments
 
@@ -16,10 +10,16 @@ This is a resubmission. In this version:
 ## R CMD check results
 
 ```
-Status: 1 NOTE
-
-* checking CRAN incoming feasibility ... NOTE
-Maintainer: 'Seung W. Choi <schoi@austin.utexas.edu>'
-
-New submission
+Status: OK
 ```
+
+`Sys.setenv('_R_CHECK_SYSTEM_CLOCK_' = 0)` was used to suppress the following NOTE:
+
+```
+* checking for future file timestamps ... NOTE
+unable to verify current time
+```
+
+## Downstream dependencies
+
+The previous version 'PROsetta' 0.1.4 does not have downstream dependencies.
