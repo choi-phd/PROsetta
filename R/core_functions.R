@@ -22,16 +22,6 @@ validateData <- function(d) {
 }
 
 #' @noRd
-getResponse <- function(d) {
-
-  item_id   <- d@itemmap[, d@item_id]
-  resp_data <- d@response[, item_id]
-
-  return(resp_data)
-
-}
-
-#' @noRd
 getModel <- function(d, dimensions, bound_cov) {
 
   resp_data  <- getResponse(d)
