@@ -26,22 +26,12 @@ getResponse <- function(d, scale_id = "all", person_id = FALSE) {
   item_idx   <- c()
   if (length(scale_id) == 1) {
     if (scale_id == "all") {
-      item_idx   <- d@itemmap[, d@item_id]
+      item_idx <- d@itemmap[, d@item_id]
     } else {
-      subset_idx <- d@itemmap[, d@scale_id] == scale_id
-      item_idx   <- c(
-        item_idx,
-        d@itemmap[subset_idx, d@item_id]
-      )
+      item_idx <- getItemNames(d, scale_id)
     }
   } else {
-    for (s in scale_id) {
-      subset_idx <- d@itemmap[, d@scale_id] == s
-      item_idx   <- c(
-        item_idx,
-        d@itemmap[subset_idx, d@item_id]
-      )
-    }
+    item_idx <- getItemNames(d, scale_id)
   }
 
   if (!person_id) {
@@ -57,5 +47,34 @@ getResponse <- function(d, scale_id = "all", person_id = FALSE) {
     ]
     return(resp_data)
   }
+
+}
+
+#' Get item names
+#'
+#' \code{\link{getItemNames}} is a helper function to extract item names for a specified scale from a \code{\linkS4class{PROsetta_data}} object.
+#'
+#' @param d a \code{\linkS4class{PROsetta_data}} object.
+#' @param scale_id scale IDs to extract item names.
+#'
+#' @return \code{\link{getItemNames}} returns a vector containing item names.
+#'
+#' @examples
+#' idx <- getItemNames(data_asq, 1)
+#' data_asq@response[, idx]
+#'
+#' @export
+getItemNames <- function(d, scale_id) {
+
+  item_idx   <- c()
+  for (s in scale_id) {
+    subset_idx <- d@itemmap[, d@scale_id] == s
+    item_idx   <- c(
+      item_idx,
+      d@itemmap[subset_idx, d@item_id]
+    )
+  }
+
+  return(item_idx)
 
 }
