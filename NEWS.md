@@ -1,7 +1,12 @@
+# PROsetta 0.2.1
+
+## QoL updates
+* Added `getResponse()` for extracting scale-wise response data from a `PROsetta_data` object.
+* Added `getItemNames()` for extracting scale-wise item names from a `PROsetta_data` object.
+
 # PROsetta 0.2.0
 
 ## New features
-
 * `runLinking()` now supports `method = 'CP'` to perform two-dimensional calibration, for use in performing calibrated projection ([Thissen et al., 2011](https://doi.org/10.1007/s11136-011-9874-y)).
 * `runLinking()` now supports `method = 'CPLA'` to perform two-dimensional calibration, for use in performing linear approximation of calibrated projection ([Thissen et al., 2015](https://doi.org/10.1007/978-3-319-19977-1_1)).
 * `runRSSS()` now performs two-dimensional Lord-Wingersky recursion with numerical integration, when the output from `runLinking(method = 'CP')` is supplied.
