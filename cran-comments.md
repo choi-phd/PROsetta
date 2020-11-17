@@ -1,4 +1,4 @@
-# PROsetta 0.2.0
+# PROsetta 0.2.1
 
 ## Test environments
 
@@ -13,13 +13,6 @@
 Status: OK
 ```
 
-`Sys.setenv('_R_CHECK_SYSTEM_CLOCK_' = 0)` was used to suppress the following NOTE:
-
-```
-* checking for future file timestamps ... NOTE
-unable to verify current time
-```
-
 ## Downstream dependencies
 
-The previous version 'PROsetta' 0.1.4 does not have downstream dependencies.
+The previous version 'PROsetta' 0.2.0 does not have downstream dependencies.
