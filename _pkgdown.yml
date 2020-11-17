@@ -45,6 +45,8 @@ reference:
   contents:
   - plotInfo
   - plot,PROsetta_data,ANY-method
+  - getItemNames
+  - getResponse
   - getCompleteData
   - getEscore
   - getScaleSum
