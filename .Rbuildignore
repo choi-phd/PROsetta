@@ -14,3 +14,4 @@
 ^vignettes/PROsetta_files/PROsetta_cache/html/*\.*$
 ^cran-comments\.md$
 ^vignettes/debug\.log$
+^\.github$
