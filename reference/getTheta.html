@@ -82,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">PROsetta</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -133,16 +133,16 @@
     <p><code>getTheta</code> is a helper function to calculate EAP estimates.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>getTheta</span>(
-  <span class='kw'>data</span>,
-  <span class='kw'>ipar</span>,
-  scale = <span class='st'>"combined"</span>,
-  model = <span class='st'>"grm"</span>,
-  theta_grid = <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='op'>-</span><span class='fl'>4</span>, <span class='fl'>4</span>, <span class='fl'>0.1</span>),
-  prior_dist = <span class='st'>"normal"</span>,
-  prior_mean = <span class='fl'>0</span>,
-  prior_sd = <span class='fl'>1</span>
-)</pre>
+    <pre class="usage"><span class='fu'>getTheta</span><span class='op'>(</span>
+  <span class='va'>data</span>,
+  <span class='va'>ipar</span>,
+  scale <span class='op'>=</span> <span class='st'>"combined"</span>,
+  model <span class='op'>=</span> <span class='st'>"grm"</span>,
+  theta_grid <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>4</span>, <span class='fl'>4</span>, <span class='fl'>0.1</span><span class='op'>)</span>,
+  prior_dist <span class='op'>=</span> <span class='st'>"normal"</span>,
+  prior_mean <span class='op'>=</span> <span class='fl'>0</span>,
+  prior_sd <span class='op'>=</span> <span class='fl'>1</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

@@ -82,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">PROsetta</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -165,20 +165,142 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples">
+    <pre class="examples"><div class='input'>
 <span class='co'>## load datasets into a PROsetta_data object</span>
-<span class='kw'>data_asq</span> <span class='op'>&lt;-</span> <span class='fu'><a href='loadData.html'>loadData</a></span>(
-  response = <span class='kw'>response_asq</span>,
-  itemmap  = <span class='kw'>itemmap_asq</span>,
-  anchor   = <span class='kw'>anchor_asq</span>
-)
-
+<span class='va'>data_asq</span> <span class='op'>&lt;-</span> <span class='fu'><a href='loadData.html'>loadData</a></span><span class='op'>(</span>
+  response <span class='op'>=</span> <span class='va'>response_asq</span>,
+  itemmap  <span class='op'>=</span> <span class='va'>itemmap_asq</span>,
+  anchor   <span class='op'>=</span> <span class='va'>anchor_asq</span>
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>'reverse' column is present in item map, and no items are marked as reversed</span></div><div class='output co'>#&gt; item_id guessed as   : item_id
+#&gt; person_id guessed as : prosettaid
+#&gt; scale_id guessed as  : instrument</div><div class='input'>
 <span class='co'>## run descriptive statistics</span>
-<span class='fu'><a href='runDescriptive.html'>runDescriptive</a></span>(<span class='kw'>data_asq</span>)
-
+<span class='fu'><a href='runDescriptive.html'>runDescriptive</a></span><span class='op'>(</span><span class='va'>data_asq</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;           n mean   sd median trimmed  mad min max range skew kurtosis   se
+#&gt; EDANX01 751 1.50 0.84      1    1.32 0.00   1   5     4 1.76     2.72 0.03
+#&gt; EDANX02 751 1.43 0.75      1    1.25 0.00   1   5     4 1.89     3.39 0.03
+#&gt; EDANX03 750 1.43 0.81      1    1.24 0.00   1   5     4 2.01     3.68 0.03
+#&gt; EDANX05 751 1.86 1.03      2    1.70 1.48   1   5     4 1.04     0.25 0.04
+#&gt; EDANX07 751 1.46 0.89      1    1.26 0.00   1   5     4 1.95     3.10 0.03
+#&gt; EDANX08 751 1.57 0.95      1    1.37 0.00   1   5     4 1.67     2.08 0.03
+#&gt; EDANX12 750 1.99 0.98      2    1.90 1.48   1   5     4 0.62    -0.49 0.04
+#&gt; EDANX13 751 1.52 0.83      1    1.35 0.00   1   5     4 1.56     1.78 0.03
+#&gt; EDANX16 750 1.67 0.95      1    1.50 0.00   1   5     4 1.34     1.07 0.03
+#&gt; EDANX18 751 1.41 0.79      1    1.22 0.00   1   5     4 2.06     3.97 0.03
+#&gt; EDANX20 751 1.65 0.91      1    1.48 0.00   1   5     4 1.48     1.87 0.03
+#&gt; EDANX21 750 1.87 0.96      2    1.75 1.48   1   5     4 0.91     0.19 0.04
+#&gt; EDANX24 751 1.71 1.06      1    1.50 0.00   1   5     4 1.30     0.54 0.04
+#&gt; EDANX26 751 1.79 0.98      1    1.64 0.00   1   5     4 1.01     0.08 0.04
+#&gt; EDANX27 751 1.51 0.87      1    1.32 0.00   1   5     4 1.77     2.60 0.03
+#&gt; EDANX30 751 2.04 1.05      2    1.90 1.48   1   5     4 0.71    -0.41 0.04
+#&gt; EDANX33 750 1.24 0.61      1    1.08 0.00   1   5     4 3.01    10.20 0.02
+#&gt; EDANX37 750 1.91 1.07      2    1.75 1.48   1   5     4 1.02     0.28 0.04
+#&gt; EDANX40 750 1.40 0.75      1    1.21 0.00   1   5     4 2.03     3.97 0.03
+#&gt; EDANX41 751 1.55 0.92      1    1.36 0.00   1   5     4 1.68     2.14 0.03
+#&gt; EDANX44 751 1.53 0.86      1    1.36 0.00   1   5     4 1.60     1.88 0.03
+#&gt; EDANX46 751 1.80 0.94      2    1.67 1.48   1   5     4 0.94     0.01 0.03
+#&gt; EDANX47 751 1.90 1.03      2    1.75 1.48   1   5     4 0.92     0.01 0.04
+#&gt; EDANX48 750 1.83 1.01      2    1.68 1.48   1   5     4 1.10     0.52 0.04
+#&gt; EDANX49 751 2.41 1.21      2    2.31 1.48   1   5     4 0.40    -0.84 0.04
+#&gt; EDANX51 751 2.03 1.06      2    1.90 1.48   1   5     4 0.68    -0.51 0.04
+#&gt; EDANX53 751 1.83 0.98      2    1.69 1.48   1   5     4 0.98     0.13 0.04
+#&gt; EDANX54 751 2.06 1.07      2    1.93 1.48   1   5     4 0.65    -0.55 0.04
+#&gt; EDANX55 751 1.55 0.86      1    1.38 0.00   1   5     4 1.55     1.82 0.03
+#&gt; MASQ1   751 1.34 0.65      1    1.20 0.00   1   5     4 2.16     4.87 0.02
+#&gt; MASQ2   751 1.40 0.75      1    1.22 0.00   1   5     4 2.05     3.95 0.03
+#&gt; MASQ3   751 1.63 0.83      1    1.48 0.00   1   5     4 1.40     1.77 0.03
+#&gt; MASQ4   751 1.69 0.88      1    1.54 0.00   1   5     4 1.37     1.67 0.03
+#&gt; MASQ5   751 1.20 0.56      1    1.06 0.00   1   5     4 3.75    16.88 0.02
+#&gt; MASQ6   751 1.57 0.82      1    1.41 0.00   1   5     4 1.50     1.91 0.03
+#&gt; MASQ7   751 1.73 0.94      1    1.57 0.00   1   5     4 1.31     1.27 0.03
+#&gt; MASQ8   751 1.70 0.96      1    1.52 0.00   1   5     4 1.41     1.41 0.03
+#&gt; MASQ9   751 1.35 0.69      1    1.19 0.00   1   5     4 2.28     5.58 0.03
+#&gt; MASQ10  750 1.69 0.97      1    1.50 0.00   1   5     4 1.46     1.49 0.04
+#&gt; MASQ11  750 2.07 1.02      2    1.94 1.48   1   5     4 0.79     0.04 0.04</div><div class='input'>
 <span class='co'>## run item parameter calibration on the response data, linking to the anchor item parameters</span>
-<span class='fu'><a href='runLinking.html'>runLinking</a></span>(<span class='kw'>data_asq</span>, method = <span class='st'>"FIXEDPAR"</span>)
-</pre>
+<span class='fu'><a href='runLinking.html'>runLinking</a></span><span class='op'>(</span><span class='va'>data_asq</span>, method <span class='op'>=</span> <span class='st'>"FIXEDPAR"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>response data has 40 items</span></div><div class='output co'>#&gt; <span class='message'>performing 1D fixed parameter calibration, using anchor data</span></div><div class='output co'>#&gt; <span class='message'>anchor has 29 items * 5 parameters = 145 parameters</span></div><div class='output co'>#&gt; <span class='message'>anchor parameters applied to par_layout</span></div><div class='output co'>#&gt; Iteration: 1, Log-Lik: -24053.720, Max-Change: 2.73844Iteration: 2, Log-Lik: -23453.207, Max-Change: 0.72611Iteration: 3, Log-Lik: -23439.758, Max-Change: 0.41693Iteration: 4, Log-Lik: -23438.315, Max-Change: 0.66336Iteration: 5, Log-Lik: -23437.791, Max-Change: 0.50564Iteration: 6, Log-Lik: -23437.683, Max-Change: 0.13194Iteration: 7, Log-Lik: -23437.680, Max-Change: 0.08704Iteration: 8, Log-Lik: -23437.677, Max-Change: 0.00500Iteration: 9, Log-Lik: -23437.677, Max-Change: 0.00021Iteration: 10, Log-Lik: -23437.677, Max-Change: 0.00014Iteration: 11, Log-Lik: -23437.677, Max-Change: 0.00014Iteration: 12, Log-Lik: -23437.677, Max-Change: 0.00005</div><div class='output co'>#&gt; $constants
+#&gt; [1] NA
+#&gt; 
+#&gt; $ipar_linked
+#&gt;                 a          b1         b2       b3       b4
+#&gt; EDANX01 3.6021544  0.34159048 1.08952607 1.960101 2.698704
+#&gt; EDANX02 3.4504105  0.49115372 1.33003913 2.155174 2.880245
+#&gt; EDANX03 3.3365573  0.62131513 1.24324827 2.061498 2.758621
+#&gt; EDANX05 3.3552816 -0.18966149 0.59808268 1.574890 2.445823
+#&gt; EDANX07 3.5509265  0.53941950 1.04602617 1.865002 2.384703
+#&gt; EDANX08 2.8482390  0.36804661 1.06412460 1.853262 2.544713
+#&gt; EDANX12 2.7344963 -0.56874342 0.47212997 1.671720 2.969534
+#&gt; EDANX13 1.4299890  0.32031811 1.38525972 2.740602 4.657334
+#&gt; EDANX16 1.8026250 -0.03826752 0.87866300 2.112580 3.045698
+#&gt; EDANX18 2.9857713  0.56615423 1.30206069 2.149592 3.060772
+#&gt; EDANX20 1.7235167  0.01038630 1.16848655 2.202962 3.108540
+#&gt; EDANX21 2.2320871 -0.30039122 0.73730822 1.859789 2.924760
+#&gt; EDANX24 1.8300229  0.33186966 0.98209963 1.887270 3.023501
+#&gt; EDANX26 1.9506502 -0.02653687 0.87921023 2.014506 3.240672
+#&gt; EDANX27 2.8602293  0.43614207 1.12685718 2.029540 2.777844
+#&gt; EDANX30 3.0318433 -0.51540331 0.31555222 1.351650 2.299683
+#&gt; EDANX33 2.5819082  1.14704504 1.81665694 2.716464 3.589089
+#&gt; EDANX37 1.7091745 -0.03958087 0.88362788 2.001631 3.104371
+#&gt; EDANX40 3.8831993  0.48588040 1.26317743 2.111117 2.898513
+#&gt; EDANX41 3.6595132  0.36439509 1.03380800 1.780490 2.621156
+#&gt; EDANX44 1.2704961  0.57192503 1.45897673 2.677899 3.972340
+#&gt; EDANX46 3.3981373 -0.21663501 0.63213040 1.644448 2.731239
+#&gt; EDANX47 2.5365096 -0.23896204 0.67780928 1.795603 2.900682
+#&gt; EDANX48 3.0433412 -0.33156350 0.55586628 1.455912 2.339870
+#&gt; EDANX49 1.5157005 -0.82984231 0.08690911 1.167730 2.379728
+#&gt; EDANX51 2.4116611 -0.46182440 0.39835327 1.363589 2.402821
+#&gt; EDANX53 3.6561060 -0.23177839 0.59522713 1.563458 2.499054
+#&gt; EDANX54 3.3503266 -0.50940366 0.31066694 1.250223 2.296618
+#&gt; EDANX55 3.1273340  0.07436260 0.94088815 1.847720 2.775704
+#&gt; MASQ1   2.4553590  0.62790093 1.76305616 2.556934 4.346750
+#&gt; MASQ2   0.7737667  1.22523358 3.13716634 4.695677 7.982062
+#&gt; MASQ3   2.9565421 -0.04681016 1.19269265 1.877235 3.041975
+#&gt; MASQ4   3.0397128 -0.12152427 1.05359329 1.773160 2.642031
+#&gt; MASQ5   1.2272524  1.63114582 3.27898650 3.861736 4.859649
+#&gt; MASQ6   1.0794230  0.24091646 2.01113983 3.214757 5.576669
+#&gt; MASQ7   2.2877395 -0.12364435 1.01625412 1.752663 2.756741
+#&gt; MASQ8   2.1625206 -0.01949997 1.07289020 1.777269 2.794919
+#&gt; MASQ9   1.1514947  0.98152540 2.52516400 3.723844 5.312664
+#&gt; MASQ10  2.3261588  0.02420731 1.06489797 1.643662 2.644612
+#&gt; MASQ11  0.8225668 -1.13444184 1.01296265 2.781961 4.912505
+#&gt; 
+#&gt; $ipar_anchor
+#&gt;                a          b1         b2       b3       b4
+#&gt; EDANX01 3.602154  0.34159048 1.08952607 1.960101 2.698704
+#&gt; EDANX02 3.450410  0.49115372 1.33003913 2.155174 2.880245
+#&gt; EDANX03 3.336557  0.62131513 1.24324827 2.061498 2.758621
+#&gt; EDANX05 3.355282 -0.18966149 0.59808268 1.574890 2.445823
+#&gt; EDANX07 3.550927  0.53941950 1.04602617 1.865002 2.384703
+#&gt; EDANX08 2.848239  0.36804661 1.06412460 1.853262 2.544713
+#&gt; EDANX12 2.734496 -0.56874342 0.47212997 1.671720 2.969534
+#&gt; EDANX13 1.429989  0.32031811 1.38525972 2.740602 4.657334
+#&gt; EDANX16 1.802625 -0.03826752 0.87866300 2.112580 3.045698
+#&gt; EDANX18 2.985771  0.56615423 1.30206069 2.149592 3.060772
+#&gt; EDANX20 1.723517  0.01038630 1.16848655 2.202962 3.108540
+#&gt; EDANX21 2.232087 -0.30039122 0.73730822 1.859789 2.924760
+#&gt; EDANX24 1.830023  0.33186966 0.98209963 1.887270 3.023501
+#&gt; EDANX26 1.950650 -0.02653687 0.87921023 2.014506 3.240672
+#&gt; EDANX27 2.860229  0.43614207 1.12685718 2.029540 2.777844
+#&gt; EDANX30 3.031843 -0.51540331 0.31555223 1.351650 2.299683
+#&gt; EDANX33 2.581908  1.14704504 1.81665694 2.716464 3.589089
+#&gt; EDANX37 1.709175 -0.03958087 0.88362788 2.001631 3.104371
+#&gt; EDANX40 3.883199  0.48588040 1.26317743 2.111117 2.898513
+#&gt; EDANX41 3.659513  0.36439509 1.03380800 1.780490 2.621156
+#&gt; EDANX44 1.270496  0.57192503 1.45897673 2.677899 3.972340
+#&gt; EDANX46 3.398137 -0.21663501 0.63213040 1.644448 2.731239
+#&gt; EDANX47 2.536510 -0.23896204 0.67780928 1.795603 2.900682
+#&gt; EDANX48 3.043341 -0.33156350 0.55586628 1.455912 2.339870
+#&gt; EDANX49 1.515701 -0.82984231 0.08690911 1.167730 2.379728
+#&gt; EDANX51 2.411661 -0.46182440 0.39835327 1.363589 2.402821
+#&gt; EDANX53 3.656106 -0.23177839 0.59522713 1.563458 2.499054
+#&gt; EDANX54 3.350327 -0.50940366 0.31066694 1.250223 2.296618
+#&gt; EDANX55 3.127334  0.07436260 0.94088815 1.847720 2.775704
+#&gt; 
+#&gt; $method
+#&gt; [1] "FIXEDPAR"
+#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

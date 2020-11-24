@@ -82,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">PROsetta</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -165,20 +165,157 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples">
+    <pre class="examples"><div class='input'>
 <span class='co'>## load datasets into a PROsetta_data object</span>
-<span class='kw'>data_dep</span> <span class='op'>&lt;-</span> <span class='fu'><a href='loadData.html'>loadData</a></span>(
-  response = <span class='kw'>response_dep</span>,
-  itemmap  = <span class='kw'>itemmap_dep</span>,
-  anchor   = <span class='kw'>anchor_dep</span>
-)
-
+<span class='va'>data_dep</span> <span class='op'>&lt;-</span> <span class='fu'><a href='loadData.html'>loadData</a></span><span class='op'>(</span>
+  response <span class='op'>=</span> <span class='va'>response_dep</span>,
+  itemmap  <span class='op'>=</span> <span class='va'>itemmap_dep</span>,
+  anchor   <span class='op'>=</span> <span class='va'>anchor_dep</span>
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>some items are marked as reversed items in 'reverse' column in item map</span></div><div class='output co'>#&gt; <span class='message'>assuming the response data is already reverse coded</span></div><div class='output co'>#&gt; item_id guessed as   : item_id
+#&gt; person_id guessed as : prosettaid
+#&gt; scale_id guessed as  : instrument</div><div class='input'>
 <span class='co'>## run descriptive statistics</span>
-<span class='fu'><a href='runDescriptive.html'>runDescriptive</a></span>(<span class='kw'>data_dep</span>)
-
+<span class='fu'><a href='runDescriptive.html'>runDescriptive</a></span><span class='op'>(</span><span class='va'>data_dep</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;           n mean   sd median trimmed  mad min max range skew kurtosis   se
+#&gt; EDDEP04 747 1.52 0.94      1    1.30 0.00   1   5     4 1.91     3.01 0.03
+#&gt; EDDEP05 746 1.62 0.99      1    1.42 0.00   1   5     4 1.54     1.50 0.04
+#&gt; EDDEP06 746 1.56 0.94      1    1.37 0.00   1   5     4 1.66     2.01 0.03
+#&gt; EDDEP07 747 1.78 1.05      1    1.59 0.00   1   5     4 1.23     0.59 0.04
+#&gt; EDDEP09 747 1.56 0.91      1    1.38 0.00   1   5     4 1.62     1.98 0.03
+#&gt; EDDEP14 747 1.69 1.00      1    1.51 0.00   1   5     4 1.38     1.12 0.04
+#&gt; EDDEP17 747 2.08 1.04      2    1.95 1.48   1   5     4 0.66    -0.40 0.04
+#&gt; EDDEP19 747 1.47 0.90      1    1.26 0.00   1   5     4 2.02     3.56 0.03
+#&gt; EDDEP21 746 1.77 0.99      1    1.61 0.00   1   5     4 1.18     0.70 0.04
+#&gt; EDDEP22 746 1.68 1.02      1    1.50 0.00   1   5     4 1.42     1.26 0.04
+#&gt; EDDEP23 747 1.91 1.09      2    1.73 1.48   1   5     4 0.98     0.01 0.04
+#&gt; EDDEP26 746 2.05 1.10      2    1.90 1.48   1   5     4 0.81    -0.18 0.04
+#&gt; EDDEP27 744 1.66 0.99      1    1.47 0.00   1   5     4 1.43     1.23 0.04
+#&gt; EDDEP28 747 1.89 1.09      1    1.70 0.00   1   5     4 1.05     0.16 0.04
+#&gt; EDDEP29 747 1.86 1.06      1    1.69 0.00   1   5     4 1.06     0.20 0.04
+#&gt; EDDEP30 747 1.83 0.98      2    1.69 1.48   1   5     4 1.02     0.34 0.04
+#&gt; EDDEP31 746 2.04 1.12      2    1.89 1.48   1   5     4 0.76    -0.35 0.04
+#&gt; EDDEP35 747 1.86 1.04      1    1.70 0.00   1   5     4 1.01     0.13 0.04
+#&gt; EDDEP36 747 2.05 1.07      2    1.90 1.48   1   5     4 0.79    -0.14 0.04
+#&gt; EDDEP39 747 1.29 0.74      1    1.09 0.00   1   5     4 2.88     8.35 0.03
+#&gt; EDDEP41 747 1.54 0.93      1    1.33 0.00   1   5     4 1.77     2.40 0.03
+#&gt; EDDEP42 747 1.80 1.00      1    1.65 0.00   1   5     4 1.09     0.39 0.04
+#&gt; EDDEP44 747 1.61 0.90      1    1.44 0.00   1   5     4 1.36     0.98 0.03
+#&gt; EDDEP45 747 1.69 0.91      1    1.55 0.00   1   5     4 1.19     0.76 0.03
+#&gt; EDDEP46 747 2.01 1.09      2    1.85 1.48   1   5     4 0.84    -0.16 0.04
+#&gt; EDDEP48 747 1.67 1.04      1    1.47 0.00   1   5     4 1.44     1.18 0.04
+#&gt; EDDEP50 746 1.72 0.99      1    1.55 0.00   1   5     4 1.30     1.01 0.04
+#&gt; EDDEP54 747 1.95 1.11      2    1.78 1.48   1   5     4 0.95    -0.06 0.04
+#&gt; CESD1   746 1.31 0.62      1    1.16 0.00   1   4     3 2.11     4.03 0.02
+#&gt; CESD2   747 1.26 0.61      1    1.11 0.00   1   4     3 2.61     6.83 0.02
+#&gt; CESD3   747 1.35 0.77      1    1.14 0.00   1   4     3 2.23     3.95 0.03
+#&gt; CESD4   747 1.72 1.09      1    1.53 0.00   1   4     3 1.17    -0.20 0.04
+#&gt; CESD5   747 1.53 0.81      1    1.38 0.00   1   4     3 1.41     1.08 0.03
+#&gt; CESD6   747 1.49 0.87      1    1.29 0.00   1   4     3 1.72     1.90 0.03
+#&gt; CESD7   747 1.61 0.89      1    1.43 0.00   1   4     3 1.38     0.93 0.03
+#&gt; CESD8   747 1.98 1.13      2    1.85 1.48   1   4     3 0.70    -1.00 0.04
+#&gt; CESD9   747 1.39 0.81      1    1.18 0.00   1   4     3 2.11     3.42 0.03
+#&gt; CESD10  747 1.23 0.57      1    1.09 0.00   1   4     3 2.58     6.27 0.02
+#&gt; CESD11  747 1.99 1.03      2    1.86 1.48   1   4     3 0.68    -0.78 0.04
+#&gt; CESD12  746 1.73 0.99      1    1.56 0.00   1   4     3 1.08    -0.13 0.04
+#&gt; CESD13  745 1.59 0.84      1    1.43 0.00   1   4     3 1.32     0.88 0.03
+#&gt; CESD14  745 1.53 0.90      1    1.33 0.00   1   4     3 1.62     1.48 0.03
+#&gt; CESD15  744 1.33 0.64      1    1.18 0.00   1   4     3 2.08     4.07 0.02
+#&gt; CESD16  745 1.71 1.00      1    1.54 0.00   1   4     3 1.09    -0.19 0.04
+#&gt; CESD17  745 1.18 0.53      1    1.02 0.00   1   4     3 3.26    10.59 0.02
+#&gt; CESD18  743 1.55 0.84      1    1.38 0.00   1   4     3 1.46     1.30 0.03
+#&gt; CESD19  742 1.36 0.71      1    1.20 0.00   1   4     3 2.10     4.02 0.03
+#&gt; CESD20  743 1.76 0.90      2    1.62 1.48   1   4     3 1.02     0.14 0.03</div><div class='input'>
 <span class='co'>## run item parameter calibration on the response data, linking to the anchor item parameters</span>
-<span class='fu'><a href='runLinking.html'>runLinking</a></span>(<span class='kw'>data_dep</span>, method = <span class='st'>"FIXEDPAR"</span>)
-</pre>
+<span class='fu'><a href='runLinking.html'>runLinking</a></span><span class='op'>(</span><span class='va'>data_dep</span>, method <span class='op'>=</span> <span class='st'>"FIXEDPAR"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>response data has 48 items</span></div><div class='output co'>#&gt; <span class='message'>performing 1D fixed parameter calibration, using anchor data</span></div><div class='output co'>#&gt; <span class='message'>anchor has 28 items * 5 parameters = 140 parameters</span></div><div class='output co'>#&gt; <span class='message'>anchor parameters applied to par_layout</span></div><div class='output co'>#&gt; Iteration: 1, Log-Lik: -27522.223, Max-Change: 2.50451Iteration: 2, Log-Lik: -26639.786, Max-Change: 0.49343Iteration: 3, Log-Lik: -26614.123, Max-Change: 0.21027Iteration: 4, Log-Lik: -26610.945, Max-Change: 0.09447Iteration: 5, Log-Lik: -26610.482, Max-Change: 0.06020Iteration: 6, Log-Lik: -26610.409, Max-Change: 0.01176Iteration: 7, Log-Lik: -26610.405, Max-Change: 0.00876Iteration: 8, Log-Lik: -26610.401, Max-Change: 0.00149Iteration: 9, Log-Lik: -26610.400, Max-Change: 0.00050Iteration: 10, Log-Lik: -26610.400, Max-Change: 0.00029Iteration: 11, Log-Lik: -26610.400, Max-Change: 0.00011Iteration: 12, Log-Lik: -26610.400, Max-Change: 0.00003</div><div class='output co'>#&gt; $constants
+#&gt; [1] NA
+#&gt; 
+#&gt; $ipar_linked
+#&gt;                a          b1        b2       b3       b4
+#&gt; EDDEP04 4.261422  0.40106943 0.9756732 1.696300 2.444072
+#&gt; EDDEP05 3.931743  0.30494182 0.9130961 1.593476 2.411682
+#&gt; EDDEP06 4.144759  0.35011299 0.9153482 1.678203 2.470526
+#&gt; EDDEP07 2.801804  0.14774854 0.7723478 1.602715 2.538057
+#&gt; EDDEP09 3.657433  0.31195821 0.9818088 1.782108 2.571127
+#&gt; EDDEP14 2.333381  0.18599340 0.9473173 1.728770 2.632643
+#&gt; EDDEP17 3.274033 -0.49845044 0.4059439 1.413052 2.375459
+#&gt; EDDEP19 3.240973  0.46049359 1.0344267 1.833595 2.514716
+#&gt; EDDEP21 2.736104  0.07245992 0.8097820 1.803067 2.673441
+#&gt; EDDEP22 3.970028  0.20379963 0.7954889 1.648707 2.295496
+#&gt; EDDEP23 2.564431 -0.03841113 0.6926952 1.652820 2.583629
+#&gt; EDDEP26 3.093368 -0.35762208 0.4124999 1.403863 2.223961
+#&gt; EDDEP27 2.920056  0.20434012 0.8909159 1.654652 2.528368
+#&gt; EDDEP28 2.588339 -0.07908821 0.6326205 1.477330 2.327715
+#&gt; EDDEP29 4.342918 -0.11730304 0.5977487 1.428166 2.272495
+#&gt; EDDEP30 2.612846 -0.02337743 0.8683854 1.864303 2.826340
+#&gt; EDDEP31 3.182866 -0.26089392 0.3967655 1.305464 2.133989
+#&gt; EDDEP35 3.105857  0.04371372 0.7223523 1.638758 2.471487
+#&gt; EDDEP36 3.483012 -0.53588456 0.3475707 1.346781 2.354790
+#&gt; EDDEP39 3.131213  0.91802061 1.4813240 2.163996 2.856377
+#&gt; EDDEP41 4.454157  0.55838282 1.0742430 1.779346 2.530080
+#&gt; EDDEP42 2.364413  0.21006534 0.9870936 1.905901 2.933758
+#&gt; EDDEP44 2.549164  0.19350024 1.0117460 2.013109 3.126494
+#&gt; EDDEP45 2.833605  0.14071213 0.9065001 1.846097 2.875194
+#&gt; EDDEP46 2.380628 -0.45788346 0.4779996 1.545663 2.631512
+#&gt; EDDEP48 3.185244  0.19814448 0.7819065 1.525815 2.324082
+#&gt; EDDEP50 2.018099 -0.05044210 0.9258678 1.999516 2.965507
+#&gt; EDDEP54 2.685300 -0.29880847 0.4234598 1.357851 2.307647
+#&gt; CESD1   2.074442  0.87588000 1.9208517 3.063586       NA
+#&gt; CESD2   1.262450  1.38731970 2.6695226 3.720540       NA
+#&gt; CESD3   3.512477  0.83271884 1.3159735 1.948794       NA
+#&gt; CESD4   1.118259  0.64882022 1.3786370 2.081167       NA
+#&gt; CESD5   1.604924  0.42935043 1.5261799 2.723723       NA
+#&gt; CESD6   3.634668  0.49267515 1.1756152 1.729146       NA
+#&gt; CESD7   1.827676  0.28707337 1.3677916 2.134161       NA
+#&gt; CESD8   1.341784 -0.06693047 0.8227682 1.619581       NA
+#&gt; CESD9   3.002587  0.74752445 1.3741501 1.855369       NA
+#&gt; CESD10  2.060394  1.17178033 2.0425563 3.268036       NA
+#&gt; CESD11  1.076593 -0.46319695 0.9471572 2.159803       NA
+#&gt; CESD12  2.229316  0.16859288 0.9449513 1.736562       NA
+#&gt; CESD13  1.288445  0.34213331 1.6959381 2.915162       NA
+#&gt; CESD14  2.176407  0.49140714 1.2914091 1.864275       NA
+#&gt; CESD15  1.396543  0.96457795 2.3205020 3.603940       NA
+#&gt; CESD16  2.132818  0.27238860 0.9216832 1.808276       NA
+#&gt; CESD17  1.718811  1.60657580 2.3169977 3.469721       NA
+#&gt; CESD18  2.812159  0.26144281 1.2484443 1.984112       NA
+#&gt; CESD19  1.833676  0.78350053 1.8751255 2.638592       NA
+#&gt; CESD20  1.490735 -0.14037590 1.2558582 2.296856       NA
+#&gt; 
+#&gt; $ipar_anchor
+#&gt;                a          b1        b2       b3       b4
+#&gt; EDDEP04 4.261422  0.40106943 0.9756732 1.696300 2.444072
+#&gt; EDDEP05 3.931743  0.30494182 0.9130961 1.593476 2.411682
+#&gt; EDDEP06 4.144759  0.35011299 0.9153482 1.678203 2.470526
+#&gt; EDDEP07 2.801804  0.14774854 0.7723478 1.602715 2.538057
+#&gt; EDDEP09 3.657433  0.31195821 0.9818088 1.782108 2.571127
+#&gt; EDDEP14 2.333381  0.18599340 0.9473173 1.728770 2.632643
+#&gt; EDDEP17 3.274033 -0.49845044 0.4059439 1.413052 2.375459
+#&gt; EDDEP19 3.240973  0.46049359 1.0344267 1.833595 2.514716
+#&gt; EDDEP21 2.736104  0.07245992 0.8097820 1.803067 2.673441
+#&gt; EDDEP22 3.970028  0.20379963 0.7954889 1.648707 2.295496
+#&gt; EDDEP23 2.564431 -0.03841113 0.6926952 1.652820 2.583629
+#&gt; EDDEP26 3.093368 -0.35762208 0.4124999 1.403863 2.223961
+#&gt; EDDEP27 2.920056  0.20434012 0.8909159 1.654652 2.528368
+#&gt; EDDEP28 2.588339 -0.07908821 0.6326205 1.477330 2.327715
+#&gt; EDDEP29 4.342918 -0.11730304 0.5977487 1.428166 2.272495
+#&gt; EDDEP30 2.612846 -0.02337743 0.8683854 1.864303 2.826340
+#&gt; EDDEP31 3.182866 -0.26089392 0.3967655 1.305464 2.133989
+#&gt; EDDEP35 3.105857  0.04371372 0.7223523 1.638758 2.471487
+#&gt; EDDEP36 3.483012 -0.53588456 0.3475707 1.346781 2.354790
+#&gt; EDDEP39 3.131213  0.91802061 1.4813240 2.163996 2.856377
+#&gt; EDDEP41 4.454157  0.55838282 1.0742430 1.779346 2.530080
+#&gt; EDDEP42 2.364413  0.21006534 0.9870936 1.905901 2.933758
+#&gt; EDDEP44 2.549164  0.19350024 1.0117460 2.013109 3.126494
+#&gt; EDDEP45 2.833605  0.14071213 0.9065001 1.846097 2.875194
+#&gt; EDDEP46 2.380628 -0.45788346 0.4779996 1.545663 2.631512
+#&gt; EDDEP48 3.185244  0.19814448 0.7819065 1.525815 2.324082
+#&gt; EDDEP50 2.018099 -0.05044210 0.9258678 1.999516 2.965507
+#&gt; EDDEP54 2.685300 -0.29880847 0.4234598 1.357851 2.307647
+#&gt; 
+#&gt; $method
+#&gt; [1] "FIXEDPAR"
+#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

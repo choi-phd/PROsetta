@@ -82,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">PROsetta</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -133,19 +133,19 @@
     <p><code>runEquateObserved</code> is a function to perform equipercentile test equating between two scales. A concordance table is produced, mapping the observed raw scores from one scale to the scores from another scale.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>runEquateObserved</span>(
-  <span class='kw'>data</span>,
-  scale_from = <span class='fl'>2</span>,
-  scale_to = <span class='fl'>1</span>,
-  type_to = <span class='st'>"raw"</span>,
-  rsss = <span class='kw'>NULL</span>,
-  eq_type = <span class='st'>"equipercentile"</span>,
-  smooth = <span class='st'>"loglinear"</span>,
-  degrees = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fl'>3</span>, <span class='fl'>1</span>),
-  boot = <span class='fl'>TRUE</span>,
-  reps = <span class='fl'>100</span>,
-  <span class='kw'>...</span>
-)</pre>
+    <pre class="usage"><span class='fu'>runEquateObserved</span><span class='op'>(</span>
+  <span class='va'>data</span>,
+  scale_from <span class='op'>=</span> <span class='fl'>2</span>,
+  scale_to <span class='op'>=</span> <span class='fl'>1</span>,
+  type_to <span class='op'>=</span> <span class='st'>"raw"</span>,
+  rsss <span class='op'>=</span> <span class='cn'>NULL</span>,
+  eq_type <span class='op'>=</span> <span class='st'>"equipercentile"</span>,
+  smooth <span class='op'>=</span> <span class='st'>"loglinear"</span>,
+  degrees <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fl'>3</span>, <span class='fl'>1</span><span class='op'>)</span>,
+  boot <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  reps <span class='op'>=</span> <span class='fl'>100</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -207,23 +207,109 @@
 <p>The concordance table is stored in <code>concordance</code> slot.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='kw'>out_eq_raw</span> <span class='op'>&lt;-</span> <span class='fu'>runEquateObserved</span>(<span class='kw'>data_asq</span>,
-  scale_to = <span class='fl'>1</span>, scale_from = <span class='fl'>2</span>,
-  eq_type = <span class='st'>"equipercentile"</span>, smooth = <span class='st'>"loglinear"</span>
-)
-<span class='kw'>out_eq_raw</span><span class='op'>$</span><span class='kw'>concordance</span>
-
+    <pre class="examples"><div class='input'><span class='va'>out_eq_raw</span> <span class='op'>&lt;-</span> <span class='fu'>runEquateObserved</span><span class='op'>(</span><span class='va'>data_asq</span>,
+  scale_to <span class='op'>=</span> <span class='fl'>1</span>, scale_from <span class='op'>=</span> <span class='fl'>2</span>,
+  eq_type <span class='op'>=</span> <span class='st'>"equipercentile"</span>, smooth <span class='op'>=</span> <span class='st'>"loglinear"</span>
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>runEquateObserved requires complete data, attempting to remove cases</span></div><div class='output co'>#&gt; <span class='message'>getCompleteData: filtered 8 cases with missing responses in all scales</span></div><div class='output co'>#&gt; <span class='message'>performing loglinear presmoothing on scale 2 (scale_from) distribution</span></div><div class='output co'>#&gt; <span class='message'>performing loglinear presmoothing on scale 1 (scale_to) distribution</span></div><div class='input'><span class='va'>out_eq_raw</span><span class='op'>$</span><span class='va'>concordance</span>
+</div><div class='output co'>#&gt;    raw_2     raw_1   raw_1_se raw_1_se_boot
+#&gt; 1     11  29.71858  0.2483603     0.1776580
+#&gt; 2     12  32.33361  0.4663568     0.4567534
+#&gt; 3     13  35.10463  0.6681376     0.6431408
+#&gt; 4     14  38.02455  0.8662512     0.8745018
+#&gt; 5     15  41.09143  1.0609494     1.1151137
+#&gt; 6     16  44.29367  1.2524657     1.2376782
+#&gt; 7     17  47.61721  1.5077675     1.4708558
+#&gt; 8     18  51.04427  1.6805879     1.7977498
+#&gt; 9     19  54.53510  1.9308974     2.0485023
+#&gt; 10    20  58.07716  2.0793550     2.2498398
+#&gt; 11    21  61.62444  2.3104050     2.4505889
+#&gt; 12    22  65.16029  2.4379903     2.7390007
+#&gt; 13    23  68.65089  2.6546378     2.8919124
+#&gt; 14    24  72.08339  2.7663267     3.0725263
+#&gt; 15    25  75.43304  2.8846186     3.1458178
+#&gt; 16    26  78.69900  3.1006498     3.1075550
+#&gt; 17    27  81.86936  3.2176468     3.2448089
+#&gt; 18    28  84.94022  3.3460076     3.2878864
+#&gt; 19    29  87.91190  3.4893302     3.2798016
+#&gt; 20    30  90.78567  3.6547336     3.5960570
+#&gt; 21    31  93.56298  3.8541951     4.1598912
+#&gt; 22    32  96.25648  3.8828176     4.2439661
+#&gt; 23    33  98.86327  4.1245578     4.2912381
+#&gt; 24    34 101.38572  4.2016116     4.4460155
+#&gt; 25    35 103.84034  4.5176063     4.5052509
+#&gt; 26    36 106.22205  4.6330766     4.7796254
+#&gt; 27    37 108.53555  5.0946338     5.1840713
+#&gt; 28    38 110.80177  5.2584873     5.7175696
+#&gt; 29    39 113.01125  5.4650506     6.5375165
+#&gt; 30    40 115.17125  5.7131451     6.7778803
+#&gt; 31    41 117.28871  6.0029191     7.1314362
+#&gt; 32    42 119.37049  6.3357393     7.5557551
+#&gt; 33    43 121.42353  6.7139238     8.2436651
+#&gt; 34    44 123.45521  7.1402725     9.4558585
+#&gt; 35    45 125.47375  7.6172335     9.9570781
+#&gt; 36    46 127.48883  8.1454867    10.0979919
+#&gt; 37    47 129.51373  9.6756492    10.9796842
+#&gt; 38    48 131.56670 10.3680795    10.9644244
+#&gt; 39    49 133.67002 11.0295096     9.7580908
+#&gt; 40    50 135.85632 11.5574281     9.5228130
+#&gt; 41    51 138.17184 11.7867191     8.5194702
+#&gt; 42    52 140.70935 12.8142324     7.0466973
+#&gt; 43    53 143.65612 10.7336688     4.4570932</div><div class='input'>
 <span class='co'># \donttest{</span>
-<span class='kw'>out_link</span> <span class='op'>&lt;-</span> <span class='fu'><a href='runLinking.html'>runLinking</a></span>(<span class='kw'>data_asq</span>, method = <span class='st'>"FIXEDPAR"</span>)
-<span class='kw'>out_rsss</span> <span class='op'>&lt;-</span> <span class='fu'><a href='runRSSS.html'>runRSSS</a></span>(<span class='kw'>data_asq</span>, <span class='kw'>out_link</span>)
-<span class='kw'>out_eq_tscore</span> <span class='op'>&lt;-</span> <span class='fu'>runEquateObserved</span>(<span class='kw'>data_asq</span>,
-  scale_to = <span class='fl'>1</span>, scale_from = <span class='fl'>2</span>,
-  type_to = <span class='st'>"tscore"</span>, rsss = <span class='kw'>out_rsss</span>,
-  eq_type = <span class='st'>"equipercentile"</span>, smooth = <span class='st'>"loglinear"</span>
-)
-<span class='kw'>out_eq_tscore</span><span class='op'>$</span><span class='kw'>concordance</span>
-<span class='co'># }</span>
-</pre>
+<span class='va'>out_link</span> <span class='op'>&lt;-</span> <span class='fu'><a href='runLinking.html'>runLinking</a></span><span class='op'>(</span><span class='va'>data_asq</span>, method <span class='op'>=</span> <span class='st'>"FIXEDPAR"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>response data has 40 items</span></div><div class='output co'>#&gt; <span class='message'>performing 1D fixed parameter calibration, using anchor data</span></div><div class='output co'>#&gt; <span class='message'>anchor has 29 items * 5 parameters = 145 parameters</span></div><div class='output co'>#&gt; <span class='message'>anchor parameters applied to par_layout</span></div><div class='output co'>#&gt; Iteration: 1, Log-Lik: -24053.720, Max-Change: 2.73844Iteration: 2, Log-Lik: -23453.207, Max-Change: 0.72611Iteration: 3, Log-Lik: -23439.758, Max-Change: 0.41693Iteration: 4, Log-Lik: -23438.315, Max-Change: 0.66336Iteration: 5, Log-Lik: -23437.791, Max-Change: 0.50564Iteration: 6, Log-Lik: -23437.683, Max-Change: 0.13194Iteration: 7, Log-Lik: -23437.680, Max-Change: 0.08704Iteration: 8, Log-Lik: -23437.677, Max-Change: 0.00500Iteration: 9, Log-Lik: -23437.677, Max-Change: 0.00021Iteration: 10, Log-Lik: -23437.677, Max-Change: 0.00014Iteration: 11, Log-Lik: -23437.677, Max-Change: 0.00014Iteration: 12, Log-Lik: -23437.677, Max-Change: 0.00005</div><div class='input'><span class='va'>out_rsss</span> <span class='op'>&lt;-</span> <span class='fu'><a href='runRSSS.html'>runRSSS</a></span><span class='op'>(</span><span class='va'>data_asq</span>, <span class='va'>out_link</span><span class='op'>)</span>
+<span class='va'>out_eq_tscore</span> <span class='op'>&lt;-</span> <span class='fu'>runEquateObserved</span><span class='op'>(</span><span class='va'>data_asq</span>,
+  scale_to <span class='op'>=</span> <span class='fl'>1</span>, scale_from <span class='op'>=</span> <span class='fl'>2</span>,
+  type_to <span class='op'>=</span> <span class='st'>"tscore"</span>, rsss <span class='op'>=</span> <span class='va'>out_rsss</span>,
+  eq_type <span class='op'>=</span> <span class='st'>"equipercentile"</span>, smooth <span class='op'>=</span> <span class='st'>"loglinear"</span>
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>runEquateObserved requires complete data, attempting to remove cases</span></div><div class='output co'>#&gt; <span class='message'>getCompleteData: filtered 8 cases with missing responses in all scales</span></div><div class='output co'>#&gt; <span class='message'>performing loglinear presmoothing on scale 2 (scale_from) distribution</span></div><div class='output co'>#&gt; <span class='message'>mapping scale 1 (scale_to) raw scores to t-scores using supplied rsss</span></div><div class='output co'>#&gt; <span class='message'>performing loglinear presmoothing on scale 1 (scale_to) distribution</span></div><div class='input'><span class='va'>out_eq_tscore</span><span class='op'>$</span><span class='va'>concordance</span>
+</div><div class='output co'>#&gt;    raw_2 tscore_1 tscore_1_se tscore_1_se_boot
+#&gt; 1     11 33.36372   0.1840702        0.6458357
+#&gt; 2     12 39.16756   0.4814386        0.6057601
+#&gt; 3     13 42.67555   0.7317634        0.7372714
+#&gt; 4     14 45.26483   0.9456388        0.6848983
+#&gt; 5     15 47.32618   1.1381595        0.6784953
+#&gt; 6     16 49.14026   1.3681523        0.7061719
+#&gt; 7     17 50.67257   1.5144268        0.7159583
+#&gt; 8     18 52.06482   1.7168981        0.7647180
+#&gt; 9     19 53.42663   1.8602303        0.7431642
+#&gt; 10    20 54.63536   2.0595410        0.7251766
+#&gt; 11    21 55.80750   2.1741094        0.7235577
+#&gt; 12    22 56.91734   2.3016332        0.7324985
+#&gt; 13    23 58.01375   2.5128914        0.7591992
+#&gt; 14    24 59.09321   2.6519517        0.8509649
+#&gt; 15    25 60.13984   2.8044582        0.8998441
+#&gt; 16    26 61.10221   2.9328283        1.0100719
+#&gt; 17    27 62.13172   3.1087742        1.1590277
+#&gt; 18    28 63.09020   3.2540073        1.2353131
+#&gt; 19    29 64.03928   3.4548135        1.2719089
+#&gt; 20    30 65.02082   3.6725052        1.3661158
+#&gt; 21    31 65.92092   3.8530508        1.3627815
+#&gt; 22    32 66.82951   4.1109814        1.3811495
+#&gt; 23    33 67.75739   4.4021366        1.5352137
+#&gt; 24    34 68.66886   4.7385995        1.6928432
+#&gt; 25    35 69.49840   4.7638406        1.8093149
+#&gt; 26    36 70.35314   5.1299518        1.8385719
+#&gt; 27    37 71.19414   5.2664352        1.8873500
+#&gt; 28    38 72.02934   5.6878068        1.9958370
+#&gt; 29    39 72.82289   5.8343796        2.0989295
+#&gt; 30    40 73.62732   6.0120004        2.0727823
+#&gt; 31    41 74.40785   6.5136427        2.6575850
+#&gt; 32    42 75.21162   6.8017115        2.6908314
+#&gt; 33    43 75.95872   6.9701691        2.6761068
+#&gt; 34    44 76.76154   7.2782573        3.1035202
+#&gt; 35    45 77.53826   7.5895778        4.1768730
+#&gt; 36    46 78.34769   8.0697432        4.4810275
+#&gt; 37    47 79.17070   8.5724514        5.2203110
+#&gt; 38    48 80.07361   8.2175842        5.3895602
+#&gt; 39    49 81.09158   8.8627216        5.2838622
+#&gt; 40    50 82.21165   9.6443142        4.9467569
+#&gt; 41    51 83.52426  10.4101281        4.2961324
+#&gt; 42    52 85.31367  11.3165392        3.6374794
+#&gt; 43    53 87.50312  11.0429480        2.3775803</div><div class='input'><span class='co'># }</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
