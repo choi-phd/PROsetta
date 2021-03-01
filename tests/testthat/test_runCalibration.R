@@ -12,7 +12,7 @@ test_that("runCalibration", {
   expect_equal(sum(ipar), -553.4556, tolerance = 1e-04)
 
   set.seed(1)
-  calib <- runCalibration(d, fixedpar = TRUE, technical = list(NCYCLES = 1000))
+  calib <- runCalibration(d, fix_method = "item", technical = list(NCYCLES = 1000))
   ipar <- mirt::coef(calib, IRTpars = TRUE, simplify = TRUE)$items
 
   ipar_anchor_original <- d@anchor[, c("a", "cb1", "cb2", "cb3", "cb4")]
