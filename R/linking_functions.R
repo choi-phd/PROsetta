@@ -91,6 +91,7 @@ runCalibration <- function(data, dimensions = 1, fixedpar = FALSE, ignore_noncon
 #'   \item{\code{FIXEDPAR} for fixed parameter calibration}
 #'   \item{\code{CP} for calibrated projection using fixed parameter calibration on the anchor dimension}
 #'   \item{\code{CPLA} for linear approximation of calibrated projection. This is identical to 'CP' in \code{\link{runLinking}} but uses approximation in \code{\link{runRSSS}}}
+#'   \item{\code{CPFIXEDDIM} for calibrated projection using mean and variance constraints on the anchor dimension}
 #' }
 #' Linear transformation methods are performed with \code{\link[plink:plink-methods]{plink}} in \href{https://CRAN.R-project.org/package=plink}{'plink'} package.
 #'
@@ -118,11 +119,11 @@ runLinking <- function(data, method, ...) {
   if (is.null(data@anchor)) {
     stop("argument 'data': @anchor must be supplied for runLinking()")
   }
-  if (!method %in% c("MM", "MS", "HB", "SL", "FIXEDPAR", "CP", "CPLA")) {
-    stop(sprintf("argument 'method': unrecognized value '%s' (accepts 'MM', 'MS', 'HB', 'SL', 'FIXEDPAR', 'CP', 'CPLA')", method))
+  if (!method %in% c("MM", "MS", "HB", "SL", "FIXEDPAR", "CP", "CPLA", "CPFIXEDDIM")) {
+    stop(sprintf("argument 'method': unrecognized value '%s' (accepts 'MM', 'MS', 'HB', 'SL', 'FIXEDPAR', 'CP', 'CPLA', 'CPFIXEDDIM')", method))
   }
 
-  if (method %in% c("CP", "CPLA")) {
+  if (method %in% c("CP", "CPLA", "CPFIXEDDIM")) {
     dimensions  <- 2
     do_fixedpar <- TRUE
   } else if (method == "FIXEDPAR") {
