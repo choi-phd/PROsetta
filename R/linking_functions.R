@@ -7,7 +7,13 @@ NULL
 #'
 #' @param data a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
 #' @param dimensions number of dimensions to use. Must be 1 or 2. If 1, use one underlying dimension for all instruments combined. If 2, use each dimension separately for the anchor instrument and the developing instrument. Covariance between dimensions is freely estimated. (default = \code{1})
-#' @param fixedpar if \code{TRUE}, perform fixed parameter calibration using anchor data. If \code{FALSE}, perform free calibration. (default = \code{TRUE})
+#' @param fix_method the type of constraints to impose.
+#' \itemize{
+#'   \item{\code{item} for fixed parameter calibration using anchor item parameters}
+#'   \item{\code{theta} for using the mean and the variance obtained from a unidimensional calibration of anchor items}
+#'   \item{\code{free} for free calibration}
+#' }
+#' @param fixedpar (deprecated) if \code{TRUE}, perform fixed parameter calibration using anchor data. If \code{FALSE}, perform free calibration. (default = \code{TRUE})
 #' @param ignore_nonconv if \code{TRUE}, return results even when calibration does not converge. If \code{FALSE}, raise an error when calibration does not converge. (default = \code{FALSE})
 #' @param ... additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{'mirt'} package.
 #'
@@ -28,7 +34,7 @@ NULL
 #' mirt::itemfit(out_calib, "S_X2", na.rm = TRUE)
 #' }
 #' @export
-runCalibration <- function(data, dimensions = 1, fixedpar = FALSE, ignore_nonconv = FALSE, ...) {
+runCalibration <- function(data, dimensions = 1, fix_method = "free", fixedpar = FALSE, ignore_nonconv = FALSE, ...) {
 
   validateData(data)
 
@@ -36,7 +42,7 @@ runCalibration <- function(data, dimensions = 1, fixedpar = FALSE, ignore_noncon
   ni          <- dim(resp_data)[2]
   message(sprintf("response data has %i items", ni))
 
-  if (fixedpar) {
+  if (toupper(fix_method) == "ITEM") {
     message(
       sprintf(
         "performing %sD fixed parameter calibration, using anchor data",
@@ -49,7 +55,61 @@ runCalibration <- function(data, dimensions = 1, fixedpar = FALSE, ignore_noncon
     par_layout  <- fixParLayout(par_layout, data)
     model_specs <- getModel(data, dimensions, bound_cov)
     calibration <- mirt::mirt(resp_data, model_specs, itemtype = "graded", pars = par_layout, ...)
-  } else {
+  } else if (toupper(fix_method) == "THETA") {
+
+    message(rep("-", options()$width))
+    message(
+      sprintf(
+        "performing 1D fixed parameter calibration of anchor instrument, using anchor data",
+        dimensions
+      ),
+      appendLF = TRUE
+    )
+
+    # Step 1. Perform 1D calibration on anchor data only, constraining item parameters to anchor values
+    # The goal of this step is to obtain the latent mean and SD of the anchor dimension
+    data_anchor <- data
+    anchor_dim  <- getAnchorDimension(data)
+    data_anchor@response <- getResponse(data_anchor, scale_id = anchor_dim, person_id = TRUE)
+    data_anchor@itemmap  <- subset(
+      data_anchor@itemmap,
+      data_anchor@itemmap$item_id %in% getItemNames(data_anchor, scale_id = anchor_dim)
+    )
+    calibration_1d <- runCalibration(data_anchor, dimensions = 1, fix_method = "ITEM")
+    calibration_1d_pars <- mirt::coef(calibration_1d, IRTpars = FALSE, simplify = TRUE)
+    message(sprintf("latent mean    : %s", calibration_1d_pars$means))
+    message(sprintf("latent variance: %s", calibration_1d_pars$cov))
+
+    # Step 2. Constrain anchor dimension using 1D results
+    par_layout <- getParLayout(data, dimensions, bound_cov = FALSE)
+
+    idx_mean <- which(
+      par_layout$class == "GroupPars" &
+      par_layout$name == sprintf("MEAN_%s", anchor_dim)
+    )
+    par_layout[idx_mean, ]$value <- calibration_1d_pars$means
+    par_layout[idx_mean, ]$est   <- FALSE
+    idx_var <- which(
+      par_layout$class == "GroupPars" &
+      par_layout$name == sprintf("COV_%s%s", anchor_dim, anchor_dim)
+    )
+    par_layout[idx_var, ]$value  <- calibration_1d_pars$cov
+    par_layout[idx_var, ]$est    <- FALSE
+
+    message(rep("-", options()$width))
+
+    # Step 3. Fit a 2D model
+    message(
+      sprintf(
+        "performing %sD free calibration of all items, using the obtained anchor mean and variance",
+        dimensions
+      ),
+      appendLF = TRUE
+    )
+    model_specs <- getModel(data, dimensions, bound_cov = FALSE)
+    calibration <- mirt::mirt(resp_data, model_specs, itemtype = "graded", pars = par_layout, ...)
+
+  } else if (toupper(fix_method) == "FREE") {
     message(
       sprintf(
         "performing %sD free calibration of all items, ignoring anchor data",
@@ -123,18 +183,21 @@ runLinking <- function(data, method, ...) {
     stop(sprintf("argument 'method': unrecognized value '%s' (accepts 'MM', 'MS', 'HB', 'SL', 'FIXEDPAR', 'CP', 'CPLA', 'CPFIXEDDIM')", method))
   }
 
-  if (method %in% c("CP", "CPLA", "CPFIXEDDIM")) {
-    dimensions  <- 2
-    do_fixedpar <- TRUE
+  if (method %in% c("CP", "CPLA")) {
+    dimensions <- 2
+    fix_method <- "item"
+  } else if (method == "CPFIXEDDIM") {
+    dimensions <- 2
+    fix_method <- "theta"
   } else if (method == "FIXEDPAR") {
-    dimensions  <- 1
-    do_fixedpar <- TRUE
+    dimensions <- 1
+    fix_method <- "item"
   } else {
-    dimensions  <- 1
-    do_fixedpar <- FALSE
+    dimensions <- 1
+    fix_method <- "free"
   }
 
-  calibration <- runCalibration(data, dimensions = dimensions, fixedpar = do_fixedpar, ...)
+  calibration <- runCalibration(data, dimensions = dimensions, fix_method = fix_method, ...)
 
   if (dimensions == 1) {
 
@@ -149,7 +212,7 @@ runLinking <- function(data, method, ...) {
     pars[[1]] <- ipar
     pars[[2]] <- data@anchor[c("a", paste0("cb", 1:(max_cat - 1)))]
 
-    if (!do_fixedpar) {
+    if (fix_method == "free") {
       message(sprintf("now performing linear transformation to match anchor with %s method", method))
       pm_all    <- plink::as.poly.mod(ni_all   , "grm", 1:ni_all)
       pm_anchor <- plink::as.poly.mod(ni_anchor, "grm", 1:ni_anchor)
