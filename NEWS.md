@@ -1,3 +1,9 @@
+# PROsetta 0.3.0
+
+## New features
+* `runLinking()` now supports `method = 'CPFIXEDDIM'` to perform two-dimensional calibration, for use in performing calibrated projection ([Thissen et al., 2015](https://doi.org/10.1007/978-3-319-19977-1_1)). The difference with `method = 'CP'` is that `'CPFIXEDDIM'` constrains the mean and the variance of the latent anchor dimension, instead of constraining anchor item parameters. For this purpose, a unidimensional fixed parameter calibration using only the anchor response data is performed to obtain the mean and the variance.
+* `getRSSS()` for computing a single raw-score to standard-score table is now exposed.
+
 # PROsetta 0.2.1
 
 ## QoL updates
