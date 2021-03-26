@@ -393,7 +393,7 @@ runEquateObserved <- function(data, scale_from = 2, scale_to = 1, type_to = "raw
 
 }
 
-#' Run Crosswalk Table Generation
+#' Compute Crosswalk Tables
 #'
 #' \code{\link{runRSSS}} is a function to generate raw-score to standard-score crosswalk tables from supplied calibrated item parameters.
 #'

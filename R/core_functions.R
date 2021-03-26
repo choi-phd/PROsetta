@@ -265,7 +265,21 @@ fixParLayout <- function(par_layout, d) {
 
 }
 
-#' @noRd
+#' Compute a Crosswalk Table
+#'
+#' \code{\link{getRSSS}} is a function to generate a raw-score to standard-score crosswalk table.
+#'
+#' @param ipar an item parameter matrix for graded response items. Accepts both a/b and a/d format parameters. Accepts multidimensional item parameters.
+#' @param theta_grid the theta grid to use.
+#' @param is_minscore_0 if \code{TRUE}, the scores of each item begins from 0. if \code{FALSE}, the scores of each item begins from 1.
+#' @param prior_mu_sigma a named list containing prior distribution parameters:
+#' \itemize{
+#'   \item{\code{mu} means}
+#'   \item{\code{sigma} the covariance matrix}
+#'   \item{\code{sd} standard deviations}
+#'   \item{\code{corr} the correlation matrix}
+#' }
+#' @export
 getRSSS <- function(ipar, theta_grid, is_minscore_0, prior_mu_sigma) {
 
   if (is.vector(theta_grid)) {
