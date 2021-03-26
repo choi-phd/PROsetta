@@ -2,7 +2,7 @@
 % Please edit documentation in R/linking_functions.R
 \name{runRSSS}
 \alias{runRSSS}
-\title{Run Crosswalk Table Generation}
+\title{Compute Crosswalk Tables}
 \usage{
 runRSSS(
   data,
