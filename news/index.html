@@ -81,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">PROsetta</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -127,6 +127,21 @@
       <small>Source: <a href='https://github.com/choi-phd/PROsetta/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="prosetta-030" class="section level1">
+<h1 class="page-header" data-toc-text="0.3.0">
+<a href="#prosetta-030" class="anchor"></a>PROsetta 0.3.0<small> Unreleased </small>
+</h1>
+<div id="new-features" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-features" class="anchor"></a>New features</h2>
+<ul>
+<li>
+<code><a href="../reference/runLinking.html">runLinking()</a></code> now supports <code>method = 'CPFIXEDDIM'</code> to perform two-dimensional calibration, for use in performing calibrated projection (<a href="https://doi.org/10.1007/978-3-319-19977-1_1">Thissen et al., 2015</a>). The difference with <code>method = 'CP'</code> is that <code>'CPFIXEDDIM'</code> constrains the mean and the variance of the latent anchor dimension, instead of constraining anchor item parameters. For this purpose, a unidimensional fixed parameter calibration using only the anchor response data is performed to obtain the mean and the variance.</li>
+<li>
+<code><a href="../reference/getRSSS.html">getRSSS()</a></code> for computing a single raw-score to standard-score table is now exposed.</li>
+</ul>
+</div>
+</div>
     <div id="prosetta-021" class="section level1">
 <h1 class="page-header" data-toc-text="0.2.1">
 <a href="#prosetta-021" class="anchor"></a>PROsetta 0.2.1<small> 2020-11-25 </small>
@@ -144,9 +159,9 @@
 <h1 class="page-header" data-toc-text="0.2.0">
 <a href="#prosetta-020" class="anchor"></a>PROsetta 0.2.0<small> 2020-09-20 </small>
 </h1>
-<div id="new-features" class="section level2">
+<div id="new-features-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features" class="anchor"></a>New features</h2>
+<a href="#new-features-1" class="anchor"></a>New features</h2>
 <ul>
 <li>
 <code><a href="../reference/runLinking.html">runLinking()</a></code> now supports <code>method = 'CP'</code> to perform two-dimensional calibration, for use in performing calibrated projection (<a href="https://doi.org/10.1007/s11136-011-9874-y">Thissen et al., 2011</a>).</li>
