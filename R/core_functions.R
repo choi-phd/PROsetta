@@ -99,7 +99,7 @@ getAnchorPar <- function(d, as_AD) {
   idx <- c()
   for (j in 1:dim(d@anchor)[2]) {
     if (inherits(d@anchor[, j], "numeric")) {
-      if (all(d@anchor[, j] != round(d@anchor[, j]), na.rm = TRUE)) {
+      if (any(d@anchor[, j] != round(d@anchor[, j]), na.rm = TRUE)) {
         idx <- c(idx, j)
       }
     }
