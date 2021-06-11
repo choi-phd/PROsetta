@@ -1,7 +1,7 @@
 citHeader("To cite PROsetta in publications use:")
 citEntry(
-  entry = "Manual",
-  title = "{PROsetta}: Linking Patient-Reported Outcomes Measures",
+  entry = "Article",
+  title = "{PROsetta}: An R Package for Linking Patient-Reported Outcome Measures",
   author = c(
     person("Seung W.", "Choi"),
     person("Sangdon", "Lim"),
@@ -9,13 +9,15 @@ citEntry(
     person("Aaron J.", "Kaat"),
     person("David", "Cella")
   ),
-  year = 2020,
-  note = "R package version 0.2.0",
-  url = "https://CRAN.R-project.org/package=PROsetta",
+  year = 2021,
+  journal = "Applied Psychological Measurement",
+  doi = "10.1177/01466216211013106",
   textVersion = paste(
     "Choi, S. W., Lim, S., Schalet, B. D., Kaat, A. J., Cella, D.",
-    "(2020).",
-    "PROsetta: Linking Patient-Reported Outcomes Measures. R package version 0.2.0.",
-    "https://CRAN.R-project.org/package=PROsetta"
+    "(2021).",
+    "PROsetta: An R Package for Linking Patient-Reported Outcome Measures.",
+    "Applied Psychological Measurement.",
+    "Advance online publication.",
+    "https://doi.org/10.1177/01466216211013106"
   )
 )

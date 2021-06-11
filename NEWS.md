@@ -1,3 +1,10 @@
+# PROsetta 0.3.1
+
+## Bug fixes
+* Fixed where `runCalibration(fixedpar = TRUE)` was not reading anchor parameters correctly when an integer value existed in anchor parameters.
+* Fixed where item parameters for dichotomous items were triggering an error while being parsed.
+* For compatibility with R < 4.0, `loadData()` now sanitizes input data when a data frame is supplied.
+
 # PROsetta 0.3.0
 
 ## New features
