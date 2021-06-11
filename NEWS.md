@@ -1,3 +1,8 @@
+# PROsetta 0.3.1
+
+## Bug fixes
+* Fixed where `runCalibration(fixedpar = TRUE)` was not reading anchor parameters correctly when an integer value existed in anchor parameters.
+
 # PROsetta 0.3.0
 
 ## New features

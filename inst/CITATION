@@ -10,12 +10,13 @@ citEntry(
     person("David", "Cella")
   ),
   year = 2020,
-  note = "R package version 0.2.0",
+  note = sprintf("R package version %s", meta$Version),
   url = "https://CRAN.R-project.org/package=PROsetta",
   textVersion = paste(
     "Choi, S. W., Lim, S., Schalet, B. D., Kaat, A. J., Cella, D.",
     "(2020).",
-    "PROsetta: Linking Patient-Reported Outcomes Measures. R package version 0.2.0.",
+    "PROsetta: Linking Patient-Reported Outcomes Measures.",
+    sprintf("R package version %s.", meta$Version),
     "https://CRAN.R-project.org/package=PROsetta"
   )
 )
