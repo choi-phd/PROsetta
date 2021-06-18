@@ -414,7 +414,7 @@ getProb <- function(ipar, model, theta_grid) {
     # a/b parameterization
     if (p_type == "ab") {
       par_a <- ipar[, 1:dimensions]
-      par_b <- ipar[, dimensions + 1:(max_cat - 1)]
+      par_b <- ipar[, dimensions + 1:(max_cat - 1), drop = FALSE]
     }
 
     pp <- list()
