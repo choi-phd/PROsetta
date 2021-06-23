@@ -813,3 +813,13 @@ appendCPLA <- function(score_table, n_scale, mu_sigma) {
   return(score_table)
 
 }
+
+#' @noRd
+sanitizeData <- function(x) {
+  for (v in colnames(x)) {
+    if (inherits(x[[v]], "factor")) {
+      x[[v]] <- as.character(x[[v]])
+    }
+  }
+  return(x)
+}
