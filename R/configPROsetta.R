@@ -109,12 +109,14 @@ loadData <- function(response, itemmap, anchor,
     stop(sprintf("argument 'anchor': unrecognized object class %s", class(anchor)))
   }
 
+  response <- sanitizeData(response)
+  itemmap  <- sanitizeData(itemmap)
+  anchor   <- sanitizeData(anchor)
 
   colnames(itemmap) <- tolower(colnames(itemmap))
 
   names_response <- colnames(response)
   names_itemmap  <- colnames(itemmap)
-
 
   if ("reverse" %in% tolower(names_itemmap)) {
     if (any(itemmap$reverse == 1)) {
