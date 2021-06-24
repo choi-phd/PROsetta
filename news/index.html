@@ -136,6 +136,8 @@
 <a href="#bug-fixes" class="anchor"></a>Bug fixes</h2>
 <ul>
 <li>Fixed where <code><a href="../reference/runCalibration.html">runCalibration(fixedpar = TRUE)</a></code> was not reading anchor parameters correctly when an integer value existed in anchor parameters.</li>
+<li>Fixed where item parameters for dichotomous items were triggering an error while being parsed.</li>
+<li>For compatibility with R &lt; 4.0, <code><a href="../reference/loadData.html">loadData()</a></code> now sanitizes input data when a data frame is supplied.</li>
 </ul>
 </div>
 </div>
