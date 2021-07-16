@@ -253,7 +253,8 @@ runFrequency <- function(data, check_frequency = TRUE) {
   tmp <- apply(resp_data, 2, table)
 
   if (inherits(tmp, "list")) {
-    catnames <- sort(unique(do.call(c, lapply(tmp, names))))
+    catnames <- unique(do.call(c, lapply(tmp, names)))
+    catnames <- sort(as.numeric(catnames))
     freq <- as.data.frame(matrix(NA, length(tmp), length(catnames)))
     colnames(freq) <- catnames
     rownames(freq) <- names(tmp)
