@@ -210,6 +210,12 @@ fixParLayout <- function(par_layout, d) {
   }
 
   ipar_anchor    <- getAnchorPar(d, as_AD = TRUE)
+  if (dimensions == 1 & (!"a1" %in% names(ipar_anchor))) {
+    # if using a 1D model and the anchor dimension is not 1
+    a_par_name <- sprintf("a%s", getAnchorDimension(d))
+    a_par_idx  <- which(names(ipar_anchor) == a_par_name)
+    names(ipar_anchor)[a_par_idx] <- "a1"
+  }
   par_to_fix     <- which(par_layout$item %in% rownames(ipar_anchor))
   n_items_to_fix <- length(unique(par_layout$item[par_to_fix]))
   par_layout$est[par_to_fix] <- FALSE
