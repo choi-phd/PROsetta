@@ -1,3 +1,9 @@
+# PROsetta 0.3.2
+
+* Fixed where `runLinking(method = "FIXEDPAR")` was not working when the anchor instrument ID was not 1 in item map.
+* Fixed where `runLinking(method = "FIXEDPAR")` was not working when the anchor and target instruments had different numbers of categories in response data.
+* Fixed where `runFrequency()` was not sorting categories correctly when the number of categories was 10 or above.
+
 # PROsetta 0.3.1
 
 ## Bug fixes
