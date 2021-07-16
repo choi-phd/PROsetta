@@ -248,8 +248,8 @@ runLinking <- function(data, method, ...) {
     out$method      <- method
     rownames(out$ipar_linked) <- id_new$ID
     rownames(out$ipar_anchor) <- id_old$ID
-    colnames(out$ipar_linked) <- colnames(ipar)
-    colnames(out$ipar_anchor) <- colnames(ipar)
+    colnames(out$ipar_linked) <- colnames(ipar)[1:dim(out$ipar_linked)[2]]
+    colnames(out$ipar_anchor) <- colnames(ipar)[1:dim(out$ipar_anchor)[2]]
 
     return(out)
 
