@@ -18,9 +18,6 @@ NULL
 #'     \item \code{item_id} item ID strings. This column refers to column names in raw response data, excluding the participant ID column.
 #'     \item \code{item_name} new item ID strings to be used in the combined scale.
 #'     \item \code{ncat} the number of response categories.
-#'     \item \code{min_score} the minimum score of the item.
-#'     \item \code{reverse} whether the item data has been reverse-scored. \code{1} indicates the item has been reverse-scored, and \code{0} indicates the item has not been reverse-scored.
-#'     \item \code{scores} a comma-separated string representing all possible score values from the item.
 #'   }
 #'   \item \code{\link{anchor_asq}} a \code{\link{data.frame}} containing anchor item parameters for 29 items.
 #'   \itemize{
@@ -71,9 +68,6 @@ NULL
 #'     \item \code{item_id} item ID strings. This column refers to column names in raw response data, excluding the participant ID column.
 #'     \item \code{item_name} new item ID strings to be used in the combined scale.
 #'     \item \code{ncat} the number of response categories.
-#'     \item \code{min_score} the minimum score of the item.
-#'     \item \code{reverse} whether the item data has been reverse-scored. \code{1} indicates the item has been reverse-scored, and \code{0} indicates the item has not been reverse-scored.
-#'     \item \code{scores} a comma-separated string representing all possible score values from the item.
 #'   }
 #'   \item \code{\link{anchor_dep}} a \code{\link{data.frame}} containing anchor item parameters for 28 items.
 #'   \itemize{
