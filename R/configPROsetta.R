@@ -3,7 +3,7 @@ NULL
 
 #' Load data from supplied config
 #'
-#' \code{\link{loadData}} is a data loading function to create a \code{\linkS4class{PROsetta_data}} object, for scale linking/equating with 'PROsetta' package.
+#' \code{\link{loadData}} is a data loading function to create a \code{\linkS4class{PROsetta_data}} object, for scale linking/equating with 'PROsetta' package. Response data is assumed to be reverse-coded for applicable items.
 #'
 #' @param response response data containing case IDs and item responses. This can be a \code{.csv} filename or a \code{\link{data.frame}} object.
 #' @param itemmap an item map containing item IDs and scale IDs. This can be a \code{.csv} filename or a \code{\link{data.frame}} object.
@@ -118,16 +118,6 @@ loadData <- function(response, itemmap, anchor,
   names_response <- colnames(response)
   names_itemmap  <- colnames(itemmap)
 
-  if ("reverse" %in% tolower(names_itemmap)) {
-    if (any(itemmap$reverse == 1)) {
-      message("some items are marked as reversed items in 'reverse' column in item map")
-      message("assuming the response data is already reverse coded")
-    } else {
-      message("'reverse' column is present in item map, and no items are marked as reversed")
-    }
-  }
-
-
   # Guess IDs
 
   n_ids <- sum(!is.null(item_id), !is.null(person_id), !is.null(scale_id))
@@ -174,6 +164,15 @@ loadData <- function(response, itemmap, anchor,
   data@item_id   <- item_id
   data@person_id <- person_id
   data@scale_id  <- scale_id
+
+  for (s in unique(data@itemmap[[scale_id]])) {
+    cor_matrix <- cor(getResponse(data, 1), use = "pairwise.complete.obs")
+    reverse_code_check <- apply(cor_matrix, 1, sum) < 0
+    if (any(reverse_code_check)) {
+      potentially_not_reverse_coded_items <- names(which(reverse_code_check))
+      warning(sprintf("Some variables may need reverse-coding: %s", potentially_not_reverse_coded_items))
+    }
+  }
 
   if (validObject(data)) {
     return(data)
