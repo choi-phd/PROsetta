@@ -1,3 +1,8 @@
+# PROsetta 0.3.3
+
+* Removed unused columns (`min_score`, `reverse`, `scores`) in example datasets for clarity. The package functions do not use these columns.
+* `loadData()` now warns if there is a variable that may need reverse coding. This is triggered by a negative correlation value.
+
 # PROsetta 0.3.2
 
 * Fixed where `runLinking(method = "FIXEDPAR")` was not working when the anchor instrument ID was not 1 in item map.
