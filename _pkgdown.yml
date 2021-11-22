@@ -51,6 +51,7 @@ reference:
   - getEscore
   - getScaleSum
   - getTheta
+  - getRSSS
   - compareScores
   - checkFrequency
 
