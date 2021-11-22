@@ -132,8 +132,8 @@
 <a href="#prosetta-032" class="anchor"></a>PROsetta 0.3.2<small> 2021-07-20 </small>
 </h1>
 <ul>
-<li>Fixed where <code><a href="../reference/runLinking.html">runLinking(method = "FIXEDPAR")</a></code> was not working when the anchor instrument ID was not 1 in item map.</li>
-<li>Fixed where <code><a href="../reference/runLinking.html">runLinking(method = "FIXEDPAR")</a></code> was not working when the anchor and target instruments had different numbers of categories in response data.</li>
+<li>Fixed where <code>runLinking(method = "FIXEDPAR")</code> was not working when the anchor instrument ID was not 1 in item map.</li>
+<li>Fixed where <code>runLinking(method = "FIXEDPAR")</code> was not working when the anchor and target instruments had different numbers of categories in response data.</li>
 <li>Fixed where <code><a href="../reference/runFrequency.html">runFrequency()</a></code> was not sorting categories correctly when the number of categories was 10 or above.</li>
 </ul>
 </div>
@@ -145,7 +145,7 @@
 <h2 class="hasAnchor">
 <a href="#bug-fixes" class="anchor"></a>Bug fixes</h2>
 <ul>
-<li>Fixed where <code><a href="../reference/runCalibration.html">runCalibration(fixedpar = TRUE)</a></code> was not reading anchor parameters correctly when an integer value existed in anchor parameters.</li>
+<li>Fixed where <code>runCalibration(fixedpar = TRUE)</code> was not reading anchor parameters correctly when an integer value existed in anchor parameters.</li>
 <li>Fixed where item parameters for dichotomous items were triggering an error while being parsed.</li>
 <li>For compatibility with R &lt; 4.0, <code><a href="../reference/loadData.html">loadData()</a></code> now sanitizes input data when a data frame is supplied.</li>
 </ul>
@@ -192,9 +192,9 @@
 <li>
 <code><a href="../reference/runLinking.html">runLinking()</a></code> now supports <code>method = 'CPLA'</code> to perform two-dimensional calibration, for use in performing linear approximation of calibrated projection (<a href="https://doi.org/10.1007/978-3-319-19977-1_1">Thissen et al., 2015</a>).</li>
 <li>
-<code><a href="../reference/runRSSS.html">runRSSS()</a></code> now performs two-dimensional Lord-Wingersky recursion with numerical integration, when the output from <code><a href="../reference/runLinking.html">runLinking(method = 'CP')</a></code> is supplied.</li>
+<code><a href="../reference/runRSSS.html">runRSSS()</a></code> now performs two-dimensional Lord-Wingersky recursion with numerical integration, when the output from <code>runLinking(method = 'CP')</code> is supplied.</li>
 <li>
-<code><a href="../reference/runRSSS.html">runRSSS()</a></code> now performs linear approximation of calibrated projection, when the output from <code><a href="../reference/runLinking.html">runLinking(method = 'CPLA')</a></code> is supplied.</li>
+<code><a href="../reference/runRSSS.html">runRSSS()</a></code> now performs linear approximation of calibrated projection, when the output from <code>runLinking(method = 'CPLA')</code> is supplied.</li>
 <li>Shiny application <code><a href="../reference/PROsetta.html">PROsetta()</a></code> now supports calibrated projection and its linear approximation.</li>
 </ul>
 </div>
@@ -203,7 +203,7 @@
 <a href="#bug-fixes-1" class="anchor"></a>Bug fixes</h2>
 <ul>
 <li>
-<code><a href="../reference/runEquateObserved.html">runEquateObserved(type_to = "theta")</a></code> now works.</li>
+<code>runEquateObserved(type_to = "theta")</code> now works.</li>
 <li>
 <code><a href="../reference/loadData.html">loadData()</a></code> now checks for a valid <code>@scale_id</code>.</li>
 </ul>
