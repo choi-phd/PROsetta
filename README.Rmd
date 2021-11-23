@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 [![Number of downloads](https://cranlogs.r-pkg.org/badges/grand-total/PROsetta?color=lightgrey)](https://cran.r-project.org/package=PROsetta)
 <!-- badges: end -->
 
-**PROsetta** package provides functions for metric-linking of item parameters and producing crosswalk tables as used in the [PROsetta Stone project](http://prosettastone.org/).
+**PROsetta** package provides functions for metric-linking of item parameters and producing crosswalk tables as used in the [PROsetta Stone project](https://www.prosettastone.org/).
 
 The primary aim of the PROsetta Stone project (1RC4CA157236-01, PI: David Cella) is to develop and apply methods to link the Patient-Reported Outcomes Measurement Information System (PROMIS) measures with other related "legacy" instruments to expand the range of PRO assessment options within a common, standardized metric. The project identifies and applies appropriate linking methods that allow scores on a range of PRO instruments to be expressed as standardized T-score metrics linked to the PROMIS.
 
