@@ -11,7 +11,7 @@ downloads](https://cranlogs.r-pkg.org/badges/grand-total/PROsetta?color=lightgre
 
 **PROsetta** package provides functions for metric-linking of item
 parameters and producing crosswalk tables as used in the [PROsetta Stone
-project](http://prosettastone.org/).
+project](https://www.prosettastone.org/).
 
 The primary aim of the PROsetta Stone project (1RC4CA157236-01, PI:
 David Cella) is to develop and apply methods to link the
