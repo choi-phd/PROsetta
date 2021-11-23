@@ -1,4 +1,4 @@
-# PROsetta 0.3.3
+# PROsetta 0.3.4
 
 * Removed unused columns (`min_score`, `reverse`, `scores`) in example datasets for clarity. The package functions do not use these columns.
 * `loadData()` now warns if there is a variable that may need reverse coding. This is triggered by a negative correlation value.
