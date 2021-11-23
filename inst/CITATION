@@ -9,15 +9,17 @@ citEntry(
     person("Aaron J.", "Kaat"),
     person("David", "Cella")
   ),
-  year = 2021,
+  year = "2021",
   journal = "Applied Psychological Measurement",
+  volume = "45",
+  number = "5",
+  pages = "386--388",
   doi = "10.1177/01466216211013106",
   textVersion = paste(
     "Choi, S. W., Lim, S., Schalet, B. D., Kaat, A. J., Cella, D.",
     "(2021).",
     "PROsetta: An R Package for Linking Patient-Reported Outcome Measures.",
-    "Applied Psychological Measurement.",
-    "Advance online publication.",
+    "Applied Psychological Measurement, 45(5), 386-388.",
     "https://doi.org/10.1177/01466216211013106"
   )
 )
