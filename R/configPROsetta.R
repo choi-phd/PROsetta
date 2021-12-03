@@ -333,9 +333,9 @@ runClassical <- function(data, omega = FALSE, scalewise = TRUE, ...) {
   }
 
   items <- data@itemmap[[data@item_id]]
-  out_alpha[['combined']] <- psych::alpha(data@response[items])
+  out_alpha[["combined"]] <- psych::alpha(data@response[items])
   if (omega) {
-    out_omega[['combined']] <- psych::omega(data@response[items], ...)
+    out_omega[["combined"]] <- psych::omega(data@response[items], ...)
   }
 
   return(list(
@@ -385,7 +385,8 @@ runCFA <- function(data, estimator = "WLSMV", std.lv = TRUE, scalewise = FALSE, 
   items <- itemmap[[data@item_id]]
   model <- paste("Factor =~ ", paste0(items, collapse = " + "))
   model_fit <- lavaan::cfa(model, data@response, estimator = estimator, ordered = items, std.lv = std.lv, ...)
-  out[['combined']] <- model_fit
+  out[["combined"]] <- model_fit
 
   return(out)
+
 }
