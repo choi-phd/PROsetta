@@ -210,7 +210,8 @@ runLinking <- function(data, method, ...) {
 
   if (dimensions == 1) {
 
-    ipar      <- mirt::coef(calibration, IRTpars = TRUE, simplify = TRUE)$items
+    fit       <- mirt::coef(calibration, IRTpars = TRUE, simplify = TRUE)
+    ipar      <- fit$items
     ni_all    <- nrow(ipar)
     ni_anchor <- nrow(data@anchor)
     max_cat   <- max(getColumn(data@anchor, "ncat"))
@@ -243,6 +244,7 @@ runLinking <- function(data, method, ...) {
       out$constants <- NA
       out$ipar_linked <- pars[[1]]
       out$ipar_anchor <- pars[[2]]
+      out$mu_sigma    <- getMuSigma(calibration)
     }
 
     out$method      <- method
