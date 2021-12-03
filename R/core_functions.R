@@ -837,3 +837,9 @@ sanitizeData <- function(x) {
   }
   return(x)
 }
+
+#' @noRd
+printLog <- function(txt1, txt2) {
+  message(sprintf("%-12s| %s", txt1, txt2))
+  flush.console()
+}
