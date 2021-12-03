@@ -84,10 +84,9 @@ runCalibration <- function(data, dimensions = 1, fix_method = "free", fixedpar =
       data_anchor@itemmap,
       data_anchor@itemmap$item_id %in% getItemNames(data_anchor, scale_id = anchor_dim)
     )
-    calibration_1d <- runCalibration(data_anchor, dimensions = 1, fix_method = "ITEM")
-    calibration_1d_pars <- mirt::coef(calibration_1d, IRTpars = FALSE, simplify = TRUE)
-    message(sprintf("latent mean    : %s", calibration_1d_pars$means))
-    message(sprintf("latent variance: %s", calibration_1d_pars$cov))
+    linked_parameters_1d <- runLinking(data_anchor, method = "FIXEDPAR")
+    message(sprintf("latent mean    : %s", linked_parameters_1d$mu_sigma$mu))
+    message(sprintf("latent variance: %s", linked_parameters_1d$mu_sigma$sigma))
 
     # Step 2. Constrain anchor dimension using 1D results
     par_layout <- getParLayout(data, dimensions, bound_cov = FALSE)
@@ -96,13 +95,13 @@ runCalibration <- function(data, dimensions = 1, fix_method = "free", fixedpar =
       par_layout$class == "GroupPars" &
       par_layout$name == sprintf("MEAN_%s", anchor_dim)
     )
-    par_layout[idx_mean, ]$value <- calibration_1d_pars$means
+    par_layout[idx_mean, ]$value <- linked_parameters_1d$mu_sigma$mu
     par_layout[idx_mean, ]$est   <- FALSE
     idx_var <- which(
       par_layout$class == "GroupPars" &
       par_layout$name == sprintf("COV_%s%s", anchor_dim, anchor_dim)
     )
-    par_layout[idx_var, ]$value  <- calibration_1d_pars$cov
+    par_layout[idx_var, ]$value  <- linked_parameters_1d$mu_sigma$sigma
     par_layout[idx_var, ]$est    <- FALSE
 
     message(rep("-", options()$width))
