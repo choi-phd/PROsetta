@@ -135,7 +135,7 @@ runCalibration <- function(data, dimensions = 1, fix_method = "free", fixedpar =
   }
 
   if (calibration@OptimInfo$iter == calibration@Options$NCYCLES) {
-    msg = sprintf("calibration did not converge: increase iteration limit by adjusting the 'technical' argument, e.g., technical = list(NCYCLES = %i)", calibration@Options$NCYCLES + 500)
+    msg <- sprintf("calibration did not converge: increase iteration limit by adjusting the 'technical' argument, e.g., technical = list(NCYCLES = %i)", calibration@Options$NCYCLES + 500)
     if (ignore_nonconv) {
       warning(msg)
     } else {
