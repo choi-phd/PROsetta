@@ -117,8 +117,6 @@ getAnchorPar <- function(d, as_AD) {
   )
   ipar <- tmp[, unique(idx)]
 
-  message(sprintf("anchor has %s items * %s parameters = %s parameters", dim(ipar)[1], dim(ipar)[2], prod(dim(ipar))))
-
   if (as_AD) {
     ipar              <- convertABtoAD(ipar)
     anchor_dim        <- getAnchorDimension(d)
@@ -209,7 +207,27 @@ fixParLayout <- function(par_layout, d) {
     dimensions <- 1
   }
 
-  ipar_anchor    <- getAnchorPar(d, as_AD = TRUE)
+  anchor_dim <- getAnchorDimension(d)
+
+  printLog(
+    "constraints",
+    sprintf(
+      "anchor instrument ID is %s",
+      anchor_dim
+    )
+  )
+
+  ipar_anchor <- getAnchorPar(d, as_AD = TRUE)
+
+  printLog(
+    "constraints",
+    sprintf(
+      "anchor has %s items * %s parameters = %s parameters",
+      dim(ipar_anchor)[1], dim(ipar_anchor)[2],
+      prod(dim(ipar_anchor))
+    )
+  )
+
   if (dimensions == 1 & (!"a1" %in% names(ipar_anchor))) {
     # if using a 1D model and the anchor dimension is not 1
     a_par_name <- sprintf("a%s", getAnchorDimension(d))
@@ -237,12 +255,20 @@ fixParLayout <- function(par_layout, d) {
     }
   }
 
+  printLog(
+    "constraints",
+    sprintf("anchor parameters applied as constraints")
+  )
+
   if (dimensions == 1) {
 
     par_to_free <- which(par_layout$class == "GroupPars")
     par_layout[par_to_free, "est"] <- TRUE
 
-    message(sprintf("anchor parameters applied to par_layout"))
+    printLog(
+      "constraints",
+      "freely estimate mean(theta) and var(theta) to capture difference compared to anchor sample"
+    )
 
     return(par_layout)
 
@@ -263,7 +289,13 @@ fixParLayout <- function(par_layout, d) {
 
     par_layout[par_to_free, "est"] <- TRUE
 
-    message(sprintf("anchor parameters applied to par_layout"))
+    printLog(
+      "constraints",
+      sprintf(
+        "freely estimate mean(theta_%s) and var(theta_%s) to capture difference compared to anchor sample",
+        anchor_dim, anchor_dim
+      )
+    )
 
     return(par_layout)
 

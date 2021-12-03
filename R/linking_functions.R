@@ -49,30 +49,37 @@ runCalibration <- function(data, dimensions = 1, fix_method = "free", fixedpar =
 
   resp_data   <- getResponse(data)
   ni          <- dim(resp_data)[2]
-  message(sprintf("response data has %i items", ni))
+  n_obs       <- dim(resp_data)[1]
+  printLog(
+    "validation",
+    sprintf("response data has %s items * %s observations", ni, n_obs)
+  )
 
   if (toupper(fix_method) == "ITEM") {
-    message(
+
+    printLog(
+      "config",
       sprintf(
         "performing %sD fixed parameter calibration, using anchor data",
         dimensions
-      ),
-      appendLF = TRUE
+      )
     )
+
     bound_cov   <- FALSE
     par_layout  <- getParLayout(data, dimensions, bound_cov)
     par_layout  <- fixParLayout(par_layout, data)
     model_specs <- getModel(data, dimensions, bound_cov)
     calibration <- mirt::mirt(resp_data, model_specs, itemtype = "graded", pars = par_layout, ...)
+
   } else if (toupper(fix_method) == "THETA") {
 
-    message(rep("-", options()$width))
-    message(
+    anchor_dim <- getAnchorDimension(data)
+    printLog(
+      "CPFIXEDDIM",
       sprintf(
-        "performing 1D fixed parameter calibration of anchor instrument, using anchor data",
-        dimensions
-      ),
-      appendLF = TRUE
+        "first obtain mean(theta_%s) and var(theta_%s)",
+        anchor_dim, anchor_dim
+      )
     )
 
     # Step 1. Perform 1D calibration on anchor data only, constraining item parameters to anchor values
@@ -85,8 +92,15 @@ runCalibration <- function(data, dimensions = 1, fix_method = "free", fixedpar =
       data_anchor@itemmap$item_id %in% getItemNames(data_anchor, scale_id = anchor_dim)
     )
     linked_parameters_1d <- runLinking(data_anchor, method = "FIXEDPAR")
-    message(sprintf("latent mean    : %s", linked_parameters_1d$mu_sigma$mu))
-    message(sprintf("latent variance: %s", linked_parameters_1d$mu_sigma$sigma))
+
+    printLog(
+      "CPFIXEDDIM",
+      sprintf("mean(theta_%s) : %s", anchor_dim, linked_parameters_1d$mu_sigma$mu)
+    )
+    printLog(
+      "CPFIXEDDIM",
+      sprintf("var(theta_%s)  : %s", anchor_dim, linked_parameters_1d$mu_sigma$sigma)
+    )
 
     # Step 2. Constrain anchor dimension using 1D results
     par_layout <- getParLayout(data, dimensions, bound_cov = FALSE)
@@ -104,27 +118,32 @@ runCalibration <- function(data, dimensions = 1, fix_method = "free", fixedpar =
     par_layout[idx_var, ]$value  <- linked_parameters_1d$mu_sigma$sigma
     par_layout[idx_var, ]$est    <- FALSE
 
-    message(rep("-", options()$width))
+    printLog(
+      "CPFIXEDDIM",
+      sprintf(
+        "mean(theta_%s) and var(theta_%s) applied as constraints",
+        anchor_dim, anchor_dim
+      )
+    )
 
     # Step 3. Fit a 2D model
-    message(
+    printLog(
+      "CPFIXEDDIM",
       sprintf(
-        "performing %sD free calibration of all items, using the obtained anchor mean and variance",
+        "performing %sD free calibration of all items, using theta constraints",
         dimensions
-      ),
-      appendLF = TRUE
+      )
     )
     model_specs <- getModel(data, dimensions, bound_cov = FALSE)
     calibration <- mirt::mirt(resp_data, model_specs, itemtype = "graded", pars = par_layout, ...)
 
   } else if (toupper(fix_method) == "FREE") {
-    message(
-      sprintf(
-        "performing %sD free calibration of all items, ignoring anchor data",
-        dimensions
-      ),
-      appendLF = TRUE
+
+    printLog(
+      "config",
+      sprintf("performing %sD free calibration of all items, ignoring anchor data", dimensions)
     )
+
     # Free calibration uses standardized factors
     # so it makes sense to bound covariance (which is just correlation here) to be below 1
     bound_cov   <- TRUE
@@ -222,7 +241,14 @@ runLinking <- function(data, method, ...) {
     pars[[2]] <- data@anchor[c("a", paste0("cb", 1:(max_cat - 1)))]
 
     if (fix_method == "free") {
-      message(sprintf("now performing linear transformation to match anchor with %s method", method))
+      printLog(
+        "metric",
+        "applying linear transformation on item parameters to match the metric of anchor data parameters"
+      )
+      printLog(
+        "metric",
+        sprintf("linear transformation method is %s", method)
+      )
       pm_all    <- plink::as.poly.mod(ni_all   , "grm", 1:ni_all)
       pm_anchor <- plink::as.poly.mod(ni_anchor, "grm", 1:ni_anchor)
       ncat <- list(
