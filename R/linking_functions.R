@@ -58,7 +58,8 @@ runCalibration <- function(
   n_obs       <- dim(resp_data)[1]
   printLog(
     "validation",
-    sprintf("response data has %s items * %s observations", ni, n_obs)
+    sprintf("response data has %s items * %s observations", ni, n_obs),
+    verbose
   )
 
   if (toupper(fix_method) == "ITEM") {
@@ -68,7 +69,8 @@ runCalibration <- function(
       sprintf(
         "performing %sD fixed parameter calibration, using anchor data",
         dimensions
-      )
+      ),
+      verbose
     )
 
     bound_cov   <- FALSE
@@ -85,7 +87,8 @@ runCalibration <- function(
       sprintf(
         "first obtain mean(theta_%s) and var(theta_%s)",
         anchor_dim, anchor_dim
-      )
+      ),
+      verbose
     )
 
     # Step 1. Perform 1D calibration on anchor data only, constraining item parameters to anchor values
@@ -101,11 +104,13 @@ runCalibration <- function(
 
     printLog(
       "CPFIXEDDIM",
-      sprintf("mean(theta_%s) : %s", anchor_dim, linked_parameters_1d$mu_sigma$mu)
+      sprintf("mean(theta_%s) : %s", anchor_dim, linked_parameters_1d$mu_sigma$mu),
+      verbose
     )
     printLog(
       "CPFIXEDDIM",
-      sprintf("var(theta_%s)  : %s", anchor_dim, linked_parameters_1d$mu_sigma$sigma)
+      sprintf("var(theta_%s)  : %s", anchor_dim, linked_parameters_1d$mu_sigma$sigma),
+      verbose
     )
 
     # Step 2. Constrain anchor dimension using 1D results
@@ -129,7 +134,8 @@ runCalibration <- function(
       sprintf(
         "mean(theta_%s) and var(theta_%s) applied as constraints",
         anchor_dim, anchor_dim
-      )
+      ),
+      verbose
     )
 
     # Step 3. Fit a 2D model
@@ -138,7 +144,8 @@ runCalibration <- function(
       sprintf(
         "performing %sD free calibration of all items, using theta constraints",
         dimensions
-      )
+      ),
+      verbose
     )
     model_specs <- getModel(data, dimensions, bound_cov = FALSE)
     calibration <- mirt::mirt(resp_data, model_specs, itemtype = "graded", pars = par_layout, ...)
@@ -147,7 +154,8 @@ runCalibration <- function(
 
     printLog(
       "config",
-      sprintf("performing %sD free calibration of all items, ignoring anchor data", dimensions)
+      sprintf("performing %sD free calibration of all items, ignoring anchor data", dimensions),
+      verbose
     )
 
     # Free calibration uses standardized factors
