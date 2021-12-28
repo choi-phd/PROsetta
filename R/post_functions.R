@@ -7,9 +7,10 @@ NULL
 #'
 #' @param data a \code{\linkS4class{PROsetta_data}} object.
 #' @param scale the index of the scale to perform casewise deletion. Leave empty or set to "combined" to perform on all scales.
+#' @param verbose if \code{TRUE}, print status messages. (default = \code{FALSE})
 #'
 #' @export
-getCompleteData <- function(data, scale = NULL) {
+getCompleteData <- function(data, scale = NULL, verbose = FALSE) {
 
   validateData(data)
 
