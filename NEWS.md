@@ -1,3 +1,9 @@
+# PROsetta 0.3.5
+
+* `runRSSS()` output now includes linear approximation betas when the `CPLA` method is used.
+* `runLinking()` output now includes the latent mean and variance when the `FIXEDPAR` method is used.
+* `runCalibration()`, `runLinking()`, `runEquateObserved()`, `getCompleteData()` gains `verbose` argument for printing status messages. Status messages that were used to be printed in previous versions are now suppressed by default.
+
 # PROsetta 0.3.4
 
 * Removed unused columns (`min_score`, `reverse`, `scores`) in example datasets for clarity. The package functions do not use these columns.
