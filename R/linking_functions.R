@@ -373,7 +373,11 @@ runEquateObserved <- function(
 
   validateData(data)
 
-  message("runEquateObserved requires complete data, attempting to remove cases", appendLF = TRUE)
+  printLog(
+    "sanitize",
+    "runEquateObserved() requires complete data, attempting to remove incomplete cases",
+    verbose
+  )
   data <- getCompleteData(data)
 
   scale_id       <- data@itemmap[[data@scale_id]]
@@ -392,16 +396,23 @@ runEquateObserved <- function(
   # scale_from
 
   if (smooth != "none") {
-    message(sprintf("performing %s presmoothing on scale %i (scale_from) distribution", smooth, scale_from))
+    printLog(
+      "smooth",
+      sprintf("performing %s presmoothing on scale %i (scale_from) distribution", smooth, scale_from),
+      verbose
+    )
     freq_from <- equate::presmoothing(freq_from, smoothmethod = smooth, degrees = degrees)
   }
-
 
   # scale_to
 
   if (type_to == "tscore") {
     if (!is.null(rsss)) {
-      message(sprintf("mapping scale %i (scale_to) raw scores to t-scores using supplied rsss", scale_to))
+      printLog(
+        "map",
+        sprintf("mapping scale %i (scale_to) raw scores to t-scores using supplied rsss", scale_to),
+        verbose
+      )
       tmp <- as.data.frame(freq_to)
       tmp <- merge(
         tmp, rsss[[as.character(scale_to)]],
@@ -414,7 +425,11 @@ runEquateObserved <- function(
   }
   if (type_to == "theta") {
     if (!is.null(rsss)) {
-      message(sprintf("mapping scale %i (scale_to) raw scores to theta using supplied rsss", scale_to))
+      printLog(
+        "map",
+        sprintf("mapping scale %i (scale_to) raw scores to theta using supplied rsss", scale_to),
+        verbose
+      )
       tmp <- as.data.frame(freq_to)
       tmp <- merge(
         tmp, rsss[[as.character(scale_to)]],
@@ -426,7 +441,11 @@ runEquateObserved <- function(
     }
   }
   if (smooth != "none") {
-    message(sprintf("performing %s presmoothing on scale %i (scale_to) distribution", smooth, scale_to))
+    printLog(
+      "smooth",
+      sprintf("performing %s presmoothing on scale %i (scale_to) distribution", smooth, scale_to),
+      verbose
+    )
     freq_to   <- equate::presmoothing(freq_to  , smoothmethod = smooth, degrees = degrees)
   }
 
