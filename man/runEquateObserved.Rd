@@ -15,6 +15,7 @@ runEquateObserved(
   degrees = list(3, 1),
   boot = TRUE,
   reps = 100,
+  verbose = FALSE,
   ...
 )
 }
@@ -38,6 +39,8 @@ runEquateObserved(
 \item{boot}{performs bootstrapping if \code{TRUE}. (default = \code{TRUE})}
 
 \item{reps}{the number of replications to perform in bootstrapping. (default = \code{100})}
+
+\item{verbose}{if \code{TRUE}, print status messages. (default = \code{FALSE})}
 
 \item{...}{other arguments to pass onto \code{\link[equate]{equate}}.}
 }

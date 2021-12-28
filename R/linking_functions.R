@@ -330,6 +330,7 @@ runLinking <- function(data, method, verbose = FALSE, ...) {
 #' @param degrees the degrees of smoothing to be passed onto \code{\link[equate]{presmoothing}}. (default = \code{list(3, 1)})
 #' @param boot performs bootstrapping if \code{TRUE}. (default = \code{TRUE})
 #' @param reps the number of replications to perform in bootstrapping. (default = \code{100})
+#' @param verbose if \code{TRUE}, print status messages. (default = \code{FALSE})
 #' @param ... other arguments to pass onto \code{\link[equate]{equate}}.
 #'
 #' @return \code{\link{runEquateObserved}} returns an \code{\link{equate}} object containing the test equating result.
@@ -362,7 +363,13 @@ runLinking <- function(data, method, verbose = FALSE, ...) {
 #' out_eq_tscore$concordance
 #' }
 #' @export
-runEquateObserved <- function(data, scale_from = 2, scale_to = 1, type_to = "raw", rsss = NULL, eq_type = "equipercentile", smooth = "loglinear", degrees = list(3, 1), boot = TRUE, reps = 100, ...) {
+runEquateObserved <- function(
+  data,
+  scale_from = 2, scale_to = 1, type_to = "raw",
+  rsss = NULL, eq_type = "equipercentile",
+  smooth = "loglinear", degrees = list(3, 1),
+  boot = TRUE, reps = 100,
+  verbose = FALSE, ...) {
 
   validateData(data)
 
