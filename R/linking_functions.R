@@ -196,6 +196,7 @@ runCalibration <- function(
 #' }
 #' Linear transformation methods are performed with \code{\link[plink:plink-methods]{plink}} in \href{https://CRAN.R-project.org/package=plink}{'plink'} package.
 #'
+#' @param verbose if \code{TRUE}, print status messages. (default = \code{FALSE})
 #' @param ... additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{'mirt'} package.
 #'
 #' @return \code{\link{runLinking}} returns a \code{\link{list}} containing the scale linking results.
@@ -213,7 +214,7 @@ runCalibration <- function(
 #' out_link$ipar_linked # item parameters linked to anchor
 #' }
 #' @export
-runLinking <- function(data, method, ...) {
+runLinking <- function(data, method, verbose = FALSE, ...) {
 
   validateData(data)
 
