@@ -32,9 +32,17 @@ getCompleteData <- function(data, scale = NULL, verbose = FALSE) {
 
   if (any(resp_with_missing_values)) {
     data@response <- data@response[!resp_with_missing_values, ]
-    message(sprintf("getCompleteData: filtered %s cases with missing responses in %s", n_resp, scale_text))
+    printLog(
+      "sanitize",
+      sprintf("getCompleteData() removed %s cases with missing responses in %s", n_resp, scale_text),
+      verbose
+    )
   } else {
-    message(sprintf("getCompleteData: no cases were removed, all %i responses are complete in %s", dim(data@response)[1], scale_text))
+    printLog(
+      "sanitize",
+      sprintf("getCompleteData() did not remove any cases because all %i responses are complete in %s", dim(data@response)[1], scale_text),
+      verbose
+    )
   }
   return(data)
 }
