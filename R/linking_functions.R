@@ -15,6 +15,7 @@ NULL
 #' }
 #' @param fixedpar this argument exists for reproducibility. \code{TRUE} is equivalent to \code{fix_method = "item"}, and \code{FALSE} is equivalent to \code{fix_method = "free"}.
 #' @param ignore_nonconv if \code{TRUE}, return results even when calibration does not converge. If \code{FALSE}, raise an error when calibration does not converge. (default = \code{FALSE})
+#' @param verbose if \code{TRUE}, print status messages. (default = \code{FALSE})
 #' @param ... additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{'mirt'} package.
 #'
 #' @return \code{\link{runCalibration}} returns a \code{\linkS4class{SingleGroupClass}} object containing item calibration results.
@@ -34,7 +35,12 @@ NULL
 #' mirt::itemfit(out_calib, "S_X2", na.rm = TRUE)
 #' }
 #' @export
-runCalibration <- function(data, dimensions = 1, fix_method = "free", fixedpar = NULL, ignore_nonconv = FALSE, ...) {
+runCalibration <- function(
+  data, dimensions = 1,
+  fix_method = "free", fixedpar = NULL,
+  ignore_nonconv = FALSE,
+  verbose = FALSE,
+  ...) {
 
   if (!missing("fixedpar")){
     if (fixedpar == TRUE) {
