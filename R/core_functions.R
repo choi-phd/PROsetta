@@ -214,7 +214,8 @@ fixParLayout <- function(par_layout, d, verbose) {
     sprintf(
       "anchor instrument ID is %s",
       anchor_dim
-    )
+    ),
+    verbose
   )
 
   ipar_anchor <- getAnchorPar(d, as_AD = TRUE)
@@ -225,7 +226,8 @@ fixParLayout <- function(par_layout, d, verbose) {
       "anchor has %s items * %s parameters = %s parameters",
       dim(ipar_anchor)[1], dim(ipar_anchor)[2],
       prod(dim(ipar_anchor))
-    )
+    ),
+    verbose
   )
 
   if (dimensions == 1 & (!"a1" %in% names(ipar_anchor))) {
@@ -257,7 +259,8 @@ fixParLayout <- function(par_layout, d, verbose) {
 
   printLog(
     "constraints",
-    sprintf("anchor parameters applied as constraints")
+    sprintf("anchor parameters applied as constraints"),
+    verbose
   )
 
   if (dimensions == 1) {
@@ -267,7 +270,8 @@ fixParLayout <- function(par_layout, d, verbose) {
 
     printLog(
       "constraints",
-      "freely estimate mean(theta) and var(theta) to capture difference compared to anchor sample"
+      "freely estimate mean(theta) and var(theta) to capture difference compared to anchor sample",
+      verbose
     )
 
     return(par_layout)
@@ -294,7 +298,8 @@ fixParLayout <- function(par_layout, d, verbose) {
       sprintf(
         "freely estimate mean(theta_%s) and var(theta_%s) to capture difference compared to anchor sample",
         anchor_dim, anchor_dim
-      )
+      ),
+      verbose
     )
 
     return(par_layout)
