@@ -239,7 +239,7 @@ runLinking <- function(data, method, verbose = FALSE, ...) {
     fix_method <- "free"
   }
 
-  calibration <- runCalibration(data, dimensions = dimensions, fix_method = fix_method, ...)
+  calibration <- runCalibration(data, dimensions = dimensions, fix_method = fix_method, verbose = verbose, ...)
 
   if (dimensions == 1) {
 
