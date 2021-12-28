@@ -4,7 +4,7 @@
 \alias{runLinking}
 \title{Run Scale Linking}
 \usage{
-runLinking(data, method, ...)
+runLinking(data, method, verbose = FALSE, ...)
 }
 \arguments{
 \item{data}{a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.}
@@ -21,6 +21,8 @@ runLinking(data, method, ...)
   \item{\code{CPFIXEDDIM} for calibrated projection using mean and variance constraints on the anchor dimension}
 }
 Linear transformation methods are performed with \code{\link[plink:plink-methods]{plink}} in \href{https://CRAN.R-project.org/package=plink}{'plink'} package.}
+
+\item{verbose}{if \code{TRUE}, print status messages. (default = \code{FALSE})}
 
 \item{...}{additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{'mirt'} package.}
 }
