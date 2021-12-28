@@ -75,7 +75,7 @@ runCalibration <- function(
 
     bound_cov   <- FALSE
     par_layout  <- getParLayout(data, dimensions, bound_cov)
-    par_layout  <- fixParLayout(par_layout, data)
+    par_layout  <- fixParLayout(par_layout, data, verbose)
     model_specs <- getModel(data, dimensions, bound_cov)
     calibration <- mirt::mirt(resp_data, model_specs, itemtype = "graded", pars = par_layout, ...)
 
