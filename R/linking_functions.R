@@ -258,11 +258,13 @@ runLinking <- function(data, method, verbose = FALSE, ...) {
     if (fix_method == "free") {
       printLog(
         "metric",
-        "applying linear transformation on item parameters to match the metric of anchor data parameters"
+        "applying linear transformation on item parameters to match the metric of anchor data parameters",
+        verbose
       )
       printLog(
         "metric",
-        sprintf("linear transformation method is %s", method)
+        sprintf("linear transformation method is %s", method),
+        verbose
       )
       pm_all    <- plink::as.poly.mod(ni_all   , "grm", 1:ni_all)
       pm_anchor <- plink::as.poly.mod(ni_anchor, "grm", 1:ni_anchor)
