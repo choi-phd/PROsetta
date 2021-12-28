@@ -10,6 +10,7 @@ runCalibration(
   fix_method = "free",
   fixedpar = NULL,
   ignore_nonconv = FALSE,
+  verbose = FALSE,
   ...
 )
 }
@@ -28,6 +29,8 @@ runCalibration(
 \item{fixedpar}{this argument exists for reproducibility. \code{TRUE} is equivalent to \code{fix_method = "item"}, and \code{FALSE} is equivalent to \code{fix_method = "free"}.}
 
 \item{ignore_nonconv}{if \code{TRUE}, return results even when calibration does not converge. If \code{FALSE}, raise an error when calibration does not converge. (default = \code{FALSE})}
+
+\item{verbose}{if \code{TRUE}, print status messages. (default = \code{FALSE})}
 
 \item{...}{additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{'mirt'} package.}
 }
