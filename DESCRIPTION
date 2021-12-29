@@ -2,7 +2,7 @@ Package: PROsetta
 Type: Package
 Title: Linking Patient-Reported Outcomes Measures
 Version: 0.3.5
-Date: 2021-11-23
+Date: 2021-12-28
 Authors@R: c(
     person("Seung W.", "Choi",
         email = "schoi@austin.utexas.edu",
