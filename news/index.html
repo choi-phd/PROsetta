@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">PROsetta</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.5</span>
       </span>
     </div>
 
@@ -50,6 +50,15 @@
       <small>Source: <a href="https://github.com/choi-phd/PROsetta/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.3.5" id="prosetta-035">PROsetta 0.3.5<a class="anchor" aria-label="anchor" href="#prosetta-035"></a></h2>
+<ul><li>
+<code><a href="../reference/runRSSS.html">runRSSS()</a></code> output now includes linear approximation betas when the <code>CPLA</code> method is used.</li>
+<li>
+<code><a href="../reference/runLinking.html">runLinking()</a></code> output now includes the latent mean and variance when the <code>FIXEDPAR</code> method is used.</li>
+<li>
+<code><a href="../reference/runCalibration.html">runCalibration()</a></code>, <code><a href="../reference/runLinking.html">runLinking()</a></code>, <code><a href="../reference/runEquateObserved.html">runEquateObserved()</a></code>, <code><a href="../reference/getCompleteData.html">getCompleteData()</a></code> gains <code>verbose</code> argument for printing status messages. Status messages that were used to be printed in previous versions are now suppressed by default.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.3.4" id="prosetta-034">PROsetta 0.3.4<small>2021-11-23</small><a class="anchor" aria-label="anchor" href="#prosetta-034"></a></h2>
 <ul><li>Removed unused columns (<code>min_score</code>, <code>reverse</code>, <code>scores</code>) in example datasets for clarity. The package functions do not use these columns.</li>

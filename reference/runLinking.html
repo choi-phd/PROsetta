@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">PROsetta</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.5</span>
       </span>
     </div>
 
@@ -56,7 +56,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">runLinking</span><span class="op">(</span><span class="va">data</span>, <span class="va">method</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">runLinking</span><span class="op">(</span><span class="va">data</span>, <span class="va">method</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -73,6 +73,8 @@
 <li><p><code>CPLA</code> for linear approximation of calibrated projection. This is identical to 'CP' in <code>runLinking</code> but uses approximation in <code><a href="runRSSS.html">runRSSS</a></code></p></li>
 <li><p><code>CPFIXEDDIM</code> for calibrated projection using mean and variance constraints on the anchor dimension</p></li>
 </ul><p>Linear transformation methods are performed with <code><a href="https://rdrr.io/pkg/plink/man/plink-methods.html" class="external-link">plink</a></code> in <a href="https://CRAN.R-project.org/package=plink" class="external-link">'plink'</a> package.</p></dd>
+<dt>verbose</dt>
+<dd><p>if <code>TRUE</code>, print status messages. (default = <code>FALSE</code>)</p></dd>
 <dt>...</dt>
 <dd><p>additional arguments to pass onto <code><a href="https://rdrr.io/pkg/mirt/man/mirt.html" class="external-link">mirt</a></code> in <a href="https://CRAN.R-project.org/package=mirt" class="external-link">'mirt'</a> package.</p></dd>
 </dl></div>
