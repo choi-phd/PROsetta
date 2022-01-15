@@ -1,7 +1,7 @@
 pandoc: 2.14.2
-pkgdown: 2.0.1
+pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
   PROsetta: PROsetta.html
-last_built: 2021-12-29T03:31Z
+last_built: 2022-01-15T22:14Z
 

@@ -87,15 +87,15 @@
 
     
     
-<div class="section level1">
-<h1 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
-</h1>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
 <p>This vignette explains how to perform scale linking with the <em>PROsetta</em> package. By way of illustration, we replicate the linking of the Center for Epidemiologic Studies Depression Scale (CES-D) to the PROMIS Depression metric as described in Choi, Schalet, Cook, and Cella (2014).</p>
 <p><br></p>
 </div>
-<div class="section level1">
-<h1 id="load-datasets">Load datasets<a class="anchor" aria-label="anchor" href="#load-datasets"></a>
-</h1>
+<div class="section level2">
+<h2 id="load-datasets">Load datasets<a class="anchor" aria-label="anchor" href="#load-datasets"></a>
+</h2>
 <p>First step is to load the input datasets comprised of three tables with <code><a href="../reference/loadData.html">loadData()</a></code>. The PROMIS Depression – CES-D linking data are included in the <em>PROsetta</em> package directory under the folder labeled <code>data-raw</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data-raw"</span>, package <span class="op">=</span> <span class="st">"PROsetta"</span><span class="op">)</span>
@@ -115,9 +115,9 @@
 <code>input_dir</code>: (Optional) The path of the directory to look for the input .csv files.</li>
 </ul>
 <p><br></p>
-<div class="section level2">
-<h2 id="response-data">Response data<a class="anchor" aria-label="anchor" href="#response-data"></a>
-</h2>
+<div class="section level3">
+<h3 id="response-data">Response data<a class="anchor" aria-label="anchor" href="#response-data"></a>
+</h3>
 <p>The response data contains individual item responses on both instruments (i.e., 28 PROMIS Depression items followed by 20 CES-D items). The data table should include the following columns.</p>
 <ul>
 <li>
@@ -129,9 +129,9 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/file.edit.html" class="external-link">file.edit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data-raw"</span>, <span class="st">"dat_DeCESD_v2.csv"</span>, package <span class="op">=</span> <span class="st">"PROsetta"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><br></p>
 </div>
-<div class="section level2">
-<h2 id="item-map-data">Item map data<a class="anchor" aria-label="anchor" href="#item-map-data"></a>
-</h2>
+<div class="section level3">
+<h3 id="item-map-data">Item map data<a class="anchor" aria-label="anchor" href="#item-map-data"></a>
+</h3>
 <p>The item map data requires the following columns.</p>
 <ul>
 <li>
@@ -150,9 +150,9 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/file.edit.html" class="external-link">file.edit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data-raw"</span>, <span class="st">"imap_DeCESD.csv"</span>, package <span class="op">=</span> <span class="st">"PROsetta"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><br></p>
 </div>
-<div class="section level2">
-<h2 id="anchor-data">Anchor data<a class="anchor" aria-label="anchor" href="#anchor-data"></a>
-</h2>
+<div class="section level3">
+<h3 id="anchor-data">Anchor data<a class="anchor" aria-label="anchor" href="#anchor-data"></a>
+</h3>
 <p>The anchor data contains the item parameters for the anchor scale (e.g., PROMIS Depression) and requires the following columns.</p>
 <ul>
 <li>
@@ -172,12 +172,12 @@
 <p><br></p>
 </div>
 </div>
-<div class="section level1">
-<h1 id="descriptive-analysis">Descriptive analysis<a class="anchor" aria-label="anchor" href="#descriptive-analysis"></a>
-</h1>
 <div class="section level2">
-<h2 id="basic-descriptive-statistics">Basic descriptive statistics<a class="anchor" aria-label="anchor" href="#basic-descriptive-statistics"></a>
+<h2 id="descriptive-analysis">Descriptive analysis<a class="anchor" aria-label="anchor" href="#descriptive-analysis"></a>
 </h2>
+<div class="section level3">
+<h3 id="basic-descriptive-statistics">Basic descriptive statistics<a class="anchor" aria-label="anchor" href="#basic-descriptive-statistics"></a>
+</h3>
 <p>The frequency distribution of each item in the response data is obtained by <code><a href="../reference/runFrequency.html">runFrequency()</a></code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">freq_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runFrequency.html">runFrequency</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>
@@ -212,9 +212,9 @@
 <span class="co">## EDDEP14 747 1.69 1.00      1    1.51   0   1   5     4 1.38     1.12 0.04</span></code></pre>
 <p><br></p>
 </div>
-<div class="section level2">
-<h2 id="classical-reliability-analysis">Classical reliability analysis<a class="anchor" aria-label="anchor" href="#classical-reliability-analysis"></a>
-</h2>
+<div class="section level3">
+<h3 id="classical-reliability-analysis">Classical reliability analysis<a class="anchor" aria-label="anchor" href="#classical-reliability-analysis"></a>
+</h3>
 <p>Classical reliability statistics can be obtained by <code><a href="../reference/runClassical.html">runClassical()</a></code>. By default, the analysis is performed for the combined scale.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">classical_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runClassical.html">runClassical</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>
@@ -240,9 +240,9 @@
 <code class="sourceCode R"><span class="va">classical_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runClassical.html">runClassical</a></span><span class="op">(</span><span class="va">d</span>, scalewise <span class="op">=</span> <span class="cn">TRUE</span>, omega <span class="op">=</span> <span class="cn">TRUE</span>, nfactors <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="co"># not run</span></code></pre></div>
 <p><br></p>
 </div>
-<div class="section level2">
-<h2 id="dimensionality-analysis">Dimensionality analysis<a class="anchor" aria-label="anchor" href="#dimensionality-analysis"></a>
-</h2>
+<div class="section level3">
+<h3 id="dimensionality-analysis">Dimensionality analysis<a class="anchor" aria-label="anchor" href="#dimensionality-analysis"></a>
+</h3>
 <p>Dimensionality analysis is performed with CFA by <code><a href="../reference/runCFA.html">runCFA()</a></code>. Setting <code>scalewise = TRUE</code> performs the dimensionality analysis for each scale separately in addition to the combined scale.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">out_cfa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runCFA.html">runCFA</a></span><span class="op">(</span><span class="va">d</span>, scalewise <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
@@ -365,9 +365,9 @@
 <span class="fu">lavaan</span><span class="fu">::</span><span class="fu">summary</span><span class="op">(</span><span class="va">out_cfa</span><span class="op">$</span><span class="va">`2`</span>, fit.measures <span class="op">=</span> <span class="cn">TRUE</span>, standardized <span class="op">=</span> <span class="cn">TRUE</span>, estimates <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># not run</span></code></pre></div>
 <p><br></p>
 </div>
-<div class="section level2">
-<h2 id="item-parameter-calibration">Item parameter calibration<a class="anchor" aria-label="anchor" href="#item-parameter-calibration"></a>
-</h2>
+<div class="section level3">
+<h3 id="item-parameter-calibration">Item parameter calibration<a class="anchor" aria-label="anchor" href="#item-parameter-calibration"></a>
+</h3>
 <p><code><a href="../reference/runCalibration.html">runCalibration()</a></code> performs IRT calibration without anchoring. <code><a href="../reference/runCalibration.html">runCalibration()</a></code> calls <code><a href="https://rdrr.io/pkg/mirt/man/mirt.html" class="external-link">mirt::mirt()</a></code> internally. Additional arguments can be passed onto <code>mirt</code>, e.g., to increase the number of EM cycles to 1000, as follows:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">out_calib</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runCalibration.html">runCalibration</a></span><span class="op">(</span><span class="va">d</span>, technical <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>NCYCLES <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -460,14 +460,14 @@
 <p><br></p>
 </div>
 </div>
-<div class="section level1">
-<h1 id="scale-aligning">Scale aligning<a class="anchor" aria-label="anchor" href="#scale-aligning"></a>
-</h1>
+<div class="section level2">
+<h2 id="scale-aligning">Scale aligning<a class="anchor" aria-label="anchor" href="#scale-aligning"></a>
+</h2>
 <p><code><a href="../reference/runLinking.html">runLinking()</a></code> performs item parameter linking based on the anchor item parameters supplied in the <code>anchor</code> table. Two linking, or more specifically scaling aligning, methods currently available are fixed-parameter calibration and linear transformation. Fixed-parameter calibration estimates the item parameters for the non-anchor items on the metric defined by the anchor items, while fixing the item parameters for the anchor items to their supplied anchor values. The linear transformation methods determine linear transformation constants, i.e., a slope and an intercept, to transform freely estimated item parameters to the metric defined by the anchor items.</p>
 <p><br></p>
-<div class="section level2">
-<h2 id="fixed-parameter-calibration-method">Fixed parameter calibration method<a class="anchor" aria-label="anchor" href="#fixed-parameter-calibration-method"></a>
-</h2>
+<div class="section level3">
+<h3 id="fixed-parameter-calibration-method">Fixed parameter calibration method<a class="anchor" aria-label="anchor" href="#fixed-parameter-calibration-method"></a>
+</h3>
 <p>Scale aligning through fixed parameter calibration is performed by setting <code>method = "FIXEDPAR"</code>. The linked parameters are stored in the <code>$ipar_linked</code> slot.</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">out_link_fixedpar</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runLinking.html">runLinking</a></span><span class="op">(</span><span class="va">d</span>, method <span class="op">=</span> <span class="st">"FIXEDPAR"</span><span class="op">)</span></code></pre></div>
@@ -524,9 +524,9 @@
 <span class="co">## CESD20  1.490735 -0.14037590 1.2558582 2.296856       NA</span></code></pre>
 <p><br></p>
 </div>
-<div class="section level2">
-<h2 id="linear-transformation-methods">Linear transformation methods<a class="anchor" aria-label="anchor" href="#linear-transformation-methods"></a>
-</h2>
+<div class="section level3">
+<h3 id="linear-transformation-methods">Linear transformation methods<a class="anchor" aria-label="anchor" href="#linear-transformation-methods"></a>
+</h3>
 <p>Scale aligning through linear transformation is performed by setting the <code>method</code> argument to one of the following options:</p>
 <ul>
 <li>
@@ -603,9 +603,9 @@
 <span class="co">##  0.982306 -0.064442</span></code></pre>
 <p><br></p>
 </div>
-<div class="section level2">
-<h2 id="obtaining-scaled-scores">Obtaining scaled scores<a class="anchor" aria-label="anchor" href="#obtaining-scaled-scores"></a>
-</h2>
+<div class="section level3">
+<h3 id="obtaining-scaled-scores">Obtaining scaled scores<a class="anchor" aria-label="anchor" href="#obtaining-scaled-scores"></a>
+</h3>
 <p>From the item parameter estimates transformed to the anchor metric, raw-score-to-scale-score (rsss) crosswalk tables can be generated by <code><a href="../reference/runRSSS.html">runRSSS()</a></code>.</p>
 <p>The output from <code><a href="../reference/runRSSS.html">runRSSS()</a></code> includes three crosswalk tables (labeled as <code>1</code>, <code>2</code>, and <code>combined</code>), one for each scale and the third one for the combined scale. Each table contains raw summed scores and corresponding scaled scores, including summed score EAP estimate, T-scores corresponding to the EAP estimates, as well as expected summed scores (i.e., true scores) for each scale from the EAP estimates.</p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
@@ -696,9 +696,9 @@
 </ul>
 <p><br></p>
 </div>
-<div class="section level2">
-<h2 id="equipercentile-method-raw-raw">Equipercentile method: raw-raw<a class="anchor" aria-label="anchor" href="#equipercentile-method-raw-raw"></a>
-</h2>
+<div class="section level3">
+<h3 id="equipercentile-method-raw-raw">Equipercentile method: raw-raw<a class="anchor" aria-label="anchor" href="#equipercentile-method-raw-raw"></a>
+</h3>
 <p>Equipercentile linking of observed summed scores is performed by <code><a href="../reference/runEquateObserved.html">runEquateObserved()</a></code>.</p>
 <p>Cases with missing responses are removed to be able to generate correct summed scores in concordance tables.</p>
 <p>This function requires four arguments:</p>
@@ -721,69 +721,69 @@
 <div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">out_equate</span><span class="op">$</span><span class="va">concordance</span></code></pre></div>
 <pre><code><span class="co">##    raw_2     raw_1  raw_1_se raw_1_se_boot</span>
-<span class="co">## 1     20  28.26881 0.1620936     0.1473177</span>
-<span class="co">## 2     21  29.88299 0.3370778     0.3294665</span>
-<span class="co">## 3     22  31.53492 0.5039397     0.4421951</span>
-<span class="co">## 4     23  33.26052 0.6025077     0.5185999</span>
-<span class="co">## 5     24  35.04116 0.7605541     0.6197794</span>
-<span class="co">## 6     25  36.88206 0.9289581     0.7738642</span>
-<span class="co">## 7     26  38.78932 1.1047990     0.8964509</span>
-<span class="co">## 8     27  40.76619 1.2851847     0.9926487</span>
-<span class="co">## 9     28  42.81301 1.4675514     1.1973355</span>
-<span class="co">## 10    29  44.92722 1.6498695     1.4183521</span>
-<span class="co">## 11    30  47.10359 1.8307274     1.6307735</span>
-<span class="co">## 12    31  49.33456 2.0092834     1.7629810</span>
-<span class="co">## 13    32  51.61601 2.2830630     1.8921002</span>
-<span class="co">## 14    33  53.93979 2.4363247     2.0386704</span>
-<span class="co">## 15    34  56.28523 2.5838111     2.2367793</span>
-<span class="co">## 16    35  58.64518 2.8128224     2.3794809</span>
-<span class="co">## 17    36  61.00920 2.9230117     2.6292273</span>
-<span class="co">## 18    37  63.35840 3.0265741     2.6479298</span>
-<span class="co">## 19    38  65.68830 3.1931417     2.6420258</span>
-<span class="co">## 20    39  67.98827 3.2579872     2.7948986</span>
-<span class="co">## 21    40  70.24833 3.3160014     2.8565712</span>
-<span class="co">## 22    41  72.46413 3.3666557     3.0787851</span>
-<span class="co">## 23    42  74.63553 3.4696445     3.1464196</span>
-<span class="co">## 24    43  76.75786 3.4943506     3.1661713</span>
-<span class="co">## 25    44  78.83013 3.5156665     3.2372983</span>
-<span class="co">## 26    45  80.85299 3.5347321     3.2676465</span>
-<span class="co">## 27    46  82.82775 3.5532238     3.0943216</span>
-<span class="co">## 28    47  84.75618 3.5733950     3.0688599</span>
-<span class="co">## 29    48  86.64034 3.5981071     3.0609142</span>
-<span class="co">## 30    49  88.48280 3.5457997     3.1120750</span>
-<span class="co">## 31    50  90.28977 3.5652250     3.2327055</span>
-<span class="co">## 32    51  92.06044 3.5948509     3.2048179</span>
-<span class="co">## 33    52  93.79686 3.6397275     3.1802002</span>
-<span class="co">## 34    53  95.50073 3.7057230     3.2271387</span>
-<span class="co">## 35    54  97.18390 3.6406951     3.3309212</span>
-<span class="co">## 36    55  98.83962 3.7115896     3.2164314</span>
-<span class="co">## 37    56 100.46992 3.6731482     3.3852237</span>
-<span class="co">## 38    57 102.08880 3.7516801     3.3708583</span>
-<span class="co">## 39    58 103.68535 3.8710358     3.2542740</span>
-<span class="co">## 40    59 105.27044 3.8253417     3.2821456</span>
-<span class="co">## 41    60 106.84491 3.9636676     3.5234544</span>
-<span class="co">## 42    61 108.40599 3.9344712     3.5957492</span>
-<span class="co">## 43    62 109.96920 4.0965312     3.6658313</span>
-<span class="co">## 44    63 111.51836 4.3289986     3.9899386</span>
-<span class="co">## 45    64 113.08139 4.2728002     4.1383863</span>
-<span class="co">## 46    65 114.63738 4.5418401     4.1447007</span>
-<span class="co">## 47    66 116.20861 4.4956647     4.2481712</span>
-<span class="co">## 48    67 117.78972 4.7999844     4.1638967</span>
-<span class="co">## 49    68 119.38584 4.7678715     4.3079394</span>
-<span class="co">## 50    69 121.01883 5.0971545     4.6506326</span>
-<span class="co">## 51    70 122.67774 5.5168449     4.9335586</span>
-<span class="co">## 52    71 124.38914 5.4272766     5.0969607</span>
-<span class="co">## 53    72 126.17776 5.8150222     5.2122419</span>
-<span class="co">## 54    73 128.05913 6.2277413     5.5760960</span>
-<span class="co">## 55    74 130.07996 6.6010857     5.9663043</span>
-<span class="co">## 56    75 132.31127 6.8333301     6.4790002</span>
-<span class="co">## 57    76 134.91376 7.4633808     6.0522681</span>
-<span class="co">## 58    77 138.21074 6.3457311     4.3183014</span></code></pre>
+<span class="co">## 1     20  28.26881 0.1620936     0.1520869</span>
+<span class="co">## 2     21  29.88299 0.3370778     0.3057510</span>
+<span class="co">## 3     22  31.53492 0.5039397     0.4276658</span>
+<span class="co">## 4     23  33.26052 0.6025077     0.5756282</span>
+<span class="co">## 5     24  35.04116 0.7605541     0.7693531</span>
+<span class="co">## 6     25  36.88206 0.9289581     0.9607761</span>
+<span class="co">## 7     26  38.78932 1.1047990     1.1232725</span>
+<span class="co">## 8     27  40.76619 1.2851847     1.2469472</span>
+<span class="co">## 9     28  42.81301 1.4675514     1.5010936</span>
+<span class="co">## 10    29  44.92722 1.6498695     1.7438334</span>
+<span class="co">## 11    30  47.10359 1.8307274     2.0144591</span>
+<span class="co">## 12    31  49.33456 2.0092834     2.2313417</span>
+<span class="co">## 13    32  51.61601 2.2830630     2.3721202</span>
+<span class="co">## 14    33  53.93979 2.4363247     2.5245520</span>
+<span class="co">## 15    34  56.28523 2.5838111     2.7228801</span>
+<span class="co">## 16    35  58.64518 2.8128224     2.8695416</span>
+<span class="co">## 17    36  61.00920 2.9230117     2.8246191</span>
+<span class="co">## 18    37  63.35840 3.0265741     2.8950461</span>
+<span class="co">## 19    38  65.68830 3.1931417     2.9894737</span>
+<span class="co">## 20    39  67.98827 3.2579872     3.0728638</span>
+<span class="co">## 21    40  70.24833 3.3160014     3.1956099</span>
+<span class="co">## 22    41  72.46413 3.3666557     3.3117403</span>
+<span class="co">## 23    42  74.63553 3.4696445     3.4128191</span>
+<span class="co">## 24    43  76.75786 3.4943506     3.5094539</span>
+<span class="co">## 25    44  78.83013 3.5156665     3.5628200</span>
+<span class="co">## 26    45  80.85299 3.5347321     3.6682424</span>
+<span class="co">## 27    46  82.82775 3.5532238     3.7315354</span>
+<span class="co">## 28    47  84.75618 3.5733950     3.7814664</span>
+<span class="co">## 29    48  86.64034 3.5981071     3.8821009</span>
+<span class="co">## 30    49  88.48280 3.5457997     3.9273704</span>
+<span class="co">## 31    50  90.28977 3.5652250     3.8778223</span>
+<span class="co">## 32    51  92.06044 3.5948509     3.9001044</span>
+<span class="co">## 33    52  93.79686 3.6397275     3.9175791</span>
+<span class="co">## 34    53  95.50073 3.7057230     3.9546354</span>
+<span class="co">## 35    54  97.18390 3.6406951     3.9341080</span>
+<span class="co">## 36    55  98.83962 3.7115896     3.9896091</span>
+<span class="co">## 37    56 100.46992 3.6731482     4.0863377</span>
+<span class="co">## 38    57 102.08880 3.7516801     4.1337730</span>
+<span class="co">## 39    58 103.68535 3.8710358     4.2637463</span>
+<span class="co">## 40    59 105.27044 3.8253417     4.2960902</span>
+<span class="co">## 41    60 106.84491 3.9636676     4.3832066</span>
+<span class="co">## 42    61 108.40599 3.9344712     4.3338656</span>
+<span class="co">## 43    62 109.96920 4.0965312     4.5466482</span>
+<span class="co">## 44    63 111.51836 4.3289986     4.4530455</span>
+<span class="co">## 45    64 113.08139 4.2728002     4.5311469</span>
+<span class="co">## 46    65 114.63738 4.5418401     5.0584699</span>
+<span class="co">## 47    66 116.20861 4.4956647     5.4045512</span>
+<span class="co">## 48    67 117.78972 4.7999844     5.2660424</span>
+<span class="co">## 49    68 119.38584 4.7678715     5.3273682</span>
+<span class="co">## 50    69 121.01883 5.0971545     5.8792376</span>
+<span class="co">## 51    70 122.67774 5.5168449     5.8452661</span>
+<span class="co">## 52    71 124.38914 5.4272766     5.5701052</span>
+<span class="co">## 53    72 126.17776 5.8150222     5.7846101</span>
+<span class="co">## 54    73 128.05913 6.2277413     6.0876314</span>
+<span class="co">## 55    74 130.07996 6.6010857     6.8162756</span>
+<span class="co">## 56    75 132.31127 6.8333301     6.6785796</span>
+<span class="co">## 57    76 134.91376 7.4633808     5.8117219</span>
+<span class="co">## 58    77 138.21074 6.3457311     4.1029553</span></code></pre>
 <p><br></p>
 </div>
-<div class="section level2">
-<h2 id="equipercentile-method-raw-tscore">Equipercentile method: raw-tscore<a class="anchor" aria-label="anchor" href="#equipercentile-method-raw-tscore"></a>
-</h2>
+<div class="section level3">
+<h3 id="equipercentile-method-raw-tscore">Equipercentile method: raw-tscore<a class="anchor" aria-label="anchor" href="#equipercentile-method-raw-tscore"></a>
+</h3>
 <p>Raw summed scores can be linked to scaled scores (e.g., T-scores) directly by specifying <code>type_to = 'tscore'</code> in <code><a href="../reference/runEquateObserved.html">runEquateObserved()</a></code>. In the following example, we map the raw summed scores from Scale 2 (CES-D, ranging from 20 to 80) onto the T-score equivalents in Scale 1 (PROMIS Depression, mean = 50 and SD = 10).</p>
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">out_equate_tscore</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runEquateObserved.html">runEquateObserved</a></span><span class="op">(</span>
@@ -794,64 +794,64 @@
 <div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">out_equate_tscore</span><span class="op">$</span><span class="va">concordance</span></code></pre></div>
 <pre><code><span class="co">##    raw_2 tscore_1 tscore_1_se tscore_1_se_boot</span>
-<span class="co">## 1     20 33.60138   0.1015887        0.3637183</span>
-<span class="co">## 2     21 38.46567   0.2970127        0.9699929</span>
-<span class="co">## 3     22 41.72102   0.5244657        0.5008220</span>
-<span class="co">## 4     23 43.93269   0.7283759        0.4940718</span>
-<span class="co">## 5     24 45.56073   0.9008862        0.4685799</span>
-<span class="co">## 6     25 46.96056   1.0676547        0.5066675</span>
-<span class="co">## 7     26 48.14591   1.2231568        0.5264544</span>
-<span class="co">## 8     27 49.15361   1.4254088        0.5563739</span>
-<span class="co">## 9     28 50.08462   1.5481891        0.5621553</span>
-<span class="co">## 10    29 50.93574   1.6767468        0.5904071</span>
-<span class="co">## 11    30 51.69914   1.7912740        0.6222505</span>
-<span class="co">## 12    31 52.45221   1.9745160        0.6354760</span>
-<span class="co">## 13    32 53.09555   2.0699538        0.6723581</span>
-<span class="co">## 14    33 53.81778   2.1925590        0.6712360</span>
-<span class="co">## 15    34 54.43935   2.2939903        0.6670488</span>
-<span class="co">## 16    35 55.05249   2.3979162        0.6655218</span>
-<span class="co">## 17    36 55.65876   2.5043386        0.6882635</span>
-<span class="co">## 18    37 56.19032   2.5834537        0.6764598</span>
-<span class="co">## 19    38 56.74801   2.6939470        0.7362134</span>
-<span class="co">## 20    39 57.33437   2.8072216        0.7725858</span>
-<span class="co">## 21    40 57.91858   2.9233371        0.7926304</span>
-<span class="co">## 22    41 58.49310   3.0422752        0.8428729</span>
-<span class="co">## 23    42 58.98081   3.1276569        0.8499655</span>
-<span class="co">## 24    43 59.55737   3.2512041        0.8754714</span>
-<span class="co">## 25    44 60.13559   3.2571331        0.8861358</span>
-<span class="co">## 26    45 60.71592   3.3751754        0.9234233</span>
-<span class="co">## 27    46 61.29874   3.4950840        0.9527925</span>
-<span class="co">## 28    47 61.88462   3.6164946        0.9440189</span>
-<span class="co">## 29    48 62.38451   3.6947613        0.9065372</span>
-<span class="co">## 30    49 62.95738   3.8157601        0.9409623</span>
-<span class="co">## 31    50 63.54690   3.9367948        0.9782020</span>
-<span class="co">## 32    51 64.14007   4.0572121        1.0189219</span>
-<span class="co">## 33    52 64.73684   4.1763139        1.0795022</span>
-<span class="co">## 34    53 65.33702   4.2933638        1.1235996</span>
-<span class="co">## 35    54 65.94024   4.4075839        1.1923099</span>
-<span class="co">## 36    55 66.54594   4.5181439        1.2005302</span>
-<span class="co">## 37    56 67.24018   4.6807053        1.2795928</span>
-<span class="co">## 38    57 67.87194   4.7833243        1.3412033</span>
-<span class="co">## 39    58 68.48824   4.8795677        1.4125358</span>
-<span class="co">## 40    59 69.10342   4.9680991        1.5131039</span>
-<span class="co">## 41    60 69.76017   5.0472563        1.4580554</span>
-<span class="co">## 42    61 70.43094   5.1798624        1.5120228</span>
-<span class="co">## 43    62 71.04031   5.2369658        1.5378563</span>
-<span class="co">## 44    63 71.74400   5.3442550        1.6537145</span>
-<span class="co">## 45    64 72.39134   5.3682887        1.7888622</span>
-<span class="co">## 46    65 73.08172   5.4387347        1.9381387</span>
-<span class="co">## 47    66 73.76203   5.4859732        2.2347107</span>
-<span class="co">## 48    67 74.42874   5.5059813        2.3357671</span>
-<span class="co">## 49    68 75.13082   5.5660930        2.3170450</span>
-<span class="co">## 50    69 75.80853   5.5266085        2.3303407</span>
-<span class="co">## 51    70 76.58968   5.6021126        2.5041662</span>
-<span class="co">## 52    71 77.31778   5.2885420        2.5639414</span>
-<span class="co">## 53    72 78.17632   5.2651465        2.8333340</span>
-<span class="co">## 54    73 79.13091   5.3383723        3.3290388</span>
-<span class="co">## 55    74 80.17216   4.8749758        3.4461130</span>
-<span class="co">## 56    75 81.48607   4.8123350        3.9438608</span>
-<span class="co">## 57    76 83.14663   4.7538824        3.7029596</span>
-<span class="co">## 58    77 85.48248   3.1143191        2.5683407</span></code></pre>
+<span class="co">## 1     20 33.60138   0.1015887        0.3863542</span>
+<span class="co">## 2     21 38.46567   0.2970127        1.0849092</span>
+<span class="co">## 3     22 41.72102   0.5244657        0.5685953</span>
+<span class="co">## 4     23 43.93269   0.7283759        0.5615376</span>
+<span class="co">## 5     24 45.56073   0.9008862        0.5523895</span>
+<span class="co">## 6     25 46.96056   1.0676547        0.6026697</span>
+<span class="co">## 7     26 48.14591   1.2231568        0.6042614</span>
+<span class="co">## 8     27 49.15361   1.4254088        0.6114178</span>
+<span class="co">## 9     28 50.08462   1.5481891        0.6363279</span>
+<span class="co">## 10    29 50.93574   1.6767468        0.6634025</span>
+<span class="co">## 11    30 51.69914   1.7912740        0.6598968</span>
+<span class="co">## 12    31 52.45221   1.9745160        0.6629369</span>
+<span class="co">## 13    32 53.09555   2.0699538        0.6841456</span>
+<span class="co">## 14    33 53.81778   2.1925590        0.6950125</span>
+<span class="co">## 15    34 54.43935   2.2939903        0.7072222</span>
+<span class="co">## 16    35 55.05249   2.3979162        0.7591019</span>
+<span class="co">## 17    36 55.65876   2.5043386        0.7924601</span>
+<span class="co">## 18    37 56.19032   2.5834537        0.8309260</span>
+<span class="co">## 19    38 56.74801   2.6939470        0.8786347</span>
+<span class="co">## 20    39 57.33437   2.8072216        0.9404141</span>
+<span class="co">## 21    40 57.91858   2.9233371        0.9316856</span>
+<span class="co">## 22    41 58.49310   3.0422752        0.9377454</span>
+<span class="co">## 23    42 58.98081   3.1276569        0.9449235</span>
+<span class="co">## 24    43 59.55737   3.2512041        0.9699108</span>
+<span class="co">## 25    44 60.13559   3.2571331        0.9988513</span>
+<span class="co">## 26    45 60.71592   3.3751754        1.0468595</span>
+<span class="co">## 27    46 61.29874   3.4950840        1.1160191</span>
+<span class="co">## 28    47 61.88462   3.6164946        1.1135411</span>
+<span class="co">## 29    48 62.38451   3.6947613        1.1051455</span>
+<span class="co">## 30    49 62.95738   3.8157601        1.1686212</span>
+<span class="co">## 31    50 63.54690   3.9367948        1.1821996</span>
+<span class="co">## 32    51 64.14007   4.0572121        1.2454767</span>
+<span class="co">## 33    52 64.73684   4.1763139        1.3032922</span>
+<span class="co">## 34    53 65.33702   4.2933638        1.2611304</span>
+<span class="co">## 35    54 65.94024   4.4075839        1.2700066</span>
+<span class="co">## 36    55 66.54594   4.5181439        1.3645533</span>
+<span class="co">## 37    56 67.24018   4.6807053        1.4206494</span>
+<span class="co">## 38    57 67.87194   4.7833243        1.5100612</span>
+<span class="co">## 39    58 68.48824   4.8795677        1.5609220</span>
+<span class="co">## 40    59 69.10342   4.9680991        1.6126585</span>
+<span class="co">## 41    60 69.76017   5.0472563        1.6355917</span>
+<span class="co">## 42    61 70.43094   5.1798624        1.6705700</span>
+<span class="co">## 43    62 71.04031   5.2369658        1.7125619</span>
+<span class="co">## 44    63 71.74400   5.3442550        1.8089465</span>
+<span class="co">## 45    64 72.39134   5.3682887        1.8096975</span>
+<span class="co">## 46    65 73.08172   5.4387347        1.8169388</span>
+<span class="co">## 47    66 73.76203   5.4859732        1.9061743</span>
+<span class="co">## 48    67 74.42874   5.5059813        2.2975789</span>
+<span class="co">## 49    68 75.13082   5.5660930        2.3884673</span>
+<span class="co">## 50    69 75.80853   5.5266085        2.4660453</span>
+<span class="co">## 51    70 76.58968   5.6021126        2.5466085</span>
+<span class="co">## 52    71 77.31778   5.2885420        3.0095930</span>
+<span class="co">## 53    72 78.17632   5.2651465        3.4020273</span>
+<span class="co">## 54    73 79.13091   5.3383723        3.6152719</span>
+<span class="co">## 55    74 80.17216   4.8749758        3.9146508</span>
+<span class="co">## 56    75 81.48607   4.8123350        4.0125320</span>
+<span class="co">## 57    76 83.14663   4.7538824        3.8735260</span>
+<span class="co">## 58    77 85.48248   3.1143191        3.0743662</span></code></pre>
 <p>In what follows we display the linking relation obtained from the equipercentile method and compare it to that from the fixed-parameter calibration method.</p>
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>
@@ -874,14 +874,14 @@
 <p><br></p>
 </div>
 </div>
-<div class="section level1">
-<h1 id="evaluation-of-linking-results">Evaluation of linking results<a class="anchor" aria-label="anchor" href="#evaluation-of-linking-results"></a>
-</h1>
+<div class="section level2">
+<h2 id="evaluation-of-linking-results">Evaluation of linking results<a class="anchor" aria-label="anchor" href="#evaluation-of-linking-results"></a>
+</h2>
 <p>The linking results produced so far are now evaluated. More specifically, we assess how closely the CES-D summed scores linked to the PROMIS Depression T-scores match the actual PROMIS Depression T-scores observed in the present linking sample. Should we have set aside a validation sample, we would have performed this evaluation on that sample.</p>
 <p><br></p>
-<div class="section level2">
-<h2 id="raw-scores-from-scale-2">Raw scores from Scale 2<a class="anchor" aria-label="anchor" href="#raw-scores-from-scale-2"></a>
-</h2>
+<div class="section level3">
+<h3 id="raw-scores-from-scale-2">Raw scores from Scale 2<a class="anchor" aria-label="anchor" href="#raw-scores-from-scale-2"></a>
+</h3>
 <p>To begin with, we create an object <code>scores</code> using <code><a href="../reference/getScaleSum.html">getScaleSum()</a></code> to contain raw summed scores on Scale 2 (i.e., CES-D). <code>NA</code> will result for any respondents with one or more missing responses on Scale 2. We could also create a summed score variable for Scale 1 using the same function, e.g., <code>getScaleSum(d, 1)</code>.</p>
 <div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getScaleSum.html">getScaleSum</a></span><span class="op">(</span><span class="va">d</span>, <span class="fl">2</span><span class="op">)</span>
@@ -895,9 +895,9 @@
 <span class="co">## 6     100053    21</span></code></pre>
 <p><br></p>
 </div>
-<div class="section level2">
-<h2 id="eap-estimates-based-on-item-responses-patterns-on-scale-1">EAP estimates based on item responses patterns on Scale 1<a class="anchor" aria-label="anchor" href="#eap-estimates-based-on-item-responses-patterns-on-scale-1"></a>
-</h2>
+<div class="section level3">
+<h3 id="eap-estimates-based-on-item-responses-patterns-on-scale-1">EAP estimates based on item responses patterns on Scale 1<a class="anchor" aria-label="anchor" href="#eap-estimates-based-on-item-responses-patterns-on-scale-1"></a>
+</h3>
 <p>We obtain EAP estimates of theta on Scale 1 (i.e., PROMIS Depression) based on item response patterns using the <code><a href="../reference/getTheta.html">getTheta()</a></code> function. The first argument of the function is a data object of <code>PROsetta</code> class, which we created earlier with <code><a href="../reference/loadData.html">loadData()</a></code>. The second argument specifies the item parameter estimates to be used for the EAP estimation. Here, we use the item parameter estimates previously obtained from the fixed-parameter calibration, <code>out_link_fixedpar$ipar_linked</code>. The third argument <code>scale = 1</code> specifies the scale to be scored (i.e., PROMIS Depression). These EAP estimates are based on the item responses actually observed on PROMIS Depression and will serve as the reference when we assess the CES-D scores liked to PROMIS Depression derived from various methods.</p>
 <div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">eap_promis</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getTheta.html">getTheta</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">out_link_fixedpar</span><span class="op">$</span><span class="va">ipar_linked</span>, scale <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">$</span><span class="va">theta</span>
@@ -943,9 +943,9 @@
 <p>The first two ways are based on the CES-D item parameters linked to the PROMIS Depression metric.</p>
 <p><br></p>
 </div>
-<div class="section level2">
-<h2 id="eap-estimates-based-on-item-responses-patterns-on-scale-2">EAP estimates based on item responses patterns on Scale 2<a class="anchor" aria-label="anchor" href="#eap-estimates-based-on-item-responses-patterns-on-scale-2"></a>
-</h2>
+<div class="section level3">
+<h3 id="eap-estimates-based-on-item-responses-patterns-on-scale-2">EAP estimates based on item responses patterns on Scale 2<a class="anchor" aria-label="anchor" href="#eap-estimates-based-on-item-responses-patterns-on-scale-2"></a>
+</h3>
 <p>First, we get EAP estimates based on item response patterns on Scale 2 using the CES-D item parameters linked to the PROMIS Depression metric (via fixed-parameter calibration). We then linearly transform the EAP estimates to T-scores and add the T-scores (<code>t_cesd_pattern</code>) to the data frame object <code>scores</code>.</p>
 <div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">eap_cesd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getTheta.html">getTheta</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">out_link_fixedpar</span><span class="op">$</span><span class="va">ipar_linked</span>, scale <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">$</span><span class="va">theta</span>
@@ -964,9 +964,9 @@
 <span class="co">## 6     100053    21     44.4           37.6</span></code></pre>
 <p><br></p>
 </div>
-<div class="section level2">
-<h2 id="eap-estimates-based-on-summed-scores-on-scale-2">EAP estimates based on summed scores on Scale 2<a class="anchor" aria-label="anchor" href="#eap-estimates-based-on-summed-scores-on-scale-2"></a>
-</h2>
+<div class="section level3">
+<h3 id="eap-estimates-based-on-summed-scores-on-scale-2">EAP estimates based on summed scores on Scale 2<a class="anchor" aria-label="anchor" href="#eap-estimates-based-on-summed-scores-on-scale-2"></a>
+</h3>
 <p>Second, we use the raw-score-to-scale-score (RSSS) crosswalk table obtained above using summed score EAP estimation to map each raw summed score on Scale 2 onto a T-score on the PROMIS Depression metric, <code>t_cesd_rsss</code>.</p>
 <div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">rsss_eap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>
@@ -984,9 +984,9 @@
 <span class="co">## 6    20     105375     37.6           34.5        34.5</span></code></pre>
 <p><br></p>
 </div>
-<div class="section level2">
-<h2 id="equipercentile-linking-of-summed-scores-on-scale-2">Equipercentile linking of summed scores on Scale 2<a class="anchor" aria-label="anchor" href="#equipercentile-linking-of-summed-scores-on-scale-2"></a>
-</h2>
+<div class="section level3">
+<h3 id="equipercentile-linking-of-summed-scores-on-scale-2">Equipercentile linking of summed scores on Scale 2<a class="anchor" aria-label="anchor" href="#equipercentile-linking-of-summed-scores-on-scale-2"></a>
+</h3>
 <p>Third, we use the concordance table from equipercentile linking to map each raw summed score on Scale 2 onto a T-score on the PROMIS Depression metric, <code>t_cesd_eqp</code>.</p>
 <div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">rsss_eqp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>
@@ -1004,9 +1004,9 @@
 <span class="co">## 6    20     105375     37.6           34.5        34.5       33.6</span></code></pre>
 <p><br></p>
 </div>
-<div class="section level2">
-<h2 id="comparison-of-equated-and-observed-t-scores">Comparison of equated and observed T-scores<a class="anchor" aria-label="anchor" href="#comparison-of-equated-and-observed-t-scores"></a>
-</h2>
+<div class="section level3">
+<h3 id="comparison-of-equated-and-observed-t-scores">Comparison of equated and observed T-scores<a class="anchor" aria-label="anchor" href="#comparison-of-equated-and-observed-t-scores"></a>
+</h3>
 <p>Finally, use <code><a href="../reference/compareScores.html">compareScores()</a></code> to compare the obtained T-scores.</p>
 <div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Reference score: IRT pattern scoring of Scale 1</span>
@@ -1045,7 +1045,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
