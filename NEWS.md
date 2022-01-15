@@ -14,10 +14,6 @@
 * Fixed where `runLinking(method = "FIXEDPAR")` was not working when the anchor instrument ID was not 1 in item map.
 * Fixed where `runLinking(method = "FIXEDPAR")` was not working when the anchor and target instruments had different numbers of categories in response data.
 * Fixed where `runFrequency()` was not sorting categories correctly when the number of categories was 10 or above.
-
-# PROsetta 0.3.1
-
-## Bug fixes
 * Fixed where `runCalibration(fixedpar = TRUE)` was not reading anchor parameters correctly when an integer value existed in anchor parameters.
 * Fixed where item parameters for dichotomous items were triggering an error while being parsed.
 * For compatibility with R < 4.0, `loadData()` now sanitizes input data when a data frame is supplied.
