@@ -238,7 +238,7 @@ checkFrequency <- function(data) {
 #' \code{\link{runFrequency}} is a descriptive function to obtain a frequency table from the dataset.
 #'
 #' @param data a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
-#' @param check_frequency Logical. If \code{TRUE}, check the frequency table for missing response categories, and display warning message if any is missing. (default = \code{TRUE})
+#' @param check_frequency if \code{TRUE}, check the frequency table for missing response categories, and display warning message if any is missing. (default = \code{TRUE})
 #'
 #' @return \code{\link{runFrequency}} returns a \code{\link{data.frame}} containing the frequency table.
 #'
@@ -303,7 +303,7 @@ runDescriptive <- function(data = NULL) {
 
 #' Run CTT-based reliability analysis
 #'
-#' \code{\link{runClassical}} is a function to perform Classial Test Theory (CTT) based reliability analysis.
+#' \code{\link{runClassical}} is a function to perform Classical Test Theory (CTT) based reliability analysis.
 #'
 #' @param data a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
 #' @param omega if \code{TRUE}, also obtain McDonald's omega using \code{\link[psych]{omega}} in \href{https://CRAN.R-project.org/package=psych}{\code{psych}} package. (default = \code{FALSE})
