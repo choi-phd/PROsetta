@@ -1,4 +1,4 @@
-#' @include configPROsetta.R
+#' @include loading_functions.R
 NULL
 
 #' Check frequency table for unobserved response categories

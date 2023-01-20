@@ -46,7 +46,7 @@ RoxygenNote: 7.2.3
 VignetteBuilder: knitr
 Collate:
     'import.R'
-    'configPROsetta.R'
+    'loading_functions.R'
     'post_functions.R'
     'core_functions.R'
     'datasets.R'
