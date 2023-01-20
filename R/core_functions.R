@@ -762,7 +762,7 @@ LtoEAP <- function(L, theta_grid, prior_mu_sigma) {
       term_V, L[, s] * prior,
       SIMPLIFY = FALSE
     )
-    num <- Reduce('+', num)
+    num <- Reduce("+", num)
     COV <- num / denom
 
     o[[s]]$EAP <- EAP
