@@ -1,3 +1,7 @@
+# PROsetta 0.3.5.9000
+
+* Deprecated `guiPROsetta()` is removed. Use `PROsetta()` for this.
+
 # PROsetta 0.3.5
 
 * `runRSSS()` output now includes linear approximation betas when the `CPLA` method is used.
