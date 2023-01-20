@@ -56,13 +56,15 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">runLinking</span><span class="op">(</span><span class="va">data</span>, <span class="va">method</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">runLinking</span><span class="op">(</span><span class="va">data</span>, <span class="va">method</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>data</dt>
 <dd><p>a <code><a href="loadData.html">PROsetta_data</a></code> object. See <code><a href="loadData.html">loadData</a></code> for loading a dataset.</p></dd>
+
+
 <dt>method</dt>
 <dd><p>the type of linking to perform. Accepts:</p><ul><li><p><code>MM</code> for mean-mean</p></li>
 <li><p><code>MS</code> for mean-sigma</p></li>
@@ -73,28 +75,34 @@
 <li><p><code>CPLA</code> for linear approximation of calibrated projection. This is identical to 'CP' in <code>runLinking</code> but uses approximation in <code><a href="runRSSS.html">runRSSS</a></code></p></li>
 <li><p><code>CPFIXEDDIM</code> for calibrated projection using mean and variance constraints on the anchor dimension</p></li>
 </ul><p>Linear transformation methods are performed with <code><a href="https://rdrr.io/pkg/plink/man/plink-methods.html" class="external-link">plink</a></code> in <a href="https://CRAN.R-project.org/package=plink" class="external-link">'plink'</a> package.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>if <code>TRUE</code>, print status messages. (default = <code>FALSE</code>)</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments to pass onto <code><a href="https://rdrr.io/pkg/mirt/man/mirt.html" class="external-link">mirt</a></code> in <a href="https://CRAN.R-project.org/package=mirt" class="external-link">'mirt'</a> package.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>runLinking</code> returns a <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></code> containing the scale linking results.</p><ul><li><p><code>constants</code> linear transformation constants. <code>NA</code> if <code>method</code> argument was <code>FIXEDPAR</code>.</p></li>
+    
+
+<p><code>runLinking</code> returns a <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></code> containing the scale linking results.</p><ul><li><p><code>constants</code> linear transformation constants. <code>NA</code> if <code>method</code> argument was <code>FIXEDPAR</code>.</p></li>
 <li><p><code>ipar_linked</code> item parameters calibrated to the response data, and linked to the anchor item parameters.</p></li>
 <li><p><code>ipar_anchor</code> anchor item parameters used in linking.</p></li>
 </ul></div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># \donttest{</span>
-<span class="va">out_link</span> <span class="op">&lt;-</span> <span class="fu">runLinking</span><span class="op">(</span><span class="va">data_asq</span>, <span class="st">"SL"</span>, technical <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>NCYCLES <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span><span class="op">)</span>
-<span class="va">out_link</span><span class="op">$</span><span class="va">constants</span>   <span class="co"># transformation constants</span>
-<span class="va">out_link</span><span class="op">$</span><span class="va">ipar_linked</span> <span class="co"># item parameters linked to anchor</span>
-<span class="va">out_link</span> <span class="op">&lt;-</span> <span class="fu">runLinking</span><span class="op">(</span><span class="va">data_asq</span>, <span class="st">"FIXEDPAR"</span><span class="op">)</span>
-<span class="va">out_link</span><span class="op">$</span><span class="va">ipar_linked</span> <span class="co"># item parameters linked to anchor</span>
-<span class="co"># }</span>
-</code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># \donttest{</span></span>
+<span><span class="va">out_link</span> <span class="op">&lt;-</span> <span class="fu">runLinking</span><span class="op">(</span><span class="va">data_asq</span>, <span class="st">"SL"</span>, technical <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>NCYCLES <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">out_link</span><span class="op">$</span><span class="va">constants</span>   <span class="co"># transformation constants</span></span>
+<span><span class="va">out_link</span><span class="op">$</span><span class="va">ipar_linked</span> <span class="co"># item parameters linked to anchor</span></span>
+<span><span class="va">out_link</span> <span class="op">&lt;-</span> <span class="fu">runLinking</span><span class="op">(</span><span class="va">data_asq</span>, <span class="st">"FIXEDPAR"</span><span class="op">)</span></span>
+<span><span class="va">out_link</span><span class="op">$</span><span class="va">ipar_linked</span> <span class="co"># item parameters linked to anchor</span></span>
+<span><span class="co"># }</span></span></code></pre></div>
     </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -108,7 +116,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

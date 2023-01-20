@@ -56,57 +56,73 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">runCalibration</span><span class="op">(</span>
-  <span class="va">data</span>,
-  dimensions <span class="op">=</span> <span class="fl">1</span>,
-  fix_method <span class="op">=</span> <span class="st">"free"</span>,
-  fixedpar <span class="op">=</span> <span class="cn">NULL</span>,
-  ignore_nonconv <span class="op">=</span> <span class="cn">FALSE</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">runCalibration</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  dimensions <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  fix_method <span class="op">=</span> <span class="st">"free"</span>,</span>
+<span>  fixedpar <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ignore_nonconv <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>data</dt>
 <dd><p>a <code><a href="loadData.html">PROsetta_data</a></code> object. See <code><a href="loadData.html">loadData</a></code> for loading a dataset.</p></dd>
+
+
 <dt>dimensions</dt>
 <dd><p>number of dimensions to use. Must be 1 or 2. If 1, use one underlying dimension for all instruments combined. If 2, use each dimension separately for the anchor instrument and the developing instrument. Covariance between dimensions is freely estimated. (default = <code>1</code>)</p></dd>
+
+
 <dt>fix_method</dt>
 <dd><p>the type of constraints to impose. (default = <code>free</code>)</p><ul><li><p><code>item</code> for fixed parameter calibration using anchor item parameters</p></li>
 <li><p><code>theta</code> for using the mean and the variance obtained from a unidimensional calibration of anchor items</p></li>
 <li><p><code>free</code> for free calibration</p></li>
 </ul></dd>
+
+
 <dt>fixedpar</dt>
 <dd><p>this argument exists for reproducibility. <code>TRUE</code> is equivalent to <code>fix_method = "item"</code>, and <code>FALSE</code> is equivalent to <code>fix_method = "free"</code>.</p></dd>
+
+
 <dt>ignore_nonconv</dt>
 <dd><p>if <code>TRUE</code>, return results even when calibration does not converge. If <code>FALSE</code>, raise an error when calibration does not converge. (default = <code>FALSE</code>)</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>if <code>TRUE</code>, print status messages. (default = <code>FALSE</code>)</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments to pass onto <code><a href="https://rdrr.io/pkg/mirt/man/mirt.html" class="external-link">mirt</a></code> in <a href="https://CRAN.R-project.org/package=mirt" class="external-link">'mirt'</a> package.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>runCalibration</code> returns a <code>SingleGroupClass</code> object containing item calibration results.
-This object can be used in <code><a href="https://rdrr.io/pkg/mirt/man/coef-method.html" class="external-link">coef</a></code>, <code><a href="https://rdrr.io/pkg/mirt/man/itemfit.html" class="external-link">itemfit</a></code>, <code><a href="https://rdrr.io/pkg/mirt/man/itemplot.html" class="external-link">itemplot</a></code> in <a href="https://CRAN.R-project.org/package=mirt" class="external-link">'mirt'</a> package to extract wanted information.</p>
+    
+
+<p><code>runCalibration</code> returns a <code>SingleGroupClass</code> object containing item calibration results.</p>
+
+
+<p>This object can be used in <code><a href="https://rdrr.io/pkg/mirt/man/coef-method.html" class="external-link">coef</a></code>, <code><a href="https://rdrr.io/pkg/mirt/man/itemfit.html" class="external-link">itemfit</a></code>, <code><a href="https://rdrr.io/pkg/mirt/man/itemplot.html" class="external-link">itemplot</a></code> in <a href="https://CRAN.R-project.org/package=mirt" class="external-link">'mirt'</a> package to extract wanted information.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span>
-<span class="va">out_calib</span> <span class="op">&lt;-</span> <span class="fu">runCalibration</span><span class="op">(</span><span class="va">data_asq</span><span class="op">)</span> <span class="co"># errors</span>
-<span class="op">}</span>
-<span class="co"># \donttest{</span>
-<span class="va">out_calib</span> <span class="op">&lt;-</span> <span class="fu">runCalibration</span><span class="op">(</span><span class="va">data_asq</span>, technical <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>NCYCLES <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">mirt</span><span class="fu">::</span><span class="fu">coef</span><span class="op">(</span><span class="va">out_calib</span>, IRTpars <span class="op">=</span> <span class="cn">TRUE</span>, simplify <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu">mirt</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mirt/man/itemfit.html" class="external-link">itemfit</a></span><span class="op">(</span><span class="va">out_calib</span>, empirical.plot <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
-<span class="fu">mirt</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mirt/man/itemplot.html" class="external-link">itemplot</a></span><span class="op">(</span><span class="va">out_calib</span>, item <span class="op">=</span> <span class="fl">1</span>, type <span class="op">=</span> <span class="st">"info"</span><span class="op">)</span>
-<span class="fu">mirt</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mirt/man/itemfit.html" class="external-link">itemfit</a></span><span class="op">(</span><span class="va">out_calib</span>, <span class="st">"S_X2"</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co"># }</span>
-</code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="va">out_calib</span> <span class="op">&lt;-</span> <span class="fu">runCalibration</span><span class="op">(</span><span class="va">data_asq</span><span class="op">)</span> <span class="co"># errors</span></span>
+<span><span class="op">}</span></span>
+<span><span class="co"># \donttest{</span></span>
+<span><span class="va">out_calib</span> <span class="op">&lt;-</span> <span class="fu">runCalibration</span><span class="op">(</span><span class="va">data_asq</span>, technical <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>NCYCLES <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">mirt</span><span class="fu">::</span><span class="fu">coef</span><span class="op">(</span><span class="va">out_calib</span>, IRTpars <span class="op">=</span> <span class="cn">TRUE</span>, simplify <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">mirt</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mirt/man/itemfit.html" class="external-link">itemfit</a></span><span class="op">(</span><span class="va">out_calib</span>, empirical.plot <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="fu">mirt</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mirt/man/itemplot.html" class="external-link">itemplot</a></span><span class="op">(</span><span class="va">out_calib</span>, item <span class="op">=</span> <span class="fl">1</span>, type <span class="op">=</span> <span class="st">"info"</span><span class="op">)</span></span>
+<span><span class="fu">mirt</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mirt/man/itemfit.html" class="external-link">itemfit</a></span><span class="op">(</span><span class="va">out_calib</span>, <span class="st">"S_X2"</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co"># }</span></span></code></pre></div>
     </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -120,7 +136,7 @@ This object can be used in <code><a href="https://rdrr.io/pkg/mirt/man/coef-meth
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

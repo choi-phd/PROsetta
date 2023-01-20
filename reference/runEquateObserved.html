@@ -56,78 +56,106 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">runEquateObserved</span><span class="op">(</span>
-  <span class="va">data</span>,
-  scale_from <span class="op">=</span> <span class="fl">2</span>,
-  scale_to <span class="op">=</span> <span class="fl">1</span>,
-  type_to <span class="op">=</span> <span class="st">"raw"</span>,
-  rsss <span class="op">=</span> <span class="cn">NULL</span>,
-  eq_type <span class="op">=</span> <span class="st">"equipercentile"</span>,
-  smooth <span class="op">=</span> <span class="st">"loglinear"</span>,
-  degrees <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">)</span>,
-  boot <span class="op">=</span> <span class="cn">TRUE</span>,
-  reps <span class="op">=</span> <span class="fl">100</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">runEquateObserved</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  scale_from <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  scale_to <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  type_to <span class="op">=</span> <span class="st">"raw"</span>,</span>
+<span>  rsss <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  eq_type <span class="op">=</span> <span class="st">"equipercentile"</span>,</span>
+<span>  smooth <span class="op">=</span> <span class="st">"loglinear"</span>,</span>
+<span>  degrees <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  boot <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  reps <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>data</dt>
 <dd><p>a <code><a href="loadData.html">PROsetta_data</a></code> object. See <code><a href="loadData.html">loadData</a></code> for loading a dataset.</p></dd>
+
+
 <dt>scale_from</dt>
 <dd><p>the scale ID of the input scale. References to <code>itemmap</code> in <code>data</code> argument. (default = <code>2</code>)</p></dd>
+
+
 <dt>scale_to</dt>
 <dd><p>the scale ID of the target scale to equate to. References to <code>itemmap</code> in <code>data</code> argument. (default = <code>1</code>)</p></dd>
+
+
 <dt>type_to</dt>
 <dd><p>the type of score to use in the target scale frequency table. Accepts <code>raw</code>, <code>tscore</code>, and <code>theta</code>. <code>tscore</code> and <code>theta</code> require argument <code>rsss</code> to be supplied. (default = <code>raw</code>)</p></dd>
+
+
 <dt>rsss</dt>
 <dd><p>the RSSS table to use to map each raw score level onto a t-score or a theta. See <code><a href="runRSSS.html">runRSSS</a></code>.</p></dd>
+
+
 <dt>eq_type</dt>
 <dd><p>the type of equating to be passed onto <code><a href="https://rdrr.io/pkg/equate/man/equate.html" class="external-link">equate</a></code> in <a href="https://CRAN.R-project.org/package=equate" class="external-link">'equate'</a> package. (default = <code>equipercentile</code>)</p></dd>
+
+
 <dt>smooth</dt>
 <dd><p>the type of smoothing method to be passed onto <code><a href="https://rdrr.io/pkg/equate/man/presmoothing.html" class="external-link">presmoothing</a></code> in <a href="https://CRAN.R-project.org/package=equate" class="external-link">'equate'</a> package. (default = <code>loglinear</code>)</p></dd>
+
+
 <dt>degrees</dt>
 <dd><p>the degrees of smoothing to be passed onto <code><a href="https://rdrr.io/pkg/equate/man/presmoothing.html" class="external-link">presmoothing</a></code>. (default = <code>list(3, 1)</code>)</p></dd>
+
+
 <dt>boot</dt>
 <dd><p>performs bootstrapping if <code>TRUE</code>. (default = <code>TRUE</code>)</p></dd>
+
+
 <dt>reps</dt>
 <dd><p>the number of replications to perform in bootstrapping. (default = <code>100</code>)</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>if <code>TRUE</code>, print status messages. (default = <code>FALSE</code>)</p></dd>
+
+
 <dt>...</dt>
 <dd><p>other arguments to pass onto <code><a href="https://rdrr.io/pkg/equate/man/equate.html" class="external-link">equate</a></code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>runEquateObserved</code> returns an <code>equate</code> object containing the test equating result.
-The printed summary statistics indicate the distributional properties of the two supplied scales and the equated scale.</p><ul><li><p><code>x</code> corresponds to <code>scale_from</code>.</p></li>
+    
+
+<p><code>runEquateObserved</code> returns an <code>equate</code> object containing the test equating result.</p>
+
+
+<p>The printed summary statistics indicate the distributional properties of the two supplied scales and the equated scale.</p><ul><li><p><code>x</code> corresponds to <code>scale_from</code>.</p></li>
 <li><p><code>y</code> corresponds to <code>scale_to</code>.</p></li>
 <li><p><code>yx</code> corresponds to <code>scale_from</code> after equating to <code>scale_to</code>.</p></li>
-</ul><p>See <code><a href="https://rdrr.io/pkg/equate/man/equate.html" class="external-link">equate</a></code> for details.
-The concordance table is stored in <code>concordance</code> slot.</p>
+</ul><p>See <code><a href="https://rdrr.io/pkg/equate/man/equate.html" class="external-link">equate</a></code> for details.</p>
+
+
+<p>The concordance table is stored in <code>concordance</code> slot.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="va">out_eq_raw</span> <span class="op">&lt;-</span> <span class="fu">runEquateObserved</span><span class="op">(</span><span class="va">data_asq</span>,
-  scale_to <span class="op">=</span> <span class="fl">1</span>, scale_from <span class="op">=</span> <span class="fl">2</span>,
-  eq_type <span class="op">=</span> <span class="st">"equipercentile"</span>, smooth <span class="op">=</span> <span class="st">"loglinear"</span>
-<span class="op">)</span>
-<span class="va">out_eq_raw</span><span class="op">$</span><span class="va">concordance</span>
-
-<span class="co"># \donttest{</span>
-<span class="va">out_link</span> <span class="op">&lt;-</span> <span class="fu"><a href="runLinking.html">runLinking</a></span><span class="op">(</span><span class="va">data_asq</span>, method <span class="op">=</span> <span class="st">"FIXEDPAR"</span><span class="op">)</span>
-<span class="va">out_rsss</span> <span class="op">&lt;-</span> <span class="fu"><a href="runRSSS.html">runRSSS</a></span><span class="op">(</span><span class="va">data_asq</span>, <span class="va">out_link</span><span class="op">)</span>
-<span class="va">out_eq_tscore</span> <span class="op">&lt;-</span> <span class="fu">runEquateObserved</span><span class="op">(</span><span class="va">data_asq</span>,
-  scale_to <span class="op">=</span> <span class="fl">1</span>, scale_from <span class="op">=</span> <span class="fl">2</span>,
-  type_to <span class="op">=</span> <span class="st">"tscore"</span>, rsss <span class="op">=</span> <span class="va">out_rsss</span>,
-  eq_type <span class="op">=</span> <span class="st">"equipercentile"</span>, smooth <span class="op">=</span> <span class="st">"loglinear"</span>
-<span class="op">)</span>
-<span class="va">out_eq_tscore</span><span class="op">$</span><span class="va">concordance</span>
-<span class="co"># }</span>
-</code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="va">out_eq_raw</span> <span class="op">&lt;-</span> <span class="fu">runEquateObserved</span><span class="op">(</span><span class="va">data_asq</span>,</span>
+<span>  scale_to <span class="op">=</span> <span class="fl">1</span>, scale_from <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  eq_type <span class="op">=</span> <span class="st">"equipercentile"</span>, smooth <span class="op">=</span> <span class="st">"loglinear"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">out_eq_raw</span><span class="op">$</span><span class="va">concordance</span></span>
+<span></span>
+<span><span class="co"># \donttest{</span></span>
+<span><span class="va">out_link</span> <span class="op">&lt;-</span> <span class="fu"><a href="runLinking.html">runLinking</a></span><span class="op">(</span><span class="va">data_asq</span>, method <span class="op">=</span> <span class="st">"FIXEDPAR"</span><span class="op">)</span></span>
+<span><span class="va">out_rsss</span> <span class="op">&lt;-</span> <span class="fu"><a href="runRSSS.html">runRSSS</a></span><span class="op">(</span><span class="va">data_asq</span>, <span class="va">out_link</span><span class="op">)</span></span>
+<span><span class="va">out_eq_tscore</span> <span class="op">&lt;-</span> <span class="fu">runEquateObserved</span><span class="op">(</span><span class="va">data_asq</span>,</span>
+<span>  scale_to <span class="op">=</span> <span class="fl">1</span>, scale_from <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  type_to <span class="op">=</span> <span class="st">"tscore"</span>, rsss <span class="op">=</span> <span class="va">out_rsss</span>,</span>
+<span>  eq_type <span class="op">=</span> <span class="st">"equipercentile"</span>, smooth <span class="op">=</span> <span class="st">"loglinear"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">out_eq_tscore</span><span class="op">$</span><span class="va">concordance</span></span>
+<span><span class="co"># }</span></span></code></pre></div>
     </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -141,7 +169,7 @@ The concordance table is stored in <code>concordance</code> slot.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -56,40 +56,57 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">getTheta</span><span class="op">(</span>
-  <span class="va">data</span>,
-  <span class="va">ipar</span>,
-  scale <span class="op">=</span> <span class="st">"combined"</span>,
-  model <span class="op">=</span> <span class="st">"grm"</span>,
-  theta_grid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="fl">4</span>, <span class="fl">0.1</span><span class="op">)</span>,
-  prior_dist <span class="op">=</span> <span class="st">"normal"</span>,
-  prior_mean <span class="op">=</span> <span class="fl">0</span>,
-  prior_sd <span class="op">=</span> <span class="fl">1</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getTheta</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  <span class="va">ipar</span>,</span>
+<span>  scale <span class="op">=</span> <span class="st">"combined"</span>,</span>
+<span>  model <span class="op">=</span> <span class="st">"grm"</span>,</span>
+<span>  theta_grid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="fl">4</span>, <span class="fl">0.1</span><span class="op">)</span>,</span>
+<span>  prior_dist <span class="op">=</span> <span class="st">"normal"</span>,</span>
+<span>  prior_mean <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  prior_sd <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>data</dt>
 <dd><p>a <code><a href="loadData.html">PROsetta_data</a></code> object.</p></dd>
+
+
 <dt>ipar</dt>
 <dd><p>a <code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></code> containing item parameters.</p></dd>
+
+
 <dt>scale</dt>
 <dd><p>the index of the scale to use. Set to 'combined' to use the combined scale.</p></dd>
+
+
 <dt>model</dt>
 <dd><p>the item model to use. Accepts 'grm' or 'gpcm'.</p></dd>
+
+
 <dt>theta_grid</dt>
 <dd><p>the theta grid to use in calculating EAP estimates.</p></dd>
+
+
 <dt>prior_dist</dt>
 <dd><p>the type of prior distribution. Accepts '<code>normal</code>' or '<code>logistic</code>'.</p></dd>
+
+
 <dt>prior_mean</dt>
 <dd><p>mean of the prior distribution.</p></dd>
+
+
 <dt>prior_sd</dt>
 <dd><p>SD of the prior distribution.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>getTheta</code> returns a <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></code> containing EAP estimates.</p>
+    
+
+<p><code>getTheta</code> returns a <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></code> containing EAP estimates.</p>
     </div>
 
   </div>
@@ -104,7 +121,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

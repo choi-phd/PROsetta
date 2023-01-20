@@ -56,31 +56,39 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">runClassical</span><span class="op">(</span><span class="va">data</span>, omega <span class="op">=</span> <span class="cn">FALSE</span>, scalewise <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">runClassical</span><span class="op">(</span><span class="va">data</span>, omega <span class="op">=</span> <span class="cn">FALSE</span>, scalewise <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>data</dt>
 <dd><p>a <code><a href="loadData.html">PROsetta_data</a></code> object. See <code><a href="loadData.html">loadData</a></code> for loading a dataset.</p></dd>
+
+
 <dt>omega</dt>
 <dd><p>if <code>TRUE</code>, also obtain McDonald's omega using <code><a href="https://rdrr.io/pkg/psych/man/omega.html" class="external-link">omega</a></code> in <a href="https://CRAN.R-project.org/package=psych" class="external-link"><code>psych</code></a> package. (default = <code>FALSE</code>)</p></dd>
+
+
 <dt>scalewise</dt>
 <dd><p>if <code>TRUE</code>, run analysis for each scale as well as for the combined scale. If <code>FALSE</code>, run analysis only for the combined scale. (default = <code>TRUE</code>)</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments to pass onto <code><a href="https://rdrr.io/pkg/psych/man/omega.html" class="external-link">omega</a></code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>runClassical</code> returns a <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></code> containing reliability analysis results.</p>
+    
+
+<p><code>runClassical</code> returns a <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></code> containing reliability analysis results.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="va">out_alpha</span> <span class="op">&lt;-</span> <span class="fu">runClassical</span><span class="op">(</span><span class="va">data_asq</span><span class="op">)</span>
-<span class="va">out_omega</span> <span class="op">&lt;-</span> <span class="fu">runClassical</span><span class="op">(</span><span class="va">data_asq</span>, omega <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># also obtain omega</span>
-
-</code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="va">out_alpha</span> <span class="op">&lt;-</span> <span class="fu">runClassical</span><span class="op">(</span><span class="va">data_asq</span><span class="op">)</span></span>
+<span><span class="va">out_omega</span> <span class="op">&lt;-</span> <span class="fu">runClassical</span><span class="op">(</span><span class="va">data_asq</span>, omega <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># also obtain omega</span></span>
+<span></span></code></pre></div>
     </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -94,7 +102,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

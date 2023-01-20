@@ -56,50 +56,66 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">runRSSS</span><span class="op">(</span>
-  <span class="va">data</span>,
-  <span class="va">ipar_linked</span>,
-  prior_mean <span class="op">=</span> <span class="fl">0</span>,
-  prior_sd <span class="op">=</span> <span class="fl">1</span>,
-  min_theta <span class="op">=</span> <span class="op">-</span><span class="fl">4</span>,
-  max_theta <span class="op">=</span> <span class="fl">4</span>,
-  inc <span class="op">=</span> <span class="fl">0.05</span>,
-  min_score <span class="op">=</span> <span class="fl">1</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">runRSSS</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  <span class="va">ipar_linked</span>,</span>
+<span>  prior_mean <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  prior_sd <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  min_theta <span class="op">=</span> <span class="op">-</span><span class="fl">4</span>,</span>
+<span>  max_theta <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  inc <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  min_score <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>data</dt>
 <dd><p>a <code><a href="loadData.html">PROsetta_data</a></code> object. See <code><a href="loadData.html">loadData</a></code> for loading a dataset.</p></dd>
+
+
 <dt>ipar_linked</dt>
 <dd><p>an object returned from <code><a href="runLinking.html">runLinking</a></code> or <code><a href="runCalibration.html">runCalibration</a></code>.</p></dd>
+
+
 <dt>prior_mean</dt>
 <dd><p>prior mean. (default = <code>0.0</code>)</p></dd>
+
+
 <dt>prior_sd</dt>
 <dd><p>prior standard deviation. (default = <code>1.0</code>)</p></dd>
+
+
 <dt>min_theta</dt>
 <dd><p>the lower limit of theta grid. (default = <code>-4</code>)</p></dd>
+
+
 <dt>max_theta</dt>
 <dd><p>the upper limit of theta grid. (default = <code>4</code>)</p></dd>
+
+
 <dt>inc</dt>
 <dd><p>the increment to use in theta grid. (default = <code>0.05</code>)</p></dd>
+
+
 <dt>min_score</dt>
 <dd><p>minimum item score (0 or 1) for each scale (1, 2, and combined). If a single value is supplied, the value is applied to all scales. (default = <code>1</code>)</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>runRSSS</code> returns a <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></code> containing crosswalk tables.</p>
+    
+
+<p><code>runRSSS</code> returns a <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></code> containing crosswalk tables.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># \donttest{</span>
-<span class="va">out_link</span>    <span class="op">&lt;-</span> <span class="fu"><a href="runLinking.html">runLinking</a></span><span class="op">(</span><span class="va">data_asq</span>, method <span class="op">=</span> <span class="st">"FIXEDPAR"</span><span class="op">)</span>
-<span class="va">score_table</span> <span class="op">&lt;-</span> <span class="fu">runRSSS</span><span class="op">(</span><span class="va">data_asq</span>, <span class="va">out_link</span><span class="op">)</span>
-<span class="co"># }</span>
-
-</code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># \donttest{</span></span>
+<span><span class="va">out_link</span>    <span class="op">&lt;-</span> <span class="fu"><a href="runLinking.html">runLinking</a></span><span class="op">(</span><span class="va">data_asq</span>, method <span class="op">=</span> <span class="st">"FIXEDPAR"</span><span class="op">)</span></span>
+<span><span class="va">score_table</span> <span class="op">&lt;-</span> <span class="fu">runRSSS</span><span class="op">(</span><span class="va">data_asq</span>, <span class="va">out_link</span><span class="op">)</span></span>
+<span><span class="co"># }</span></span>
+<span></span></code></pre></div>
     </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -113,7 +129,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

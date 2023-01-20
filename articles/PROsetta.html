@@ -90,43 +90,62 @@
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>This vignette explains how to perform scale linking with the <em>PROsetta</em> package. By way of illustration, we replicate the linking of the Center for Epidemiologic Studies Depression Scale (CES-D) to the PROMIS Depression metric as described in Choi, Schalet, Cook, and Cella (2014).</p>
+<p>This vignette explains how to perform scale linking with the
+<em>PROsetta</em> package. By way of illustration, we replicate the
+linking of the Center for Epidemiologic Studies Depression Scale (CES-D)
+to the PROMIS Depression metric as described in Choi, Schalet, Cook, and
+Cella (2014).</p>
 <p><br></p>
 </div>
 <div class="section level2">
 <h2 id="load-datasets">Load datasets<a class="anchor" aria-label="anchor" href="#load-datasets"></a>
 </h2>
-<p>First step is to load the input datasets comprised of three tables with <code><a href="../reference/loadData.html">loadData()</a></code>. The PROMIS Depression – CES-D linking data are included in the <em>PROsetta</em> package directory under the folder labeled <code>data-raw</code>.</p>
+<p>First step is to load the input datasets comprised of three tables
+with <code><a href="../reference/loadData.html">loadData()</a></code>. The PROMIS Depression – CES-D linking data
+are included in the <em>PROsetta</em> package directory under the folder
+labeled <code>data-raw</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">fp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data-raw"</span>, package <span class="op">=</span> <span class="st">"PROsetta"</span><span class="op">)</span>
-<span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/loadData.html">loadData</a></span><span class="op">(</span>
-  response  <span class="op">=</span> <span class="st">"dat_DeCESD_v2.csv"</span>,
-  itemmap   <span class="op">=</span> <span class="st">"imap_DeCESD.csv"</span>,
-  anchor    <span class="op">=</span> <span class="st">"anchor_DeCESD.csv"</span>,
-  input_dir <span class="op">=</span> <span class="va">fp</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">fp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data-raw"</span>, package <span class="op">=</span> <span class="st">"PROsetta"</span><span class="op">)</span></span>
+<span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/loadData.html">loadData</a></span><span class="op">(</span></span>
+<span>  response  <span class="op">=</span> <span class="st">"dat_DeCESD_v2.csv"</span>,</span>
+<span>  itemmap   <span class="op">=</span> <span class="st">"imap_DeCESD.csv"</span>,</span>
+<span>  anchor    <span class="op">=</span> <span class="st">"anchor_DeCESD.csv"</span>,</span>
+<span>  input_dir <span class="op">=</span> <span class="va">fp</span><span class="op">)</span></span></code></pre></div>
 <ul>
 <li>
-<code>response</code>: Contains item response data from both instruments. You can supply a .csv filename or a data frame. In this example, we supply a .csv filename <code>dat_DeCESD_v2.csv</code>.</li>
+<code>response</code>: Contains item response data from both
+instruments. You can supply a .csv filename or a data frame. In this
+example, we supply a .csv filename <code>dat_DeCESD_v2.csv</code>.</li>
 <li>
-<code>itemmap</code>: Specifies which items belong to which instruments. Can be a .csv filename or a data frame.</li>
+<code>itemmap</code>: Specifies which items belong to which
+instruments. Can be a .csv filename or a data frame.</li>
 <li>
-<code>anchor</code>: Contains tem parameters for anchor items (e.g., PROMIS Depression). Can be a .csv filename or a data frame.</li>
+<code>anchor</code>: Contains tem parameters for anchor items (e.g.,
+PROMIS Depression). Can be a .csv filename or a data frame.</li>
 <li>
-<code>input_dir</code>: (Optional) The path of the directory to look for the input .csv files.</li>
+<code>input_dir</code>: (Optional) The path of the directory to look
+for the input .csv files.</li>
 </ul>
 <p><br></p>
 <div class="section level3">
 <h3 id="response-data">Response data<a class="anchor" aria-label="anchor" href="#response-data"></a>
 </h3>
-<p>The response data contains individual item responses on both instruments (i.e., 28 PROMIS Depression items followed by 20 CES-D items). The data table should include the following columns.</p>
+<p>The response data contains individual item responses on both
+instruments (i.e., 28 PROMIS Depression items followed by 20 CES-D
+items). The data table should include the following columns.</p>
 <ul>
 <li>
-<code>prosettaid</code>: The person ID of the respondents (N = 747). This column does not have to be named <code>prosettaid</code> but should not conflict with other data tables (item map and anchor).</li>
-<li>Other columns should include the item response fields with their unique item IDs as column names. The item names should match the <code>item_id</code> column in both the item map and anchor files.</li>
+<code>prosettaid</code>: The person ID of the respondents (N = 747).
+This column does not have to be named <code>prosettaid</code> but should
+not conflict with other data tables (item map and anchor).</li>
+<li>Other columns should include the item response fields with their
+unique item IDs as column names. The item names should match the
+<code>item_id</code> column in both the item map and anchor files.</li>
 </ul>
-<p>Run the following code, for example, to open the response data in edit mode.</p>
+<p>Run the following code, for example, to open the response data in
+edit mode.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/file.edit.html" class="external-link">file.edit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data-raw"</span>, <span class="st">"dat_DeCESD_v2.csv"</span>, package <span class="op">=</span> <span class="st">"PROsetta"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/file.edit.html" class="external-link">file.edit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data-raw"</span>, <span class="st">"dat_DeCESD_v2.csv"</span>, package <span class="op">=</span> <span class="st">"PROsetta"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><br></p>
 </div>
 <div class="section level3">
@@ -135,11 +154,17 @@
 <p>The item map data requires the following columns.</p>
 <ul>
 <li>
-<code>item_id</code>: Contains the unique ID of the items. The name of this column does not have to be <code>item_id</code> but should be consistent with the item ID column in the anchor table. The IDs in this column should match the column names in the response data.</li>
+<code>item_id</code>: Contains the unique ID of the items. The name
+of this column does not have to be <code>item_id</code> but should be
+consistent with the item ID column in the anchor table. The IDs in this
+column should match the column names in the response data.</li>
 <li>
-<code>instrument</code>: Numerals (1 or 2) indicating to which of the two instruments the items belong (e.g., 1 = PROMIS Depression; 2 = CES-D)</li>
+<code>instrument</code>: Numerals (1 or 2) indicating to which of
+the two instruments the items belong (e.g., 1 = PROMIS Depression; 2 =
+CES-D)</li>
 <li>
-<code>item_order</code>: The sequential position of the items in the combined table (e.g., 1, 2, 3, …, 28, …, 48)</li>
+<code>item_order</code>: The sequential position of the items in the
+combined table (e.g., 1, 2, 3, …, 28, …, 48)</li>
 <li>
 <code>item_name</code>: Secondary labels for the items</li>
 <li>
@@ -147,28 +172,36 @@
 </ul>
 <p>Run the following code to open the item map data in edit mode.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/file.edit.html" class="external-link">file.edit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data-raw"</span>, <span class="st">"imap_DeCESD.csv"</span>, package <span class="op">=</span> <span class="st">"PROsetta"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/file.edit.html" class="external-link">file.edit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data-raw"</span>, <span class="st">"imap_DeCESD.csv"</span>, package <span class="op">=</span> <span class="st">"PROsetta"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><br></p>
 </div>
 <div class="section level3">
 <h3 id="anchor-data">Anchor data<a class="anchor" aria-label="anchor" href="#anchor-data"></a>
 </h3>
-<p>The anchor data contains the item parameters for the anchor scale (e.g., PROMIS Depression) and requires the following columns.</p>
+<p>The anchor data contains the item parameters for the anchor scale
+(e.g., PROMIS Depression) and requires the following columns.</p>
 <ul>
 <li>
-<code>item_order</code>: The sequential position of the items in the anchor scale (e.g., 1, 2, 3, …, 28)</li>
+<code>item_order</code>: The sequential position of the items in the
+anchor scale (e.g., 1, 2, 3, …, 28)</li>
 <li>
-<code>item_id</code>: The unique ID of the anchor items. The name of this column does not have to be <code>item_id</code> but should be consistent with the item ID column in the item map table The IDs in this column should refer to the specific column names in the response data.</li>
+<code>item_id</code>: The unique ID of the anchor items. The name of
+this column does not have to be <code>item_id</code> but should be
+consistent with the item ID column in the item map table The IDs in this
+column should refer to the specific column names in the response
+data.</li>
 <li>
 <code>a</code>: The slope parameter value for each anchor item</li>
 <li>
-<code>cb1</code>, <code>cb2</code>, …: The category boundary parameter values for each anchor item</li>
+<code>cb1</code>, <code>cb2</code>, …: The category boundary
+parameter values for each anchor item</li>
 <li>
-<code>ncat</code>: The number of response categories for each anchor item</li>
+<code>ncat</code>: The number of response categories for each anchor
+item</li>
 </ul>
 <p>Run the following code to open the anchor data in edit mode.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/file.edit.html" class="external-link">file.edit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data-raw"</span>, <span class="st">"anchor_DeCESD.csv"</span>, package <span class="op">=</span> <span class="st">"PROsetta"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/file.edit.html" class="external-link">file.edit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"data-raw"</span>, <span class="st">"anchor_DeCESD.csv"</span>, package <span class="op">=</span> <span class="st">"PROsetta"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><br></p>
 </div>
 </div>
@@ -178,284 +211,322 @@
 <div class="section level3">
 <h3 id="basic-descriptive-statistics">Basic descriptive statistics<a class="anchor" aria-label="anchor" href="#basic-descriptive-statistics"></a>
 </h3>
-<p>The frequency distribution of each item in the response data is obtained by <code><a href="../reference/runFrequency.html">runFrequency()</a></code>.</p>
+<p>The frequency distribution of each item in the response data is
+obtained by <code><a href="../reference/runFrequency.html">runFrequency()</a></code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">freq_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runFrequency.html">runFrequency</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">freq_table</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##           1   2   3  4  5</span>
-<span class="co">## EDDEP04 526 112  66 29 14</span>
-<span class="co">## EDDEP05 488 118  91 37 12</span>
-<span class="co">## EDDEP06 502 119  85 30 10</span>
-<span class="co">## EDDEP07 420 155 107 49 16</span>
-<span class="co">## EDDEP09 492 132  89 25  9</span>
-<span class="co">## EDDEP14 445 150 101 37 14</span></code></pre>
+<code class="sourceCode R"><span><span class="va">freq_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runFrequency.html">runFrequency</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">freq_table</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##           1   2   3  4  5</span></span>
+<span><span class="co">## EDDEP04 526 112  66 29 14</span></span>
+<span><span class="co">## EDDEP05 488 118  91 37 12</span></span>
+<span><span class="co">## EDDEP06 502 119  85 30 10</span></span>
+<span><span class="co">## EDDEP07 420 155 107 49 16</span></span>
+<span><span class="co">## EDDEP09 492 132  89 25  9</span></span>
+<span><span class="co">## EDDEP14 445 150 101 37 14</span></span></code></pre>
 <p><br></p>
-<p>The frequency distribution of the summed scores for the combined scale can be plotted as a histogram with <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>. The required argument is a <code>PROsetta_data</code> object created with <code><a href="../reference/loadData.html">loadData()</a></code>. The optional <code>scale</code> argument specifies for which scale the summed score should be created. Setting <code>scale = 'combined'</code> plots the summed score distribution for the combined scale.</p>
+<p>The frequency distribution of the summed scores for the combined
+scale can be plotted as a histogram with <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>. The
+required argument is a <code>PROsetta_data</code> object created with
+<code><a href="../reference/loadData.html">loadData()</a></code>. The optional <code>scale</code> argument
+specifies for which scale the summed score should be created. Setting
+<code>scale = 'combined'</code> plots the summed score distribution for
+the combined scale.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">d</span>, scale <span class="op">=</span> <span class="st">"combined"</span>, title <span class="op">=</span> <span class="st">"Combined scale"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">d</span>, scale <span class="op">=</span> <span class="st">"combined"</span>, title <span class="op">=</span> <span class="st">"Combined scale"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="PROsetta_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;"></p>
-<p>The user can also generate the summed score distribution for the first or second scale by specifying <code>scale = 1</code> or <code>scale = 2</code>.</p>
+<p>The user can also generate the summed score distribution for the
+first or second scale by specifying <code>scale = 1</code> or
+<code>scale = 2</code>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">d</span>, scale <span class="op">=</span> <span class="fl">1</span>, title <span class="op">=</span> <span class="st">"Scale 1"</span><span class="op">)</span> <span class="co"># not run</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">d</span>, scale <span class="op">=</span> <span class="fl">2</span>, title <span class="op">=</span> <span class="st">"Scale 2"</span><span class="op">)</span> <span class="co"># not run</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">d</span>, scale <span class="op">=</span> <span class="fl">1</span>, title <span class="op">=</span> <span class="st">"Scale 1"</span><span class="op">)</span> <span class="co"># not run</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">d</span>, scale <span class="op">=</span> <span class="fl">2</span>, title <span class="op">=</span> <span class="st">"Scale 2"</span><span class="op">)</span> <span class="co"># not run</span></span></code></pre></div>
 <p><br></p>
-<p>Basic descriptive statistics are obtained for each item by <code><a href="../reference/runDescriptive.html">runDescriptive()</a></code>.</p>
+<p>Basic descriptive statistics are obtained for each item by
+<code><a href="../reference/runDescriptive.html">runDescriptive()</a></code>.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">desc_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runDescriptive.html">runDescriptive</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">desc_table</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##           n mean   sd median trimmed mad min max range skew kurtosis   se</span>
-<span class="co">## EDDEP04 747 1.52 0.94      1    1.30   0   1   5     4 1.91     3.01 0.03</span>
-<span class="co">## EDDEP05 746 1.62 0.99      1    1.42   0   1   5     4 1.54     1.50 0.04</span>
-<span class="co">## EDDEP06 746 1.56 0.94      1    1.37   0   1   5     4 1.66     2.01 0.03</span>
-<span class="co">## EDDEP07 747 1.78 1.05      1    1.59   0   1   5     4 1.23     0.59 0.04</span>
-<span class="co">## EDDEP09 747 1.56 0.91      1    1.38   0   1   5     4 1.62     1.98 0.03</span>
-<span class="co">## EDDEP14 747 1.69 1.00      1    1.51   0   1   5     4 1.38     1.12 0.04</span></code></pre>
+<code class="sourceCode R"><span><span class="va">desc_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runDescriptive.html">runDescriptive</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">desc_table</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##           n mean   sd median trimmed mad min max range skew kurtosis   se</span></span>
+<span><span class="co">## EDDEP04 747 1.52 0.94      1    1.30   0   1   5     4 1.91     3.01 0.03</span></span>
+<span><span class="co">## EDDEP05 746 1.62 0.99      1    1.42   0   1   5     4 1.54     1.50 0.04</span></span>
+<span><span class="co">## EDDEP06 746 1.56 0.94      1    1.37   0   1   5     4 1.66     2.01 0.03</span></span>
+<span><span class="co">## EDDEP07 747 1.78 1.05      1    1.59   0   1   5     4 1.23     0.59 0.04</span></span>
+<span><span class="co">## EDDEP09 747 1.56 0.91      1    1.38   0   1   5     4 1.62     1.98 0.03</span></span>
+<span><span class="co">## EDDEP14 747 1.69 1.00      1    1.51   0   1   5     4 1.38     1.12 0.04</span></span></code></pre>
 <p><br></p>
 </div>
 <div class="section level3">
 <h3 id="classical-reliability-analysis">Classical reliability analysis<a class="anchor" aria-label="anchor" href="#classical-reliability-analysis"></a>
 </h3>
-<p>Classical reliability statistics can be obtained by <code><a href="../reference/runClassical.html">runClassical()</a></code>. By default, the analysis is performed for the combined scale.</p>
+<p>Classical reliability statistics can be obtained by
+<code><a href="../reference/runClassical.html">runClassical()</a></code>. By default, the analysis is performed for
+the combined scale.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">classical_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runClassical.html">runClassical</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">classical_table</span><span class="op">$</span><span class="va">alpha</span><span class="op">$</span><span class="va">combined</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## </span>
-<span class="co">## Reliability analysis   </span>
-<span class="co">##  raw_alpha std.alpha G6(smc) average_r S/N   ase mean   sd median_r</span>
-<span class="co">##       0.98      0.98    0.99      0.53  54 9e-04  1.7 0.69     0.54</span></code></pre>
-<p>The user can set <code>scalewise = TRUE</code> to request an analysis for each scale separately in addition to the combined scale.</p>
+<code class="sourceCode R"><span><span class="va">classical_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runClassical.html">runClassical</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">classical_table</span><span class="op">$</span><span class="va">alpha</span><span class="op">$</span><span class="va">combined</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">## Reliability analysis   </span></span>
+<span><span class="co">##  raw_alpha std.alpha G6(smc) average_r S/N   ase mean   sd median_r</span></span>
+<span><span class="co">##       0.98      0.98    0.99      0.53  54 9e-04  1.7 0.69     0.54</span></span></code></pre>
+<p>The user can set <code>scalewise = TRUE</code> to request an analysis
+for each scale separately in addition to the combined scale.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">classical_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runClassical.html">runClassical</a></span><span class="op">(</span><span class="va">d</span>, scalewise <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="va">classical_table</span><span class="op">$</span><span class="va">alpha</span><span class="op">$</span><span class="va">combined</span> <span class="co"># alpha values for combined scale</span>
-<span class="va">classical_table</span><span class="op">$</span><span class="va">alpha</span><span class="op">$</span><span class="va">`1`</span>      <span class="co"># alpha values for each scale, created when scalewise = TRUE</span>
-<span class="va">classical_table</span><span class="op">$</span><span class="va">alpha</span><span class="op">$</span><span class="va">`2`</span>      <span class="co"># alpha values for each scale, created when scalewise = TRUE</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">classical_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runClassical.html">runClassical</a></span><span class="op">(</span><span class="va">d</span>, scalewise <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">classical_table</span><span class="op">$</span><span class="va">alpha</span><span class="op">$</span><span class="va">combined</span> <span class="co"># alpha values for combined scale</span></span>
+<span><span class="va">classical_table</span><span class="op">$</span><span class="va">alpha</span><span class="op">$</span><span class="va">`1`</span>      <span class="co"># alpha values for each scale, created when scalewise = TRUE</span></span>
+<span><span class="va">classical_table</span><span class="op">$</span><span class="va">alpha</span><span class="op">$</span><span class="va">`2`</span>      <span class="co"># alpha values for each scale, created when scalewise = TRUE</span></span></code></pre></div>
 <p>Specifying <code>omega = TRUE</code> returns the McDonald’s <span class="math inline">\(\omega\)</span> coefficients as well.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">classical_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runClassical.html">runClassical</a></span><span class="op">(</span><span class="va">d</span>, scalewise <span class="op">=</span> <span class="cn">TRUE</span>, omega <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="va">classical_table</span><span class="op">$</span><span class="va">omega</span><span class="op">$</span><span class="va">combined</span> <span class="co"># omega values for combined scale</span>
-<span class="va">classical_table</span><span class="op">$</span><span class="va">omega</span><span class="op">$</span><span class="va">`1`</span>      <span class="co"># omega values for each scale, created when scalewise = TRUE</span>
-<span class="va">classical_table</span><span class="op">$</span><span class="va">omega</span><span class="op">$</span><span class="va">`2`</span>      <span class="co"># omega values for each scale, created when scalewise = TRUE</span></code></pre></div>
-<p>Additional arguments can be supplied to <code><a href="../reference/runClassical.html">runClassical()</a></code> to pass onto <code><a href="https://rdrr.io/pkg/psych/man/omega.html" class="external-link">psych::omega()</a></code>.</p>
+<code class="sourceCode R"><span><span class="va">classical_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runClassical.html">runClassical</a></span><span class="op">(</span><span class="va">d</span>, scalewise <span class="op">=</span> <span class="cn">TRUE</span>, omega <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">classical_table</span><span class="op">$</span><span class="va">omega</span><span class="op">$</span><span class="va">combined</span> <span class="co"># omega values for combined scale</span></span>
+<span><span class="va">classical_table</span><span class="op">$</span><span class="va">omega</span><span class="op">$</span><span class="va">`1`</span>      <span class="co"># omega values for each scale, created when scalewise = TRUE</span></span>
+<span><span class="va">classical_table</span><span class="op">$</span><span class="va">omega</span><span class="op">$</span><span class="va">`2`</span>      <span class="co"># omega values for each scale, created when scalewise = TRUE</span></span></code></pre></div>
+<p>Additional arguments can be supplied to <code><a href="../reference/runClassical.html">runClassical()</a></code>
+to pass onto <code><a href="https://rdrr.io/pkg/psych/man/omega.html" class="external-link">psych::omega()</a></code>.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">classical_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runClassical.html">runClassical</a></span><span class="op">(</span><span class="va">d</span>, scalewise <span class="op">=</span> <span class="cn">TRUE</span>, omega <span class="op">=</span> <span class="cn">TRUE</span>, nfactors <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="co"># not run</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">classical_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runClassical.html">runClassical</a></span><span class="op">(</span><span class="va">d</span>, scalewise <span class="op">=</span> <span class="cn">TRUE</span>, omega <span class="op">=</span> <span class="cn">TRUE</span>, nfactors <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="co"># not run</span></span></code></pre></div>
 <p><br></p>
 </div>
 <div class="section level3">
 <h3 id="dimensionality-analysis">Dimensionality analysis<a class="anchor" aria-label="anchor" href="#dimensionality-analysis"></a>
 </h3>
-<p>Dimensionality analysis is performed with CFA by <code><a href="../reference/runCFA.html">runCFA()</a></code>. Setting <code>scalewise = TRUE</code> performs the dimensionality analysis for each scale separately in addition to the combined scale.</p>
+<p>Dimensionality analysis is performed with CFA by
+<code><a href="../reference/runCFA.html">runCFA()</a></code>. Setting <code>scalewise = TRUE</code> performs
+the dimensionality analysis for each scale separately in addition to the
+combined scale.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">out_cfa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runCFA.html">runCFA</a></span><span class="op">(</span><span class="va">d</span>, scalewise <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<p><code><a href="../reference/runCFA.html">runCFA()</a></code> calls for <code><a href="https://rdrr.io/pkg/lavaan/man/cfa.html" class="external-link">lavaan::cfa()</a></code> internally and can pass additional arguments onto it.</p>
+<code class="sourceCode R"><span><span class="va">out_cfa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runCFA.html">runCFA</a></span><span class="op">(</span><span class="va">d</span>, scalewise <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p><code><a href="../reference/runCFA.html">runCFA()</a></code> calls for <code><a href="https://rdrr.io/pkg/lavaan/man/cfa.html" class="external-link">lavaan::cfa()</a></code> internally
+and can pass additional arguments onto it.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">out_cfa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runCFA.html">runCFA</a></span><span class="op">(</span><span class="va">d</span>, scalewise <span class="op">=</span> <span class="cn">TRUE</span>, std.lv <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># not run</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">out_cfa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runCFA.html">runCFA</a></span><span class="op">(</span><span class="va">d</span>, scalewise <span class="op">=</span> <span class="cn">TRUE</span>, std.lv <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># not run</span></span></code></pre></div>
 <p><br></p>
-<p>The CFA result for the combined scale is stored in the <code>combined</code> slot, and if <code>scalewise = TRUE</code>, the analysis for each scale is also stored in each numbered slot.</p>
+<p>The CFA result for the combined scale is stored in the
+<code>combined</code> slot, and if <code>scalewise = TRUE</code>, the
+analysis for each scale is also stored in each numbered slot.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">out_cfa</span><span class="op">$</span><span class="va">combined</span></code></pre></div>
-<pre><code><span class="co">## lavaan 0.6-9 ended normally after 23 iterations</span>
-<span class="co">## </span>
-<span class="co">##   Estimator                                       DWLS</span>
-<span class="co">##   Optimization method                           NLMINB</span>
-<span class="co">##   Number of model parameters                       220</span>
-<span class="co">##                                                       </span>
-<span class="co">##                                                   Used       Total</span>
-<span class="co">##   Number of observations                           731         747</span>
-<span class="co">##                                                                   </span>
-<span class="co">## Model Test User Model:</span>
-<span class="co">##                                               Standard      Robust</span>
-<span class="co">##   Test Statistic                              4227.611    4700.780</span>
-<span class="co">##   Degrees of freedom                              1080        1080</span>
-<span class="co">##   P-value (Chi-square)                           0.000       0.000</span>
-<span class="co">##   Scaling correction factor                                  1.046</span>
-<span class="co">##   Shift parameter                                          657.455</span>
-<span class="co">##        simple second-order correction</span></code></pre>
+<code class="sourceCode R"><span><span class="va">out_cfa</span><span class="op">$</span><span class="va">combined</span></span></code></pre></div>
+<pre><code><span><span class="co">## lavaan 0.6.13 ended normally after 23 iterations</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##   Estimator                                       DWLS</span></span>
+<span><span class="co">##   Optimization method                           NLMINB</span></span>
+<span><span class="co">##   Number of model parameters                       220</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##                                                   Used       Total</span></span>
+<span><span class="co">##   Number of observations                           731         747</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Model Test User Model:</span></span>
+<span><span class="co">##                                               Standard      Scaled</span></span>
+<span><span class="co">##   Test Statistic                              4227.611    4700.780</span></span>
+<span><span class="co">##   Degrees of freedom                              1080        1080</span></span>
+<span><span class="co">##   P-value (Chi-square)                           0.000       0.000</span></span>
+<span><span class="co">##   Scaling correction factor                                  1.046</span></span>
+<span><span class="co">##   Shift parameter                                          657.455</span></span>
+<span><span class="co">##     simple second-order correction</span></span></code></pre>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">out_cfa</span><span class="op">$</span><span class="va">`1`</span></code></pre></div>
-<pre><code><span class="co">## lavaan 0.6-9 ended normally after 16 iterations</span>
-<span class="co">## </span>
-<span class="co">##   Estimator                                       DWLS</span>
-<span class="co">##   Optimization method                           NLMINB</span>
-<span class="co">##   Number of model parameters                       140</span>
-<span class="co">##                                                       </span>
-<span class="co">##                                                   Used       Total</span>
-<span class="co">##   Number of observations                           738         747</span>
-<span class="co">##                                                                   </span>
-<span class="co">## Model Test User Model:</span>
-<span class="co">##                                               Standard      Robust</span>
-<span class="co">##   Test Statistic                               863.527    1434.277</span>
-<span class="co">##   Degrees of freedom                               350         350</span>
-<span class="co">##   P-value (Chi-square)                           0.000       0.000</span>
-<span class="co">##   Scaling correction factor                                  0.678</span>
-<span class="co">##   Shift parameter                                          160.257</span>
-<span class="co">##        simple second-order correction</span></code></pre>
+<code class="sourceCode R"><span><span class="va">out_cfa</span><span class="op">$</span><span class="va">`1`</span></span></code></pre></div>
+<pre><code><span><span class="co">## lavaan 0.6.13 ended normally after 16 iterations</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##   Estimator                                       DWLS</span></span>
+<span><span class="co">##   Optimization method                           NLMINB</span></span>
+<span><span class="co">##   Number of model parameters                       140</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##                                                   Used       Total</span></span>
+<span><span class="co">##   Number of observations                           738         747</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Model Test User Model:</span></span>
+<span><span class="co">##                                               Standard      Scaled</span></span>
+<span><span class="co">##   Test Statistic                               863.527    1434.277</span></span>
+<span><span class="co">##   Degrees of freedom                               350         350</span></span>
+<span><span class="co">##   P-value (Chi-square)                           0.000       0.000</span></span>
+<span><span class="co">##   Scaling correction factor                                  0.678</span></span>
+<span><span class="co">##   Shift parameter                                          160.257</span></span>
+<span><span class="co">##     simple second-order correction</span></span></code></pre>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">out_cfa</span><span class="op">$</span><span class="va">`2`</span></code></pre></div>
-<pre><code><span class="co">## lavaan 0.6-9 ended normally after 20 iterations</span>
-<span class="co">## </span>
-<span class="co">##   Estimator                                       DWLS</span>
-<span class="co">##   Optimization method                           NLMINB</span>
-<span class="co">##   Number of model parameters                        80</span>
-<span class="co">##                                                       </span>
-<span class="co">##                                                   Used       Total</span>
-<span class="co">##   Number of observations                           740         747</span>
-<span class="co">##                                                                   </span>
-<span class="co">## Model Test User Model:</span>
-<span class="co">##                                               Standard      Robust</span>
-<span class="co">##   Test Statistic                              1106.148    1431.797</span>
-<span class="co">##   Degrees of freedom                               170         170</span>
-<span class="co">##   P-value (Chi-square)                           0.000       0.000</span>
-<span class="co">##   Scaling correction factor                                  0.812</span>
-<span class="co">##   Shift parameter                                           69.205</span>
-<span class="co">##        simple second-order correction</span></code></pre>
+<code class="sourceCode R"><span><span class="va">out_cfa</span><span class="op">$</span><span class="va">`2`</span></span></code></pre></div>
+<pre><code><span><span class="co">## lavaan 0.6.13 ended normally after 20 iterations</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##   Estimator                                       DWLS</span></span>
+<span><span class="co">##   Optimization method                           NLMINB</span></span>
+<span><span class="co">##   Number of model parameters                        80</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##                                                   Used       Total</span></span>
+<span><span class="co">##   Number of observations                           740         747</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Model Test User Model:</span></span>
+<span><span class="co">##                                               Standard      Scaled</span></span>
+<span><span class="co">##   Test Statistic                              1106.148    1431.797</span></span>
+<span><span class="co">##   Degrees of freedom                               170         170</span></span>
+<span><span class="co">##   P-value (Chi-square)                           0.000       0.000</span></span>
+<span><span class="co">##   Scaling correction factor                                  0.812</span></span>
+<span><span class="co">##   Shift parameter                                           69.205</span></span>
+<span><span class="co">##     simple second-order correction</span></span></code></pre>
 <p><br></p>
-<p>CFA fit indices can be obtained by using <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> from the <em>lavaan</em> package. For the combined scale:</p>
+<p>CFA fit indices can be obtained by using <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> from
+the <em>lavaan</em> package. For the combined scale:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">lavaan</span><span class="fu">::</span><span class="fu">summary</span><span class="op">(</span><span class="va">out_cfa</span><span class="op">$</span><span class="va">combined</span>, fit.measures <span class="op">=</span> <span class="cn">TRUE</span>, standardized <span class="op">=</span> <span class="cn">TRUE</span>, estimates <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## lavaan 0.6-9 ended normally after 23 iterations</span>
-<span class="co">## </span>
-<span class="co">##   Estimator                                       DWLS</span>
-<span class="co">##   Optimization method                           NLMINB</span>
-<span class="co">##   Number of model parameters                       220</span>
-<span class="co">##                                                       </span>
-<span class="co">##                                                   Used       Total</span>
-<span class="co">##   Number of observations                           731         747</span>
-<span class="co">##                                                                   </span>
-<span class="co">## Model Test User Model:</span>
-<span class="co">##                                               Standard      Robust</span>
-<span class="co">##   Test Statistic                              4227.611    4700.780</span>
-<span class="co">##   Degrees of freedom                              1080        1080</span>
-<span class="co">##   P-value (Chi-square)                           0.000       0.000</span>
-<span class="co">##   Scaling correction factor                                  1.046</span>
-<span class="co">##   Shift parameter                                          657.455</span>
-<span class="co">##        simple second-order correction                             </span>
-<span class="co">## </span>
-<span class="co">## Model Test Baseline Model:</span>
-<span class="co">## </span>
-<span class="co">##   Test statistic                            793198.133   91564.632</span>
-<span class="co">##   Degrees of freedom                              1128        1128</span>
-<span class="co">##   P-value                                        0.000       0.000</span>
-<span class="co">##   Scaling correction factor                                  8.758</span>
-<span class="co">## </span>
-<span class="co">## User Model versus Baseline Model:</span>
-<span class="co">## </span>
-<span class="co">##   Comparative Fit Index (CFI)                    0.996       0.960</span>
-<span class="co">##   Tucker-Lewis Index (TLI)                       0.996       0.958</span>
-<span class="co">##                                                                   </span>
-<span class="co">##   Robust Comparative Fit Index (CFI)                            NA</span>
-<span class="co">##   Robust Tucker-Lewis Index (TLI)                               NA</span>
-<span class="co">## </span>
-<span class="co">## Root Mean Square Error of Approximation:</span>
-<span class="co">## </span>
-<span class="co">##   RMSEA                                          0.063       0.068</span>
-<span class="co">##   90 Percent confidence interval - lower         0.061       0.066</span>
-<span class="co">##   90 Percent confidence interval - upper         0.065       0.070</span>
-<span class="co">##   P-value RMSEA &lt;= 0.05                          0.000       0.000</span>
-<span class="co">##                                                                   </span>
-<span class="co">##   Robust RMSEA                                                  NA</span>
-<span class="co">##   90 Percent confidence interval - lower                        NA</span>
-<span class="co">##   90 Percent confidence interval - upper                        NA</span>
-<span class="co">## </span>
-<span class="co">## Standardized Root Mean Square Residual:</span>
-<span class="co">## </span>
-<span class="co">##   SRMR                                           0.051       0.051</span></code></pre>
+<code class="sourceCode R"><span><span class="fu">lavaan</span><span class="fu">::</span><span class="fu">summary</span><span class="op">(</span><span class="va">out_cfa</span><span class="op">$</span><span class="va">combined</span>, fit.measures <span class="op">=</span> <span class="cn">TRUE</span>, standardized <span class="op">=</span> <span class="cn">TRUE</span>, estimates <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## lavaan 0.6.13 ended normally after 23 iterations</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##   Estimator                                       DWLS</span></span>
+<span><span class="co">##   Optimization method                           NLMINB</span></span>
+<span><span class="co">##   Number of model parameters                       220</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##                                                   Used       Total</span></span>
+<span><span class="co">##   Number of observations                           731         747</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Model Test User Model:</span></span>
+<span><span class="co">##                                               Standard      Scaled</span></span>
+<span><span class="co">##   Test Statistic                              4227.611    4700.780</span></span>
+<span><span class="co">##   Degrees of freedom                              1080        1080</span></span>
+<span><span class="co">##   P-value (Chi-square)                           0.000       0.000</span></span>
+<span><span class="co">##   Scaling correction factor                                  1.046</span></span>
+<span><span class="co">##   Shift parameter                                          657.455</span></span>
+<span><span class="co">##     simple second-order correction                                </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Model Test Baseline Model:</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##   Test statistic                            793198.133   91564.632</span></span>
+<span><span class="co">##   Degrees of freedom                              1128        1128</span></span>
+<span><span class="co">##   P-value                                        0.000       0.000</span></span>
+<span><span class="co">##   Scaling correction factor                                  8.758</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## User Model versus Baseline Model:</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##   Comparative Fit Index (CFI)                    0.996       0.960</span></span>
+<span><span class="co">##   Tucker-Lewis Index (TLI)                       0.996       0.958</span></span>
+<span><span class="co">##                                                                   </span></span>
+<span><span class="co">##   Robust Comparative Fit Index (CFI)                         0.784</span></span>
+<span><span class="co">##   Robust Tucker-Lewis Index (TLI)                            0.774</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Root Mean Square Error of Approximation:</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##   RMSEA                                          0.063       0.068</span></span>
+<span><span class="co">##   90 Percent confidence interval - lower         0.061       0.066</span></span>
+<span><span class="co">##   90 Percent confidence interval - upper         0.065       0.070</span></span>
+<span><span class="co">##   P-value H_0: RMSEA &lt;= 0.050                    0.000       0.000</span></span>
+<span><span class="co">##   P-value H_0: RMSEA &gt;= 0.080                    0.000       0.000</span></span>
+<span><span class="co">##                                                                   </span></span>
+<span><span class="co">##   Robust RMSEA                                               0.118</span></span>
+<span><span class="co">##   90 Percent confidence interval - lower                     0.114</span></span>
+<span><span class="co">##   90 Percent confidence interval - upper                     0.121</span></span>
+<span><span class="co">##   P-value H_0: Robust RMSEA &lt;= 0.050                         0.000</span></span>
+<span><span class="co">##   P-value H_0: Robust RMSEA &gt;= 0.080                         1.000</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Standardized Root Mean Square Residual:</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##   SRMR                                           0.051       0.051</span></span></code></pre>
 <p>and also for each scale separately:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">lavaan</span><span class="fu">::</span><span class="fu">summary</span><span class="op">(</span><span class="va">out_cfa</span><span class="op">$</span><span class="va">`1`</span>, fit.measures <span class="op">=</span> <span class="cn">TRUE</span>, standardized <span class="op">=</span> <span class="cn">TRUE</span>, estimates <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># not run</span>
-<span class="fu">lavaan</span><span class="fu">::</span><span class="fu">summary</span><span class="op">(</span><span class="va">out_cfa</span><span class="op">$</span><span class="va">`2`</span>, fit.measures <span class="op">=</span> <span class="cn">TRUE</span>, standardized <span class="op">=</span> <span class="cn">TRUE</span>, estimates <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># not run</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">lavaan</span><span class="fu">::</span><span class="fu">summary</span><span class="op">(</span><span class="va">out_cfa</span><span class="op">$</span><span class="va">`1`</span>, fit.measures <span class="op">=</span> <span class="cn">TRUE</span>, standardized <span class="op">=</span> <span class="cn">TRUE</span>, estimates <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># not run</span></span>
+<span><span class="fu">lavaan</span><span class="fu">::</span><span class="fu">summary</span><span class="op">(</span><span class="va">out_cfa</span><span class="op">$</span><span class="va">`2`</span>, fit.measures <span class="op">=</span> <span class="cn">TRUE</span>, standardized <span class="op">=</span> <span class="cn">TRUE</span>, estimates <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># not run</span></span></code></pre></div>
 <p><br></p>
 </div>
 <div class="section level3">
 <h3 id="item-parameter-calibration">Item parameter calibration<a class="anchor" aria-label="anchor" href="#item-parameter-calibration"></a>
 </h3>
-<p><code><a href="../reference/runCalibration.html">runCalibration()</a></code> performs IRT calibration without anchoring. <code><a href="../reference/runCalibration.html">runCalibration()</a></code> calls <code><a href="https://rdrr.io/pkg/mirt/man/mirt.html" class="external-link">mirt::mirt()</a></code> internally. Additional arguments can be passed onto <code>mirt</code>, e.g., to increase the number of EM cycles to 1000, as follows:</p>
+<p><code><a href="../reference/runCalibration.html">runCalibration()</a></code> performs IRT calibration without
+anchoring. <code><a href="../reference/runCalibration.html">runCalibration()</a></code> calls <code><a href="https://rdrr.io/pkg/mirt/man/mirt.html" class="external-link">mirt::mirt()</a></code>
+internally. Additional arguments can be passed onto <code>mirt</code>,
+e.g., to increase the number of EM cycles to 1000, as follows:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">out_calib</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runCalibration.html">runCalibration</a></span><span class="op">(</span><span class="va">d</span>, technical <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>NCYCLES <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">out_calib</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runCalibration.html">runCalibration</a></span><span class="op">(</span><span class="va">d</span>, technical <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>NCYCLES <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><br></p>
-<p>In case of nonconvergence, <code><a href="../reference/runCalibration.html">runCalibration()</a></code> explicitly raises an error and does not return its results.</p>
+<p>In case of nonconvergence, <code><a href="../reference/runCalibration.html">runCalibration()</a></code> explicitly
+raises an error and does not return its results.</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">out_calib</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runCalibration.html">runCalibration</a></span><span class="op">(</span><span class="va">d</span>, technical <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>NCYCLES <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Error in runCalibration(d, technical = list(NCYCLES = 10)): calibration did not converge: increase iteration limit by adjusting the 'technical' argument, e.g., technical = list(NCYCLES = 510)</span></code></pre>
+<code class="sourceCode R"><span><span class="va">out_calib</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runCalibration.html">runCalibration</a></span><span class="op">(</span><span class="va">d</span>, technical <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>NCYCLES <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Error in runCalibration(d, technical = list(NCYCLES = 10)): calibration did not converge: increase iteration limit by adjusting the 'technical' argument, e.g., technical = list(NCYCLES = 510)</span></span></code></pre>
 <p><br></p>
-<p>Also, specify <code>fixedpar = TRUE</code> to perform fixed parameter calibration using the anchor data.</p>
+<p>Also, specify <code>fixedpar = TRUE</code> to perform fixed parameter
+calibration using the anchor data.</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">out_calib</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runCalibration.html">runCalibration</a></span><span class="op">(</span><span class="va">d</span>, fixedpar <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">out_calib</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runCalibration.html">runCalibration</a></span><span class="op">(</span><span class="va">d</span>, fixedpar <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><br></p>
-<p>The output object from <code><a href="../reference/runCalibration.html">runCalibration()</a></code> can be used to generate additional output with functions from the <em>mirt</em> package.</p>
+<p>The output object from <code><a href="../reference/runCalibration.html">runCalibration()</a></code> can be used to
+generate additional output with functions from the <em>mirt</em>
+package.</p>
 <p>Use <code><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef()</a></code> to extract item parameters:</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">mirt</span><span class="fu">::</span><span class="fu">coef</span><span class="op">(</span><span class="va">out_calib</span>, IRTpars <span class="op">=</span> <span class="cn">TRUE</span>, simplify <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## $items</span>
-<span class="co">##             a     b1    b2    b3    b4</span>
-<span class="co">## EDDEP04 4.261  0.401 0.976 1.696 2.444</span>
-<span class="co">## EDDEP05 3.932  0.305 0.913 1.593 2.412</span>
-<span class="co">## EDDEP06 4.145  0.350 0.915 1.678 2.471</span>
-<span class="co">## EDDEP07 2.802  0.148 0.772 1.603 2.538</span>
-<span class="co">## EDDEP09 3.657  0.312 0.982 1.782 2.571</span>
-<span class="co">## EDDEP14 2.333  0.186 0.947 1.729 2.633</span>
-<span class="co">## EDDEP17 3.274 -0.498 0.406 1.413 2.375</span>
-<span class="co">## EDDEP19 3.241  0.460 1.034 1.834 2.515</span>
-<span class="co">## EDDEP21 2.736  0.072 0.810 1.803 2.673</span>
-<span class="co">## EDDEP22 3.970  0.204 0.795 1.649 2.295</span>
-<span class="co">## EDDEP23 2.564 -0.038 0.693 1.653 2.584</span>
-<span class="co">## EDDEP26 3.093 -0.358 0.412 1.404 2.224</span>
-<span class="co">## EDDEP27 2.920  0.204 0.891 1.655 2.528</span>
-<span class="co">## EDDEP28 2.588 -0.079 0.633 1.477 2.328</span>
-<span class="co">## EDDEP29 4.343 -0.117 0.598 1.428 2.272</span>
-<span class="co">## EDDEP30 2.613 -0.023 0.868 1.864 2.826</span>
-<span class="co">## EDDEP31 3.183 -0.261 0.397 1.305 2.134</span>
-<span class="co">## EDDEP35 3.106  0.044 0.722 1.639 2.471</span>
-<span class="co">## EDDEP36 3.483 -0.536 0.348 1.347 2.355</span>
-<span class="co">## EDDEP39 3.131  0.918 1.481 2.164 2.856</span>
-<span class="co">## EDDEP41 4.454  0.558 1.074 1.779 2.530</span>
-<span class="co">## EDDEP42 2.364  0.210 0.987 1.906 2.934</span>
-<span class="co">## EDDEP44 2.549  0.194 1.012 2.013 3.126</span>
-<span class="co">## EDDEP45 2.834  0.141 0.907 1.846 2.875</span>
-<span class="co">## EDDEP46 2.381 -0.458 0.478 1.546 2.632</span>
-<span class="co">## EDDEP48 3.185  0.198 0.782 1.526 2.324</span>
-<span class="co">## EDDEP50 2.018 -0.050 0.926 2.000 2.966</span>
-<span class="co">## EDDEP54 2.685 -0.299 0.423 1.358 2.308</span>
-<span class="co">## CESD1   2.074  0.876 1.921 3.064    NA</span>
-<span class="co">## CESD2   1.262  1.387 2.670 3.721    NA</span>
-<span class="co">## CESD3   3.512  0.833 1.316 1.949    NA</span>
-<span class="co">## CESD4   1.118  0.649 1.379 2.081    NA</span>
-<span class="co">## CESD5   1.605  0.429 1.526 2.724    NA</span>
-<span class="co">## CESD6   3.635  0.493 1.176 1.729    NA</span>
-<span class="co">## CESD7   1.828  0.287 1.368 2.134    NA</span>
-<span class="co">## CESD8   1.342 -0.067 0.823 1.620    NA</span>
-<span class="co">## CESD9   3.003  0.748 1.374 1.855    NA</span>
-<span class="co">## CESD10  2.060  1.172 2.043 3.268    NA</span>
-<span class="co">## CESD11  1.077 -0.463 0.947 2.160    NA</span>
-<span class="co">## CESD12  2.229  0.169 0.945 1.737    NA</span>
-<span class="co">## CESD13  1.288  0.342 1.696 2.915    NA</span>
-<span class="co">## CESD14  2.176  0.491 1.291 1.864    NA</span>
-<span class="co">## CESD15  1.397  0.965 2.321 3.604    NA</span>
-<span class="co">## CESD16  2.133  0.272 0.922 1.808    NA</span>
-<span class="co">## CESD17  1.719  1.607 2.317 3.470    NA</span>
-<span class="co">## CESD18  2.812  0.261 1.248 1.984    NA</span>
-<span class="co">## CESD19  1.834  0.784 1.875 2.639    NA</span>
-<span class="co">## CESD20  1.491 -0.140 1.256 2.297    NA</span>
-<span class="co">## </span>
-<span class="co">## $means</span>
-<span class="co">##    F1 </span>
-<span class="co">## -0.06 </span>
-<span class="co">## </span>
-<span class="co">## $cov</span>
-<span class="co">##      F1</span>
-<span class="co">## F1 0.95</span></code></pre>
+<code class="sourceCode R"><span><span class="fu">mirt</span><span class="fu">::</span><span class="fu">coef</span><span class="op">(</span><span class="va">out_calib</span>, IRTpars <span class="op">=</span> <span class="cn">TRUE</span>, simplify <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## $items</span></span>
+<span><span class="co">##             a     b1    b2    b3    b4</span></span>
+<span><span class="co">## EDDEP04 4.261  0.401 0.976 1.696 2.444</span></span>
+<span><span class="co">## EDDEP05 3.932  0.305 0.913 1.593 2.412</span></span>
+<span><span class="co">## EDDEP06 4.145  0.350 0.915 1.678 2.471</span></span>
+<span><span class="co">## EDDEP07 2.802  0.148 0.772 1.603 2.538</span></span>
+<span><span class="co">## EDDEP09 3.657  0.312 0.982 1.782 2.571</span></span>
+<span><span class="co">## EDDEP14 2.333  0.186 0.947 1.729 2.633</span></span>
+<span><span class="co">## EDDEP17 3.274 -0.498 0.406 1.413 2.375</span></span>
+<span><span class="co">## EDDEP19 3.241  0.460 1.034 1.834 2.515</span></span>
+<span><span class="co">## EDDEP21 2.736  0.072 0.810 1.803 2.673</span></span>
+<span><span class="co">## EDDEP22 3.970  0.204 0.795 1.649 2.295</span></span>
+<span><span class="co">## EDDEP23 2.564 -0.038 0.693 1.653 2.584</span></span>
+<span><span class="co">## EDDEP26 3.093 -0.358 0.412 1.404 2.224</span></span>
+<span><span class="co">## EDDEP27 2.920  0.204 0.891 1.655 2.528</span></span>
+<span><span class="co">## EDDEP28 2.588 -0.079 0.633 1.477 2.328</span></span>
+<span><span class="co">## EDDEP29 4.343 -0.117 0.598 1.428 2.272</span></span>
+<span><span class="co">## EDDEP30 2.613 -0.023 0.868 1.864 2.826</span></span>
+<span><span class="co">## EDDEP31 3.183 -0.261 0.397 1.305 2.134</span></span>
+<span><span class="co">## EDDEP35 3.106  0.044 0.722 1.639 2.471</span></span>
+<span><span class="co">## EDDEP36 3.483 -0.536 0.348 1.347 2.355</span></span>
+<span><span class="co">## EDDEP39 3.131  0.918 1.481 2.164 2.856</span></span>
+<span><span class="co">## EDDEP41 4.454  0.558 1.074 1.779 2.530</span></span>
+<span><span class="co">## EDDEP42 2.364  0.210 0.987 1.906 2.934</span></span>
+<span><span class="co">## EDDEP44 2.549  0.194 1.012 2.013 3.126</span></span>
+<span><span class="co">## EDDEP45 2.834  0.141 0.907 1.846 2.875</span></span>
+<span><span class="co">## EDDEP46 2.381 -0.458 0.478 1.546 2.632</span></span>
+<span><span class="co">## EDDEP48 3.185  0.198 0.782 1.526 2.324</span></span>
+<span><span class="co">## EDDEP50 2.018 -0.050 0.926 2.000 2.966</span></span>
+<span><span class="co">## EDDEP54 2.685 -0.299 0.423 1.358 2.308</span></span>
+<span><span class="co">## CESD1   2.074  0.876 1.921 3.064    NA</span></span>
+<span><span class="co">## CESD2   1.262  1.387 2.670 3.721    NA</span></span>
+<span><span class="co">## CESD3   3.512  0.833 1.316 1.949    NA</span></span>
+<span><span class="co">## CESD4   1.118  0.649 1.379 2.081    NA</span></span>
+<span><span class="co">## CESD5   1.605  0.429 1.526 2.724    NA</span></span>
+<span><span class="co">## CESD6   3.635  0.493 1.176 1.729    NA</span></span>
+<span><span class="co">## CESD7   1.828  0.287 1.368 2.134    NA</span></span>
+<span><span class="co">## CESD8   1.342 -0.067 0.823 1.620    NA</span></span>
+<span><span class="co">## CESD9   3.003  0.748 1.374 1.855    NA</span></span>
+<span><span class="co">## CESD10  2.060  1.172 2.043 3.268    NA</span></span>
+<span><span class="co">## CESD11  1.077 -0.463 0.947 2.160    NA</span></span>
+<span><span class="co">## CESD12  2.229  0.169 0.945 1.737    NA</span></span>
+<span><span class="co">## CESD13  1.288  0.342 1.696 2.915    NA</span></span>
+<span><span class="co">## CESD14  2.176  0.491 1.291 1.864    NA</span></span>
+<span><span class="co">## CESD15  1.397  0.965 2.321 3.604    NA</span></span>
+<span><span class="co">## CESD16  2.133  0.272 0.922 1.808    NA</span></span>
+<span><span class="co">## CESD17  1.719  1.607 2.317 3.470    NA</span></span>
+<span><span class="co">## CESD18  2.812  0.261 1.248 1.984    NA</span></span>
+<span><span class="co">## CESD19  1.834  0.784 1.875 2.639    NA</span></span>
+<span><span class="co">## CESD20  1.491 -0.140 1.256 2.297    NA</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $means</span></span>
+<span><span class="co">##    F1 </span></span>
+<span><span class="co">## -0.06 </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $cov</span></span>
+<span><span class="co">##      F1</span></span>
+<span><span class="co">## F1 0.95</span></span></code></pre>
 <p>and also other commonly used functions:</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">mirt</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mirt/man/itemfit.html" class="external-link">itemfit</a></span><span class="op">(</span><span class="va">out_calib</span>, empirical.plot <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
-<span class="fu">mirt</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mirt/man/itemplot.html" class="external-link">itemplot</a></span><span class="op">(</span><span class="va">out_calib</span>, item <span class="op">=</span> <span class="fl">1</span>, type <span class="op">=</span> <span class="st">"info"</span><span class="op">)</span>
-<span class="fu">mirt</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mirt/man/itemfit.html" class="external-link">itemfit</a></span><span class="op">(</span><span class="va">out_calib</span>, <span class="st">"S_X2"</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">mirt</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mirt/man/itemfit.html" class="external-link">itemfit</a></span><span class="op">(</span><span class="va">out_calib</span>, empirical.plot <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="fu">mirt</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mirt/man/itemplot.html" class="external-link">itemplot</a></span><span class="op">(</span><span class="va">out_calib</span>, item <span class="op">=</span> <span class="fl">1</span>, type <span class="op">=</span> <span class="st">"info"</span><span class="op">)</span></span>
+<span><span class="fu">mirt</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mirt/man/itemfit.html" class="external-link">itemfit</a></span><span class="op">(</span><span class="va">out_calib</span>, <span class="st">"S_X2"</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><br></p>
-<p>Scale information functions can be plotted with <code>plotInfo</code>. The two required arguments are an output object from <code><a href="../reference/runCalibration.html">runCalibration()</a></code> and a <code>PROsetta</code> object from <code><a href="../reference/loadData.html">loadData()</a></code>. The additional arguments specify the labels, colors, and line types for each scale and the combined scale. The last values in arguments <code>scale_label</code>, <code>color</code>, <code>lty</code> represent the values for the combined scale.</p>
+<p>Scale information functions can be plotted with
+<code>plotInfo</code>. The two required arguments are an output object
+from <code><a href="../reference/runCalibration.html">runCalibration()</a></code> and a <code>PROsetta</code> object
+from <code><a href="../reference/loadData.html">loadData()</a></code>. The additional arguments specify the
+labels, colors, and line types for each scale and the combined scale.
+The last values in arguments <code>scale_label</code>,
+<code>color</code>, <code>lty</code> represent the values for the
+combined scale.</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/plotInfo-methods.html">plotInfo</a></span><span class="op">(</span>
-  <span class="va">out_calib</span>, <span class="va">d</span>,
-  scale_label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PROMIS Depression"</span>, <span class="st">"CES-D"</span>, <span class="st">"Combined"</span><span class="op">)</span>,
-  color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"red"</span>, <span class="st">"black"</span><span class="op">)</span>,
-  lty <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plotInfo-methods.html">plotInfo</a></span><span class="op">(</span></span>
+<span>  <span class="va">out_calib</span>, <span class="va">d</span>,</span>
+<span>  scale_label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PROMIS Depression"</span>, <span class="st">"CES-D"</span>, <span class="st">"Combined"</span><span class="op">)</span>,</span>
+<span>  color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"red"</span>, <span class="st">"black"</span><span class="op">)</span>,</span>
+<span>  lty <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="PROsetta_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;"></p>
 <p><br></p>
 </div>
@@ -463,71 +534,84 @@
 <div class="section level2">
 <h2 id="scale-aligning">Scale aligning<a class="anchor" aria-label="anchor" href="#scale-aligning"></a>
 </h2>
-<p><code><a href="../reference/runLinking.html">runLinking()</a></code> performs item parameter linking based on the anchor item parameters supplied in the <code>anchor</code> table. Two linking, or more specifically scaling aligning, methods currently available are fixed-parameter calibration and linear transformation. Fixed-parameter calibration estimates the item parameters for the non-anchor items on the metric defined by the anchor items, while fixing the item parameters for the anchor items to their supplied anchor values. The linear transformation methods determine linear transformation constants, i.e., a slope and an intercept, to transform freely estimated item parameters to the metric defined by the anchor items.</p>
+<p><code><a href="../reference/runLinking.html">runLinking()</a></code> performs item parameter linking based on
+the anchor item parameters supplied in the <code>anchor</code> table.
+Two linking, or more specifically scaling aligning, methods currently
+available are fixed-parameter calibration and linear transformation.
+Fixed-parameter calibration estimates the item parameters for the
+non-anchor items on the metric defined by the anchor items, while fixing
+the item parameters for the anchor items to their supplied anchor
+values. The linear transformation methods determine linear
+transformation constants, i.e., a slope and an intercept, to transform
+freely estimated item parameters to the metric defined by the anchor
+items.</p>
 <p><br></p>
 <div class="section level3">
 <h3 id="fixed-parameter-calibration-method">Fixed parameter calibration method<a class="anchor" aria-label="anchor" href="#fixed-parameter-calibration-method"></a>
 </h3>
-<p>Scale aligning through fixed parameter calibration is performed by setting <code>method = "FIXEDPAR"</code>. The linked parameters are stored in the <code>$ipar_linked</code> slot.</p>
+<p>Scale aligning through fixed parameter calibration is performed by
+setting <code>method = "FIXEDPAR"</code>. The linked parameters are
+stored in the <code>$ipar_linked</code> slot.</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">out_link_fixedpar</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runLinking.html">runLinking</a></span><span class="op">(</span><span class="va">d</span>, method <span class="op">=</span> <span class="st">"FIXEDPAR"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">out_link_fixedpar</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runLinking.html">runLinking</a></span><span class="op">(</span><span class="va">d</span>, method <span class="op">=</span> <span class="st">"FIXEDPAR"</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">out_link_fixedpar</span><span class="op">$</span><span class="va">ipar_linked</span></code></pre></div>
-<pre><code><span class="co">##                a          b1        b2       b3       b4</span>
-<span class="co">## EDDEP04 4.261422  0.40106943 0.9756732 1.696300 2.444072</span>
-<span class="co">## EDDEP05 3.931743  0.30494182 0.9130961 1.593476 2.411682</span>
-<span class="co">## EDDEP06 4.144759  0.35011299 0.9153482 1.678203 2.470526</span>
-<span class="co">## EDDEP07 2.801804  0.14774854 0.7723478 1.602715 2.538057</span>
-<span class="co">## EDDEP09 3.657433  0.31195821 0.9818088 1.782108 2.571127</span>
-<span class="co">## EDDEP14 2.333381  0.18599340 0.9473173 1.728770 2.632643</span>
-<span class="co">## EDDEP17 3.274033 -0.49845044 0.4059439 1.413052 2.375459</span>
-<span class="co">## EDDEP19 3.240973  0.46049359 1.0344267 1.833595 2.514716</span>
-<span class="co">## EDDEP21 2.736104  0.07245992 0.8097820 1.803067 2.673441</span>
-<span class="co">## EDDEP22 3.970028  0.20379963 0.7954889 1.648707 2.295496</span>
-<span class="co">## EDDEP23 2.564431 -0.03841113 0.6926952 1.652820 2.583629</span>
-<span class="co">## EDDEP26 3.093368 -0.35762208 0.4124999 1.403863 2.223961</span>
-<span class="co">## EDDEP27 2.920056  0.20434012 0.8909159 1.654652 2.528368</span>
-<span class="co">## EDDEP28 2.588339 -0.07908821 0.6326205 1.477330 2.327715</span>
-<span class="co">## EDDEP29 4.342918 -0.11730304 0.5977487 1.428166 2.272495</span>
-<span class="co">## EDDEP30 2.612846 -0.02337743 0.8683854 1.864303 2.826340</span>
-<span class="co">## EDDEP31 3.182866 -0.26089392 0.3967655 1.305464 2.133989</span>
-<span class="co">## EDDEP35 3.105857  0.04371372 0.7223523 1.638758 2.471487</span>
-<span class="co">## EDDEP36 3.483012 -0.53588456 0.3475707 1.346781 2.354790</span>
-<span class="co">## EDDEP39 3.131213  0.91802061 1.4813240 2.163996 2.856377</span>
-<span class="co">## EDDEP41 4.454157  0.55838282 1.0742430 1.779346 2.530080</span>
-<span class="co">## EDDEP42 2.364413  0.21006534 0.9870936 1.905901 2.933758</span>
-<span class="co">## EDDEP44 2.549164  0.19350024 1.0117460 2.013109 3.126494</span>
-<span class="co">## EDDEP45 2.833605  0.14071213 0.9065001 1.846097 2.875194</span>
-<span class="co">## EDDEP46 2.380628 -0.45788346 0.4779996 1.545663 2.631512</span>
-<span class="co">## EDDEP48 3.185244  0.19814448 0.7819065 1.525815 2.324082</span>
-<span class="co">## EDDEP50 2.018099 -0.05044210 0.9258678 1.999516 2.965507</span>
-<span class="co">## EDDEP54 2.685300 -0.29880847 0.4234598 1.357851 2.307647</span>
-<span class="co">## CESD1   2.074442  0.87588000 1.9208517 3.063586       NA</span>
-<span class="co">## CESD2   1.262450  1.38731970 2.6695226 3.720540       NA</span>
-<span class="co">## CESD3   3.512477  0.83271884 1.3159735 1.948794       NA</span>
-<span class="co">## CESD4   1.118259  0.64882022 1.3786370 2.081167       NA</span>
-<span class="co">## CESD5   1.604924  0.42935043 1.5261799 2.723723       NA</span>
-<span class="co">## CESD6   3.634668  0.49267515 1.1756152 1.729146       NA</span>
-<span class="co">## CESD7   1.827676  0.28707337 1.3677916 2.134161       NA</span>
-<span class="co">## CESD8   1.341784 -0.06693047 0.8227682 1.619581       NA</span>
-<span class="co">## CESD9   3.002587  0.74752445 1.3741501 1.855369       NA</span>
-<span class="co">## CESD10  2.060394  1.17178033 2.0425563 3.268036       NA</span>
-<span class="co">## CESD11  1.076593 -0.46319695 0.9471572 2.159803       NA</span>
-<span class="co">## CESD12  2.229316  0.16859288 0.9449513 1.736562       NA</span>
-<span class="co">## CESD13  1.288445  0.34213331 1.6959381 2.915162       NA</span>
-<span class="co">## CESD14  2.176407  0.49140714 1.2914091 1.864275       NA</span>
-<span class="co">## CESD15  1.396543  0.96457795 2.3205020 3.603940       NA</span>
-<span class="co">## CESD16  2.132818  0.27238860 0.9216832 1.808276       NA</span>
-<span class="co">## CESD17  1.718811  1.60657580 2.3169977 3.469721       NA</span>
-<span class="co">## CESD18  2.812159  0.26144281 1.2484443 1.984112       NA</span>
-<span class="co">## CESD19  1.833676  0.78350053 1.8751255 2.638592       NA</span>
-<span class="co">## CESD20  1.490735 -0.14037590 1.2558582 2.296856       NA</span></code></pre>
+<code class="sourceCode R"><span><span class="va">out_link_fixedpar</span><span class="op">$</span><span class="va">ipar_linked</span></span></code></pre></div>
+<pre><code><span><span class="co">##                a          b1        b2       b3       b4</span></span>
+<span><span class="co">## EDDEP04 4.261422  0.40106943 0.9756732 1.696300 2.444072</span></span>
+<span><span class="co">## EDDEP05 3.931743  0.30494182 0.9130961 1.593476 2.411682</span></span>
+<span><span class="co">## EDDEP06 4.144759  0.35011299 0.9153482 1.678203 2.470526</span></span>
+<span><span class="co">## EDDEP07 2.801804  0.14774854 0.7723478 1.602715 2.538057</span></span>
+<span><span class="co">## EDDEP09 3.657433  0.31195821 0.9818088 1.782108 2.571127</span></span>
+<span><span class="co">## EDDEP14 2.333381  0.18599340 0.9473173 1.728770 2.632643</span></span>
+<span><span class="co">## EDDEP17 3.274033 -0.49845044 0.4059439 1.413052 2.375459</span></span>
+<span><span class="co">## EDDEP19 3.240973  0.46049359 1.0344267 1.833595 2.514716</span></span>
+<span><span class="co">## EDDEP21 2.736104  0.07245992 0.8097820 1.803067 2.673441</span></span>
+<span><span class="co">## EDDEP22 3.970028  0.20379963 0.7954889 1.648707 2.295496</span></span>
+<span><span class="co">## EDDEP23 2.564431 -0.03841113 0.6926952 1.652820 2.583629</span></span>
+<span><span class="co">## EDDEP26 3.093368 -0.35762208 0.4124999 1.403863 2.223961</span></span>
+<span><span class="co">## EDDEP27 2.920056  0.20434012 0.8909159 1.654652 2.528368</span></span>
+<span><span class="co">## EDDEP28 2.588339 -0.07908821 0.6326205 1.477330 2.327715</span></span>
+<span><span class="co">## EDDEP29 4.342918 -0.11730304 0.5977487 1.428166 2.272495</span></span>
+<span><span class="co">## EDDEP30 2.612846 -0.02337743 0.8683854 1.864303 2.826340</span></span>
+<span><span class="co">## EDDEP31 3.182866 -0.26089392 0.3967655 1.305464 2.133989</span></span>
+<span><span class="co">## EDDEP35 3.105857  0.04371372 0.7223523 1.638758 2.471487</span></span>
+<span><span class="co">## EDDEP36 3.483012 -0.53588456 0.3475707 1.346781 2.354790</span></span>
+<span><span class="co">## EDDEP39 3.131213  0.91802061 1.4813240 2.163996 2.856377</span></span>
+<span><span class="co">## EDDEP41 4.454157  0.55838282 1.0742430 1.779346 2.530080</span></span>
+<span><span class="co">## EDDEP42 2.364413  0.21006534 0.9870936 1.905901 2.933758</span></span>
+<span><span class="co">## EDDEP44 2.549164  0.19350024 1.0117460 2.013109 3.126494</span></span>
+<span><span class="co">## EDDEP45 2.833605  0.14071213 0.9065001 1.846097 2.875194</span></span>
+<span><span class="co">## EDDEP46 2.380628 -0.45788346 0.4779996 1.545663 2.631512</span></span>
+<span><span class="co">## EDDEP48 3.185244  0.19814448 0.7819065 1.525815 2.324082</span></span>
+<span><span class="co">## EDDEP50 2.018099 -0.05044210 0.9258678 1.999516 2.965507</span></span>
+<span><span class="co">## EDDEP54 2.685300 -0.29880847 0.4234598 1.357851 2.307647</span></span>
+<span><span class="co">## CESD1   2.074442  0.87588000 1.9208517 3.063586       NA</span></span>
+<span><span class="co">## CESD2   1.262450  1.38731970 2.6695226 3.720540       NA</span></span>
+<span><span class="co">## CESD3   3.512477  0.83271884 1.3159735 1.948794       NA</span></span>
+<span><span class="co">## CESD4   1.118259  0.64882022 1.3786370 2.081167       NA</span></span>
+<span><span class="co">## CESD5   1.604924  0.42935043 1.5261799 2.723723       NA</span></span>
+<span><span class="co">## CESD6   3.634668  0.49267515 1.1756152 1.729146       NA</span></span>
+<span><span class="co">## CESD7   1.827676  0.28707337 1.3677916 2.134161       NA</span></span>
+<span><span class="co">## CESD8   1.341784 -0.06693047 0.8227682 1.619581       NA</span></span>
+<span><span class="co">## CESD9   3.002587  0.74752445 1.3741501 1.855369       NA</span></span>
+<span><span class="co">## CESD10  2.060394  1.17178033 2.0425563 3.268036       NA</span></span>
+<span><span class="co">## CESD11  1.076593 -0.46319695 0.9471572 2.159803       NA</span></span>
+<span><span class="co">## CESD12  2.229316  0.16859288 0.9449513 1.736562       NA</span></span>
+<span><span class="co">## CESD13  1.288445  0.34213331 1.6959381 2.915162       NA</span></span>
+<span><span class="co">## CESD14  2.176407  0.49140714 1.2914091 1.864275       NA</span></span>
+<span><span class="co">## CESD15  1.396543  0.96457795 2.3205020 3.603940       NA</span></span>
+<span><span class="co">## CESD16  2.132818  0.27238860 0.9216832 1.808276       NA</span></span>
+<span><span class="co">## CESD17  1.718811  1.60657580 2.3169977 3.469721       NA</span></span>
+<span><span class="co">## CESD18  2.812159  0.26144281 1.2484443 1.984112       NA</span></span>
+<span><span class="co">## CESD19  1.833676  0.78350053 1.8751255 2.638592       NA</span></span>
+<span><span class="co">## CESD20  1.490735 -0.14037590 1.2558582 2.296856       NA</span></span></code></pre>
 <p><br></p>
 </div>
 <div class="section level3">
 <h3 id="linear-transformation-methods">Linear transformation methods<a class="anchor" aria-label="anchor" href="#linear-transformation-methods"></a>
 </h3>
-<p>Scale aligning through linear transformation is performed by setting the <code>method</code> argument to one of the following options:</p>
+<p>Scale aligning through linear transformation is performed by setting
+the <code>method</code> argument to one of the following options:</p>
 <ul>
 <li>
 <code>MM</code> (Mean-Mean)</li>
@@ -538,338 +622,379 @@
 <li>
 <code>SL</code> (Stocking-Lord)</li>
 </ul>
-<p>Arguments supplied to <code>runLinking</code> are passed onto <code><a href="https://rdrr.io/pkg/mirt/man/mirt.html" class="external-link">mirt::mirt()</a></code> internally. In case of nonconvergence in the free calibration step, <code><a href="../reference/runLinking.html">runLinking()</a></code> explicitly raises an error and does not return its results.</p>
+<p>Arguments supplied to <code>runLinking</code> are passed onto
+<code><a href="https://rdrr.io/pkg/mirt/man/mirt.html" class="external-link">mirt::mirt()</a></code> internally. In case of nonconvergence in the
+free calibration step, <code><a href="../reference/runLinking.html">runLinking()</a></code> explicitly raises an
+error and does not return its results.</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">out_link_sl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runLinking.html">runLinking</a></span><span class="op">(</span><span class="va">d</span>, method <span class="op">=</span> <span class="st">"SL"</span>, technical <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>NCYCLES <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span><span class="op">)</span>
-<span class="va">out_link_sl</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">out_link_sl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runLinking.html">runLinking</a></span><span class="op">(</span><span class="va">d</span>, method <span class="op">=</span> <span class="st">"SL"</span>, technical <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>NCYCLES <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">out_link_sl</span></span></code></pre></div>
 <p><br></p>
-<p>The item parameter estimates linked to the anchor metric are stored in the <code>$ipar_linked</code> slot.</p>
+<p>The item parameter estimates linked to the anchor metric are stored
+in the <code>$ipar_linked</code> slot.</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">out_link_sl</span><span class="op">$</span><span class="va">ipar_linked</span></code></pre></div>
-<pre><code><span class="co">##                a           b1        b2       b3       b4</span>
-<span class="co">## EDDEP04 3.793161  0.469530551 1.0795350 1.723900 2.349080</span>
-<span class="co">## EDDEP05 3.320380  0.332903277 0.8987342 1.652724 2.495485</span>
-<span class="co">## EDDEP06 3.425968  0.387802947 1.0150063 1.791367 2.554685</span>
-<span class="co">## EDDEP07 2.515490  0.079235109 0.8041320 1.613013 2.489921</span>
-<span class="co">## EDDEP09 3.473136  0.333925352 1.0061928 1.872557 2.581161</span>
-<span class="co">## EDDEP14 2.593311  0.166259562 0.8908913 1.766003 2.578983</span>
-<span class="co">## EDDEP17 3.271634 -0.484050567 0.3934638 1.378818 2.485111</span>
-<span class="co">## EDDEP19 3.288519  0.594093189 1.1569664 1.908307 2.491027</span>
-<span class="co">## EDDEP21 2.658942 -0.008883032 0.7996149 1.769781 2.587528</span>
-<span class="co">## EDDEP22 3.694447  0.202954598 0.7692452 1.679950 2.211225</span>
-<span class="co">## EDDEP23 2.558598 -0.112441069 0.6118728 1.527154 2.413630</span>
-<span class="co">## EDDEP26 2.978928 -0.359701425 0.4134169 1.383127 2.206006</span>
-<span class="co">## EDDEP27 2.945571  0.220218470 0.9013523 1.670465 2.546562</span>
-<span class="co">## EDDEP28 2.533119 -0.089891132 0.6379695 1.516825 2.353177</span>
-<span class="co">## EDDEP29 3.641962 -0.108954575 0.6340853 1.413200 2.313974</span>
-<span class="co">## EDDEP30 2.366329 -0.144282442 0.8036419 1.852479 2.826838</span>
-<span class="co">## EDDEP31 2.859310 -0.272675089 0.3784892 1.397099 2.247133</span>
-<span class="co">## EDDEP35 2.833419 -0.091131191 0.6508336 1.594374 2.513021</span>
-<span class="co">## EDDEP36 3.831055 -0.409409211 0.4298663 1.362454 2.182998</span>
-<span class="co">## EDDEP39 2.921752  1.013208977 1.5973594 2.147477 2.830996</span>
-<span class="co">## EDDEP41 4.290619  0.403879976 1.0501835 1.653612 2.444910</span>
-<span class="co">## EDDEP42 2.203147 -0.061878352 0.8051774 1.819106 2.845104</span>
-<span class="co">## EDDEP44 2.487211  0.265078137 1.0153973 2.024893 3.207768</span>
-<span class="co">## EDDEP45 2.598389  0.071892748 0.9289133 2.065916 2.910995</span>
-<span class="co">## EDDEP46 2.580547 -0.300956201 0.4971925 1.463755 2.349175</span>
-<span class="co">## EDDEP48 3.192270  0.301874524 0.7763961 1.670600 2.269183</span>
-<span class="co">## EDDEP50 2.171919  0.094996852 0.9605635 1.915714 2.757297</span>
-<span class="co">## EDDEP54 2.962340 -0.178813349 0.5521133 1.377950 2.253458</span>
-<span class="co">## CESD1   2.061779  0.879468923 1.9314933 3.076904       NA</span>
-<span class="co">## CESD2   1.255554  1.392413300 2.6815860 3.738048       NA</span>
-<span class="co">## CESD3   3.508817  0.837483846 1.3247576 1.957232       NA</span>
-<span class="co">## CESD4   1.111395  0.650007324 1.3850762 2.091836       NA</span>
-<span class="co">## CESD5   1.593890  0.428582958 1.5343148 2.738424       NA</span>
-<span class="co">## CESD6   3.618615  0.492972124 1.1842575 1.739733       NA</span>
-<span class="co">## CESD7   1.811273  0.285422401 1.3764427 2.148182       NA</span>
-<span class="co">## CESD8   1.332344 -0.070810659 0.8265571 1.629126       NA</span>
-<span class="co">## CESD9   2.980182  0.751486735 1.3836642 1.866730       NA</span>
-<span class="co">## CESD10  2.054306  1.176185489 2.0499467 3.277152       NA</span>
-<span class="co">## CESD11  1.072249 -0.469512670 0.9481340 2.166840       NA</span>
-<span class="co">## CESD12  2.220284  0.164843960 0.9489153 1.745282       NA</span>
-<span class="co">## CESD13  1.279643  0.340717619 1.7050034 2.932279       NA</span>
-<span class="co">## CESD14  2.165046  0.490996018 1.2981449 1.874621       NA</span>
-<span class="co">## CESD15  1.388293  0.967787304 2.3321682 3.621488       NA</span>
-<span class="co">## CESD16  2.119598  0.270262537 0.9262685 1.818613       NA</span>
-<span class="co">## CESD17  1.720576  1.609372015 2.3204181 3.472175       NA</span>
-<span class="co">## CESD18  2.803351  0.257880402 1.2547114 1.992341       NA</span>
-<span class="co">## CESD19  1.820455  0.786210490 1.8859182 2.652889       NA</span>
-<span class="co">## CESD20  1.482218 -0.145778099 1.2604344 2.307638       NA</span></code></pre>
+<code class="sourceCode R"><span><span class="va">out_link_sl</span><span class="op">$</span><span class="va">ipar_linked</span></span></code></pre></div>
+<pre><code><span><span class="co">##                a           b1        b2       b3       b4</span></span>
+<span><span class="co">## EDDEP04 3.793161  0.469530551 1.0795350 1.723900 2.349080</span></span>
+<span><span class="co">## EDDEP05 3.320380  0.332903277 0.8987342 1.652724 2.495485</span></span>
+<span><span class="co">## EDDEP06 3.425968  0.387802947 1.0150063 1.791367 2.554685</span></span>
+<span><span class="co">## EDDEP07 2.515490  0.079235109 0.8041320 1.613013 2.489921</span></span>
+<span><span class="co">## EDDEP09 3.473136  0.333925352 1.0061928 1.872557 2.581161</span></span>
+<span><span class="co">## EDDEP14 2.593311  0.166259562 0.8908913 1.766003 2.578983</span></span>
+<span><span class="co">## EDDEP17 3.271634 -0.484050567 0.3934638 1.378818 2.485111</span></span>
+<span><span class="co">## EDDEP19 3.288519  0.594093189 1.1569664 1.908307 2.491027</span></span>
+<span><span class="co">## EDDEP21 2.658942 -0.008883032 0.7996149 1.769781 2.587528</span></span>
+<span><span class="co">## EDDEP22 3.694447  0.202954598 0.7692452 1.679950 2.211225</span></span>
+<span><span class="co">## EDDEP23 2.558598 -0.112441069 0.6118728 1.527154 2.413630</span></span>
+<span><span class="co">## EDDEP26 2.978928 -0.359701425 0.4134169 1.383127 2.206006</span></span>
+<span><span class="co">## EDDEP27 2.945571  0.220218470 0.9013523 1.670465 2.546562</span></span>
+<span><span class="co">## EDDEP28 2.533119 -0.089891132 0.6379695 1.516825 2.353177</span></span>
+<span><span class="co">## EDDEP29 3.641962 -0.108954575 0.6340853 1.413200 2.313974</span></span>
+<span><span class="co">## EDDEP30 2.366329 -0.144282442 0.8036419 1.852479 2.826838</span></span>
+<span><span class="co">## EDDEP31 2.859310 -0.272675089 0.3784892 1.397099 2.247133</span></span>
+<span><span class="co">## EDDEP35 2.833419 -0.091131191 0.6508336 1.594374 2.513021</span></span>
+<span><span class="co">## EDDEP36 3.831055 -0.409409211 0.4298663 1.362454 2.182998</span></span>
+<span><span class="co">## EDDEP39 2.921752  1.013208977 1.5973594 2.147477 2.830996</span></span>
+<span><span class="co">## EDDEP41 4.290619  0.403879976 1.0501835 1.653612 2.444910</span></span>
+<span><span class="co">## EDDEP42 2.203147 -0.061878352 0.8051774 1.819106 2.845104</span></span>
+<span><span class="co">## EDDEP44 2.487211  0.265078137 1.0153973 2.024893 3.207768</span></span>
+<span><span class="co">## EDDEP45 2.598389  0.071892748 0.9289133 2.065916 2.910995</span></span>
+<span><span class="co">## EDDEP46 2.580547 -0.300956201 0.4971925 1.463755 2.349175</span></span>
+<span><span class="co">## EDDEP48 3.192270  0.301874524 0.7763961 1.670600 2.269183</span></span>
+<span><span class="co">## EDDEP50 2.171919  0.094996852 0.9605635 1.915714 2.757297</span></span>
+<span><span class="co">## EDDEP54 2.962340 -0.178813349 0.5521133 1.377950 2.253458</span></span>
+<span><span class="co">## CESD1   2.061779  0.879468923 1.9314933 3.076904       NA</span></span>
+<span><span class="co">## CESD2   1.255554  1.392413300 2.6815860 3.738048       NA</span></span>
+<span><span class="co">## CESD3   3.508817  0.837483846 1.3247576 1.957232       NA</span></span>
+<span><span class="co">## CESD4   1.111395  0.650007324 1.3850762 2.091836       NA</span></span>
+<span><span class="co">## CESD5   1.593890  0.428582958 1.5343148 2.738424       NA</span></span>
+<span><span class="co">## CESD6   3.618615  0.492972124 1.1842575 1.739733       NA</span></span>
+<span><span class="co">## CESD7   1.811273  0.285422401 1.3764427 2.148182       NA</span></span>
+<span><span class="co">## CESD8   1.332344 -0.070810659 0.8265571 1.629126       NA</span></span>
+<span><span class="co">## CESD9   2.980182  0.751486735 1.3836642 1.866730       NA</span></span>
+<span><span class="co">## CESD10  2.054306  1.176185489 2.0499467 3.277152       NA</span></span>
+<span><span class="co">## CESD11  1.072249 -0.469512670 0.9481340 2.166840       NA</span></span>
+<span><span class="co">## CESD12  2.220284  0.164843960 0.9489153 1.745282       NA</span></span>
+<span><span class="co">## CESD13  1.279643  0.340717619 1.7050034 2.932279       NA</span></span>
+<span><span class="co">## CESD14  2.165046  0.490996018 1.2981449 1.874621       NA</span></span>
+<span><span class="co">## CESD15  1.388293  0.967787304 2.3321682 3.621488       NA</span></span>
+<span><span class="co">## CESD16  2.119598  0.270262537 0.9262685 1.818613       NA</span></span>
+<span><span class="co">## CESD17  1.720576  1.609372015 2.3204181 3.472175       NA</span></span>
+<span><span class="co">## CESD18  2.803351  0.257880402 1.2547114 1.992341       NA</span></span>
+<span><span class="co">## CESD19  1.820455  0.786210490 1.8859182 2.652889       NA</span></span>
+<span><span class="co">## CESD20  1.482218 -0.145778099 1.2604344 2.307638       NA</span></span></code></pre>
 <p><br></p>
-<p>Transformation constants (A = slope; B = intercept) for the specified linear transformation method are stored in the <code>$constants</code> slot.</p>
+<p>Transformation constants (A = slope; B = intercept) for the specified
+linear transformation method are stored in the <code>$constants</code>
+slot.</p>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">out_link_sl</span><span class="op">$</span><span class="va">constants</span></code></pre></div>
-<pre><code><span class="co">##         A         B </span>
-<span class="co">##  0.982306 -0.064442</span></code></pre>
+<code class="sourceCode R"><span><span class="va">out_link_sl</span><span class="op">$</span><span class="va">constants</span></span></code></pre></div>
+<pre><code><span><span class="co">##         A         B </span></span>
+<span><span class="co">##  0.982306 -0.064442</span></span></code></pre>
 <p><br></p>
 </div>
 <div class="section level3">
 <h3 id="obtaining-scaled-scores">Obtaining scaled scores<a class="anchor" aria-label="anchor" href="#obtaining-scaled-scores"></a>
 </h3>
-<p>From the item parameter estimates transformed to the anchor metric, raw-score-to-scale-score (rsss) crosswalk tables can be generated by <code><a href="../reference/runRSSS.html">runRSSS()</a></code>.</p>
-<p>The output from <code><a href="../reference/runRSSS.html">runRSSS()</a></code> includes three crosswalk tables (labeled as <code>1</code>, <code>2</code>, and <code>combined</code>), one for each scale and the third one for the combined scale. Each table contains raw summed scores and corresponding scaled scores, including summed score EAP estimate, T-scores corresponding to the EAP estimates, as well as expected summed scores (i.e., true scores) for each scale from the EAP estimates.</p>
+<p>From the item parameter estimates transformed to the anchor metric,
+raw-score-to-scale-score (rsss) crosswalk tables can be generated by
+<code><a href="../reference/runRSSS.html">runRSSS()</a></code>.</p>
+<p>The output from <code><a href="../reference/runRSSS.html">runRSSS()</a></code> includes three crosswalk
+tables (labeled as <code>1</code>, <code>2</code>, and
+<code>combined</code>), one for each scale and the third one for the
+combined scale. Each table contains raw summed scores and corresponding
+scaled scores, including summed score EAP estimate, T-scores
+corresponding to the EAP estimates, as well as expected summed scores
+(i.e., true scores) for each scale from the EAP estimates.</p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">rsss_fixedpar</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runRSSS.html">runRSSS</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">out_link_fixedpar</span><span class="op">)</span>
-<span class="va">rsss_sl</span>       <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runRSSS.html">runRSSS</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">out_link_sl</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">rsss_fixedpar</span><span class="op">$</span><span class="va">`2`</span>, <span class="fl">3</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##    raw_2 tscore tscore_se    eap eap_se escore_1 escore_2 escore_combined</span>
-<span class="co">## 1     20   34.5       6.0 -1.554  0.599   28.455   21.105          49.560</span>
-<span class="co">## 2     21   38.6       5.1 -1.139  0.509   29.340   21.851          51.192</span>
-<span class="co">## 3     22   41.1       4.7 -0.892  0.473   30.503   22.523          53.026</span>
-<span class="co">## 4     23   42.9       4.5 -0.713  0.455   31.837   23.154          54.991</span>
-<span class="co">## 5     24   44.7       4.1 -0.534  0.412   33.735   23.950          57.685</span>
-<span class="co">## 6     25   46.2       3.8 -0.382  0.382   35.853   24.777          60.630</span>
-<span class="co">## 7     26   47.5       3.6 -0.248  0.357   38.134   25.636          63.769</span>
-<span class="co">## 8     27   48.7       3.3 -0.128  0.335   40.558   26.535          67.093</span>
-<span class="co">## 9     28   49.8       3.2 -0.020  0.316   43.052   27.459          70.511</span>
-<span class="co">## 10    29   50.8       3.0  0.080  0.300   45.580   28.401          73.981</span>
-<span class="co">## 11    30   51.7       2.9  0.171  0.287   48.114   29.358          77.471</span>
-<span class="co">## 12    31   52.6       2.8  0.256  0.275   50.629   30.324          80.953</span>
-<span class="co">## 13    32   53.4       2.7  0.336  0.266   53.105   31.297          84.402</span>
-<span class="co">## 14    33   54.1       2.6  0.411  0.257   55.527   32.273          87.801</span>
-<span class="co">## 15    34   54.8       2.5  0.482  0.250   57.886   33.251          91.137</span>
-<span class="co">## 16    35   55.5       2.4  0.550  0.244   60.176   34.228          94.405</span>
-<span class="co">## 17    36   56.2       2.4  0.615  0.239   62.397   35.205          97.601</span>
-<span class="co">## 18    37   56.8       2.3  0.678  0.235   64.549   36.179         100.728</span>
-<span class="co">## 19    38   57.4       2.3  0.739  0.231   66.637   37.152         103.788</span>
-<span class="co">## 20    39   58.0       2.3  0.798  0.228   68.665   38.122         106.788</span>
-<span class="co">## 21    40   58.6       2.3  0.856  0.225   70.639   39.092         109.731</span>
-<span class="co">## 22    41   59.1       2.2  0.912  0.223   72.564   40.060         112.625</span>
-<span class="co">## 23    42   59.7       2.2  0.967  0.221   74.444   41.029         115.472</span>
-<span class="co">## 24    43   60.2       2.2  1.022  0.219   76.283   41.997         118.280</span>
-<span class="co">## 25    44   60.8       2.2  1.075  0.218   78.086   42.965         121.051</span>
-<span class="co">## 26    45   61.3       2.2  1.128  0.216   79.858   43.933         123.792</span>
-<span class="co">## 27    46   61.8       2.2  1.181  0.215   81.604   44.902         126.506</span>
-<span class="co">## 28    47   62.3       2.1  1.233  0.215   83.329   45.871         129.200</span>
-<span class="co">## 29    48   62.8       2.1  1.285  0.214   85.038   46.840         131.878</span>
-<span class="co">## 30    49   63.4       2.1  1.336  0.214   86.737   47.810         134.547</span>
-<span class="co">## 31    50   63.9       2.1  1.388  0.214   88.432   48.780         137.211</span>
-<span class="co">## 32    51   64.4       2.1  1.439  0.214   90.126   49.750         139.875</span>
-<span class="co">## 33    52   64.9       2.1  1.491  0.214   91.823   50.721         142.544</span>
-<span class="co">## 34    53   65.4       2.1  1.543  0.215   93.528   51.692         145.220</span>
-<span class="co">## 35    54   65.9       2.2  1.595  0.216   95.241   52.666         147.907</span>
-<span class="co">## 36    55   66.5       2.2  1.647  0.217   96.965   53.640         150.605</span>
-<span class="co">## 37    56   67.0       2.2  1.701  0.218   98.700   54.616         153.316</span>
-<span class="co">## 38    57   67.5       2.2  1.755  0.220  100.446   55.594         156.040</span>
-<span class="co">## 39    58   68.1       2.2  1.809  0.222  102.205   56.572         158.777</span>
-<span class="co">## 40    59   68.7       2.2  1.865  0.225  103.978   57.549         161.528</span>
-<span class="co">## 41    60   69.2       2.3  1.922  0.227  105.768   58.526         164.294</span>
-<span class="co">## 42    61   69.8       2.3  1.980  0.231  107.579   59.499         167.078</span>
-<span class="co">## 43    62   70.4       2.3  2.040  0.234  109.416   60.467         169.884</span>
-<span class="co">## 44    63   71.0       2.4  2.101  0.239  111.287   61.429         172.716</span>
-<span class="co">## 45    64   71.6       2.4  2.164  0.243  113.196   62.383         175.579</span>
-<span class="co">## 46    65   72.3       2.5  2.230  0.248  115.149   63.326         178.476</span>
-<span class="co">## 47    66   73.0       2.5  2.297  0.254  117.147   64.259         181.407</span>
-<span class="co">## 48    67   73.7       2.6  2.367  0.260  119.185   65.181         184.366</span>
-<span class="co">## 49    68   74.4       2.7  2.440  0.267  121.251   66.091         187.342</span>
-<span class="co">## 50    69   75.2       2.7  2.517  0.274  123.325   66.991         190.316</span>
-<span class="co">## 51    70   76.0       2.8  2.597  0.282  125.381   67.883         193.263</span>
-<span class="co">## 52    71   76.8       2.9  2.682  0.290  127.385   68.767         196.152</span>
-<span class="co">## 53    72   77.7       3.0  2.772  0.299  129.304   69.647         198.951</span>
-<span class="co">## 54    73   78.7       3.1  2.868  0.308  131.104   70.522         201.626</span>
-<span class="co">## 55    74   79.7       3.2  2.970  0.316  132.754   71.393         204.147</span>
-<span class="co">## 56    75   80.8       3.2  3.079  0.323  134.224   72.253         206.478</span>
-<span class="co">## 57    76   81.9       3.3  3.195  0.326  135.490   73.090         208.580</span>
-<span class="co">## 58    77   83.1       3.2  3.314  0.322  136.534   73.882         210.416</span>
-<span class="co">## 59    78   84.3       3.1  3.433  0.310  137.354   74.604         211.959</span>
-<span class="co">## 60    79   85.5       2.9  3.549  0.287  137.973   75.238         213.211</span>
-<span class="co">## 61    80   86.5       2.6  3.654  0.256  138.415   75.762         214.177</span></code></pre>
+<code class="sourceCode R"><span><span class="va">rsss_fixedpar</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runRSSS.html">runRSSS</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">out_link_fixedpar</span><span class="op">)</span></span>
+<span><span class="va">rsss_sl</span>       <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runRSSS.html">runRSSS</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">out_link_sl</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">rsss_fixedpar</span><span class="op">$</span><span class="va">`2`</span>, <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##    raw_2 tscore tscore_se    eap eap_se escore_1 escore_2 escore_combined</span></span>
+<span><span class="co">## 1     20   34.5       6.0 -1.554  0.599   28.455   21.105          49.560</span></span>
+<span><span class="co">## 2     21   38.6       5.1 -1.139  0.509   29.340   21.851          51.192</span></span>
+<span><span class="co">## 3     22   41.1       4.7 -0.892  0.473   30.503   22.523          53.026</span></span>
+<span><span class="co">## 4     23   42.9       4.5 -0.713  0.455   31.837   23.154          54.991</span></span>
+<span><span class="co">## 5     24   44.7       4.1 -0.534  0.412   33.735   23.950          57.685</span></span>
+<span><span class="co">## 6     25   46.2       3.8 -0.382  0.382   35.853   24.777          60.630</span></span>
+<span><span class="co">## 7     26   47.5       3.6 -0.248  0.357   38.134   25.636          63.769</span></span>
+<span><span class="co">## 8     27   48.7       3.3 -0.128  0.335   40.558   26.535          67.093</span></span>
+<span><span class="co">## 9     28   49.8       3.2 -0.020  0.316   43.052   27.459          70.511</span></span>
+<span><span class="co">## 10    29   50.8       3.0  0.080  0.300   45.580   28.401          73.981</span></span>
+<span><span class="co">## 11    30   51.7       2.9  0.171  0.287   48.114   29.358          77.471</span></span>
+<span><span class="co">## 12    31   52.6       2.8  0.256  0.275   50.629   30.324          80.953</span></span>
+<span><span class="co">## 13    32   53.4       2.7  0.336  0.266   53.105   31.297          84.402</span></span>
+<span><span class="co">## 14    33   54.1       2.6  0.411  0.257   55.527   32.273          87.801</span></span>
+<span><span class="co">## 15    34   54.8       2.5  0.482  0.250   57.886   33.251          91.137</span></span>
+<span><span class="co">## 16    35   55.5       2.4  0.550  0.244   60.176   34.228          94.405</span></span>
+<span><span class="co">## 17    36   56.2       2.4  0.615  0.239   62.397   35.205          97.601</span></span>
+<span><span class="co">## 18    37   56.8       2.3  0.678  0.235   64.549   36.179         100.728</span></span>
+<span><span class="co">## 19    38   57.4       2.3  0.739  0.231   66.637   37.152         103.788</span></span>
+<span><span class="co">## 20    39   58.0       2.3  0.798  0.228   68.665   38.122         106.788</span></span>
+<span><span class="co">## 21    40   58.6       2.3  0.856  0.225   70.639   39.092         109.731</span></span>
+<span><span class="co">## 22    41   59.1       2.2  0.912  0.223   72.564   40.060         112.625</span></span>
+<span><span class="co">## 23    42   59.7       2.2  0.967  0.221   74.444   41.029         115.472</span></span>
+<span><span class="co">## 24    43   60.2       2.2  1.022  0.219   76.283   41.997         118.280</span></span>
+<span><span class="co">## 25    44   60.8       2.2  1.075  0.218   78.086   42.965         121.051</span></span>
+<span><span class="co">## 26    45   61.3       2.2  1.128  0.216   79.858   43.933         123.792</span></span>
+<span><span class="co">## 27    46   61.8       2.2  1.181  0.215   81.604   44.902         126.506</span></span>
+<span><span class="co">## 28    47   62.3       2.1  1.233  0.215   83.329   45.871         129.200</span></span>
+<span><span class="co">## 29    48   62.8       2.1  1.285  0.214   85.038   46.840         131.878</span></span>
+<span><span class="co">## 30    49   63.4       2.1  1.336  0.214   86.737   47.810         134.547</span></span>
+<span><span class="co">## 31    50   63.9       2.1  1.388  0.214   88.432   48.780         137.211</span></span>
+<span><span class="co">## 32    51   64.4       2.1  1.439  0.214   90.126   49.750         139.875</span></span>
+<span><span class="co">## 33    52   64.9       2.1  1.491  0.214   91.823   50.721         142.544</span></span>
+<span><span class="co">## 34    53   65.4       2.1  1.543  0.215   93.528   51.692         145.220</span></span>
+<span><span class="co">## 35    54   65.9       2.2  1.595  0.216   95.241   52.666         147.907</span></span>
+<span><span class="co">## 36    55   66.5       2.2  1.647  0.217   96.965   53.640         150.605</span></span>
+<span><span class="co">## 37    56   67.0       2.2  1.701  0.218   98.700   54.616         153.316</span></span>
+<span><span class="co">## 38    57   67.5       2.2  1.755  0.220  100.446   55.594         156.040</span></span>
+<span><span class="co">## 39    58   68.1       2.2  1.809  0.222  102.205   56.572         158.777</span></span>
+<span><span class="co">## 40    59   68.7       2.2  1.865  0.225  103.978   57.549         161.528</span></span>
+<span><span class="co">## 41    60   69.2       2.3  1.922  0.227  105.768   58.526         164.294</span></span>
+<span><span class="co">## 42    61   69.8       2.3  1.980  0.231  107.579   59.499         167.078</span></span>
+<span><span class="co">## 43    62   70.4       2.3  2.040  0.234  109.416   60.467         169.884</span></span>
+<span><span class="co">## 44    63   71.0       2.4  2.101  0.239  111.287   61.429         172.716</span></span>
+<span><span class="co">## 45    64   71.6       2.4  2.164  0.243  113.196   62.383         175.579</span></span>
+<span><span class="co">## 46    65   72.3       2.5  2.230  0.248  115.149   63.326         178.476</span></span>
+<span><span class="co">## 47    66   73.0       2.5  2.297  0.254  117.147   64.259         181.407</span></span>
+<span><span class="co">## 48    67   73.7       2.6  2.367  0.260  119.185   65.181         184.366</span></span>
+<span><span class="co">## 49    68   74.4       2.7  2.440  0.267  121.251   66.091         187.342</span></span>
+<span><span class="co">## 50    69   75.2       2.7  2.517  0.274  123.325   66.991         190.316</span></span>
+<span><span class="co">## 51    70   76.0       2.8  2.597  0.282  125.381   67.883         193.263</span></span>
+<span><span class="co">## 52    71   76.8       2.9  2.682  0.290  127.385   68.767         196.152</span></span>
+<span><span class="co">## 53    72   77.7       3.0  2.772  0.299  129.304   69.647         198.951</span></span>
+<span><span class="co">## 54    73   78.7       3.1  2.868  0.308  131.104   70.522         201.626</span></span>
+<span><span class="co">## 55    74   79.7       3.2  2.970  0.316  132.754   71.393         204.147</span></span>
+<span><span class="co">## 56    75   80.8       3.2  3.079  0.323  134.224   72.253         206.478</span></span>
+<span><span class="co">## 57    76   81.9       3.3  3.195  0.326  135.490   73.090         208.580</span></span>
+<span><span class="co">## 58    77   83.1       3.2  3.314  0.322  136.534   73.882         210.416</span></span>
+<span><span class="co">## 59    78   84.3       3.1  3.433  0.310  137.354   74.604         211.959</span></span>
+<span><span class="co">## 60    79   85.5       2.9  3.549  0.287  137.973   75.238         213.211</span></span>
+<span><span class="co">## 61    80   86.5       2.6  3.654  0.256  138.415   75.762         214.177</span></span></code></pre>
 <p><br></p>
 <p>The columns in the crosswalk tables include:</p>
 <ul>
 <li>
-<code>raw_1</code>: raw summed score in Scale 1 (also <code>raw_2</code> for Scale 2 and <code>raw_3</code> for the combined)</li>
+<code>raw_1</code>: raw summed score in Scale 1 (also
+<code>raw_2</code> for Scale 2 and <code>raw_3</code> for the
+combined)</li>
 <li>
 <code>tscore</code>: T-score corresponding to each summed score</li>
 <li>
-<code>tscore_se</code>: standard error associated with each T-score</li>
+<code>tscore_se</code>: standard error associated with each
+T-score</li>
 <li>
-<code>eap</code>: summed score EAP equivalent for each raw summed score</li>
+<code>eap</code>: summed score EAP equivalent for each raw summed
+score</li>
 <li>
-<code>eap_se</code>: standard error associated with each EAP estimate</li>
+<code>eap_se</code>: standard error associated with each EAP
+estimate</li>
 <li>
-<code>escore_1</code>: expected summed score (true score) for Scale 1 given the EAP estimate</li>
+<code>escore_1</code>: expected summed score (true score) for Scale
+1 given the EAP estimate</li>
 <li>
-<code>escore_2</code>: expected summed score (true score) for Scale 2 given the EAP estimate</li>
+<code>escore_2</code>: expected summed score (true score) for Scale
+2 given the EAP estimate</li>
 <li>
-<code>escore_combined</code>: expected summed score (true score) for the combined scale given the EAP estimate</li>
+<code>escore_combined</code>: expected summed score (true score) for
+the combined scale given the EAP estimate</li>
 </ul>
 <p><br></p>
 </div>
 <div class="section level3">
 <h3 id="equipercentile-method-raw-raw">Equipercentile method: raw-raw<a class="anchor" aria-label="anchor" href="#equipercentile-method-raw-raw"></a>
 </h3>
-<p>Equipercentile linking of observed summed scores is performed by <code><a href="../reference/runEquateObserved.html">runEquateObserved()</a></code>.</p>
-<p>Cases with missing responses are removed to be able to generate correct summed scores in concordance tables.</p>
+<p>Equipercentile linking of observed summed scores is performed by
+<code><a href="../reference/runEquateObserved.html">runEquateObserved()</a></code>.</p>
+<p>Cases with missing responses are removed to be able to generate
+correct summed scores in concordance tables.</p>
 <p>This function requires four arguments:</p>
 <ul>
 <li>
-<code>scale_from</code>: numeric index of the scale (as specified in the item map) to be linked</li>
+<code>scale_from</code>: numeric index of the scale (as specified in
+the item map) to be linked</li>
 <li>
-<code>scale_to</code>: numeric index of the scale (as specified in the item map) to serve as the anchor</li>
+<code>scale_to</code>: numeric index of the scale (as specified in
+the item map) to serve as the anchor</li>
 <li>
-<code>eq_type</code>: the type of equating to be performed, <code>equipercentile</code> for this example. See <code><a href="https://rdrr.io/pkg/equate/man/equate.html" class="external-link">?equate::equate</a></code> for details.</li>
+<code>eq_type</code>: the type of equating to be performed,
+<code>equipercentile</code> for this example. See
+<code><a href="https://rdrr.io/pkg/equate/man/equate.html" class="external-link">?equate::equate</a></code> for details.</li>
 <li>
 <code>smooth</code>: the type of presmoothing to perform</li>
 </ul>
-<p>By default, <code><a href="../reference/runEquateObserved.html">runEquateObserved()</a></code> performs raw-raw equipercentile linking. In this example, each raw summed score in Scale 2 (CES-D, ranging from 20 to 80) is linked to a raw summed score equivalent in Scale 1 (PROMIS Depression, rangeing from 28 to 140) with loglinear presmoothing.</p>
+<p>By default, <code><a href="../reference/runEquateObserved.html">runEquateObserved()</a></code> performs raw-raw
+equipercentile linking. In this example, each raw summed score in Scale
+2 (CES-D, ranging from 20 to 80) is linked to a raw summed score
+equivalent in Scale 1 (PROMIS Depression, rangeing from 28 to 140) with
+loglinear presmoothing.</p>
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">out_equate</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runEquateObserved.html">runEquateObserved</a></span><span class="op">(</span>
-  <span class="va">d</span>, scale_from <span class="op">=</span> <span class="fl">2</span>, scale_to <span class="op">=</span> <span class="fl">1</span>,
-  eq_type <span class="op">=</span> <span class="st">"equipercentile"</span>, smooth <span class="op">=</span> <span class="st">"loglinear"</span><span class="op">)</span></code></pre></div>
-<p>The crosswalk table can be obtained from the <code>concordance</code> slot:</p>
+<code class="sourceCode R"><span><span class="va">out_equate</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runEquateObserved.html">runEquateObserved</a></span><span class="op">(</span></span>
+<span>  <span class="va">d</span>, scale_from <span class="op">=</span> <span class="fl">2</span>, scale_to <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  eq_type <span class="op">=</span> <span class="st">"equipercentile"</span>, smooth <span class="op">=</span> <span class="st">"loglinear"</span><span class="op">)</span></span></code></pre></div>
+<p>The crosswalk table can be obtained from the <code>concordance</code>
+slot:</p>
 <div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">out_equate</span><span class="op">$</span><span class="va">concordance</span></code></pre></div>
-<pre><code><span class="co">##    raw_2     raw_1  raw_1_se raw_1_se_boot</span>
-<span class="co">## 1     20  28.26881 0.1620936     0.1520869</span>
-<span class="co">## 2     21  29.88299 0.3370778     0.3057510</span>
-<span class="co">## 3     22  31.53492 0.5039397     0.4276658</span>
-<span class="co">## 4     23  33.26052 0.6025077     0.5756282</span>
-<span class="co">## 5     24  35.04116 0.7605541     0.7693531</span>
-<span class="co">## 6     25  36.88206 0.9289581     0.9607761</span>
-<span class="co">## 7     26  38.78932 1.1047990     1.1232725</span>
-<span class="co">## 8     27  40.76619 1.2851847     1.2469472</span>
-<span class="co">## 9     28  42.81301 1.4675514     1.5010936</span>
-<span class="co">## 10    29  44.92722 1.6498695     1.7438334</span>
-<span class="co">## 11    30  47.10359 1.8307274     2.0144591</span>
-<span class="co">## 12    31  49.33456 2.0092834     2.2313417</span>
-<span class="co">## 13    32  51.61601 2.2830630     2.3721202</span>
-<span class="co">## 14    33  53.93979 2.4363247     2.5245520</span>
-<span class="co">## 15    34  56.28523 2.5838111     2.7228801</span>
-<span class="co">## 16    35  58.64518 2.8128224     2.8695416</span>
-<span class="co">## 17    36  61.00920 2.9230117     2.8246191</span>
-<span class="co">## 18    37  63.35840 3.0265741     2.8950461</span>
-<span class="co">## 19    38  65.68830 3.1931417     2.9894737</span>
-<span class="co">## 20    39  67.98827 3.2579872     3.0728638</span>
-<span class="co">## 21    40  70.24833 3.3160014     3.1956099</span>
-<span class="co">## 22    41  72.46413 3.3666557     3.3117403</span>
-<span class="co">## 23    42  74.63553 3.4696445     3.4128191</span>
-<span class="co">## 24    43  76.75786 3.4943506     3.5094539</span>
-<span class="co">## 25    44  78.83013 3.5156665     3.5628200</span>
-<span class="co">## 26    45  80.85299 3.5347321     3.6682424</span>
-<span class="co">## 27    46  82.82775 3.5532238     3.7315354</span>
-<span class="co">## 28    47  84.75618 3.5733950     3.7814664</span>
-<span class="co">## 29    48  86.64034 3.5981071     3.8821009</span>
-<span class="co">## 30    49  88.48280 3.5457997     3.9273704</span>
-<span class="co">## 31    50  90.28977 3.5652250     3.8778223</span>
-<span class="co">## 32    51  92.06044 3.5948509     3.9001044</span>
-<span class="co">## 33    52  93.79686 3.6397275     3.9175791</span>
-<span class="co">## 34    53  95.50073 3.7057230     3.9546354</span>
-<span class="co">## 35    54  97.18390 3.6406951     3.9341080</span>
-<span class="co">## 36    55  98.83962 3.7115896     3.9896091</span>
-<span class="co">## 37    56 100.46992 3.6731482     4.0863377</span>
-<span class="co">## 38    57 102.08880 3.7516801     4.1337730</span>
-<span class="co">## 39    58 103.68535 3.8710358     4.2637463</span>
-<span class="co">## 40    59 105.27044 3.8253417     4.2960902</span>
-<span class="co">## 41    60 106.84491 3.9636676     4.3832066</span>
-<span class="co">## 42    61 108.40599 3.9344712     4.3338656</span>
-<span class="co">## 43    62 109.96920 4.0965312     4.5466482</span>
-<span class="co">## 44    63 111.51836 4.3289986     4.4530455</span>
-<span class="co">## 45    64 113.08139 4.2728002     4.5311469</span>
-<span class="co">## 46    65 114.63738 4.5418401     5.0584699</span>
-<span class="co">## 47    66 116.20861 4.4956647     5.4045512</span>
-<span class="co">## 48    67 117.78972 4.7999844     5.2660424</span>
-<span class="co">## 49    68 119.38584 4.7678715     5.3273682</span>
-<span class="co">## 50    69 121.01883 5.0971545     5.8792376</span>
-<span class="co">## 51    70 122.67774 5.5168449     5.8452661</span>
-<span class="co">## 52    71 124.38914 5.4272766     5.5701052</span>
-<span class="co">## 53    72 126.17776 5.8150222     5.7846101</span>
-<span class="co">## 54    73 128.05913 6.2277413     6.0876314</span>
-<span class="co">## 55    74 130.07996 6.6010857     6.8162756</span>
-<span class="co">## 56    75 132.31127 6.8333301     6.6785796</span>
-<span class="co">## 57    76 134.91376 7.4633808     5.8117219</span>
-<span class="co">## 58    77 138.21074 6.3457311     4.1029553</span></code></pre>
+<code class="sourceCode R"><span><span class="va">out_equate</span><span class="op">$</span><span class="va">concordance</span></span></code></pre></div>
+<pre><code><span><span class="co">##    raw_2     raw_1  raw_1_se raw_1_se_boot</span></span>
+<span><span class="co">## 1     20  28.26881 0.1620936     0.1402952</span></span>
+<span><span class="co">## 2     21  29.88299 0.3370778     0.3356868</span></span>
+<span><span class="co">## 3     22  31.53492 0.5039397     0.4723403</span></span>
+<span><span class="co">## 4     23  33.26052 0.6025077     0.6111411</span></span>
+<span><span class="co">## 5     24  35.04116 0.7605541     0.7302472</span></span>
+<span><span class="co">## 6     25  36.88206 0.9289581     0.8542081</span></span>
+<span><span class="co">## 7     26  38.78932 1.1047990     1.0439639</span></span>
+<span><span class="co">## 8     27  40.76619 1.2851847     1.2692119</span></span>
+<span><span class="co">## 9     28  42.81301 1.4675514     1.4509368</span></span>
+<span><span class="co">## 10    29  44.92722 1.6498695     1.6679366</span></span>
+<span><span class="co">## 11    30  47.10359 1.8307274     1.9035236</span></span>
+<span><span class="co">## 12    31  49.33456 2.0092834     2.1016786</span></span>
+<span><span class="co">## 13    32  51.61601 2.2830630     2.2847374</span></span>
+<span><span class="co">## 14    33  53.93979 2.4363247     2.4643192</span></span>
+<span><span class="co">## 15    34  56.28523 2.5838111     2.6645247</span></span>
+<span><span class="co">## 16    35  58.64518 2.8128224     2.9084761</span></span>
+<span><span class="co">## 17    36  61.00920 2.9230117     2.9736199</span></span>
+<span><span class="co">## 18    37  63.35840 3.0265741     3.1298174</span></span>
+<span><span class="co">## 19    38  65.68830 3.1931417     3.2373597</span></span>
+<span><span class="co">## 20    39  67.98827 3.2579872     3.3246506</span></span>
+<span><span class="co">## 21    40  70.24833 3.3160014     3.4056969</span></span>
+<span><span class="co">## 22    41  72.46413 3.3666557     3.4119348</span></span>
+<span><span class="co">## 23    42  74.63553 3.4696445     3.3810577</span></span>
+<span><span class="co">## 24    43  76.75786 3.4943506     3.3680059</span></span>
+<span><span class="co">## 25    44  78.83013 3.5156665     3.3499647</span></span>
+<span><span class="co">## 26    45  80.85299 3.5347321     3.3336418</span></span>
+<span><span class="co">## 27    46  82.82775 3.5532238     3.5401790</span></span>
+<span><span class="co">## 28    47  84.75618 3.5733950     3.7015680</span></span>
+<span><span class="co">## 29    48  86.64034 3.5981071     3.7706715</span></span>
+<span><span class="co">## 30    49  88.48280 3.5457997     3.6871150</span></span>
+<span><span class="co">## 31    50  90.28977 3.5652250     3.6949274</span></span>
+<span><span class="co">## 32    51  92.06044 3.5948509     3.5719508</span></span>
+<span><span class="co">## 33    52  93.79686 3.6397275     3.4421804</span></span>
+<span><span class="co">## 34    53  95.50073 3.7057230     3.5268023</span></span>
+<span><span class="co">## 35    54  97.18390 3.6406951     3.6259209</span></span>
+<span><span class="co">## 36    55  98.83962 3.7115896     3.6724745</span></span>
+<span><span class="co">## 37    56 100.46992 3.6731482     3.6159414</span></span>
+<span><span class="co">## 38    57 102.08880 3.7516801     3.5655197</span></span>
+<span><span class="co">## 39    58 103.68535 3.8710358     3.6646940</span></span>
+<span><span class="co">## 40    59 105.27044 3.8253417     3.8763299</span></span>
+<span><span class="co">## 41    60 106.84491 3.9636676     3.9430371</span></span>
+<span><span class="co">## 42    61 108.40599 3.9344712     3.8635917</span></span>
+<span><span class="co">## 43    62 109.96920 4.0965312     4.2203091</span></span>
+<span><span class="co">## 44    63 111.51836 4.3289986     4.3708528</span></span>
+<span><span class="co">## 45    64 113.08139 4.2728002     4.3340729</span></span>
+<span><span class="co">## 46    65 114.63738 4.5418401     4.4697950</span></span>
+<span><span class="co">## 47    66 116.20861 4.4956647     4.4651416</span></span>
+<span><span class="co">## 48    67 117.78972 4.7999844     4.5772108</span></span>
+<span><span class="co">## 49    68 119.38584 4.7678715     4.9376194</span></span>
+<span><span class="co">## 50    69 121.01883 5.0971545     5.2333909</span></span>
+<span><span class="co">## 51    70 122.67774 5.5168449     5.7149023</span></span>
+<span><span class="co">## 52    71 124.38914 5.4272766     6.4044923</span></span>
+<span><span class="co">## 53    72 126.17776 5.8150222     6.9618880</span></span>
+<span><span class="co">## 54    73 128.05913 6.2277413     6.5689467</span></span>
+<span><span class="co">## 55    74 130.07996 6.6010857     6.4802304</span></span>
+<span><span class="co">## 56    75 132.31127 6.8333301     6.3293392</span></span>
+<span><span class="co">## 57    76 134.91376 7.4633808     5.5273821</span></span>
+<span><span class="co">## 58    77 138.21074 6.3457311     4.4734364</span></span></code></pre>
 <p><br></p>
 </div>
 <div class="section level3">
 <h3 id="equipercentile-method-raw-tscore">Equipercentile method: raw-tscore<a class="anchor" aria-label="anchor" href="#equipercentile-method-raw-tscore"></a>
 </h3>
-<p>Raw summed scores can be linked to scaled scores (e.g., T-scores) directly by specifying <code>type_to = 'tscore'</code> in <code><a href="../reference/runEquateObserved.html">runEquateObserved()</a></code>. In the following example, we map the raw summed scores from Scale 2 (CES-D, ranging from 20 to 80) onto the T-score equivalents in Scale 1 (PROMIS Depression, mean = 50 and SD = 10).</p>
+<p>Raw summed scores can be linked to scaled scores (e.g., T-scores)
+directly by specifying <code>type_to = 'tscore'</code> in
+<code><a href="../reference/runEquateObserved.html">runEquateObserved()</a></code>. In the following example, we map the
+raw summed scores from Scale 2 (CES-D, ranging from 20 to 80) onto the
+T-score equivalents in Scale 1 (PROMIS Depression, mean = 50 and SD =
+10).</p>
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">out_equate_tscore</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runEquateObserved.html">runEquateObserved</a></span><span class="op">(</span>
-  <span class="va">d</span>, scale_from <span class="op">=</span> <span class="fl">2</span>, scale_to <span class="op">=</span> <span class="fl">1</span>,
-  type_to <span class="op">=</span> <span class="st">"tscore"</span>, rsss <span class="op">=</span> <span class="va">rsss_fixedpar</span>,
-  eq_type <span class="op">=</span> <span class="st">"equipercentile"</span>, smooth <span class="op">=</span> <span class="st">"loglinear"</span><span class="op">)</span></code></pre></div>
-<p>Again, the crosswalk table can be retrieved from the <code>concordance</code> slot:</p>
+<code class="sourceCode R"><span><span class="va">out_equate_tscore</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runEquateObserved.html">runEquateObserved</a></span><span class="op">(</span></span>
+<span>  <span class="va">d</span>, scale_from <span class="op">=</span> <span class="fl">2</span>, scale_to <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  type_to <span class="op">=</span> <span class="st">"tscore"</span>, rsss <span class="op">=</span> <span class="va">rsss_fixedpar</span>,</span>
+<span>  eq_type <span class="op">=</span> <span class="st">"equipercentile"</span>, smooth <span class="op">=</span> <span class="st">"loglinear"</span><span class="op">)</span></span></code></pre></div>
+<p>Again, the crosswalk table can be retrieved from the
+<code>concordance</code> slot:</p>
 <div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">out_equate_tscore</span><span class="op">$</span><span class="va">concordance</span></code></pre></div>
-<pre><code><span class="co">##    raw_2 tscore_1 tscore_1_se tscore_1_se_boot</span>
-<span class="co">## 1     20 33.60138   0.1015887        0.3863542</span>
-<span class="co">## 2     21 38.46567   0.2970127        1.0849092</span>
-<span class="co">## 3     22 41.72102   0.5244657        0.5685953</span>
-<span class="co">## 4     23 43.93269   0.7283759        0.5615376</span>
-<span class="co">## 5     24 45.56073   0.9008862        0.5523895</span>
-<span class="co">## 6     25 46.96056   1.0676547        0.6026697</span>
-<span class="co">## 7     26 48.14591   1.2231568        0.6042614</span>
-<span class="co">## 8     27 49.15361   1.4254088        0.6114178</span>
-<span class="co">## 9     28 50.08462   1.5481891        0.6363279</span>
-<span class="co">## 10    29 50.93574   1.6767468        0.6634025</span>
-<span class="co">## 11    30 51.69914   1.7912740        0.6598968</span>
-<span class="co">## 12    31 52.45221   1.9745160        0.6629369</span>
-<span class="co">## 13    32 53.09555   2.0699538        0.6841456</span>
-<span class="co">## 14    33 53.81778   2.1925590        0.6950125</span>
-<span class="co">## 15    34 54.43935   2.2939903        0.7072222</span>
-<span class="co">## 16    35 55.05249   2.3979162        0.7591019</span>
-<span class="co">## 17    36 55.65876   2.5043386        0.7924601</span>
-<span class="co">## 18    37 56.19032   2.5834537        0.8309260</span>
-<span class="co">## 19    38 56.74801   2.6939470        0.8786347</span>
-<span class="co">## 20    39 57.33437   2.8072216        0.9404141</span>
-<span class="co">## 21    40 57.91858   2.9233371        0.9316856</span>
-<span class="co">## 22    41 58.49310   3.0422752        0.9377454</span>
-<span class="co">## 23    42 58.98081   3.1276569        0.9449235</span>
-<span class="co">## 24    43 59.55737   3.2512041        0.9699108</span>
-<span class="co">## 25    44 60.13559   3.2571331        0.9988513</span>
-<span class="co">## 26    45 60.71592   3.3751754        1.0468595</span>
-<span class="co">## 27    46 61.29874   3.4950840        1.1160191</span>
-<span class="co">## 28    47 61.88462   3.6164946        1.1135411</span>
-<span class="co">## 29    48 62.38451   3.6947613        1.1051455</span>
-<span class="co">## 30    49 62.95738   3.8157601        1.1686212</span>
-<span class="co">## 31    50 63.54690   3.9367948        1.1821996</span>
-<span class="co">## 32    51 64.14007   4.0572121        1.2454767</span>
-<span class="co">## 33    52 64.73684   4.1763139        1.3032922</span>
-<span class="co">## 34    53 65.33702   4.2933638        1.2611304</span>
-<span class="co">## 35    54 65.94024   4.4075839        1.2700066</span>
-<span class="co">## 36    55 66.54594   4.5181439        1.3645533</span>
-<span class="co">## 37    56 67.24018   4.6807053        1.4206494</span>
-<span class="co">## 38    57 67.87194   4.7833243        1.5100612</span>
-<span class="co">## 39    58 68.48824   4.8795677        1.5609220</span>
-<span class="co">## 40    59 69.10342   4.9680991        1.6126585</span>
-<span class="co">## 41    60 69.76017   5.0472563        1.6355917</span>
-<span class="co">## 42    61 70.43094   5.1798624        1.6705700</span>
-<span class="co">## 43    62 71.04031   5.2369658        1.7125619</span>
-<span class="co">## 44    63 71.74400   5.3442550        1.8089465</span>
-<span class="co">## 45    64 72.39134   5.3682887        1.8096975</span>
-<span class="co">## 46    65 73.08172   5.4387347        1.8169388</span>
-<span class="co">## 47    66 73.76203   5.4859732        1.9061743</span>
-<span class="co">## 48    67 74.42874   5.5059813        2.2975789</span>
-<span class="co">## 49    68 75.13082   5.5660930        2.3884673</span>
-<span class="co">## 50    69 75.80853   5.5266085        2.4660453</span>
-<span class="co">## 51    70 76.58968   5.6021126        2.5466085</span>
-<span class="co">## 52    71 77.31778   5.2885420        3.0095930</span>
-<span class="co">## 53    72 78.17632   5.2651465        3.4020273</span>
-<span class="co">## 54    73 79.13091   5.3383723        3.6152719</span>
-<span class="co">## 55    74 80.17216   4.8749758        3.9146508</span>
-<span class="co">## 56    75 81.48607   4.8123350        4.0125320</span>
-<span class="co">## 57    76 83.14663   4.7538824        3.8735260</span>
-<span class="co">## 58    77 85.48248   3.1143191        3.0743662</span></code></pre>
-<p>In what follows we display the linking relation obtained from the equipercentile method and compare it to that from the fixed-parameter calibration method.</p>
+<code class="sourceCode R"><span><span class="va">out_equate_tscore</span><span class="op">$</span><span class="va">concordance</span></span></code></pre></div>
+<pre><code><span><span class="co">##    raw_2 tscore_1 tscore_1_se tscore_1_se_boot</span></span>
+<span><span class="co">## 1     20 33.60138   0.1015887        0.4037261</span></span>
+<span><span class="co">## 2     21 38.46567   0.2970127        1.0152828</span></span>
+<span><span class="co">## 3     22 41.72102   0.5244657        0.6144270</span></span>
+<span><span class="co">## 4     23 43.93269   0.7283759        0.6999848</span></span>
+<span><span class="co">## 5     24 45.56073   0.9008862        0.6544455</span></span>
+<span><span class="co">## 6     25 46.96056   1.0676547        0.6944895</span></span>
+<span><span class="co">## 7     26 48.14591   1.2231568        0.6469651</span></span>
+<span><span class="co">## 8     27 49.15361   1.4254088        0.6440456</span></span>
+<span><span class="co">## 9     28 50.08462   1.5481891        0.6495690</span></span>
+<span><span class="co">## 10    29 50.93574   1.6767468        0.6505889</span></span>
+<span><span class="co">## 11    30 51.69914   1.7912740        0.6844263</span></span>
+<span><span class="co">## 12    31 52.45221   1.9745160        0.6614178</span></span>
+<span><span class="co">## 13    32 53.09555   2.0699538        0.6640976</span></span>
+<span><span class="co">## 14    33 53.81778   2.1925590        0.6797029</span></span>
+<span><span class="co">## 15    34 54.43935   2.2939903        0.7277988</span></span>
+<span><span class="co">## 16    35 55.05249   2.3979162        0.7322567</span></span>
+<span><span class="co">## 17    36 55.65876   2.5043386        0.7461761</span></span>
+<span><span class="co">## 18    37 56.19032   2.5834537        0.7620370</span></span>
+<span><span class="co">## 19    38 56.74801   2.6939470        0.8116819</span></span>
+<span><span class="co">## 20    39 57.33437   2.8072216        0.8548528</span></span>
+<span><span class="co">## 21    40 57.91858   2.9233371        0.8731307</span></span>
+<span><span class="co">## 22    41 58.49310   3.0422752        0.8896708</span></span>
+<span><span class="co">## 23    42 58.98081   3.1276569        0.8897051</span></span>
+<span><span class="co">## 24    43 59.55737   3.2512041        0.9783085</span></span>
+<span><span class="co">## 25    44 60.13559   3.2571331        1.0777110</span></span>
+<span><span class="co">## 26    45 60.71592   3.3751754        1.0919364</span></span>
+<span><span class="co">## 27    46 61.29874   3.4950840        1.1103505</span></span>
+<span><span class="co">## 28    47 61.88462   3.6164946        1.0974321</span></span>
+<span><span class="co">## 29    48 62.38451   3.6947613        1.0889808</span></span>
+<span><span class="co">## 30    49 62.95738   3.8157601        1.1334900</span></span>
+<span><span class="co">## 31    50 63.54690   3.9367948        1.2546659</span></span>
+<span><span class="co">## 32    51 64.14007   4.0572121        1.3249758</span></span>
+<span><span class="co">## 33    52 64.73684   4.1763139        1.3619151</span></span>
+<span><span class="co">## 34    53 65.33702   4.2933638        1.3958615</span></span>
+<span><span class="co">## 35    54 65.94024   4.4075839        1.4428287</span></span>
+<span><span class="co">## 36    55 66.54594   4.5181439        1.4737142</span></span>
+<span><span class="co">## 37    56 67.24018   4.6807053        1.5509051</span></span>
+<span><span class="co">## 38    57 67.87194   4.7833243        1.5944804</span></span>
+<span><span class="co">## 39    58 68.48824   4.8795677        1.6895910</span></span>
+<span><span class="co">## 40    59 69.10342   4.9680991        1.7313272</span></span>
+<span><span class="co">## 41    60 69.76017   5.0472563        1.7925702</span></span>
+<span><span class="co">## 42    61 70.43094   5.1798624        1.8183844</span></span>
+<span><span class="co">## 43    62 71.04031   5.2369658        1.8522600</span></span>
+<span><span class="co">## 44    63 71.74400   5.3442550        1.8555293</span></span>
+<span><span class="co">## 45    64 72.39134   5.3682887        1.9071948</span></span>
+<span><span class="co">## 46    65 73.08172   5.4387347        2.0369422</span></span>
+<span><span class="co">## 47    66 73.76203   5.4859732        2.1807839</span></span>
+<span><span class="co">## 48    67 74.42874   5.5059813        2.1194029</span></span>
+<span><span class="co">## 49    68 75.13082   5.5660930        2.1565075</span></span>
+<span><span class="co">## 50    69 75.80853   5.5266085        2.3058579</span></span>
+<span><span class="co">## 51    70 76.58968   5.6021126        2.2838671</span></span>
+<span><span class="co">## 52    71 77.31778   5.2885420        2.5667395</span></span>
+<span><span class="co">## 53    72 78.17632   5.2651465        2.8608963</span></span>
+<span><span class="co">## 54    73 79.13091   5.3383723        3.4274130</span></span>
+<span><span class="co">## 55    74 80.17216   4.8749758        3.6581657</span></span>
+<span><span class="co">## 56    75 81.48607   4.8123350        3.8113113</span></span>
+<span><span class="co">## 57    76 83.14663   4.7538824        3.5065662</span></span>
+<span><span class="co">## 58    77 85.48248   3.1143191        2.3942761</span></span></code></pre>
+<p>In what follows we display the linking relation obtained from the
+equipercentile method and compare it to that from the fixed-parameter
+calibration method.</p>
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>
-  <span class="va">rsss_fixedpar</span><span class="op">$</span><span class="va">`2`</span><span class="op">$</span><span class="va">raw_2</span>,
-  <span class="va">rsss_fixedpar</span><span class="op">$</span><span class="va">`2`</span><span class="op">$</span><span class="va">tscore</span>,
-  xlab <span class="op">=</span> <span class="st">"CES-D Summed Score"</span>,
-  ylab <span class="op">=</span> <span class="st">"PROMIS Depression T-score"</span>,
-  type <span class="op">=</span> <span class="st">"l"</span>, col <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span>
-  <span class="va">out_equate_tscore</span><span class="op">$</span><span class="va">concordance</span><span class="op">$</span><span class="va">raw_2</span>,
-  <span class="va">out_equate_tscore</span><span class="op">$</span><span class="va">concordance</span><span class="op">$</span><span class="va">tscore_1</span>,
-  lty <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span>
-  <span class="st">"topleft"</span>,
-  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Fixed-Parameter Calibration"</span>, <span class="st">"Equipercentile Linking"</span><span class="op">)</span>,
-  lty <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"red"</span><span class="op">)</span>, bg <span class="op">=</span> <span class="st">"white"</span>
-<span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
+<span>  <span class="va">rsss_fixedpar</span><span class="op">$</span><span class="va">`2`</span><span class="op">$</span><span class="va">raw_2</span>,</span>
+<span>  <span class="va">rsss_fixedpar</span><span class="op">$</span><span class="va">`2`</span><span class="op">$</span><span class="va">tscore</span>,</span>
+<span>  xlab <span class="op">=</span> <span class="st">"CES-D Summed Score"</span>,</span>
+<span>  ylab <span class="op">=</span> <span class="st">"PROMIS Depression T-score"</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"l"</span>, col <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span></span>
+<span>  <span class="va">out_equate_tscore</span><span class="op">$</span><span class="va">concordance</span><span class="op">$</span><span class="va">raw_2</span>,</span>
+<span>  <span class="va">out_equate_tscore</span><span class="op">$</span><span class="va">concordance</span><span class="op">$</span><span class="va">tscore_1</span>,</span>
+<span>  lty <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/grid.html" class="external-link">grid</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span></span>
+<span>  <span class="st">"topleft"</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Fixed-Parameter Calibration"</span>, <span class="st">"Equipercentile Linking"</span><span class="op">)</span>,</span>
+<span>  lty <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"red"</span><span class="op">)</span>, bg <span class="op">=</span> <span class="st">"white"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p><img src="PROsetta_files/figure-html/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;"></p>
 <p><br></p>
 </div>
@@ -877,153 +1002,190 @@
 <div class="section level2">
 <h2 id="evaluation-of-linking-results">Evaluation of linking results<a class="anchor" aria-label="anchor" href="#evaluation-of-linking-results"></a>
 </h2>
-<p>The linking results produced so far are now evaluated. More specifically, we assess how closely the CES-D summed scores linked to the PROMIS Depression T-scores match the actual PROMIS Depression T-scores observed in the present linking sample. Should we have set aside a validation sample, we would have performed this evaluation on that sample.</p>
+<p>The linking results produced so far are now evaluated. More
+specifically, we assess how closely the CES-D summed scores linked to
+the PROMIS Depression T-scores match the actual PROMIS Depression
+T-scores observed in the present linking sample. Should we have set
+aside a validation sample, we would have performed this evaluation on
+that sample.</p>
 <p><br></p>
 <div class="section level3">
 <h3 id="raw-scores-from-scale-2">Raw scores from Scale 2<a class="anchor" aria-label="anchor" href="#raw-scores-from-scale-2"></a>
 </h3>
-<p>To begin with, we create an object <code>scores</code> using <code><a href="../reference/getScaleSum.html">getScaleSum()</a></code> to contain raw summed scores on Scale 2 (i.e., CES-D). <code>NA</code> will result for any respondents with one or more missing responses on Scale 2. We could also create a summed score variable for Scale 1 using the same function, e.g., <code>getScaleSum(d, 1)</code>.</p>
+<p>To begin with, we create an object <code>scores</code> using
+<code><a href="../reference/getScaleSum.html">getScaleSum()</a></code> to contain raw summed scores on Scale 2
+(i.e., CES-D). <code>NA</code> will result for any respondents with one
+or more missing responses on Scale 2. We could also create a summed
+score variable for Scale 1 using the same function, e.g.,
+<code>getScaleSum(d, 1)</code>.</p>
 <div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getScaleSum.html">getScaleSum</a></span><span class="op">(</span><span class="va">d</span>, <span class="fl">2</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">scores</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##   prosettaid raw_2</span>
-<span class="co">## 1     100048    21</span>
-<span class="co">## 2     100049    21</span>
-<span class="co">## 3     100050    24</span>
-<span class="co">## 4     100051    26</span>
-<span class="co">## 5     100052    20</span>
-<span class="co">## 6     100053    21</span></code></pre>
+<code class="sourceCode R"><span><span class="va">scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getScaleSum.html">getScaleSum</a></span><span class="op">(</span><span class="va">d</span>, <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">scores</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##   prosettaid raw_2</span></span>
+<span><span class="co">## 1     100048    21</span></span>
+<span><span class="co">## 2     100049    21</span></span>
+<span><span class="co">## 3     100050    24</span></span>
+<span><span class="co">## 4     100051    26</span></span>
+<span><span class="co">## 5     100052    20</span></span>
+<span><span class="co">## 6     100053    21</span></span></code></pre>
 <p><br></p>
 </div>
 <div class="section level3">
 <h3 id="eap-estimates-based-on-item-responses-patterns-on-scale-1">EAP estimates based on item responses patterns on Scale 1<a class="anchor" aria-label="anchor" href="#eap-estimates-based-on-item-responses-patterns-on-scale-1"></a>
 </h3>
-<p>We obtain EAP estimates of theta on Scale 1 (i.e., PROMIS Depression) based on item response patterns using the <code><a href="../reference/getTheta.html">getTheta()</a></code> function. The first argument of the function is a data object of <code>PROsetta</code> class, which we created earlier with <code><a href="../reference/loadData.html">loadData()</a></code>. The second argument specifies the item parameter estimates to be used for the EAP estimation. Here, we use the item parameter estimates previously obtained from the fixed-parameter calibration, <code>out_link_fixedpar$ipar_linked</code>. The third argument <code>scale = 1</code> specifies the scale to be scored (i.e., PROMIS Depression). These EAP estimates are based on the item responses actually observed on PROMIS Depression and will serve as the reference when we assess the CES-D scores liked to PROMIS Depression derived from various methods.</p>
+<p>We obtain EAP estimates of theta on Scale 1 (i.e., PROMIS Depression)
+based on item response patterns using the <code><a href="../reference/getTheta.html">getTheta()</a></code>
+function. The first argument of the function is a data object of
+<code>PROsetta</code> class, which we created earlier with
+<code><a href="../reference/loadData.html">loadData()</a></code>. The second argument specifies the item
+parameter estimates to be used for the EAP estimation. Here, we use the
+item parameter estimates previously obtained from the fixed-parameter
+calibration, <code>out_link_fixedpar$ipar_linked</code>. The third
+argument <code>scale = 1</code> specifies the scale to be scored (i.e.,
+PROMIS Depression). These EAP estimates are based on the item responses
+actually observed on PROMIS Depression and will serve as the reference
+when we assess the CES-D scores liked to PROMIS Depression derived from
+various methods.</p>
 <div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">eap_promis</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getTheta.html">getTheta</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">out_link_fixedpar</span><span class="op">$</span><span class="va">ipar_linked</span>, scale <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">$</span><span class="va">theta</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">eap_promis</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##   prosettaid   theta_eap  theta_se</span>
-<span class="co">## 1     100048 -0.42410653 0.1606312</span>
-<span class="co">## 2     100049 -1.15269342 0.3229802</span>
-<span class="co">## 3     100050  0.05281656 0.1176509</span>
-<span class="co">## 4     100051 -0.04622278 0.1238298</span>
-<span class="co">## 5     100052 -1.65063866 0.5049212</span>
-<span class="co">## 6     100053 -0.55824065 0.1812502</span></code></pre>
-<p>The EAP estimates for PROMIS Depression will be converted to T-scores using a linear transformation.</p>
+<code class="sourceCode R"><span><span class="va">eap_promis</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getTheta.html">getTheta</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">out_link_fixedpar</span><span class="op">$</span><span class="va">ipar_linked</span>, scale <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">$</span><span class="va">theta</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">eap_promis</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##   prosettaid   theta_eap  theta_se</span></span>
+<span><span class="co">## 1     100048 -0.42410653 0.1606312</span></span>
+<span><span class="co">## 2     100049 -1.15269342 0.3229802</span></span>
+<span><span class="co">## 3     100050  0.05281656 0.1176509</span></span>
+<span><span class="co">## 4     100051 -0.04622278 0.1238298</span></span>
+<span><span class="co">## 5     100052 -1.65063866 0.5049212</span></span>
+<span><span class="co">## 6     100053 -0.55824065 0.1812502</span></span></code></pre>
+<p>The EAP estimates for PROMIS Depression will be converted to T-scores
+using a linear transformation.</p>
 <div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">t_promis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>
-  prosettaid <span class="op">=</span> <span class="va">eap_promis</span><span class="op">$</span><span class="va">prosettaid</span>,
-  t_promis <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">eap_promis</span><span class="op">$</span><span class="va">theta_eap</span> <span class="op">*</span> <span class="fl">10</span> <span class="op">+</span> <span class="fl">50</span>, <span class="fl">1</span><span class="op">)</span>
-<span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">t_promis</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##   prosettaid t_promis</span>
-<span class="co">## 1     100048     45.8</span>
-<span class="co">## 2     100049     38.5</span>
-<span class="co">## 3     100050     50.5</span>
-<span class="co">## 4     100051     49.5</span>
-<span class="co">## 5     100052     33.5</span>
-<span class="co">## 6     100053     44.4</span></code></pre>
-<p>We then merge the PROMIS Depression T-scores with the raw summed scores for CES-D calculated in the previous step.</p>
+<code class="sourceCode R"><span><span class="va">t_promis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  prosettaid <span class="op">=</span> <span class="va">eap_promis</span><span class="op">$</span><span class="va">prosettaid</span>,</span>
+<span>  t_promis <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">eap_promis</span><span class="op">$</span><span class="va">theta_eap</span> <span class="op">*</span> <span class="fl">10</span> <span class="op">+</span> <span class="fl">50</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">t_promis</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##   prosettaid t_promis</span></span>
+<span><span class="co">## 1     100048     45.8</span></span>
+<span><span class="co">## 2     100049     38.5</span></span>
+<span><span class="co">## 3     100050     50.5</span></span>
+<span><span class="co">## 4     100051     49.5</span></span>
+<span><span class="co">## 5     100052     33.5</span></span>
+<span><span class="co">## 6     100053     44.4</span></span></code></pre>
+<p>We then merge the PROMIS Depression T-scores with the raw summed
+scores for CES-D calculated in the previous step.</p>
 <div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">scores</span>, <span class="va">t_promis</span>, by <span class="op">=</span> <span class="st">"prosettaid"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">scores</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##   prosettaid raw_2 t_promis</span>
-<span class="co">## 1     100048    21     45.8</span>
-<span class="co">## 2     100049    21     38.5</span>
-<span class="co">## 3     100050    24     50.5</span>
-<span class="co">## 4     100051    26     49.5</span>
-<span class="co">## 5     100052    20     33.5</span>
-<span class="co">## 6     100053    21     44.4</span></code></pre>
-<p>Now we are going to generate T-scores linked to PROMIS Depression using only item responses on Scale 2 (CES-D). These T-scores linked to PROMIS Depression can be generated in different ways as:</p>
+<code class="sourceCode R"><span><span class="va">scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">scores</span>, <span class="va">t_promis</span>, by <span class="op">=</span> <span class="st">"prosettaid"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">scores</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##   prosettaid raw_2 t_promis</span></span>
+<span><span class="co">## 1     100048    21     45.8</span></span>
+<span><span class="co">## 2     100049    21     38.5</span></span>
+<span><span class="co">## 3     100050    24     50.5</span></span>
+<span><span class="co">## 4     100051    26     49.5</span></span>
+<span><span class="co">## 5     100052    20     33.5</span></span>
+<span><span class="co">## 6     100053    21     44.4</span></span></code></pre>
+<p>Now we are going to generate T-scores linked to PROMIS Depression
+using only item responses on Scale 2 (CES-D). These T-scores linked to
+PROMIS Depression can be generated in different ways as:</p>
 <ul>
 <li>EAP estimates based on item response patterns on Scale 2</li>
 <li>EAP estimates based on summed scores on Scale 2</li>
 <li>Equipercentile equivalents based on summed scores on Scale 2</li>
 </ul>
-<p>The first two ways are based on the CES-D item parameters linked to the PROMIS Depression metric.</p>
+<p>The first two ways are based on the CES-D item parameters linked to
+the PROMIS Depression metric.</p>
 <p><br></p>
 </div>
 <div class="section level3">
 <h3 id="eap-estimates-based-on-item-responses-patterns-on-scale-2">EAP estimates based on item responses patterns on Scale 2<a class="anchor" aria-label="anchor" href="#eap-estimates-based-on-item-responses-patterns-on-scale-2"></a>
 </h3>
-<p>First, we get EAP estimates based on item response patterns on Scale 2 using the CES-D item parameters linked to the PROMIS Depression metric (via fixed-parameter calibration). We then linearly transform the EAP estimates to T-scores and add the T-scores (<code>t_cesd_pattern</code>) to the data frame object <code>scores</code>.</p>
+<p>First, we get EAP estimates based on item response patterns on Scale
+2 using the CES-D item parameters linked to the PROMIS Depression metric
+(via fixed-parameter calibration). We then linearly transform the EAP
+estimates to T-scores and add the T-scores (<code>t_cesd_pattern</code>)
+to the data frame object <code>scores</code>.</p>
 <div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">eap_cesd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getTheta.html">getTheta</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">out_link_fixedpar</span><span class="op">$</span><span class="va">ipar_linked</span>, scale <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">$</span><span class="va">theta</span>
-<span class="va">t_cesd_pattern</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>
-  prosettaid <span class="op">=</span> <span class="va">eap_cesd</span><span class="op">$</span><span class="va">prosettaid</span>,
-  t_cesd_pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">eap_cesd</span><span class="op">$</span><span class="va">theta_eap</span> <span class="op">*</span> <span class="fl">10</span> <span class="op">+</span> <span class="fl">50</span>, <span class="fl">1</span><span class="op">)</span>
-<span class="op">)</span>
-<span class="va">scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">scores</span>, <span class="va">t_cesd_pattern</span>, by <span class="op">=</span> <span class="st">"prosettaid"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">scores</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##   prosettaid raw_2 t_promis t_cesd_pattern</span>
-<span class="co">## 1     100048    21     45.8           37.6</span>
-<span class="co">## 2     100049    21     38.5           37.6</span>
-<span class="co">## 3     100050    24     50.5           45.1</span>
-<span class="co">## 4     100051    26     49.5           48.5</span>
-<span class="co">## 5     100052    20     33.5           34.5</span>
-<span class="co">## 6     100053    21     44.4           37.6</span></code></pre>
+<code class="sourceCode R"><span><span class="va">eap_cesd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getTheta.html">getTheta</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">out_link_fixedpar</span><span class="op">$</span><span class="va">ipar_linked</span>, scale <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">$</span><span class="va">theta</span></span>
+<span><span class="va">t_cesd_pattern</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  prosettaid <span class="op">=</span> <span class="va">eap_cesd</span><span class="op">$</span><span class="va">prosettaid</span>,</span>
+<span>  t_cesd_pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">eap_cesd</span><span class="op">$</span><span class="va">theta_eap</span> <span class="op">*</span> <span class="fl">10</span> <span class="op">+</span> <span class="fl">50</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">scores</span>, <span class="va">t_cesd_pattern</span>, by <span class="op">=</span> <span class="st">"prosettaid"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">scores</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##   prosettaid raw_2 t_promis t_cesd_pattern</span></span>
+<span><span class="co">## 1     100048    21     45.8           37.6</span></span>
+<span><span class="co">## 2     100049    21     38.5           37.6</span></span>
+<span><span class="co">## 3     100050    24     50.5           45.1</span></span>
+<span><span class="co">## 4     100051    26     49.5           48.5</span></span>
+<span><span class="co">## 5     100052    20     33.5           34.5</span></span>
+<span><span class="co">## 6     100053    21     44.4           37.6</span></span></code></pre>
 <p><br></p>
 </div>
 <div class="section level3">
 <h3 id="eap-estimates-based-on-summed-scores-on-scale-2">EAP estimates based on summed scores on Scale 2<a class="anchor" aria-label="anchor" href="#eap-estimates-based-on-summed-scores-on-scale-2"></a>
 </h3>
-<p>Second, we use the raw-score-to-scale-score (RSSS) crosswalk table obtained above using summed score EAP estimation to map each raw summed score on Scale 2 onto a T-score on the PROMIS Depression metric, <code>t_cesd_rsss</code>.</p>
+<p>Second, we use the raw-score-to-scale-score (RSSS) crosswalk table
+obtained above using summed score EAP estimation to map each raw summed
+score on Scale 2 onto a T-score on the PROMIS Depression metric,
+<code>t_cesd_rsss</code>.</p>
 <div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">rsss_eap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>
-  raw_2 <span class="op">=</span> <span class="va">rsss_fixedpar</span><span class="op">$</span><span class="va">`2`</span><span class="op">$</span><span class="va">raw_2</span>,
-  t_cesd_rsss <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">rsss_fixedpar</span><span class="op">$</span><span class="va">`2`</span><span class="op">$</span><span class="va">tscore</span>, <span class="fl">1</span><span class="op">)</span>
-<span class="op">)</span>
-<span class="va">scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">scores</span>, <span class="va">rsss_eap</span>, by <span class="op">=</span> <span class="st">"raw_2"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">scores</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##   raw_2 prosettaid t_promis t_cesd_pattern t_cesd_rsss</span>
-<span class="co">## 1    20     101352     37.7           34.5        34.5</span>
-<span class="co">## 2    20     100621     54.6           34.5        34.5</span>
-<span class="co">## 3    20     104958     33.5           34.5        34.5</span>
-<span class="co">## 4    20     100059     38.9           34.5        34.5</span>
-<span class="co">## 5    20     104756     37.7           34.5        34.5</span>
-<span class="co">## 6    20     105375     37.6           34.5        34.5</span></code></pre>
+<code class="sourceCode R"><span><span class="va">rsss_eap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  raw_2 <span class="op">=</span> <span class="va">rsss_fixedpar</span><span class="op">$</span><span class="va">`2`</span><span class="op">$</span><span class="va">raw_2</span>,</span>
+<span>  t_cesd_rsss <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">rsss_fixedpar</span><span class="op">$</span><span class="va">`2`</span><span class="op">$</span><span class="va">tscore</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">scores</span>, <span class="va">rsss_eap</span>, by <span class="op">=</span> <span class="st">"raw_2"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">scores</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##   raw_2 prosettaid t_promis t_cesd_pattern t_cesd_rsss</span></span>
+<span><span class="co">## 1    20     101352     37.7           34.5        34.5</span></span>
+<span><span class="co">## 2    20     100621     54.6           34.5        34.5</span></span>
+<span><span class="co">## 3    20     104958     33.5           34.5        34.5</span></span>
+<span><span class="co">## 4    20     100059     38.9           34.5        34.5</span></span>
+<span><span class="co">## 5    20     104756     37.7           34.5        34.5</span></span>
+<span><span class="co">## 6    20     105375     37.6           34.5        34.5</span></span></code></pre>
 <p><br></p>
 </div>
 <div class="section level3">
 <h3 id="equipercentile-linking-of-summed-scores-on-scale-2">Equipercentile linking of summed scores on Scale 2<a class="anchor" aria-label="anchor" href="#equipercentile-linking-of-summed-scores-on-scale-2"></a>
 </h3>
-<p>Third, we use the concordance table from equipercentile linking to map each raw summed score on Scale 2 onto a T-score on the PROMIS Depression metric, <code>t_cesd_eqp</code>.</p>
+<p>Third, we use the concordance table from equipercentile linking to
+map each raw summed score on Scale 2 onto a T-score on the PROMIS
+Depression metric, <code>t_cesd_eqp</code>.</p>
 <div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">rsss_eqp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>
-  raw_2 <span class="op">=</span> <span class="va">out_equate_tscore</span><span class="op">$</span><span class="va">concordance</span><span class="op">$</span><span class="va">raw_2</span>,
-  t_cesd_eqp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">out_equate_tscore</span><span class="op">$</span><span class="va">concordance</span><span class="op">$</span><span class="va">tscore_1</span>, <span class="fl">1</span><span class="op">)</span>
-<span class="op">)</span>
-<span class="va">scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">scores</span>, <span class="va">rsss_eqp</span>, by <span class="op">=</span> <span class="st">"raw_2"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">scores</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##   raw_2 prosettaid t_promis t_cesd_pattern t_cesd_rsss t_cesd_eqp</span>
-<span class="co">## 1    20     101352     37.7           34.5        34.5       33.6</span>
-<span class="co">## 2    20     100621     54.6           34.5        34.5       33.6</span>
-<span class="co">## 3    20     104958     33.5           34.5        34.5       33.6</span>
-<span class="co">## 4    20     100059     38.9           34.5        34.5       33.6</span>
-<span class="co">## 5    20     104756     37.7           34.5        34.5       33.6</span>
-<span class="co">## 6    20     105375     37.6           34.5        34.5       33.6</span></code></pre>
+<code class="sourceCode R"><span><span class="va">rsss_eqp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  raw_2 <span class="op">=</span> <span class="va">out_equate_tscore</span><span class="op">$</span><span class="va">concordance</span><span class="op">$</span><span class="va">raw_2</span>,</span>
+<span>  t_cesd_eqp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">out_equate_tscore</span><span class="op">$</span><span class="va">concordance</span><span class="op">$</span><span class="va">tscore_1</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">scores</span>, <span class="va">rsss_eqp</span>, by <span class="op">=</span> <span class="st">"raw_2"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">scores</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##   raw_2 prosettaid t_promis t_cesd_pattern t_cesd_rsss t_cesd_eqp</span></span>
+<span><span class="co">## 1    20     101352     37.7           34.5        34.5       33.6</span></span>
+<span><span class="co">## 2    20     100621     54.6           34.5        34.5       33.6</span></span>
+<span><span class="co">## 3    20     104958     33.5           34.5        34.5       33.6</span></span>
+<span><span class="co">## 4    20     100059     38.9           34.5        34.5       33.6</span></span>
+<span><span class="co">## 5    20     104756     37.7           34.5        34.5       33.6</span></span>
+<span><span class="co">## 6    20     105375     37.6           34.5        34.5       33.6</span></span></code></pre>
 <p><br></p>
 </div>
 <div class="section level3">
 <h3 id="comparison-of-equated-and-observed-t-scores">Comparison of equated and observed T-scores<a class="anchor" aria-label="anchor" href="#comparison-of-equated-and-observed-t-scores"></a>
 </h3>
-<p>Finally, use <code><a href="../reference/compareScores.html">compareScores()</a></code> to compare the obtained T-scores.</p>
+<p>Finally, use <code><a href="../reference/compareScores.html">compareScores()</a></code> to compare the obtained
+T-scores.</p>
 <div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Reference score: IRT pattern scoring of Scale 1</span>
-<span class="va">c_pattern</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compareScores.html">compareScores</a></span><span class="op">(</span>
-  <span class="va">scores</span><span class="op">$</span><span class="va">t_promis</span>, <span class="va">scores</span><span class="op">$</span><span class="va">t_cesd_pattern</span><span class="op">)</span> <span class="co">## IRT response pattern EAP to T-score</span>
-<span class="va">c_rsss</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compareScores.html">compareScores</a></span><span class="op">(</span>
-  <span class="va">scores</span><span class="op">$</span><span class="va">t_promis</span>, <span class="va">scores</span><span class="op">$</span><span class="va">t_cesd_rsss</span><span class="op">)</span>    <span class="co">## IRT summed score EAP to T-score</span>
-<span class="va">c_eqp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compareScores.html">compareScores</a></span><span class="op">(</span>
-  <span class="va">scores</span><span class="op">$</span><span class="va">t_promis</span>, <span class="va">scores</span><span class="op">$</span><span class="va">t_cesd_eqp</span><span class="op">)</span>     <span class="co">## Equipercentile summed score to T-score</span>
-
-<span class="va">stats</span>           <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">c_pattern</span>, <span class="va">c_rsss</span>, <span class="va">c_eqp</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">stats</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"IRT Pattern"</span>, <span class="st">"IRT RSSS"</span>, <span class="st">"Equipercentile"</span><span class="op">)</span>
-<span class="va">stats</span></code></pre></div>
-<pre><code><span class="co">##                     corr        mean       sd     rmsd      mad</span>
-<span class="co">## IRT Pattern    0.8437275  0.31409029 5.452607 5.461646 4.237209</span>
-<span class="co">## IRT RSSS       0.8212425  0.09425445 5.772118 5.772887 4.442818</span>
-<span class="co">## Equipercentile 0.8153648 -0.01121751 5.849425 5.849436 4.450889</span></code></pre>
+<code class="sourceCode R"><span><span class="co"># Reference score: IRT pattern scoring of Scale 1</span></span>
+<span><span class="va">c_pattern</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compareScores.html">compareScores</a></span><span class="op">(</span></span>
+<span>  <span class="va">scores</span><span class="op">$</span><span class="va">t_promis</span>, <span class="va">scores</span><span class="op">$</span><span class="va">t_cesd_pattern</span><span class="op">)</span> <span class="co">## IRT response pattern EAP to T-score</span></span>
+<span><span class="va">c_rsss</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compareScores.html">compareScores</a></span><span class="op">(</span></span>
+<span>  <span class="va">scores</span><span class="op">$</span><span class="va">t_promis</span>, <span class="va">scores</span><span class="op">$</span><span class="va">t_cesd_rsss</span><span class="op">)</span>    <span class="co">## IRT summed score EAP to T-score</span></span>
+<span><span class="va">c_eqp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compareScores.html">compareScores</a></span><span class="op">(</span></span>
+<span>  <span class="va">scores</span><span class="op">$</span><span class="va">t_promis</span>, <span class="va">scores</span><span class="op">$</span><span class="va">t_cesd_eqp</span><span class="op">)</span>     <span class="co">## Equipercentile summed score to T-score</span></span>
+<span></span>
+<span><span class="va">stats</span>           <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">c_pattern</span>, <span class="va">c_rsss</span>, <span class="va">c_eqp</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">stats</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"IRT Pattern"</span>, <span class="st">"IRT RSSS"</span>, <span class="st">"Equipercentile"</span><span class="op">)</span></span>
+<span><span class="va">stats</span></span></code></pre></div>
+<pre><code><span><span class="co">##                     corr        mean       sd     rmsd      mad</span></span>
+<span><span class="co">## IRT Pattern    0.8437275  0.31409029 5.452607 5.461646 4.237209</span></span>
+<span><span class="co">## IRT RSSS       0.8212425  0.09425445 5.772118 5.772887 4.442818</span></span>
+<span><span class="co">## Equipercentile 0.8153648 -0.01121751 5.849425 5.849436 4.450889</span></span></code></pre>
 </div>
 </div>
   </div>
@@ -1045,7 +1207,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

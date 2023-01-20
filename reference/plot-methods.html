@@ -56,67 +56,95 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S4 method for PROsetta_data,ANY</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>
-  <span class="va">x</span>,
-  <span class="va">y</span>,
-  scale_id <span class="op">=</span> <span class="st">"combined"</span>,
-  filename <span class="op">=</span> <span class="cn">NULL</span>,
-  title <span class="op">=</span> <span class="cn">NULL</span>,
-  xlim <span class="op">=</span> <span class="cn">NULL</span>,
-  color <span class="op">=</span> <span class="st">"blue"</span>,
-  nbar <span class="op">=</span> <span class="fl">20</span>,
-  rug <span class="op">=</span> <span class="cn">FALSE</span>,
-  filetype <span class="op">=</span> <span class="st">"pdf"</span>,
-  savefile <span class="op">=</span> <span class="cn">FALSE</span>,
-  bg <span class="op">=</span> <span class="st">"white"</span>,
-  width <span class="op">=</span> <span class="fl">6</span>,
-  height <span class="op">=</span> <span class="fl">6</span>,
-  pointsize <span class="op">=</span> <span class="fl">12</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S4 method for PROsetta_data,ANY</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">y</span>,</span>
+<span>  scale_id <span class="op">=</span> <span class="st">"combined"</span>,</span>
+<span>  filename <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  title <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  xlim <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  color <span class="op">=</span> <span class="st">"blue"</span>,</span>
+<span>  nbar <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>  rug <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  filetype <span class="op">=</span> <span class="st">"pdf"</span>,</span>
+<span>  savefile <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  bg <span class="op">=</span> <span class="st">"white"</span>,</span>
+<span>  width <span class="op">=</span> <span class="fl">6</span>,</span>
+<span>  height <span class="op">=</span> <span class="fl">6</span>,</span>
+<span>  pointsize <span class="op">=</span> <span class="fl">12</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>a <code><a href="loadData.html">PROsetta_data</a></code> object.</p></dd>
+
+
 <dt>y</dt>
 <dd><p>unused argument, exists for compatibility with <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></code> in the base R package.</p></dd>
+
+
 <dt>scale_id</dt>
 <dd><p>scale ID to plot. <code>combined</code> (default) represents the combined scale.</p></dd>
+
+
 <dt>filename</dt>
 <dd><p>filename to write if '<code>savefile</code>' argument is <code>TRUE</code>.</p></dd>
+
+
 <dt>title</dt>
 <dd><p>the title of the figure.</p></dd>
+
+
 <dt>xlim</dt>
 <dd><p>the range of scores to plot.</p></dd>
+
+
 <dt>color</dt>
 <dd><p>the color to fill the histogram.</p></dd>
+
+
 <dt>nbar</dt>
 <dd><p>the number of histogram bars.</p></dd>
+
+
 <dt>rug</dt>
 <dd><p>if <code>TRUE</code>, display the actual distribution of scores below each bar.</p></dd>
+
+
 <dt>filetype</dt>
 <dd><p>the type of file to write if '<code>savefile</code>' argument is <code>TRUE</code>. Accepts '<code>pdf</code>', '<code>jpeg</code>', '<code>png</code>', and '<code>tiff</code>'.</p></dd>
+
+
 <dt>savefile</dt>
 <dd><p>if <code>TRUE</code>, save the figure as a file.</p></dd>
+
+
 <dt>bg</dt>
 <dd><p>the background color of the plot.</p></dd>
+
+
 <dt>width</dt>
 <dd><p>the width of the plot.</p></dd>
+
+
 <dt>height</dt>
 <dd><p>the height of the plot.</p></dd>
+
+
 <dt>pointsize</dt>
 <dd><p>point size to pass onto file writing functions.</p></dd>
+
 </dl></div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">data_asq</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">data_asq</span>, scale_id <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">data_asq</span>, scale_id <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
-
-</code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">data_asq</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">data_asq</span>, scale_id <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">data_asq</span>, scale_id <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span></span></code></pre></div>
     </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -130,7 +158,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

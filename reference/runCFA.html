@@ -56,36 +56,46 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">runCFA</span><span class="op">(</span><span class="va">data</span>, estimator <span class="op">=</span> <span class="st">"WLSMV"</span>, std.lv <span class="op">=</span> <span class="cn">TRUE</span>, scalewise <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">runCFA</span><span class="op">(</span><span class="va">data</span>, estimator <span class="op">=</span> <span class="st">"WLSMV"</span>, std.lv <span class="op">=</span> <span class="cn">TRUE</span>, scalewise <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>data</dt>
 <dd><p>a <code><a href="loadData.html">PROsetta_data</a></code> object. See <code><a href="loadData.html">loadData</a></code> for loading a dataset.</p></dd>
+
+
 <dt>estimator</dt>
 <dd><p>the estimator to be used. Passed onto <code><a href="https://rdrr.io/pkg/lavaan/man/cfa.html" class="external-link">cfa</a></code> in <a href="https://CRAN.R-project.org/package=lavaan" class="external-link">'lavaan'</a> package. (default = <code>WLSMV</code>)</p></dd>
+
+
 <dt>std.lv</dt>
 <dd><p>if <code>TRUE</code>, the metric of the latent variable is determined by fixing their (residual) variances to 1.0. If <code>FALSE</code>, the metric of each latent variable is determined by fixing the factor loading of the first indicator to 1.0. Passed onto <code><a href="https://rdrr.io/pkg/lavaan/man/cfa.html" class="external-link">cfa</a></code>. (default = <code>TRUE</code>)</p></dd>
+
+
 <dt>scalewise</dt>
 <dd><p>if <code>TRUE</code>, run analysis for each scale as well as for the combined scale. If <code>FALSE</code>, run analysis only for the combined scale. (default = <code>FALSE</code>)</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments to pass onto <code><a href="https://rdrr.io/pkg/lavaan/man/cfa.html" class="external-link">cfa</a></code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>runCFA</code> returns a list containing the CFA results.</p>
+    
+
+<p><code>runCFA</code> returns a list containing the CFA results.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># \donttest{</span>
-<span class="va">out_cfa</span> <span class="op">&lt;-</span> <span class="fu">runCFA</span><span class="op">(</span><span class="va">data_asq</span>, scalewise <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu">lavaan</span><span class="fu">::</span><span class="fu">summary</span><span class="op">(</span><span class="va">out_cfa</span><span class="op">$</span><span class="va">`1`</span>       , fit.measures <span class="op">=</span> <span class="cn">TRUE</span>, standardized <span class="op">=</span> <span class="cn">TRUE</span>, estimates <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="fu">lavaan</span><span class="fu">::</span><span class="fu">summary</span><span class="op">(</span><span class="va">out_cfa</span><span class="op">$</span><span class="va">`2`</span>       , fit.measures <span class="op">=</span> <span class="cn">TRUE</span>, standardized <span class="op">=</span> <span class="cn">TRUE</span>, estimates <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="fu">lavaan</span><span class="fu">::</span><span class="fu">summary</span><span class="op">(</span><span class="va">out_cfa</span><span class="op">$</span><span class="va">`combined`</span>, fit.measures <span class="op">=</span> <span class="cn">TRUE</span>, standardized <span class="op">=</span> <span class="cn">TRUE</span>, estimates <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="co"># }</span>
-</code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># \donttest{</span></span>
+<span><span class="va">out_cfa</span> <span class="op">&lt;-</span> <span class="fu">runCFA</span><span class="op">(</span><span class="va">data_asq</span>, scalewise <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">lavaan</span><span class="fu">::</span><span class="fu">summary</span><span class="op">(</span><span class="va">out_cfa</span><span class="op">$</span><span class="va">`1`</span>       , fit.measures <span class="op">=</span> <span class="cn">TRUE</span>, standardized <span class="op">=</span> <span class="cn">TRUE</span>, estimates <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu">lavaan</span><span class="fu">::</span><span class="fu">summary</span><span class="op">(</span><span class="va">out_cfa</span><span class="op">$</span><span class="va">`2`</span>       , fit.measures <span class="op">=</span> <span class="cn">TRUE</span>, standardized <span class="op">=</span> <span class="cn">TRUE</span>, estimates <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu">lavaan</span><span class="fu">::</span><span class="fu">summary</span><span class="op">(</span><span class="va">out_cfa</span><span class="op">$</span><span class="va">`combined`</span>, fit.measures <span class="op">=</span> <span class="cn">TRUE</span>, standardized <span class="op">=</span> <span class="cn">TRUE</span>, estimates <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co"># }</span></span></code></pre></div>
     </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -99,7 +109,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
