@@ -1,4 +1,4 @@
-#' @include configPROsetta.R
+#' @include loading_functions.R
 NULL
 
 #' Get complete data
