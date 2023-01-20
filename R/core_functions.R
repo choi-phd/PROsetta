@@ -567,7 +567,7 @@ getProb <- function(ipar, model, theta_grid) {
 }
 
 #' @noRd
-getEscoreTheta = function(ipar, model, theta, is_minscore_0) {
+getEscoreTheta <- function(ipar, model, theta, is_minscore_0) {
 
   pp <- getProb(ipar, "grm", theta)
 
@@ -588,7 +588,7 @@ getEscoreTheta = function(ipar, model, theta, is_minscore_0) {
 }
 
 #' @noRd
-getEAP = function(theta_grid, prior, pp, resp_data) {
+getEAP <- function(theta_grid, prior, pp, resp_data) {
 
   n  <- dim(resp_data)[1]
   ni <- dim(resp_data)[2]
@@ -639,7 +639,8 @@ getMuSigma <- function(calib) {
     mu    = mu,
     sigma = sigma,
     sd    = sd_sigma,
-    corr  = corr)
+    corr  = corr
+  )
 
   return(o)
 

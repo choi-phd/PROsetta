@@ -76,8 +76,11 @@ setClass("PROsetta_data",
 
 #' @rdname loadData
 #' @export
-loadData <- function(response, itemmap, anchor,
-  item_id = NULL, person_id = NULL, scale_id = NULL, input_dir = getwd()) {
+loadData <- function(
+  response, itemmap, anchor,
+  item_id = NULL, person_id = NULL, scale_id = NULL,
+  input_dir = getwd()
+) {
 
   if (inherits(response, "character")) {
     p <- checkFilePath(input_dir, response)
@@ -318,8 +321,8 @@ runClassical <- function(data, omega = FALSE, scalewise = TRUE, ...) {
 
   validateData(data)
 
-  out_alpha = list()
-  out_omega = list()
+  out_alpha <- list()
+  out_omega <- list()
 
   if (scalewise) {
     for (scale_id in unique(data@itemmap[[data@scale_id]])) {

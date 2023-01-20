@@ -97,7 +97,6 @@ getTheta <- function(
   eap   <- getEAP(theta_grid, prior, pp, resp_data)
   eap   <- cbind(person_id, eap)
 
-
 	out <- list()
 	out$theta    <- eap
 	out$item_idx <- item_idx

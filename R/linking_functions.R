@@ -42,7 +42,7 @@ runCalibration <- function(
   verbose = FALSE,
   ...) {
 
-  if (!missing("fixedpar")){
+  if (!missing("fixedpar")) {
     if (fixedpar == TRUE) {
       fix_method <- "item"
     }
@@ -391,7 +391,6 @@ runEquateObserved <- function(
   scores_to      <- rowSums(data@response[itemnames_to])
   freq_from      <- equate::freqtab(scores_from)
   freq_to        <- equate::freqtab(scores_to)
-
 
   # scale_from
 
