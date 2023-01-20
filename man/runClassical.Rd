@@ -19,7 +19,7 @@ runClassical(data, omega = FALSE, scalewise = TRUE, ...)
 \code{\link{runClassical}} returns a \code{\link{list}} containing reliability analysis results.
 }
 \description{
-\code{\link{runClassical}} is a function to perform Classial Test Theory (CTT) based reliability analysis.
+\code{\link{runClassical}} is a function to perform Classical Test Theory (CTT) based reliability analysis.
 }
 \examples{
 out_alpha <- runClassical(data_asq)
