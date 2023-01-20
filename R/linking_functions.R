@@ -3,17 +3,19 @@ NULL
 
 #' Run Calibration
 #'
-#' \code{\link{runCalibration}} is a function to perform item calibration on the response data.
+#' \code{\link{runCalibration}} is a function for performing item parameter calibration on the response data.
 #'
 #' @param data a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
-#' @param dimensions number of dimensions to use. Must be 1 or 2. If 1, use one underlying dimension for all instruments combined. If 2, use each dimension separately for the anchor instrument and the developing instrument. Covariance between dimensions is freely estimated. (default = \code{1})
+#' @param dimensions the number of dimensions to use. Must be 1 or 2.
+#' If 1, use one underlying dimension for all instruments combined.
+#' If 2, use each dimension separately for the anchor instrument and the developing instrument. Covariance between dimensions is freely estimated. (default = \code{1})
 #' @param fix_method the type of constraints to impose. (default = \code{free})
 #' \itemize{
 #'   \item{\code{item} for fixed parameter calibration using anchor item parameters}
 #'   \item{\code{theta} for using the mean and the variance obtained from a unidimensional calibration of anchor items}
 #'   \item{\code{free} for free calibration}
 #' }
-#' @param fixedpar this argument exists for reproducibility. \code{TRUE} is equivalent to \code{fix_method = "item"}, and \code{FALSE} is equivalent to \code{fix_method = "free"}.
+#' @param fixedpar this argument exists for backwards compatibility. \code{TRUE} is equivalent to \code{fix_method = "item"}, and \code{FALSE} is equivalent to \code{fix_method = "free"}.
 #' @param ignore_nonconv if \code{TRUE}, return results even when calibration does not converge. If \code{FALSE}, raise an error when calibration does not converge. (default = \code{FALSE})
 #' @param verbose if \code{TRUE}, print status messages. (default = \code{FALSE})
 #' @param ... additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{'mirt'} package.
@@ -180,29 +182,29 @@ runCalibration <- function(
 
 #' Run Scale Linking
 #'
-#' \code{\link{runLinking}} is a function to obtain item parameters from the response data, and perform scale linking onto the metric of supplied anchor item parameters.
+#' \code{\link{runLinking}} is a function for obtaining item parameters from the response data in the metric of supplied anchor item parameters.
 #'
 #' @param data a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
-#' @param method the type of linking to perform. Accepts:
+#' @param method the linking method to use. Accepts:
 #' \itemize{
-#'   \item{\code{MM} for mean-mean}
-#'   \item{\code{MS} for mean-sigma}
+#'   \item{\code{MM} for mean-mean method}
+#'   \item{\code{MS} for mean-sigma method}
 #'   \item{\code{HB} for Haebara method}
 #'   \item{\code{SL} for Stocking-Lord method}
 #'   \item{\code{FIXEDPAR} for fixed parameter calibration}
 #'   \item{\code{CP} for calibrated projection using fixed parameter calibration on the anchor dimension}
-#'   \item{\code{CPLA} for linear approximation of calibrated projection. This is identical to 'CP' in \code{\link{runLinking}} but uses approximation in \code{\link{runRSSS}}}
+#'   \item{\code{CPLA} for linear approximation of calibrated projection. This is identical to 'CP' but uses approximation in \code{\link{runRSSS}}}
 #'   \item{\code{CPFIXEDDIM} for calibrated projection using mean and variance constraints on the anchor dimension}
 #' }
-#' Linear transformation methods are performed with \code{\link[plink:plink-methods]{plink}} in \href{https://CRAN.R-project.org/package=plink}{'plink'} package.
+#' Linear transformation methods (i.e., MM, MS, HB, SL) are performed with \code{\link[plink:plink-methods]{plink}} in \href{https://CRAN.R-project.org/package=plink}{'plink'} package.
 #'
 #' @param verbose if \code{TRUE}, print status messages. (default = \code{FALSE})
 #' @param ... additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{'mirt'} package.
 #'
 #' @return \code{\link{runLinking}} returns a \code{\link{list}} containing the scale linking results.
 #' \itemize{
-#'   \item{\code{constants}} linear transformation constants. \code{NA} if \code{method} argument was \code{FIXEDPAR}.
-#'   \item{\code{ipar_linked}} item parameters calibrated to the response data, and linked to the anchor item parameters.
+#'   \item{\code{constants}} linear transformation constants. Only available when linear transformation methods were used (i.e., MM, MS, HB, SL).
+#'   \item{\code{ipar_linked}} item parameters calibrated to the response data, and linked to the metric of anchor item parameters.
 #'   \item{\code{ipar_anchor}} anchor item parameters used in linking.
 #' }
 #' @examples
@@ -318,7 +320,8 @@ runLinking <- function(data, method, verbose = FALSE, ...) {
 
 #' Run Test Equating
 #'
-#' \code{\link{runEquateObserved}} is a function to perform equipercentile test equating between two scales. A concordance table is produced, mapping the observed raw scores from one scale to the scores from another scale.
+#' \code{\link{runEquateObserved}} is a function for performing equipercentile equating between two scales.
+#' \code{\link{runEquateObserved}} also produces a concordance table, mapping the observed raw scores from one scale to the scores from another scale.
 #'
 #' @param data a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
 #' @param scale_from the scale ID of the input scale. References to \code{itemmap} in \code{data} argument. (default = \code{2})
@@ -464,7 +467,7 @@ runEquateObserved <- function(
 
 #' Compute Crosswalk Tables
 #'
-#' \code{\link{runRSSS}} is a function to generate raw-score to standard-score crosswalk tables from supplied calibrated item parameters.
+#' \code{\link{runRSSS}} is a function for generating raw-score to standard-score crosswalk tables from supplied calibrated item parameters.
 #'
 #' @param data a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
 #' @param ipar_linked an object returned from \code{\link{runLinking}} or \code{\link{runCalibration}}.

@@ -15,7 +15,7 @@ runFrequency(data, check_frequency = TRUE)
 \code{\link{runFrequency}} returns a \code{\link{data.frame}} containing the frequency table.
 }
 \description{
-\code{\link{runFrequency}} is a descriptive function to obtain a frequency table from the dataset.
+\code{\link{runFrequency}} is a descriptive function for obtaining a frequency table from the dataset.
 }
 \examples{
 freq_asq <- runFrequency(data_asq)

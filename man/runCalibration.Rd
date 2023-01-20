@@ -17,7 +17,9 @@ runCalibration(
 \arguments{
 \item{data}{a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.}
 
-\item{dimensions}{number of dimensions to use. Must be 1 or 2. If 1, use one underlying dimension for all instruments combined. If 2, use each dimension separately for the anchor instrument and the developing instrument. Covariance between dimensions is freely estimated. (default = \code{1})}
+\item{dimensions}{the number of dimensions to use. Must be 1 or 2.
+If 1, use one underlying dimension for all instruments combined.
+If 2, use each dimension separately for the anchor instrument and the developing instrument. Covariance between dimensions is freely estimated. (default = \code{1})}
 
 \item{fix_method}{the type of constraints to impose. (default = \code{free})
 \itemize{
@@ -26,7 +28,7 @@ runCalibration(
   \item{\code{free} for free calibration}
 }}
 
-\item{fixedpar}{this argument exists for reproducibility. \code{TRUE} is equivalent to \code{fix_method = "item"}, and \code{FALSE} is equivalent to \code{fix_method = "free"}.}
+\item{fixedpar}{this argument exists for backwards compatibility. \code{TRUE} is equivalent to \code{fix_method = "item"}, and \code{FALSE} is equivalent to \code{fix_method = "free"}.}
 
 \item{ignore_nonconv}{if \code{TRUE}, return results even when calibration does not converge. If \code{FALSE}, raise an error when calibration does not converge. (default = \code{FALSE})}
 
@@ -40,7 +42,7 @@ runCalibration(
 This object can be used in \code{\link[mirt:coef-method]{coef}}, \code{\link[mirt]{itemfit}}, \code{\link[mirt]{itemplot}} in \href{https://CRAN.R-project.org/package=mirt}{'mirt'} package to extract wanted information.
 }
 \description{
-\code{\link{runCalibration}} is a function to perform item calibration on the response data.
+\code{\link{runCalibration}} is a function for performing item parameter calibration on the response data.
 }
 \examples{
 \dontrun{

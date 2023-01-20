@@ -11,7 +11,7 @@ runClassical(data, omega = FALSE, scalewise = TRUE, ...)
 
 \item{omega}{if \code{TRUE}, also obtain McDonald's omega using \code{\link[psych]{omega}} in \href{https://CRAN.R-project.org/package=psych}{\code{psych}} package. (default = \code{FALSE})}
 
-\item{scalewise}{if \code{TRUE}, run analysis for each scale as well as for the combined scale. If \code{FALSE}, run analysis only for the combined scale. (default = \code{TRUE})}
+\item{scalewise}{if \code{TRUE}, run analysis for each instrument as well as for the combined instrument. If \code{FALSE}, run analysis only for the combined instrument. (default = \code{TRUE})}
 
 \item{...}{additional arguments to pass onto \code{\link[psych]{omega}}.}
 }
@@ -19,7 +19,7 @@ runClassical(data, omega = FALSE, scalewise = TRUE, ...)
 \code{\link{runClassical}} returns a \code{\link{list}} containing reliability analysis results.
 }
 \description{
-\code{\link{runClassical}} is a function to perform Classical Test Theory (CTT) based reliability analysis.
+\code{\link{runClassical}} is a function for performing a Classical Test Theory (CTT) based reliability analysis.
 }
 \examples{
 out_alpha <- runClassical(data_asq)

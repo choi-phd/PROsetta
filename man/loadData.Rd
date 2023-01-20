@@ -35,5 +35,6 @@ loadData(
 \code{\link{loadData}} returns a \code{\linkS4class{PROsetta_data}} object containing the loaded data.
 }
 \description{
-\code{\link{loadData}} is a data loading function to create a \code{\linkS4class{PROsetta_data}} object, for scale linking/equating with 'PROsetta' package. Response data is assumed to be reverse-coded for applicable items.
+\code{\link{loadData}} is a data loading function for creating a \code{\linkS4class{PROsetta_data}} object, for performing scale linking/equating in the 'PROsetta' package.
+\code{\link{loadData}} assumes the response data has been reverse-coded for applicable items.
 }

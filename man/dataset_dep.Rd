@@ -15,8 +15,8 @@ This dataset is associated with the following objects:
 \itemize{
   \item \code{\link{response_dep}} a \code{\link{data.frame}} containing raw response data of 747 participants and 49 variables.
   \itemize{
-    \item \code{prosettaid}. participant IDs.
-    \item \code{EDDEP04 -- CESD20}. response to items.
+    \item \code{prosettaid} participant IDs.
+    \item \code{EDDEP04 -- CESD20} response to items.
   }
   \item \code{\link{itemmap_dep}} a \code{\link{data.frame}} containing the item map, describing the items in each instrument.
   \itemize{
