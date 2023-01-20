@@ -231,7 +231,7 @@ checkFrequency <- function(data) {
   }
   if (length(msg) > 0) {
     msg <- c("The following items have one or more unobserved response categories:", msg)
-    msg <- c(msg, "Proceeding to runCFA or runCalibration may cause problems.")
+    msg <- c(msg, "Proceeding to runCFA() or runCalibration() may cause problems.")
     msg <- paste0(msg, collapse = "\n")
     warning(msg)
     return(FALSE)
