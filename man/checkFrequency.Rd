@@ -10,10 +10,17 @@ checkFrequency(data)
 \item{data}{a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.}
 }
 \value{
-If all response categories have a frequency of at least 1, the value is \code{TRUE}.
-
-Otherwise, the value is \code{FALSE}.
+\code{\link{checkFrequency}} returns \code{TRUE} if all response categories have a frequency of at least 1, and \code{FALSE} if not.
 }
 \description{
-\code{\link{checkFrequency}} is a descriptive function to check whether all response categories in a frequency table have a frequency of at least 1.
+\code{\link{checkFrequency}} is a descriptive function for checking whether all response categories in a frequency table have a frequency of at least 1.
+}
+\examples{
+checkFrequency(data_asq) # TRUE
+
+\dontrun{
+data_asq@response$EDANX01[data_asq@response$EDANX01 == 4] <- 3
+checkFrequency(data_asq) # FALSE
+}
+
 }

@@ -15,10 +15,12 @@ getItemNames(d, scale_id)
 \code{\link{getItemNames}} returns a vector containing item names.
 }
 \description{
-\code{\link{getItemNames}} is a helper function to extract item names for a specified scale from a \code{\linkS4class{PROsetta_data}} object.
+\code{\link{getItemNames}} is a helper function for extracting item names for a specified scale from a \code{\linkS4class{PROsetta_data}} object.
 }
 \examples{
-idx <- getItemNames(data_asq, 1)
-data_asq@response[, idx]
+getItemNames(data_asq, 1)
+getItemNames(data_asq, 2)
+getItemNames(data_asq, c(1, 2))
+getItemNames(data_asq, c(2, 1))
 
 }

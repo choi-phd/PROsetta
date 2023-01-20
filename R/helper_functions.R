@@ -3,7 +3,7 @@ NULL
 
 #' Extract scale-wise response
 #'
-#' \code{\link{getResponse}} is a helper function to extract scale-wise response from a \code{\linkS4class{PROsetta_data}} object.
+#' \code{\link{getResponse}} is a helper function for extracting scale-wise response from a \code{\linkS4class{PROsetta_data}} object.
 #'
 #' @param d a \code{\linkS4class{PROsetta_data}} object.
 #' @param scale_id scale IDs to extract response. If \code{all}, use all scale IDs. (default = \code{all})
@@ -52,7 +52,7 @@ getResponse <- function(d, scale_id = "all", person_id = FALSE) {
 
 #' Get item names
 #'
-#' \code{\link{getItemNames}} is a helper function to extract item names for a specified scale from a \code{\linkS4class{PROsetta_data}} object.
+#' \code{\link{getItemNames}} is a helper function for extracting item names for a specified scale from a \code{\linkS4class{PROsetta_data}} object.
 #'
 #' @param d a \code{\linkS4class{PROsetta_data}} object.
 #' @param scale_id scale IDs to extract item names.
@@ -60,8 +60,10 @@ getResponse <- function(d, scale_id = "all", person_id = FALSE) {
 #' @return \code{\link{getItemNames}} returns a vector containing item names.
 #'
 #' @examples
-#' idx <- getItemNames(data_asq, 1)
-#' data_asq@response[, idx]
+#' getItemNames(data_asq, 1)
+#' getItemNames(data_asq, 2)
+#' getItemNames(data_asq, c(1, 2))
+#' getItemNames(data_asq, c(2, 1))
 #'
 #' @export
 getItemNames <- function(d, scale_id) {

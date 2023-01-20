@@ -3,7 +3,8 @@ NULL
 
 #' Load data from supplied config
 #'
-#' \code{\link{loadData}} is a data loading function to create a \code{\linkS4class{PROsetta_data}} object, for scale linking/equating with 'PROsetta' package. Response data is assumed to be reverse-coded for applicable items.
+#' \code{\link{loadData}} is a data loading function for creating a \code{\linkS4class{PROsetta_data}} object, for performing scale linking/equating in the 'PROsetta' package.
+#' \code{\link{loadData}} assumes the response data has been reverse-coded for applicable items.
 #'
 #' @param response response data containing case IDs and item responses. This can be a \code{.csv} filename or a \code{\link{data.frame}} object.
 #' @param itemmap an item map containing item IDs and scale IDs. This can be a \code{.csv} filename or a \code{\link{data.frame}} object.
@@ -184,13 +185,19 @@ loadData <- function(
 
 #' Check frequency table for unobserved response categories
 #'
-#' \code{\link{checkFrequency}} is a descriptive function to check whether all response categories in a frequency table have a frequency of at least 1.
+#' \code{\link{checkFrequency}} is a descriptive function for checking whether all response categories in a frequency table have a frequency of at least 1.
 #'
 #' @param data a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
 #'
-#' @return If all response categories have a frequency of at least 1, the value is \code{TRUE}.
+#' @return \code{\link{checkFrequency}} returns \code{TRUE} if all response categories have a frequency of at least 1, and \code{FALSE} if not.
 #'
-#' Otherwise, the value is \code{FALSE}.
+#' @examples
+#' checkFrequency(data_asq) # TRUE
+#'
+#' \dontrun{
+#' data_asq@response$EDANX01[data_asq@response$EDANX01 == 4] <- 3
+#' checkFrequency(data_asq) # FALSE
+#' }
 #'
 #' @export
 checkFrequency <- function(data) {
@@ -235,7 +242,7 @@ checkFrequency <- function(data) {
 
 #' Obtain a frequency table
 #'
-#' \code{\link{runFrequency}} is a descriptive function to obtain a frequency table from the dataset.
+#' \code{\link{runFrequency}} is a descriptive function for obtaining a frequency table from the dataset.
 #'
 #' @param data a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
 #' @param check_frequency if \code{TRUE}, check the frequency table for missing response categories, and display warning message if any is missing. (default = \code{TRUE})
@@ -279,7 +286,7 @@ runFrequency <- function(data, check_frequency = TRUE) {
 
 #' Obtain a descriptive statistics table
 #'
-#' \code{\link{runDescriptive}} is a descriptive function to obtain descriptive statistics for each item in the dataset.
+#' \code{\link{runDescriptive}} is a descriptive function for obtaining descriptive statistics for each item in the dataset.
 #'
 #' @param data a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
 #'
@@ -303,11 +310,11 @@ runDescriptive <- function(data = NULL) {
 
 #' Run CTT-based reliability analysis
 #'
-#' \code{\link{runClassical}} is a function to perform Classical Test Theory (CTT) based reliability analysis.
+#' \code{\link{runClassical}} is a function for performing a Classical Test Theory (CTT) based reliability analysis.
 #'
 #' @param data a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
 #' @param omega if \code{TRUE}, also obtain McDonald's omega using \code{\link[psych]{omega}} in \href{https://CRAN.R-project.org/package=psych}{\code{psych}} package. (default = \code{FALSE})
-#' @param scalewise if \code{TRUE}, run analysis for each scale as well as for the combined scale. If \code{FALSE}, run analysis only for the combined scale. (default = \code{TRUE})
+#' @param scalewise if \code{TRUE}, run analysis for each instrument as well as for the combined instrument. If \code{FALSE}, run analysis only for the combined instrument. (default = \code{TRUE})
 #' @param ... additional arguments to pass onto \code{\link[psych]{omega}}.
 #'
 #' @return \code{\link{runClassical}} returns a \code{\link{list}} containing reliability analysis results.
@@ -350,12 +357,15 @@ runClassical <- function(data, omega = FALSE, scalewise = TRUE, ...) {
 
 #' Run a confirmatory factor analysis
 #'
-#' \code{\link{runCFA}} is a function to perform a one-factor confirmatory factor analysis (CFA) to test unidimensionality.
+#' \code{\link{runCFA}} is a function for performing a one-factor confirmatory factor analysis (CFA) to test unidimensionality.
 #'
 #' @param data a \code{\linkS4class{PROsetta_data}} object. See \code{\link{loadData}} for loading a dataset.
 #' @param estimator the estimator to be used. Passed onto \code{\link[lavaan]{cfa}} in \href{https://CRAN.R-project.org/package=lavaan}{'lavaan'} package. (default = \code{WLSMV})
-#' @param std.lv if \code{TRUE}, the metric of the latent variable is determined by fixing their (residual) variances to 1.0. If \code{FALSE}, the metric of each latent variable is determined by fixing the factor loading of the first indicator to 1.0. Passed onto \code{\link[lavaan]{cfa}}. (default = \code{TRUE})
-#' @param scalewise if \code{TRUE}, run analysis for each scale as well as for the combined scale. If \code{FALSE}, run analysis only for the combined scale. (default = \code{FALSE})
+#' @param std.lv if \code{TRUE}, the metric of the latent variable is determined by fixing their (residual) variances to 1.0.
+#' If \code{FALSE}, the metric of each latent variable is determined by fixing the factor loading of the first indicator to 1.0.
+#' Passed onto \code{\link[lavaan]{cfa}}. (default = \code{TRUE})
+#' @param scalewise if \code{TRUE}, run analysis for each instrument as well as for the combined instrument.
+#' If \code{FALSE}, run analysis only for the combined instrument. (default = \code{FALSE})
 #' @param ... additional arguments to pass onto \code{\link[lavaan]{cfa}}.
 #'
 #' @return \code{\link{runCFA}} returns a list containing the CFA results.

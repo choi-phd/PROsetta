@@ -17,7 +17,7 @@ getResponse(d, scale_id = "all", person_id = FALSE)
 \code{\link{getResponse}} returns a \code{\link{data.frame}} containing scale-wise response.
 }
 \description{
-\code{\link{getResponse}} is a helper function to extract scale-wise response from a \code{\linkS4class{PROsetta_data}} object.
+\code{\link{getResponse}} is a helper function for extracting scale-wise response from a \code{\linkS4class{PROsetta_data}} object.
 }
 \examples{
 getResponse(data_asq)

@@ -58,7 +58,8 @@ See \code{\link[equate]{equate}} for details.
 The concordance table is stored in \code{concordance} slot.
 }
 \description{
-\code{\link{runEquateObserved}} is a function to perform equipercentile test equating between two scales. A concordance table is produced, mapping the observed raw scores from one scale to the scores from another scale.
+\code{\link{runEquateObserved}} is a function for performing equipercentile equating between two scales.
+\code{\link{runEquateObserved}} also produces a concordance table, mapping the observed raw scores from one scale to the scores from another scale.
 }
 \examples{
 out_eq_raw <- runEquateObserved(data_asq,

@@ -13,7 +13,7 @@ runDescriptive(data = NULL)
 \code{\link{runDescriptive}} returns a \code{\link{data.frame}} containing descriptive statistics (mean, standard deviation, median, ...) of the items in the dataset. These are calculated with \code{\link[psych]{describe}} in '\href{https://CRAN.R-project.org/package=psych}{psych}' package.
 }
 \description{
-\code{\link{runDescriptive}} is a descriptive function to obtain descriptive statistics for each item in the dataset.
+\code{\link{runDescriptive}} is a descriptive function for obtaining descriptive statistics for each item in the dataset.
 }
 \examples{
 out_desc <- runDescriptive(data_asq)

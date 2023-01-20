@@ -36,7 +36,7 @@ runRSSS(
 \code{\link{runRSSS}} returns a \code{\link{list}} containing crosswalk tables.
 }
 \description{
-\code{\link{runRSSS}} is a function to generate raw-score to standard-score crosswalk tables from supplied calibrated item parameters.
+\code{\link{runRSSS}} is a function for generating raw-score to standard-score crosswalk tables from supplied calibrated item parameters.
 }
 \examples{
 \donttest{
