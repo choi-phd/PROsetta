@@ -6,6 +6,7 @@ library(DT, quietly = TRUE, warn.conflicts = FALSE)
 library(PROsetta)
 
 css_y <- "overflow-y:scroll; max-height: 65vh"
+pre_icon    <- list(yes = icon("brush"), no = icon("brush"))
 solver_icon <- list(yes = icon("drafting-compass"), no = icon("drafting-compass"))
 
 ui <- fluidPage(
@@ -54,10 +55,18 @@ ui <- fluidPage(
         label = "Options"
       ),
 
-      checkboxGroupButtons(choices = c("Run descriptive")      , inputId = "rundescriptive", status = "primary", justified = TRUE, checkIcon = solver_icon),
-      checkboxGroupButtons(choices = c("Run calibration")      , inputId = "runcalibration", status = "primary", justified = TRUE, checkIcon = solver_icon),
-      checkboxGroupButtons(choices = c("Run parameter linking"), inputId = "runlinking",     status = "primary", justified = TRUE, checkIcon = solver_icon),
-      checkboxGroupButtons(choices = c("Run score equating")   , inputId = "runequating",    status = "primary", justified = TRUE, checkIcon = solver_icon),
+      checkboxGroupButtons(
+        choices = c("Pre-analysis: descriptive"), inputId = "rundescriptive",
+        status = "primary", justified = TRUE, checkIcon = pre_icon),
+      checkboxGroupButtons(
+        choices = c("Pre-analysis: calibration (for item fit)"), inputId = "runcalibration",
+        status = "primary", justified = TRUE, checkIcon = pre_icon),
+      checkboxGroupButtons(
+        choices = c("Run parameter linking"), inputId = "runlinking",
+        status = "warning", justified = TRUE, checkIcon = solver_icon),
+      checkboxGroupButtons(
+        choices = c("Run score equating")   , inputId = "runequating",
+        status = "warning", justified = TRUE, checkIcon = solver_icon),
 
       h3(""),
 
@@ -95,25 +104,23 @@ ui <- fluidPage(
       verbatimTextOutput("textoutput", placeholder = TRUE),
       hr(),
       tabsetPanel(id = "tabs",
-        tabPanel("Response data",          value = 11, DTOutput("response_data"),                style = css_y),
-        tabPanel("Item map data",          value = 12, DTOutput("itemmap_data"),                 style = css_y),
-        tabPanel("Anchor data",            value = 13, DTOutput("anchor_data"),                  style = css_y),
-        tabPanel("Frequency table",        value = 21, DTOutput("freqtable"),                    style = css_y),
-        tabPanel("Descriptives",           value = 22, DTOutput("desctable"),                    style = css_y),
-        tabPanel("Classical",              value = 23, verbatimTextOutput("classical"),          style = css_y),
-        tabPanel("Classical (omega)",      value = 24, verbatimTextOutput("classical2"),         style = css_y),
-        tabPanel("Calibration result",     value = 31, DTOutput("calib_params"),                 style = css_y),
-        tabPanel("Item fit plot",          value = 32, plotOutput("plot_itemfit", width = "100%", height = "65vh"),  style = css_y),
-        tabPanel("Item info",              value = 33, plotOutput("plot_iteminfo", width = "100%", height = "65vh"), style = css_y),
-        tabPanel("Item fit table",         value = 34, DTOutput("table_itemfit"),                style = css_y),
-        tabPanel("Crosswalk table (from calibration)", value = 35,
-                 DTOutput("crosswalk_calibration"), style = css_y),
-        tabPanel("Linking constants",      value = 41, verbatimTextOutput("linking_constants"),  style = css_y),
-        tabPanel("Linked parameters", value = 42, DTOutput("table_linked_params"),     style = css_y),
-        tabPanel("Crosswalk table (from linking)", value = 43,
-                 DTOutput("crosswalk_linking"), style = css_y),
-        tabPanel("Equating",               value = 51, verbatimTextOutput("equating_constants"), style = css_y),
-        tabPanel("Concordance table",      value = 52, DTOutput("table_concordance"),            style = css_y)
+        tabPanel("Response data"                     , value = 11, DTOutput("response_data")                                   , style = css_y),
+        tabPanel("Item map data"                     , value = 12, DTOutput("itemmap_data")                                    , style = css_y),
+        tabPanel("Anchor data"                       , value = 13, DTOutput("anchor_data")                                     , style = css_y),
+        tabPanel("Frequency table"                   , value = 21, DTOutput("freqtable")                                       , style = css_y),
+        tabPanel("Descriptives"                      , value = 22, DTOutput("desctable")                                       , style = css_y),
+        tabPanel("Classical"                         , value = 23, verbatimTextOutput("classical")                             , style = css_y),
+        tabPanel("Classical (omega)"                 , value = 24, verbatimTextOutput("classical2")                            , style = css_y),
+        tabPanel("Calibration result (not linked)"   , value = 31, DTOutput("calib_params")                                    , style = css_y),
+        tabPanel("Item fit plot"                     , value = 32, plotOutput("plot_itemfit", width = "100%", height = "65vh") , style = css_y),
+        tabPanel("Item info"                         , value = 33, plotOutput("plot_iteminfo", width = "100%", height = "65vh"), style = css_y),
+        tabPanel("Item fit table"                    , value = 34, DTOutput("table_itemfit")                                   , style = css_y),
+        tabPanel("Crosswalk table (from calibration)", value = 35, DTOutput("crosswalk_calibration")                           , style = css_y),
+        tabPanel("Linking constants"                 , value = 41, verbatimTextOutput("linking_constants")                     , style = css_y),
+        tabPanel("Linked parameters"                 , value = 42, DTOutput("table_linked_params")                             , style = css_y),
+        tabPanel("Crosswalk table (from linking)"    , value = 43, DTOutput("crosswalk_linking")                               , style = css_y),
+        tabPanel("Equating"                          , value = 51, verbatimTextOutput("equating_constants")                    , style = css_y),
+        tabPanel("Concordance table"                 , value = 52, DTOutput("table_concordance")                               , style = css_y)
       ),
 
       width = 9
