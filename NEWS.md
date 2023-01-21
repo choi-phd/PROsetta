@@ -1,6 +1,8 @@
 # PROsetta 0.3.5.9000
 
 * Deprecated `guiPROsetta()` is removed. Use `PROsetta()` for this.
+* Updated documentation.
+* Made minor updates to the Shiny app in `PROsetta()`.
 
 # PROsetta 0.3.5
 
