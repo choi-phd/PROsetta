@@ -1,52 +1,6 @@
 #' @include loading_functions.R
 NULL
 
-#' Get complete data
-#'
-#' \code{\link{getCompleteData}} is a helper function to perform casewise deletion of missing values.
-#'
-#' @param data a \code{\linkS4class{PROsetta_data}} object.
-#' @param scale the index of the scale to perform casewise deletion. Leave empty or set to "combined" to perform on all scales.
-#' @param verbose if \code{TRUE}, print status messages. (default = \code{FALSE})
-#'
-#' @export
-getCompleteData <- function(data, scale = NULL, verbose = FALSE) {
-
-  validateData(data)
-
-  if (is.null(scale)) {
-    scale <- "combined"
-  }
-
-  if (scale == "combined") {
-    items <- data@itemmap[[data@item_id]]
-    scale_text <- sprintf("all scales")
-  } else {
-    idx   <- data@itemmap[[data@scale_id]] == scale
-    items <- data@itemmap[[data@item_id]][idx]
-    scale_text <- sprintf("Scale %s", scale)
-  }
-
-  resp_with_missing_values <- apply(is.na(data@response[, items]), 1, any)
-  n_resp <- sum(resp_with_missing_values)
-
-  if (any(resp_with_missing_values)) {
-    data@response <- data@response[!resp_with_missing_values, ]
-    printLog(
-      "sanitize",
-      sprintf("getCompleteData() removed %s cases with missing responses in %s", n_resp, scale_text),
-      verbose
-    )
-  } else {
-    printLog(
-      "sanitize",
-      sprintf("getCompleteData() did not remove any cases because all %i responses are complete in %s", dim(data@response)[1], scale_text),
-      verbose
-    )
-  }
-  return(data)
-}
-
 #' Obtain EAP estimates
 #'
 #' \code{\link{getTheta}} is a helper function to calculate EAP estimates.
