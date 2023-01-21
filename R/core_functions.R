@@ -438,7 +438,17 @@ genPrior <- function(theta_grid, dist_type, prior_mu_sigma) {
   return(prior)
 }
 
-#' @noRd
+#' (internal) detect parameterization type
+#'
+#' \code{\link{detectParameterization}} is an internal function for detecting the type of parameterization used in a set of item parameters.
+#'
+#' @param ipar a \code{\link{data.frame}} containing item parameters.
+#'
+#' @return \code{\link{detectParameterization}} returns \code{ab} or \code{ad}.
+#'
+#' @examples
+#' PROsetta:::detectParameterization(data_asq@anchor) # ab
+#'
 detectParameterization <- function(ipar) {
   if ("b1" %in% colnames(ipar)) {
     return("ab")
