@@ -31,23 +31,23 @@ plotInfo(
 
 \item{data}{a \code{\linkS4class{PROsetta_data}} object.}
 
-\item{theta}{theta values to plot on the x-axis.}
+\item{theta}{(optional) theta values to plot on the x-axis. (default = \code{seq(-4, 4, .1)})}
 
-\item{t_score}{set to \code{TRUE} to convert thetas into T-scores.}
+\item{t_score}{(optional) set to \code{TRUE} to plot T-scores on the x-axis instead of thetas. (default = \code{FALSE})}
 
-\item{scale_label}{names of each scale.}
+\item{scale_label}{(optional) names of each scale. This must have three values. (default = \code{c(1, 2, "Combined")})}
 
-\item{color}{line colors to plot.}
+\item{color}{(optional) line colors to plot. This must have three values. (default = \code{c("red", "blue", "black")})}
 
-\item{lty}{line types to plot.}
+\item{lty}{(optional) line types to plot. This must have three values. (default = \code{c(3, 2, 1)})}
 }
 \description{
 \code{\link{plotInfo}} is a plotting function to visualize scale-level information.
 }
 \examples{
 \donttest{
-out_calib = runCalibration(data_asq, technical = list(NCYCLES = 1000))
-plotInfo(out_calib, data_asq)
+o <- runCalibration(data_asq, technical = list(NCYCLES = 1000))
+plotInfo(o, data_asq)
 }
 
 }

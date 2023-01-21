@@ -144,16 +144,16 @@ setMethod(
 #'
 #' @param object a \code{\linkS4class{SingleGroupClass}} object from \code{\link{runCalibration}}.
 #' @param data a \code{\linkS4class{PROsetta_data}} object.
-#' @param theta theta values to plot on the x-axis.
-#' @param t_score set to \code{TRUE} to convert thetas into T-scores.
-#' @param scale_label names of each scale.
-#' @param color line colors to plot.
-#' @param lty line types to plot.
+#' @param theta (optional) theta values to plot on the x-axis. (default = \code{seq(-4, 4, .1)})
+#' @param t_score (optional) set to \code{TRUE} to plot T-scores on the x-axis instead of thetas. (default = \code{FALSE})
+#' @param scale_label (optional) names of each scale. This must have three values. (default = \code{c(1, 2, "Combined")})
+#' @param color (optional) line colors to plot. This must have three values. (default = \code{c("red", "blue", "black")})
+#' @param lty (optional) line types to plot. This must have three values. (default = \code{c(3, 2, 1)})
 #'
 #' @examples
 #' \donttest{
-#' out_calib = runCalibration(data_asq, technical = list(NCYCLES = 1000))
-#' plotInfo(out_calib, data_asq)
+#' o <- runCalibration(data_asq, technical = list(NCYCLES = 1000))
+#' plotInfo(o, data_asq)
 #' }
 #'
 #' @docType methods
