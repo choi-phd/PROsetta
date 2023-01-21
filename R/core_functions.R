@@ -21,7 +21,25 @@ validateData <- function(d) {
   }
 }
 
-#' @noRd
+#' (internal) construct a model
+#'
+#' \code{\link{getModel}} is an internal function for constructing a model.
+#'
+#' @param d a \code{\linkS4class{PROsetta_data}} object.
+#' @param dimensions the number of dimensions to use in the model. Must be \code{1} or \code{2}.
+#' If \code{1}, all instruments are modeled to be from one dimension.
+#' If \code{2}, each instrument is modeled to be from its own dimension (i.e., calibrated projection is used).
+#' @param bound_cov only used when \code{dimensions} is \code{2}.
+#' If \code{TRUE}, then constrain the between-dimension covariance to be \code{< .999}.
+#'
+#' @return \code{\link{getModel}} returns a \code{\link[mirt]{mirt.model}} object.
+#'
+#' @examples
+#' PROsetta:::getModel(data_asq, 1, FALSE)
+#' PROsetta:::getModel(data_asq, 1, TRUE)
+#' PROsetta:::getModel(data_asq, 2, FALSE)
+#' PROsetta:::getModel(data_asq, 2, TRUE)
+#'
 getModel <- function(d, dimensions, bound_cov) {
 
   resp_data  <- getResponse(d)
