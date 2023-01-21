@@ -7,19 +7,19 @@ NULL
 #'
 #' @param x a \code{\linkS4class{PROsetta_data}} object.
 #' @param y unused argument, exists for compatibility with \code{\link{plot}} in the base R package.
-#' @param scale_id scale ID to plot. \code{combined} (default) represents the combined scale.
-#' @param filename filename to write if '\code{savefile}' argument is \code{TRUE}.
+#' @param scale_id scale ID to plot. \code{combined} represents the combined scale. (default = \code{combined})
 #' @param title the title of the figure.
 #' @param xlim the range of scores to plot.
-#' @param color the color to fill the histogram.
-#' @param nbar the number of histogram bars.
-#' @param rug if \code{TRUE}, display the actual distribution of scores below each bar.
-#' @param filetype the type of file to write if '\code{savefile}' argument is \code{TRUE}. Accepts '\code{pdf}', '\code{jpeg}', '\code{png}', and '\code{tiff}'.
-#' @param savefile if \code{TRUE}, save the figure as a file.
-#' @param bg the background color of the plot.
-#' @param width the width of the plot.
-#' @param height the height of the plot.
-#' @param pointsize point size to pass onto file writing functions.
+#' @param color the color to fill the histogram. (default = \code{blue})
+#' @param nbar the number of histogram bars. (default = \code{20})
+#' @param rug if \code{TRUE}, display the actual distribution of scores below each bar. (default = \code{FALSE})
+#' @param width the width of the plot. (default = \code{6})
+#' @param height the height of the plot. (default = \code{6})
+#' @param savefile if \code{TRUE}, save the figure as a file. (default = \code{FALSE})
+#' @param filename the filename to write if \code{savefile} argument is \code{TRUE}.
+#' @param filetype the type of file to write if \code{savefile} argument is \code{TRUE}. Accepts \code{pdf}, \code{jpeg}, \code{png}, and \code{tiff}. (default = \code{pdf})
+#' @param bg the background color to use when saving the figure as a file. (default = \code{white})
+#' @param pointsize the point size to use when saving the figure as a file. (default = \code{12})
 #'
 #' @examples
 #' plot(data_asq)
