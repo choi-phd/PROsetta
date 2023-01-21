@@ -19,5 +19,5 @@ getEscore(ipar, model, theta, is_minscore_0)
 \code{\link{getEscore}} returns a vector of expected scores.
 }
 \description{
-\code{\link{getEscore}} is a helper function to calculate expected scores at supplied thetas.
+\code{\link{getEscore}} is a helper function for obtaining expected scores at supplied thetas.
 }
