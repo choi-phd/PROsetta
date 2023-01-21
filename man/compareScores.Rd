@@ -19,3 +19,10 @@ compareScores(left, right, type = c("corr", "mean", "sd", "rmsd", "mad"))
 \description{
 \code{\link{compareScores}} is a helper function for comparing two sets of scores.
 }
+\examples{
+set.seed(1)
+true_theta <- rnorm(100)
+theta_est <- true_theta + rnorm(100, 0, 0.3)
+compareScores(theta_est, true_theta)
+
+}
