@@ -217,7 +217,7 @@ getAnchorDimension <- function(d) {
 }
 
 #' @noRd
-fixParLayout <- function(par_layout, d, verbose) {
+applyConstraintsToParLayout <- function(par_layout, d, verbose) {
 
   if (any("a2" %in% par_layout$name)) {
     dimensions <- 2
