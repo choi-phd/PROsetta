@@ -461,7 +461,31 @@ detectParameterization <- function(ipar) {
   }
 }
 
-#' @noRd
+#' (internal) compute response probability
+#'
+#' \code{\link{getProb}} is an internal function for computing response probability from a set of item parameters.
+#'
+#' @param ipar a \code{\link{data.frame}} containing item parameters.
+#' @param model the item model to use. Accepts \code{grm} or {gpcm}.
+#' @param theta_grid theta values to compute probability values at.
+#'
+#' @return \code{\link{getProb}} returns an item-wise list of probability matrices.
+#'
+#' @examples
+#' ipar <- PROsetta:::getAnchorPar(data_asq, FALSE)
+#' theta_q <- seq(-4, 4, .1)
+#' p <- PROsetta:::getProb(ipar, "grm", theta_q)
+#'
+#' plot(
+#'   0, 0, type = "n", xlim = c(-4, 4), ylim = c(0, 1),
+#'   xlab = "Theta", ylab = "Response probability"
+#' )
+#' lines(theta_q, p[[1]][, 1])
+#' lines(theta_q, p[[1]][, 2])
+#' lines(theta_q, p[[1]][, 3])
+#' lines(theta_q, p[[1]][, 4])
+#' lines(theta_q, p[[1]][, 5])
+#'
 getProb <- function(ipar, model, theta_grid) {
 
   if (is.vector(theta_grid)) {
