@@ -69,8 +69,10 @@ server <- function(input, output, session) {
 
     progress <- Progress$new(session)
     on.exit(progress$close())
-    progress$set(message = 'Computing..',
-                 detail = 'This may take a while.')
+    progress$set(
+      message = "Computing..",
+      detail = "This may take a while."
+    )
 
     v$time <- Sys.time()
 
@@ -132,8 +134,10 @@ server <- function(input, output, session) {
 
     progress <- Progress$new(session)
     on.exit(progress$close())
-    progress$set(message = 'Computing..',
-                  detail = 'This may take a while.')
+    progress$set(
+      message = "Computing..",
+      detail = "This may take a while."
+    )
 
     v$text <- "Running.."
     v$time <- Sys.time()
@@ -217,7 +221,7 @@ server <- function(input, output, session) {
 
   opts = list(
     pageLength = 100,
-    columnDefs = list(list(className = 'dt-right', targets = "_all"))
+    columnDefs = list(list(className = "dt-right", targets = "_all"))
   )
 
   output$response_data         <- renderDT(parseObject(v$response_data),      options = opts)
