@@ -22,11 +22,11 @@ getTheta(
 
 \item{scale}{the index of the scale to use. Set to 'combined' to use the combined scale.}
 
-\item{model}{the item model to use. Accepts 'grm' or 'gpcm'.}
+\item{model}{the item model to use. Accepts \code{grm} or \code{gpcm}.}
 
-\item{theta_grid}{the theta grid to use in calculating EAP estimates.}
+\item{theta_grid}{the theta grid to use for numerical integration.}
 
-\item{prior_dist}{the type of prior distribution. Accepts '\code{normal}' or '\code{logistic}'.}
+\item{prior_dist}{the type of prior distribution. Accepts \code{normal} or \code{logistic}.}
 
 \item{prior_mean}{mean of the prior distribution.}
 
@@ -36,5 +36,5 @@ getTheta(
 \code{\link{getTheta}} returns a \code{\link{list}} containing EAP estimates.
 }
 \description{
-\code{\link{getTheta}} is a helper function to calculate EAP estimates.
+\code{\link{getTheta}} is a helper function for obtaining EAP estimates.
 }

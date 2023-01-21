@@ -9,8 +9,13 @@ getScaleSum(data, scale_idx)
 \arguments{
 \item{data}{a \code{\linkS4class{PROsetta_data}} object.}
 
-\item{scale_idx}{the index of the scale to obtain the raw sum scores.}
+\item{scale_idx}{the instrument index to obtain the raw sum scores.}
 }
 \description{
-\code{\link{getScaleSum}} is a helper function to calculate raw sum scores of a scale.
+\code{\link{getScaleSum}} is a helper function for calculating instrument-wise raw sum scores from response data.
+}
+\examples{
+getScaleSum(data_asq, 1)
+getScaleSum(data_asq, 2)
+
 }

@@ -3,7 +3,7 @@ NULL
 
 #' PROsetta
 #'
-#' \code{\link{PROsetta}} is a caller function to launch a Shiny app locally.
+#' \code{\link{PROsetta}} is a caller function for launching a Shiny app locally.
 #'
 #' @examples
 #' if (interactive()) {

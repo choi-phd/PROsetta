@@ -83,11 +83,15 @@ getItemNames <- function(d, scale_id) {
 
 #' Get complete data
 #'
-#' \code{\link{getCompleteData}} is a helper function to perform casewise deletion of missing values.
+#' \code{\link{getCompleteData}} is a helper function for performing casewise deletion of missing values.
 #'
 #' @param data a \code{\linkS4class{PROsetta_data}} object.
 #' @param scale the index of the scale to perform casewise deletion. Leave empty or set to "combined" to perform on all scales.
 #' @param verbose if \code{TRUE}, print status messages. (default = \code{FALSE})
+#'
+#' @returns \code{\link{getCompleteData}} returns an updated \code{\linkS4class{PROsetta_data}} object.
+#' @examples
+#' d <- getCompleteData(data_asq, verbose = TRUE)
 #'
 #' @export
 getCompleteData <- function(data, scale = NULL, verbose = FALSE) {

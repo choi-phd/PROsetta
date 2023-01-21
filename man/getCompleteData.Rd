@@ -13,6 +13,13 @@ getCompleteData(data, scale = NULL, verbose = FALSE)
 
 \item{verbose}{if \code{TRUE}, print status messages. (default = \code{FALSE})}
 }
+\value{
+\code{\link{getCompleteData}} returns an updated \code{\linkS4class{PROsetta_data}} object.
+}
 \description{
-\code{\link{getCompleteData}} is a helper function to perform casewise deletion of missing values.
+\code{\link{getCompleteData}} is a helper function for performing casewise deletion of missing values.
+}
+\examples{
+d <- getCompleteData(data_asq, verbose = TRUE)
+
 }

@@ -3,14 +3,14 @@ NULL
 
 #' Obtain EAP estimates
 #'
-#' \code{\link{getTheta}} is a helper function to calculate EAP estimates.
+#' \code{\link{getTheta}} is a helper function for obtaining EAP estimates.
 #'
 #' @param data a \code{\linkS4class{PROsetta_data}} object.
 #' @param ipar a \code{\link{data.frame}} containing item parameters.
 #' @param scale the index of the scale to use. Set to 'combined' to use the combined scale.
-#' @param model the item model to use. Accepts 'grm' or 'gpcm'.
-#' @param theta_grid the theta grid to use in calculating EAP estimates.
-#' @param prior_dist the type of prior distribution. Accepts '\code{normal}' or '\code{logistic}'.
+#' @param model the item model to use. Accepts \code{grm} or \code{gpcm}.
+#' @param theta_grid the theta grid to use for numerical integration.
+#' @param prior_dist the type of prior distribution. Accepts \code{normal} or \code{logistic}.
 #' @param prior_mean mean of the prior distribution.
 #' @param prior_sd SD of the prior distribution.
 #'
@@ -62,7 +62,7 @@ getTheta <- function(
 
 #' Calculate expected scores at theta
 #'
-#' \code{\link{getEscore}} is a helper function to calculate expected scores at supplied thetas.
+#' \code{\link{getEscore}} is a helper function for obtaining expected scores at supplied thetas.
 #'
 #' @param ipar item parameters.
 #' @param model item model to use.
@@ -84,10 +84,14 @@ getEscore <- function(ipar, model, theta, is_minscore_0) {
 
 #' Calculate raw sum scores of a scale
 #'
-#' \code{\link{getScaleSum}} is a helper function to calculate raw sum scores of a scale.
+#' \code{\link{getScaleSum}} is a helper function for calculating instrument-wise raw sum scores from response data.
 #'
 #' @param data a \code{\linkS4class{PROsetta_data}} object.
-#' @param scale_idx the index of the scale to obtain the raw sum scores.
+#' @param scale_idx the instrument index to obtain the raw sum scores.
+#'
+#' @examples
+#' getScaleSum(data_asq, 1)
+#' getScaleSum(data_asq, 2)
 #'
 #' @export
 getScaleSum <- function(data, scale_idx) {
@@ -101,11 +105,11 @@ getScaleSum <- function(data, scale_idx) {
 
 #' Compare two sets of scores
 #'
-#' \code{\link{compareScores}} is a helper function to compare two sets of scores.
+#' \code{\link{compareScores}} is a helper function for comparing two sets of scores.
 #'
 #' @param left scores on the left side of comparison.
 #' @param right scores on the right side of comparison. This is subtracted from 'left'.
-#' @param type type of comparisons to include. Accepts '\code{corr}', "\code{mean}', '\code{sd}', '\code{rmsd}'. Defaults to all four.
+#' @param type type of comparisons to include. Accepts \code{corr}, \code{mean}, \code{sd}, \code{rmsd}, \code{mad}. Defaults to all types.
 #'
 #' @return \code{\link{compareScores}} returns a \code{\link{data.frame}} containing the comparison results.
 #'
