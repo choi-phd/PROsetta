@@ -4,6 +4,7 @@
 
 h2 {
     font-size: 170%;
+    font-weight: bold;
 }
 
 h3 {
@@ -164,4 +165,10 @@ label {
     padding: 20px 0 40px 0px;
     border-width: 0 1px 1px 1px;
     border: 1px solid #444;
+}
+
+.nav-tabs>li>a {
+    -webkit-transition: none;
+    -o-transition: none;
+    transition: none;
 }
