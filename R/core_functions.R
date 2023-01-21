@@ -347,8 +347,6 @@ getRSSS <- function(ipar, theta_grid, is_minscore_0, prior_mu_sigma) {
     theta_grid <- matrix(theta_grid)
   }
 
-  pp   <- getProb(ipar, "grm", theta_grid)
-
   dimensions <- detectDimensions(ipar)
   ni         <- dim(ipar)[1]
   nq         <- dim(theta_grid)[1]
@@ -356,8 +354,9 @@ getRSSS <- function(ipar, theta_grid, is_minscore_0, prior_mu_sigma) {
     sum(!is.na(x)) - dimensions + 1
   })
 
-  L <- LWrecursion(pp, ncat, theta_grid, is_minscore_0)
-  o <- LtoEAP(L, theta_grid, prior_mu_sigma)
+  pp <- getProb(ipar, "grm", theta_grid)
+  L  <- LWrecursion(pp, ncat, theta_grid, is_minscore_0)
+  o  <- LtoEAP(L, theta_grid, prior_mu_sigma)
 
   theta     <- lapply(o, function(x) x$EAP)
   theta     <- do.call(rbind, theta)
