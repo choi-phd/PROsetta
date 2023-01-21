@@ -170,5 +170,3 @@ validateData <- function(v, input, session) {
   }
 
 }
-
-shinyApp(ui = ui, server = server)
