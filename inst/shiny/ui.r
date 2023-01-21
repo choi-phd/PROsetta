@@ -70,7 +70,11 @@ ui <- fluidPage(
           justified = TRUE,
           selected = c(1,2)
         ),
-        textInput(label = "Item ID to plot", inputId = "item_id_to_plot", value = "1"),
+        sliderInput(
+          label = "Item ID to plot", inputId = "item_id_to_plot",
+          min = 1, max = 1, step = 1,
+          value = 1
+        ),
         textInput(label = "Scale ID to display crosswalk tables (also accepts 'combined')", inputId = "id_cross", value = "1")
       ),
 

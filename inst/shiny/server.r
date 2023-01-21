@@ -63,8 +63,6 @@ server <- function(input, output, session) {
 
   })
 
-
-
   observeEvent(input$runcalibration, {
 
     toggleSolverButtons(FALSE, session)
@@ -123,8 +121,6 @@ server <- function(input, output, session) {
 
   })
 
-
-
   observeEvent(input$runlinking, {
 
     toggleSolverButtons(FALSE, session)
@@ -164,9 +160,6 @@ server <- function(input, output, session) {
     toggleSolverButtons(TRUE, session)
   })
 
-
-
-
   observeEvent(input$runequating, {
 
     toggleSolverButtons(FALSE, session)
@@ -189,8 +182,6 @@ server <- function(input, output, session) {
     toggleSolverButtons(TRUE, session)
 
   })
-
-
 
   observeEvent(input$item_id_to_plot, {
     if (verifyText(input$item_id_to_plot)) {

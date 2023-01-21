@@ -165,6 +165,15 @@ validateData <- function(v, input, session) {
     } else {
       v$active_tabset <- updateTabSet(v$active_tabset, add_tabset = 1, session = session)
     }
+
+    if (v$data_exists) {
+      updateSliderInput(
+        session, "item_id_to_plot",
+        min = 1,
+        max = ncol(getResponse(v$inputdata))
+      )
+    }
+
     toggleSolverButtons(v$data_exists, session)
 
   }
