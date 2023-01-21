@@ -227,18 +227,21 @@ runLinking <- function(data, method, verbose = FALSE, ...) {
     stop(sprintf("argument 'method': unrecognized value '%s' (accepts 'MM', 'MS', 'HB', 'SL', 'FIXEDPAR', 'CP', 'CPLA', 'CPFIXEDDIM')", method))
   }
 
+  if (method %in% c("MM", "MS", "HB", "SL")) {
+    dimensions <- 1
+    fix_method <- "free"
+  }
+  if (method == "FIXEDPAR") {
+    dimensions <- 1
+    fix_method <- "item"
+  }
   if (method %in% c("CP", "CPLA")) {
     dimensions <- 2
     fix_method <- "item"
-  } else if (method == "CPFIXEDDIM") {
+  }
+  if (method == "CPFIXEDDIM") {
     dimensions <- 2
     fix_method <- "theta"
-  } else if (method == "FIXEDPAR") {
-    dimensions <- 1
-    fix_method <- "item"
-  } else {
-    dimensions <- 1
-    fix_method <- "free"
   }
 
   calibration <- runCalibration(data, dimensions = dimensions, fix_method = fix_method, verbose = verbose, ...)
@@ -257,7 +260,7 @@ runLinking <- function(data, method, verbose = FALSE, ...) {
     pars[[1]] <- ipar
     pars[[2]] <- data@anchor[c("a", paste0("cb", 1:(max_cat - 1)))]
 
-    if (fix_method == "free") {
+    if (method %in% c("MM", "MS", "HB", "SL")) {
       printLog(
         "metric",
         "applying linear transformation on item parameters to match the metric of anchor data parameters",
@@ -283,7 +286,8 @@ runLinking <- function(data, method, verbose = FALSE, ...) {
       out$constants <- out$link@constants[[method]]
       out$ipar_linked <- out$pars@pars$From
       out$ipar_anchor <- out$pars@pars$To
-    } else {
+    }
+    if (method == "FIXEDPAR") {
       out <- list()
       out$constants <- NA
       out$ipar_linked <- pars[[1]]
