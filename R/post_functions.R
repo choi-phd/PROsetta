@@ -38,7 +38,8 @@ getTheta <- function(
   theta_grid = seq(-4, 4, .1),
   prior_dist = "normal",
   prior_mean = 0.0,
-  prior_sd = 1.0) {
+  prior_sd = 1.0
+) {
 
   resp_data <- getCompleteData(data, scale)@response
 
@@ -130,7 +131,9 @@ getScaleSum <- function(data, scale_idx) {
 #' @return \code{\link{compareScores}} returns a \code{\link{data.frame}} containing the comparison results.
 #'
 #' @export
-compareScores <- function(left, right, type = c("corr", "mean", "sd", "rmsd", "mad")) {
+compareScores <- function(
+  left, right, type = c("corr", "mean", "sd", "rmsd", "mad")
+) {
 
   out <- list()
   if ("corr" %in% type) {
