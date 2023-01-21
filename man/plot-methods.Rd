@@ -28,31 +28,31 @@
 
 \item{y}{unused argument, exists for compatibility with \code{\link{plot}} in the base R package.}
 
-\item{scale_id}{scale ID to plot. \code{combined} (default) represents the combined scale.}
+\item{scale_id}{scale ID to plot. \code{combined} represents the combined scale. (default = \code{combined})}
 
-\item{filename}{filename to write if '\code{savefile}' argument is \code{TRUE}.}
+\item{filename}{the filename to write if \code{savefile} argument is \code{TRUE}.}
 
 \item{title}{the title of the figure.}
 
 \item{xlim}{the range of scores to plot.}
 
-\item{color}{the color to fill the histogram.}
+\item{color}{the color to fill the histogram. (default = \code{blue})}
 
-\item{nbar}{the number of histogram bars.}
+\item{nbar}{the number of histogram bars. (default = \code{20})}
 
-\item{rug}{if \code{TRUE}, display the actual distribution of scores below each bar.}
+\item{rug}{if \code{TRUE}, display the actual distribution of scores below each bar. (default = \code{FALSE})}
 
-\item{filetype}{the type of file to write if '\code{savefile}' argument is \code{TRUE}. Accepts '\code{pdf}', '\code{jpeg}', '\code{png}', and '\code{tiff}'.}
+\item{filetype}{the type of file to write if \code{savefile} argument is \code{TRUE}. Accepts \code{pdf}, \code{jpeg}, \code{png}, and \code{tiff}. (default = \code{pdf})}
 
-\item{savefile}{if \code{TRUE}, save the figure as a file.}
+\item{savefile}{if \code{TRUE}, save the figure as a file. (default = \code{FALSE})}
 
-\item{bg}{the background color of the plot.}
+\item{bg}{the background color to use when saving the figure as a file. (default = \code{white})}
 
-\item{width}{the width of the plot.}
+\item{width}{the width of the plot. (default = \code{6})}
 
-\item{height}{the height of the plot.}
+\item{height}{the height of the plot. (default = \code{6})}
 
-\item{pointsize}{point size to pass onto file writing functions.}
+\item{pointsize}{the point size to use when saving the figure as a file. (default = \code{12})}
 }
 \description{
 This is an extension of \code{\link{plot}} to visualize frequency distribution from \code{\linkS4class{PROsetta_data}} object.
