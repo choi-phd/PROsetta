@@ -2,7 +2,7 @@
 % Please edit documentation in R/post_functions.R
 \name{getTheta}
 \alias{getTheta}
-\title{Obtain EAP estimates}
+\title{Obtain theta estimates}
 \usage{
 getTheta(
   data,
@@ -20,21 +20,38 @@ getTheta(
 
 \item{ipar}{a \code{\link{data.frame}} containing item parameters.}
 
-\item{scale}{the index of the scale to use. Set to 'combined' to use the combined scale.}
+\item{scale}{the index of the scale to use. \code{combined} refers to the combined scale. (default = \code{combined})}
 
-\item{model}{the item model to use. Accepts \code{grm} or \code{gpcm}.}
+\item{model}{the item model to use. Accepts \code{grm} or \code{gpcm}. (default = \code{grm})}
 
-\item{theta_grid}{the theta grid to use for numerical integration.}
+\item{theta_grid}{the theta grid to use for numerical integration. (default = \code{seq(-4, 4, .1)})}
 
-\item{prior_dist}{the type of prior distribution. Accepts \code{normal} or \code{logistic}.}
+\item{prior_dist}{the type of prior distribution. Accepts \code{normal} or \code{logistic}. (default = \code{normal})}
 
-\item{prior_mean}{mean of the prior distribution.}
+\item{prior_mean}{mean of the prior distribution. (default = \code{0.0})}
 
-\item{prior_sd}{SD of the prior distribution.}
+\item{prior_sd}{SD of the prior distribution. (default = \code{1.0})}
 }
 \value{
 \code{\link{getTheta}} returns a \code{\link{list}} containing EAP estimates.
 }
 \description{
-\code{\link{getTheta}} is a helper function for obtaining EAP estimates.
+\code{\link{getTheta}} is a helper function for obtaining theta estimates.
+Estimates are obtained using an \emph{expected a posteriori} (EAP) method.
+}
+\examples{
+x <- runLinking(data_asq, method = "FIXEDPAR")
+
+o <- getTheta(data_asq, x$ipar_linked, scale = 1)
+o$theta
+o$item_idx
+
+o <- getTheta(data_asq, x$ipar_linked, scale = 2)
+o$theta
+o$item_idx
+
+o <- getTheta(data_asq, x$ipar_linked, scale = "combined")
+o$theta
+o$item_idx
+
 }

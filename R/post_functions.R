@@ -1,20 +1,36 @@
 #' @include loading_functions.R
 NULL
 
-#' Obtain EAP estimates
+#' Obtain theta estimates
 #'
-#' \code{\link{getTheta}} is a helper function for obtaining EAP estimates.
+#' \code{\link{getTheta}} is a helper function for obtaining theta estimates.
+#' Estimates are obtained using an \emph{expected a posteriori} (EAP) method.
 #'
 #' @param data a \code{\linkS4class{PROsetta_data}} object.
 #' @param ipar a \code{\link{data.frame}} containing item parameters.
-#' @param scale the index of the scale to use. Set to 'combined' to use the combined scale.
-#' @param model the item model to use. Accepts \code{grm} or \code{gpcm}.
-#' @param theta_grid the theta grid to use for numerical integration.
-#' @param prior_dist the type of prior distribution. Accepts \code{normal} or \code{logistic}.
-#' @param prior_mean mean of the prior distribution.
-#' @param prior_sd SD of the prior distribution.
+#' @param scale the index of the scale to use. \code{combined} refers to the combined scale. (default = \code{combined})
+#' @param model the item model to use. Accepts \code{grm} or \code{gpcm}. (default = \code{grm})
+#' @param theta_grid the theta grid to use for numerical integration. (default = \code{seq(-4, 4, .1)})
+#' @param prior_dist the type of prior distribution. Accepts \code{normal} or \code{logistic}. (default = \code{normal})
+#' @param prior_mean mean of the prior distribution. (default = \code{0.0})
+#' @param prior_sd SD of the prior distribution. (default = \code{1.0})
 #'
 #' @return \code{\link{getTheta}} returns a \code{\link{list}} containing EAP estimates.
+#'
+#' @examples
+#' x <- runLinking(data_asq, method = "FIXEDPAR")
+#'
+#' o <- getTheta(data_asq, x$ipar_linked, scale = 1)
+#' o$theta
+#' o$item_idx
+#'
+#' o <- getTheta(data_asq, x$ipar_linked, scale = 2)
+#' o$theta
+#' o$item_idx
+#'
+#' o <- getTheta(data_asq, x$ipar_linked, scale = "combined")
+#' o$theta
+#' o$item_idx
 #'
 #' @export
 getTheta <- function(
