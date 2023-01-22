@@ -15,7 +15,7 @@ NULL
 #'   \item{\code{theta} for using the mean and the variance obtained from a unidimensional calibration of anchor items}
 #'   \item{\code{free} for free calibration}
 #' }
-#' @param fixedpar this argument exists for backwards compatibility. \code{TRUE} is equivalent to \code{fix_method = "item"}, and \code{FALSE} is equivalent to \code{fix_method = "free"}.
+#' @param fixedpar this argument exists for backward compatibility. \code{TRUE} is equivalent to \code{fix_method = "item"}, and \code{FALSE} is equivalent to \code{fix_method = "free"}.
 #' @param ignore_nonconv if \code{TRUE}, return results even when calibration does not converge. If \code{FALSE}, raise an error when calibration does not converge. (default = \code{FALSE})
 #' @param verbose if \code{TRUE}, print status messages. (default = \code{FALSE})
 #' @param ... additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{'mirt'} package.
