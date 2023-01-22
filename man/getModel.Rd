@@ -29,3 +29,4 @@ PROsetta:::getModel(data_asq, 2, FALSE)
 PROsetta:::getModel(data_asq, 2, TRUE)
 
 }
+\keyword{internal}

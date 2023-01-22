@@ -35,3 +35,4 @@ lines(theta_q, p[[1]][, 4])
 lines(theta_q, p[[1]][, 5])
 
 }
+\keyword{internal}
