@@ -348,8 +348,6 @@ getRSSS <- function(ipar, theta_grid, is_minscore_0, prior_mu_sigma) {
   }
 
   dimensions <- detectDimensions(ipar)
-  ni         <- dim(ipar)[1]
-  nq         <- dim(theta_grid)[1]
   ncat       <- apply(ipar, 1, function(x) {
     sum(!is.na(x)) - dimensions + 1
   })
