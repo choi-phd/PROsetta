@@ -5,7 +5,6 @@ test_that("runRSSS", {
   d <- data_asq
 
   skip_on_cran()
-  skip_on_travis()
   skip_on_os("mac")
   skip_on_os("linux")
   skip_on_os("solaris")
