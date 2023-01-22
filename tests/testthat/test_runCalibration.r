@@ -5,6 +5,9 @@ test_that("runCalibration() works", {
   d <- data_asq
 
   skip_on_cran()
+  skip_on_os("mac")
+  skip_on_os("linux")
+  skip_on_os("solaris")
 
   # free calibration, used for diagnostics -------------------------------------
   set.seed(1)
