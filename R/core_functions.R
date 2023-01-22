@@ -331,7 +331,7 @@ applyConstraintsToParLayout <- function(par_layout, d, verbose) {
 #' \code{\link{getRSSS}} is a function to generate a raw-score to standard-score crosswalk table.
 #'
 #' @param ipar an item parameter matrix for graded response items. Accepts both a/b and a/d format parameters. Accepts multidimensional item parameters.
-#' @param theta_grid the theta grid to use.
+#' @param theta_grid the theta grid to use for numerical integration.
 #' @param is_minscore_0 if \code{TRUE}, the scores of each item begins from 0. if \code{FALSE}, the scores of each item begins from 1.
 #' @param prior_mu_sigma a named list containing prior distribution parameters:
 #' \itemize{
