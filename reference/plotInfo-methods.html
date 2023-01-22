@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">PROsetta</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.5.9000</span>
       </span>
     </div>
 
@@ -89,31 +89,31 @@
 
 
 <dt>theta</dt>
-<dd><p>theta values to plot on the x-axis.</p></dd>
+<dd><p>(optional) theta values to plot on the x-axis. (default = <code>seq(-4, 4, .1)</code>)</p></dd>
 
 
 <dt>t_score</dt>
-<dd><p>set to <code>TRUE</code> to convert thetas into T-scores.</p></dd>
+<dd><p>(optional) set to <code>TRUE</code> to plot T-scores on the x-axis instead of thetas. (default = <code>FALSE</code>)</p></dd>
 
 
 <dt>scale_label</dt>
-<dd><p>names of each scale.</p></dd>
+<dd><p>(optional) names of each scale. This must have three values. (default = <code>c(1, 2, "Combined")</code>)</p></dd>
 
 
 <dt>color</dt>
-<dd><p>line colors to plot.</p></dd>
+<dd><p>(optional) line colors to plot. This must have three values. (default = <code>c("red", "blue", "black")</code>)</p></dd>
 
 
 <dt>lty</dt>
-<dd><p>line types to plot.</p></dd>
+<dd><p>(optional) line types to plot. This must have three values. (default = <code>c(3, 2, 1)</code>)</p></dd>
 
 </dl></div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># \donttest{</span></span>
-<span><span class="va">out_calib</span> <span class="op">=</span> <span class="fu"><a href="runCalibration.html">runCalibration</a></span><span class="op">(</span><span class="va">data_asq</span>, technical <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>NCYCLES <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu">plotInfo</span><span class="op">(</span><span class="va">out_calib</span>, <span class="va">data_asq</span><span class="op">)</span></span>
+<span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="runCalibration.html">runCalibration</a></span><span class="op">(</span><span class="va">data_asq</span>, technical <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>NCYCLES <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">plotInfo</span><span class="op">(</span><span class="va">o</span>, <span class="va">data_asq</span><span class="op">)</span></span>
 <span><span class="co"># }</span></span>
 <span></span></code></pre></div>
     </div>

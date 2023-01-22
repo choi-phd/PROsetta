@@ -34,6 +34,9 @@
     <loc>/reference/dataset_dep.html</loc>
   </url>
   <url>
+    <loc>/reference/detectParameterization.html</loc>
+  </url>
+  <url>
     <loc>/reference/getCompleteData.html</loc>
   </url>
   <url>
@@ -41,6 +44,12 @@
   </url>
   <url>
     <loc>/reference/getItemNames.html</loc>
+  </url>
+  <url>
+    <loc>/reference/getModel.html</loc>
+  </url>
+  <url>
+    <loc>/reference/getProb.html</loc>
   </url>
   <url>
     <loc>/reference/getRSSS.html</loc>
