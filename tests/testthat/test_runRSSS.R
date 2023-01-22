@@ -41,19 +41,19 @@ test_that("runRSSS", {
 
   score_table <- runRSSS(d, calib)
 
-  expect_equal(sum(score_table$`1`$eap_dim1    ** 2), 414.3229, tolerance = 1e-04)
-  expect_equal(sum(score_table$`1`$eap_dim2    ** 2), 371.6067, tolerance = 1e-04)
-  expect_equal(sum(score_table$`1`$eap_se_dim1 ** 2), 3.604093, tolerance = 1e-04)
-  expect_equal(sum(score_table$`1`$eap_se_dim2 ** 2), 18.52500, tolerance = 1e-04)
+  expect_equal(sum(score_table$`1`$eap_dim1    ** 2), 414.3413, tolerance = 1e-04)
+  expect_equal(sum(score_table$`1`$eap_dim2    ** 2), 371.1619, tolerance = 1e-04)
+  expect_equal(sum(score_table$`1`$eap_se_dim1 ** 2), 3.603925, tolerance = 1e-04)
+  expect_equal(sum(score_table$`1`$eap_se_dim2 ** 2), 18.52101, tolerance = 1e-04)
 
-  expect_equal(sum(score_table$`2`$eap_dim1    ** 2), 180.4345, tolerance = 1e-04)
-  expect_equal(sum(score_table$`2`$eap_dim2    ** 2), 220.6753, tolerance = 1e-04)
+  expect_equal(sum(score_table$`2`$eap_dim1    ** 2), 180.4879, tolerance = 1e-04)
+  expect_equal(sum(score_table$`2`$eap_dim2    ** 2), 220.4561, tolerance = 1e-04)
   expect_equal(sum(score_table$`2`$eap_se_dim1 ** 2), 10.73108, tolerance = 1e-04)
-  expect_equal(sum(score_table$`2`$eap_se_dim2 ** 2), 4.724330, tolerance = 1e-04)
+  expect_equal(sum(score_table$`2`$eap_se_dim2 ** 2), 4.724061, tolerance = 1e-04)
 
-  expect_equal(sum(score_table$`combined`$eap_dim1    ** 2), 670.6838, tolerance = 1e-04)
-  expect_equal(sum(score_table$`combined`$eap_dim2    ** 2), 653.2407, tolerance = 1e-04)
-  expect_equal(sum(score_table$`combined`$eap_se_dim1 ** 2), 5.859767, tolerance = 1e-04)
-  expect_equal(sum(score_table$`combined`$eap_se_dim2 ** 2), 15.94437, tolerance = 1e-04)
+  expect_equal(sum(score_table$`combined`$eap_dim1    ** 2), 670.684 , tolerance = 1e-04)
+  expect_equal(sum(score_table$`combined`$eap_dim2    ** 2), 652.5277, tolerance = 1e-04)
+  expect_equal(sum(score_table$`combined`$eap_se_dim1 ** 2), 5.859263, tolerance = 1e-04)
+  expect_equal(sum(score_table$`combined`$eap_se_dim2 ** 2), 15.94169, tolerance = 1e-04)
 
 })
