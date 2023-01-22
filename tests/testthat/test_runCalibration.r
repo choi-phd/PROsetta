@@ -45,6 +45,6 @@ test_that("runCalibration() works", {
   set.seed(1)
   expect_error( runCalibration(d, technical = list(NCYCLES = 1)) )
   set.seed(1)
-  expect_no_error( runCalibration(d, ignore_nonconv = TRUE, technical = list(NCYCLES = 1)) )
+  expect_warning( runCalibration(d, ignore_nonconv = TRUE, technical = list(NCYCLES = 1)) )
 
 })
