@@ -28,7 +28,7 @@ If 2, use each dimension separately for the anchor instrument and the developing
   \item{\code{free} for free calibration}
 }}
 
-\item{fixedpar}{this argument exists for backwards compatibility. \code{TRUE} is equivalent to \code{fix_method = "item"}, and \code{FALSE} is equivalent to \code{fix_method = "free"}.}
+\item{fixedpar}{this argument exists for backward compatibility. \code{TRUE} is equivalent to \code{fix_method = "item"}, and \code{FALSE} is equivalent to \code{fix_method = "free"}.}
 
 \item{ignore_nonconv}{if \code{TRUE}, return results even when calibration does not converge. If \code{FALSE}, raise an error when calibration does not converge. (default = \code{FALSE})}
 
