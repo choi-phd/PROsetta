@@ -40,6 +40,7 @@ validateData <- function(d) {
 #' PROsetta:::getModel(data_asq, 2, FALSE)
 #' PROsetta:::getModel(data_asq, 2, TRUE)
 #'
+#' @keywords internal
 getModel <- function(d, dimensions, bound_cov) {
 
   resp_data  <- getResponse(d)
@@ -446,6 +447,7 @@ genPrior <- function(theta_grid, dist_type, prior_mu_sigma) {
 #' @examples
 #' PROsetta:::detectParameterization(data_asq@anchor) # ab
 #'
+#' @keywords internal
 detectParameterization <- function(ipar) {
   if ("b1" %in% colnames(ipar)) {
     return("ab")
@@ -483,6 +485,7 @@ detectParameterization <- function(ipar) {
 #' lines(theta_q, p[[1]][, 4])
 #' lines(theta_q, p[[1]][, 5])
 #'
+#' @keywords internal
 getProb <- function(ipar, model, theta_grid) {
 
   if (is.vector(theta_grid)) {

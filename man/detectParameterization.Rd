@@ -19,3 +19,4 @@ detectParameterization(ipar)
 PROsetta:::detectParameterization(data_asq@anchor) # ab
 
 }
+\keyword{internal}
