@@ -9,7 +9,7 @@ getRSSS(ipar, theta_grid, is_minscore_0, prior_mu_sigma)
 \arguments{
 \item{ipar}{an item parameter matrix for graded response items. Accepts both a/b and a/d format parameters. Accepts multidimensional item parameters.}
 
-\item{theta_grid}{the theta grid to use.}
+\item{theta_grid}{the theta grid to use for numerical integration.}
 
 \item{is_minscore_0}{if \code{TRUE}, the scores of each item begins from 0. if \code{FALSE}, the scores of each item begins from 1.}
 
