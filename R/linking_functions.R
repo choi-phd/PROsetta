@@ -477,9 +477,9 @@ runEquateObserved <- function(
 #' @param ipar_linked an object returned from \code{\link{runLinking}} or \code{\link{runCalibration}}.
 #' @param prior_mean prior mean. (default = \code{0.0})
 #' @param prior_sd prior standard deviation. (default = \code{1.0})
-#' @param min_theta the lower limit of theta grid. (default = \code{-4})
-#' @param max_theta the upper limit of theta grid. (default = \code{4})
-#' @param inc the increment to use in theta grid. (default = \code{0.05})
+#' @param min_theta the lower limit of theta quadratures for numerical integration. (default = \code{-4})
+#' @param max_theta the upper limit of theta quadratures for numerical integration. (default = \code{4})
+#' @param inc the increment between theta quadratures for numerical integration. (default = \code{0.05})
 #' @param min_score minimum item score (0 or 1) for each scale (1, 2, and combined). If a single value is supplied, the value is applied to all scales. (default = \code{1})
 #'
 #' @return \code{\link{runRSSS}} returns a \code{\link{list}} containing crosswalk tables.
