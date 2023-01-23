@@ -510,6 +510,7 @@ getProb <- function(ipar, model, theta_grid) {
     if (p_type == "ab") {
       par_a <- ipar[, 1:dimensions]
       par_b <- ipar[, dimensions + 1:(max_cat - 1), drop = FALSE]
+      par_b <- as.matrix(par_b)
     }
 
     pp <- list()
@@ -521,16 +522,11 @@ getProb <- function(ipar, model, theta_grid) {
 
       for (i in 1:ni) {
 
-        ps <- matrix(0, nq, ncat[i] + 1)
-        ps[, 1] <- 1
-        ps[, ncat[i] + 1] <- 0
-
-        for (k in 1:(ncat[i] - 1)) {
-          ps[, k + 1] <- 1 / (1 + exp(-par_a[i] * (theta_grid - par_b[i, k])))
-        }
-        for (k in 1:ncat[i]) {
-          pp[[i]][, k] <- ps[, k] - ps[, k + 1];
-        }
+        pp[[i]] <- array_p_gr(
+          theta_grid,
+          par_a[i],
+          par_b[i, 1:(ncat[i] - 1)]
+        )
 
       }
 
@@ -541,20 +537,11 @@ getProb <- function(ipar, model, theta_grid) {
 
       for (i in 1:ni) {
 
-        cb <- unlist(par_b[i, ])
-        cb <- c(0, cb)
-        zz <- matrix(0, nq, ncat[i])
-        sdsum <- 0
-        den <- rep(0, nq)
-
-        for (k in 1:ncat[i]) {
-          sdsum <- sdsum + cb[k]
-          zz[, k] <- exp(par_a[i] * (k * theta_grid - sdsum))
-          den <- den + zz[, k]
-        }
-        for (k in 1:ncat[i]) {
-          pp[, i, k] <- zz[, k] / den
-        }
+        pp[[i]] <- array_p_gpc(
+          theta_grid,
+          par_a[i],
+          par_b[i, 1:(ncat[i] - 1)]
+        )
 
       }
 
@@ -570,6 +557,8 @@ getProb <- function(ipar, model, theta_grid) {
 
     par_a <- ipar[, 1:dimensions, drop = FALSE]
     par_d <- ipar[, dimensions + 1:(max_cat - 1), drop = FALSE]
+    par_a <- as.matrix(par_a)
+    par_d <- as.matrix(par_d)
 
     ncat <- apply(par_d, 1, function(x) {
       sum(!is.na(x)) + 1
@@ -585,20 +574,11 @@ getProb <- function(ipar, model, theta_grid) {
 
       for (i in 1:ni) {
 
-        ps <- matrix(NA, nq, ncat[i] + 1)
-        ps[, 1] <- 1
-        ps[, ncat[i] + 1] <- 0
-
-        theta_mul <- theta_grid %*% t(par_a[i, , drop = FALSE])
-
-        for (k in 1:(ncat[i] - 1)) {
-          logit_term <- theta_mul + par_d[i, k]
-          ps[, k + 1] <- exp(logit_term) / (1 + exp(logit_term))
-        }
-
-        for (k in 1:ncat[i]) {
-          pp[[i]][, k] <- ps[, k] - ps[, k + 1];
-        }
+        pp[[i]] <- array_p_m_gr(
+          theta_grid,
+          par_a[i, , drop = FALSE],
+          par_d[i, 1:(ncat[i] - 1), drop = FALSE]
+        )
 
       }
 
@@ -608,7 +588,15 @@ getProb <- function(ipar, model, theta_grid) {
 
     if (model == "gpcm") {
 
-      stop("multidimensional GPCM is not yet supported")
+      for (i in 1:ni) {
+
+        pp[[i]] <- array_p_m_gpc(
+          theta_grid,
+          par_a[i, , drop = FALSE],
+          par_d[i, 1:(ncat[i] - 1), drop = FALSE]
+        )
+
+      }
 
     }
 
