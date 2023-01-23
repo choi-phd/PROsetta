@@ -790,36 +790,7 @@ LtoEAP <- function(L, theta_grid, prior_mu_sigma) {
 
   prior      <- genPrior(theta_grid, "normal", prior_mu_sigma)
   n_score    <- dim(L)[2]
-  o          <- vector("list", n_score)
-
-  for (s in 1:n_score) {
-
-    # common
-    denom <- sum(L[, s] * prior)
-
-    # EAP
-    num <- t(t(theta_grid) %*% (L[, s] * prior))
-    EAP <- num / denom
-
-    # COV
-    diff_grid <- theta_grid - matrix(EAP, nq, dimensions, byrow = TRUE)
-
-    diff_grid <- split(diff_grid, 1:nq)
-    term_V <- lapply(diff_grid, function(x) {
-      outer(x, x)
-    })
-    num <- mapply(
-      function(V, w) {V * w},
-      term_V, L[, s] * prior,
-      SIMPLIFY = FALSE
-    )
-    num <- Reduce("+", num)
-    COV <- num / denom
-
-    o[[s]]$EAP <- EAP
-    o[[s]]$COV <- COV
-
-  }
+  o <- LtoEAP_cpp(L, theta_grid, prior)
 
   return(o)
 
