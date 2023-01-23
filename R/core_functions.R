@@ -21,6 +21,13 @@ validateData <- function(d) {
   }
 }
 
+#' @noRd
+detectNCategories <- function(ipar) {
+  nd <- detectDimensions(ipar)
+  n_cats <- apply(ipar, 1, function(x) sum(!is.na(x)) - nd + 1)
+  return(n_cats)
+}
+
 #' (internal) construct a model
 #'
 #' \code{\link{getModel}} is an internal function for constructing a model.
