@@ -131,7 +131,6 @@ filterItemParameters <- function(ipar) {
       }
     }
   }
-
   ipar <- ipar[, idx]
 
   idx <- c(
@@ -142,7 +141,6 @@ filterItemParameters <- function(ipar) {
     grep("^a[1-9]", names(ipar)),
     grep("^cb[1-9]", names(ipar))
   )
-
   ipar <- ipar[, unique(idx)]
 
   return(ipar)
@@ -722,8 +720,8 @@ extractMuSigma <- function(calib) {
 }
 
 #' @noRd
-detectDimensions <- function(item_par_matrix) {
-  if ("a2" %in% colnames(item_par_matrix)) {
+detectDimensions <- function(ipar) {
+  if ("a2" %in% colnames(ipar)) {
     return(2)
   } else {
     return(1)
