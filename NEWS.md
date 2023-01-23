@@ -1,8 +1,12 @@
 # PROsetta 0.3.5.9000
 
+* Now requires `TestDesign (>= 1.5.1)`.
+* Response probabilities are now computed faster using cpp functions.
 * Deprecated `guiPROsetta()` is removed. Use `PROsetta()` instead.
 * Updated documentation.
 * Made minor updates to the Shiny app in `PROsetta()`.
+* Removed `ncat` column in anchor parameters. This is now inferred from the number of parameters.
+* Added cpp routine for EAP computation after Lord-Wingersky recursion. This improves the speed of `runRSSS()`.
 
 # PROsetta 0.3.5
 
