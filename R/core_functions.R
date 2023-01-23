@@ -364,12 +364,10 @@ getRSSS <- function(ipar, theta_grid, is_minscore_0, prior_mu_sigma) {
   }
 
   dimensions <- detectDimensions(ipar)
-  ncat       <- apply(ipar, 1, function(x) {
-    sum(!is.na(x)) - dimensions + 1
-  })
+  n_cats <- detectNCategories(ipar)
 
   pp <- getProb(ipar, "grm", theta_grid)
-  L  <- LWrecursion(pp, ncat, theta_grid, is_minscore_0)
+  L  <- LWrecursion(pp, n_cats, theta_grid, is_minscore_0)
   o  <- LtoEAP(L, theta_grid, prior_mu_sigma)
 
   theta     <- lapply(o, function(x) x$EAP)
@@ -511,10 +509,8 @@ getProb <- function(ipar, model, theta_grid) {
 
   dimensions <- detectDimensions(ipar)
   ni         <- nrow(ipar)
-  ncat       <- apply(ipar, 1, function(x) {
-    sum(!is.na(x)) - dimensions + 1
-  })
-  max_cat    <- max(ncat)
+  n_cats     <- detectNCategories(ipar)
+  max_cats   <- max(n_cats)
   nq         <- nrow(theta_grid)
 
   p_type     <- detectParameterization(ipar)
@@ -524,13 +520,13 @@ getProb <- function(ipar, model, theta_grid) {
     # a/b parameterization
     if (p_type == "ab") {
       par_a <- ipar[, 1:dimensions]
-      par_b <- ipar[, dimensions + 1:(max_cat - 1), drop = FALSE]
+      par_b <- ipar[, dimensions + 1:(max_cats - 1), drop = FALSE]
       par_b <- as.matrix(par_b)
     }
 
     pp <- list()
     for (i in 1:ni) {
-      pp[[i]] <- matrix(NA, nq, ncat[i])
+      pp[[i]] <- matrix(NA, nq, n_cats[i])
     }
 
     if (model == "grm") {
@@ -540,7 +536,7 @@ getProb <- function(ipar, model, theta_grid) {
         pp[[i]] <- array_p_gr(
           theta_grid,
           par_a[i],
-          par_b[i, 1:(ncat[i] - 1)]
+          par_b[i, 1:(n_cats[i] - 1)]
         )
 
       }
@@ -555,7 +551,7 @@ getProb <- function(ipar, model, theta_grid) {
         pp[[i]] <- array_p_gpc(
           theta_grid,
           par_a[i],
-          par_b[i, 1:(ncat[i] - 1)]
+          par_b[i, 1:(n_cats[i] - 1)]
         )
 
       }
@@ -571,18 +567,18 @@ getProb <- function(ipar, model, theta_grid) {
     # a/d parameterization
 
     par_a <- ipar[, 1:dimensions, drop = FALSE]
-    par_d <- ipar[, dimensions + 1:(max_cat - 1), drop = FALSE]
+    par_d <- ipar[, dimensions + 1:(max_cats - 1), drop = FALSE]
     par_a <- as.matrix(par_a)
     par_d <- as.matrix(par_d)
 
-    ncat <- apply(par_d, 1, function(x) {
+    n_cats <- apply(par_d, 1, function(x) {
       sum(!is.na(x)) + 1
     })
-    max_cat <- max(ncat)
+    max_cats <- max(n_cats)
 
     pp <- list()
     for (i in 1:ni) {
-      pp[[i]] <- matrix(NA, nq, max_cat)
+      pp[[i]] <- matrix(NA, nq, max_cats)
     }
 
     if (model == "grm") {
@@ -592,7 +588,7 @@ getProb <- function(ipar, model, theta_grid) {
         pp[[i]] <- array_p_m_gr(
           theta_grid,
           par_a[i, , drop = FALSE],
-          par_d[i, 1:(ncat[i] - 1), drop = FALSE]
+          par_d[i, 1:(n_cats[i] - 1), drop = FALSE]
         )
 
       }
@@ -608,7 +604,7 @@ getProb <- function(ipar, model, theta_grid) {
         pp[[i]] <- array_p_m_gpc(
           theta_grid,
           par_a[i, , drop = FALSE],
-          par_d[i, 1:(ncat[i] - 1), drop = FALSE]
+          par_d[i, 1:(n_cats[i] - 1), drop = FALSE]
         )
 
       }
@@ -730,13 +726,13 @@ getThetaGrid <- function(dimensions, min_theta, max_theta, inc) {
 }
 
 #' @noRd
-LWrecursion <- function(prob_list, ncat, theta_grid, is_minscore_0) {
+LWrecursion <- function(prob_list, n_cats, theta_grid, is_minscore_0) {
 
   ni <- length(prob_list)
   nq <- dim(theta_grid)[1]
 
   min_raw_score <- 0                                 # minimum obtainable raw score
-  max_raw_score <- sum(ncat) - ni                    # maximum obtainable raw score
+  max_raw_score <- sum(n_cats) - ni                  # maximum obtainable raw score
   raw_score     <- min_raw_score:max_raw_score       # raw scores
   n_score       <- length(raw_score)                 # number of score levels
   inv_tcc       <- numeric(n_score)                  # initialize TCC scoring table
@@ -746,22 +742,22 @@ LWrecursion <- function(prob_list, ncat, theta_grid, is_minscore_0) {
 
     if (i == 1) {
 
-      ncat_i    <- ncat[1]
+      n_cats_i  <- n_cats[1]
       max_score <- 0
-      lh[, 1:ncat_i] <- prob_list[[1]][, 1:ncat_i]
-      idx <- ncat_i
+      lh[, 1:n_cats_i] <- prob_list[[1]][, 1:n_cats_i]
+      idx <- n_cats_i
 
     }
 
     if (i > 1) {
 
-      ncat_i    <- ncat[i]                    # number of categories for item i
-      max_score <- ncat_i - 1                 # maximum score for item i
-      score     <- 0:max_score                # score values for item i
-      prob      <- prob_list[[i]][, 1:ncat_i] # category probabilities for item i
-      plh       <- matrix(0, nq, n_score)     # place holder for lh
+      n_cats_i  <- n_cats[i]                    # number of categories for item i
+      max_score <- n_cats_i - 1                 # maximum score for item i
+      score     <- 0:max_score                  # score values for item i
+      prob      <- prob_list[[i]][, 1:n_cats_i] # category probabilities for item i
+      plh       <- matrix(0, nq, n_score)       # place holder for lh
 
-      for (k in 1:ncat_i) {
+      for (k in 1:n_cats_i) {
         for (h in 1:idx) {
           sco <- raw_score[h] + score[k]
           position <- which(raw_score == sco)
