@@ -9,4 +9,5 @@
 #' @importFrom grDevices pdf jpeg png tiff dev.off
 #' @importFrom graphics hist text points box legend grid lines strheight
 #' @importFrom mvnfast dmvn
+#' @importFrom TestDesign array_p_gr array_p_gpc
 NULL
