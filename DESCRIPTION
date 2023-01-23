@@ -25,7 +25,7 @@ Description: Perform scale linking to establish relationships between instrument
     that measure similar constructs according to the PROsetta Stone methodology, as in Choi, Schalet, Cook, & Cella (2014) <doi:10.1037/a0035768>.
 URL: https://www.prosettastone.org/ (project description), https://choi-phd.github.io/PROsetta/ (documentation)
 BugReports: https://github.com/choi-phd/PROsetta/issues
-Imports: equate, lavaan, mirt, plink, psych, methods, mvnfast
+Imports: equate, lavaan, mirt, plink, psych, methods, mvnfast, TestDesign
 Depends: R (>= 3.5.0)
 Suggests:
     shiny,
