@@ -13,3 +13,6 @@ inst/doc
 vignettes/debug.log
 docs
 docs/
+src/*.o
+src/*.so
+src/*.dll
