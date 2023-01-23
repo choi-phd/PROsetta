@@ -25,7 +25,6 @@ NULL
 #'     \item \code{item_id} item ID strings. This column refers to column names in raw response data, excluding the participant ID column.
 #'     \item \code{a} the discrimination (slope) parameter for the graded response model.
 #'     \item \code{cb1 - cb4} the boundaries between each category-pair for the graded response model.
-#'     \item \code{ncat} the number of response categories.
 #'   }
 #'   \item \code{\link{data_asq}} a \code{\linkS4class{PROsetta_data}} object containing the datasets above. See \code{\link{loadData}} for creating \code{\linkS4class{PROsetta_data}} objects.
 #' }
@@ -75,7 +74,6 @@ NULL
 #'     \item \code{item_id} item ID strings. This column refers to column names in raw response data, excluding the participant ID column.
 #'     \item \code{a} the discrimination (slope) parameter for the graded response model.
 #'     \item \code{cb1 - cb4} the boundaries between each category-pair for the graded response model.
-#'     \item \code{ncat} the number of response categories.
 #'   }
 #'   \item \code{\link{data_dep}} a \code{\linkS4class{PROsetta_data}} object containing the datasets above. See \code{\link{loadData}} for creating \code{\linkS4class{PROsetta_data}} objects.
 #' }

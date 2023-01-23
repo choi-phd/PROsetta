@@ -93,7 +93,6 @@ The anchor data contains the item parameters for the anchor scale (e.g., PROMIS 
 * `item_id`: The unique ID of the anchor items. The name of this column does not have to be `item_id` but should be consistent with the item ID column in the item map table The IDs in this column should refer to the specific column names in the response data.
 * `a`: The slope parameter value for each anchor item
 * `cb1`, `cb2`, ...: The category boundary parameter values for each anchor item
-* `ncat`: The number of response categories for each anchor item
 
 Run the following code to open the anchor data in edit mode.
 
