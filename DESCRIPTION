@@ -25,7 +25,8 @@ Description: Perform scale linking to establish relationships between instrument
     that measure similar constructs according to the PROsetta Stone methodology, as in Choi, Schalet, Cook, & Cella (2014) <doi:10.1037/a0035768>.
 URL: https://www.prosettastone.org/ (project description), https://choi-phd.github.io/PROsetta/ (documentation)
 BugReports: https://github.com/choi-phd/PROsetta/issues
-Imports: equate, lavaan, mirt, plink, psych, methods, mvnfast, TestDesign (>= 1.5.1)
+Imports: Rcpp (>= 1.0.0), equate, lavaan, mirt, plink, psych, methods, mvnfast, TestDesign (>= 1.5.1)
+SystemRequirements: C++17
 Depends: R (>= 3.5.0)
 Suggests:
     shiny,
@@ -39,12 +40,14 @@ Suggests:
     rmarkdown,
     dplyr,
     pkgdown
+LinkingTo: Rcpp, RcppArmadillo
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3
 VignetteBuilder: knitr
 Collate:
+    'RcppExports.R'
     'import.R'
     'loading_functions.R'
     'post_functions.R'
