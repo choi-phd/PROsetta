@@ -252,13 +252,15 @@ runLinking <- function(data, method, verbose = FALSE, ...) {
     ipar      <- fit$items
     ni_all    <- nrow(ipar)
     ni_anchor <- nrow(data@anchor)
-    max_cat   <- max(getColumn(data@anchor, "ncat"))
+    ipar_anchor     <- getAnchorPar(data, FALSE)
+    n_cats_anchor   <- detectNCategories(ipar_anchor)
+    max_cats_anchor <- max(n_cats_anchor)
     id_new <- data.frame(New = 1:ni_all   , ID = data@itemmap[[data@item_id]])
     id_old <- data.frame(Old = 1:ni_anchor, ID = data@anchor[[data@item_id]])
     common <- merge(id_new, id_old, by = "ID", sort = FALSE)[c("New", "Old")]
     pars <- vector("list", 2)
     pars[[1]] <- ipar
-    pars[[2]] <- data@anchor[c("a", paste0("cb", 1:(max_cat - 1)))]
+    pars[[2]] <- data@anchor[c("a", paste0("cb", 1:(max_cats_anchor - 1)))]
 
     if (method %in% c("MM", "MS", "HB", "SL")) {
       printLog(
@@ -273,12 +275,12 @@ runLinking <- function(data, method, verbose = FALSE, ...) {
       )
       pm_all    <- plink::as.poly.mod(ni_all   , "grm", 1:ni_all)
       pm_anchor <- plink::as.poly.mod(ni_anchor, "grm", 1:ni_anchor)
-      ncat <- list(
+      n_cats <- list(
         getColumn(data@itemmap, "ncat"),
-        getColumn(data@anchor, "ncat")
+        n_cats_anchor
       )
       plink_pars <- plink::as.irt.pars(
-        pars, common, cat = ncat,
+        pars, common, cat = n_cats,
         list(pm_all, pm_anchor),
         grp.names = c("From", "To")
       )

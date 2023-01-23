@@ -30,14 +30,14 @@ checkFrequency <- function(data) {
   if (sum(is.na(tmp)) > 0) {
     for (i in 1:ni) {
       nm <- sum(is.na(tmp[i, ]))
-      ncats_obs <- nc - nm
+      n_cats_obs <- nc - nm
 
       if (nm > 0) {
         item_id   <- rownames(tmp[i, ])
         idx       <- which(data@itemmap[[data@item_id]] == item_id)
-        ncats_exp <- getColumn(data@itemmap, "ncat")[idx]
+        n_cats_exp <- getColumn(data@itemmap, "ncat")[idx]
 
-        if (ncats_exp != ncats_obs) {
+        if (n_cats_exp != n_cats_obs) {
           cats <- colnames(tmp[i, ])
           missingcats <- which(is.na(tmp[i, ]))
           cats[missingcats] <- "missing"
