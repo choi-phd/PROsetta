@@ -113,18 +113,18 @@ getParLayout <- function(d, dimensions, bound_cov) {
 }
 
 #' @noRd
-getAnchorPar <- function(d, as_AD) {
+filterItemParameters <- function(ipar) {
 
   idx <- c()
-  for (j in 1:dim(d@anchor)[2]) {
-    if (inherits(d@anchor[, j], "numeric")) {
-      if (any(d@anchor[, j] != round(d@anchor[, j]), na.rm = TRUE)) {
+  for (j in 1:dim(ipar)[2]) {
+    if (inherits(ipar[, j], "numeric")) {
+      if (any(ipar[, j] != round(ipar[, j]), na.rm = TRUE)) {
         idx <- c(idx, j)
       }
     }
   }
 
-  tmp <- d@anchor[, idx]
+  tmp <- ipar[, idx]
 
   idx <- c(
     grep("^a", names(tmp)),
@@ -136,13 +136,21 @@ getAnchorPar <- function(d, as_AD) {
   )
   ipar <- tmp[, unique(idx)]
 
+  return(ipar)
+
+}
+
+#' @noRd
+getAnchorPar <- function(d, as_AD) {
+
+  ipar <- filterItemParameters(d@anchor)
+  rownames(ipar) <- d@anchor[, d@item_id]
+
   if (as_AD) {
     ipar              <- convertABtoAD(ipar)
     anchor_dim        <- getAnchorDimension(d)
     colnames(ipar)[1] <- sprintf("a%s", anchor_dim)
   }
-
-  rownames(ipar) <- d@anchor[, d@item_id]
 
   return(ipar)
 
