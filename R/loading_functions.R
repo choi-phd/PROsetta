@@ -68,6 +68,18 @@ setClass("PROsetta_data",
         msg_all <- c(msg_all, msg)
       }
     }
+
+    # validate whether item models are consistent
+    anchor_items <- object@itemmap[[object@item_id]] %in% object@anchor[[object@item_id]]
+    anchor_items <- rownames(object@itemmap)[anchor_items]
+
+    for (i in anchor_items) {
+      if (!(object@itemmap[i, ]$item_model == object@anchor[i, ]$item_model)) {
+        msg <- sprintf("item '%s' has different models between @itemmap and @anchor: must match", i)
+        msg_all <- c(msg_all, msg)
+      }
+    }
+
     if (length(msg_all) > 0) {
       return(msg_all)
     }
