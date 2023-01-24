@@ -30,7 +30,7 @@ detectNCategories <- function(ipar) {
 
 #' (internal) construct a model
 #'
-#' \code{\link{getModel}} is an internal function for constructing a model.
+#' \code{\link{makeCalibrationModel}} is an internal function for constructing a model.
 #'
 #' @param d a \code{\linkS4class{PROsetta_data}} object.
 #' @param dimensions the number of dimensions to use in the model. Must be \code{1} or \code{2}.
@@ -39,16 +39,16 @@ detectNCategories <- function(ipar) {
 #' @param bound_cov only used when \code{dimensions} is \code{2}.
 #' If \code{TRUE}, then constrain the between-dimension covariance to be \code{< .999}.
 #'
-#' @return \code{\link{getModel}} returns a \code{\link[mirt]{mirt.model}} object.
+#' @return \code{\link{makeCalibrationModel}} returns a \code{\link[mirt]{mirt.model}} object.
 #'
 #' @examples
-#' PROsetta:::getModel(data_asq, 1, FALSE)
-#' PROsetta:::getModel(data_asq, 1, TRUE)
-#' PROsetta:::getModel(data_asq, 2, FALSE)
-#' PROsetta:::getModel(data_asq, 2, TRUE)
+#' PROsetta:::makeCalibrationModel(data_asq, 1, FALSE)
+#' PROsetta:::makeCalibrationModel(data_asq, 1, TRUE)
+#' PROsetta:::makeCalibrationModel(data_asq, 2, FALSE)
+#' PROsetta:::makeCalibrationModel(data_asq, 2, TRUE)
 #'
 #' @keywords internal
-getModel <- function(d, dimensions, bound_cov) {
+makeCalibrationModel <- function(d, dimensions, bound_cov) {
 
   resp_data  <- getResponse(d)
   model_text <- c()
@@ -109,13 +109,13 @@ getModel <- function(d, dimensions, bound_cov) {
 }
 
 #' @noRd
-getParLayout <- function(d, dimensions, bound_cov) {
+makeParameterLayout <- function(d, dimensions, bound_cov) {
 
-  resp_data  <- getResponse(d)
-  m          <- getModel(d, dimensions, bound_cov)
-  par_layout <- mirt(resp_data, m, itemtype = "graded", pars = "values")
+  resp_data <- getResponse(d)
+  m         <- makeCalibrationModel(d, dimensions, bound_cov)
+  layout    <- mirt(resp_data, m, itemtype = "graded", pars = "values")
 
-  return(par_layout)
+  return(layout)
 
 }
 
@@ -123,6 +123,7 @@ getParLayout <- function(d, dimensions, bound_cov) {
 filterItemParameters <- function(ipar) {
 
   idx <- c()
+
   for (j in 1:dim(ipar)[2]) {
     if (inherits(ipar[, j], "numeric")) {
       if (any(ipar[, j] != round(ipar[, j]), na.rm = TRUE)) {
@@ -131,24 +132,25 @@ filterItemParameters <- function(ipar) {
     }
   }
 
-  tmp <- ipar[, idx]
+  ipar <- ipar[, idx]
 
   idx <- c(
-    grep("^a", names(tmp)),
-    grep("^b", names(tmp)),
-    grep("^c", names(tmp)),
-    grep("^d", names(tmp)),
-    grep("^a[1-9]", names(tmp)),
-    grep("^cb[1-9]", names(tmp))
+    grep("^a", names(ipar)),
+    grep("^b", names(ipar)),
+    grep("^c", names(ipar)),
+    grep("^d", names(ipar)),
+    grep("^a[1-9]", names(ipar)),
+    grep("^cb[1-9]", names(ipar))
   )
-  ipar <- tmp[, unique(idx)]
+
+  ipar <- ipar[, unique(idx)]
 
   return(ipar)
 
 }
 
 #' @noRd
-getAnchorPar <- function(d, as_AD) {
+extractAnchorParameters <- function(d, as_AD) {
 
   ipar <- filterItemParameters(d@anchor)
   rownames(ipar) <- d@anchor[, d@item_id]
@@ -233,9 +235,9 @@ getAnchorDimension <- function(d) {
 }
 
 #' @noRd
-applyConstraintsToParLayout <- function(par_layout, d, verbose) {
+applyConstraintsToLayout <- function(layout, d, verbose) {
 
-  if (any("a2" %in% par_layout$name)) {
+  if (any("a2" %in% layout$name)) {
     dimensions <- 2
   } else {
     dimensions <- 1
@@ -252,7 +254,7 @@ applyConstraintsToParLayout <- function(par_layout, d, verbose) {
     verbose
   )
 
-  ipar_anchor <- getAnchorPar(d, as_AD = TRUE)
+  ipar_anchor <- extractAnchorParameters(d, as_AD = TRUE)
 
   printLog(
     "constraints",
@@ -270,24 +272,24 @@ applyConstraintsToParLayout <- function(par_layout, d, verbose) {
     a_par_idx  <- which(names(ipar_anchor) == a_par_name)
     names(ipar_anchor)[a_par_idx] <- "a1"
   }
-  par_to_fix     <- which(par_layout$item %in% rownames(ipar_anchor))
-  n_items_to_fix <- length(unique(par_layout$item[par_to_fix]))
-  par_layout$est[par_to_fix] <- FALSE
+  par_to_fix     <- which(layout$item %in% rownames(ipar_anchor))
+  n_items_to_fix <- length(unique(layout$item[par_to_fix]))
+  layout$est[par_to_fix] <- FALSE
 
   for (i in 1:dim(ipar_anchor)[1]) {
     item_name <- rownames(ipar_anchor)[i]
     for (j in 1:dim(ipar_anchor)[2]) {
       par_name <- colnames(ipar_anchor)[j]
       idx <-
-        par_layout$item == item_name &
-        par_layout$name == par_name
+        layout$item == item_name &
+        layout$name == par_name
       if (length(which(idx)) == 0) {
-        stop(sprintf("@anchor: %s %s does not correspond to par_layout", item_name, par_name))
+        stop(sprintf("@anchor: %s %s does not correspond to layout", item_name, par_name))
       }
       if (length(which(idx)) > 2) {
-        stop(sprintf("@anchor: %s %s has multiple matches in par_layout", item_name, par_name))
+        stop(sprintf("@anchor: %s %s has multiple matches in layout", item_name, par_name))
       }
-      par_layout[idx, "value"] <- ipar_anchor[i, j]
+      layout[idx, "value"] <- ipar_anchor[i, j]
     }
   }
 
@@ -299,8 +301,8 @@ applyConstraintsToParLayout <- function(par_layout, d, verbose) {
 
   if (dimensions == 1) {
 
-    par_to_free <- which(par_layout$class == "GroupPars")
-    par_layout[par_to_free, "est"] <- TRUE
+    par_to_free <- which(layout$class == "GroupPars")
+    layout[par_to_free, "est"] <- TRUE
 
     printLog(
       "constraints",
@@ -308,7 +310,7 @@ applyConstraintsToParLayout <- function(par_layout, d, verbose) {
       verbose
     )
 
-    return(par_layout)
+    return(layout)
 
   }
 
@@ -318,14 +320,14 @@ applyConstraintsToParLayout <- function(par_layout, d, verbose) {
     # to capture the difference relative to anchor
     anchor_dim  <- getAnchorDimension(d)
     par_to_free <- which(
-      par_layout$class == "GroupPars" &
-      par_layout$name %in% c(
+      layout$class == "GroupPars" &
+      layout$name %in% c(
         sprintf("MEAN_%s", anchor_dim),
         sprintf("COV_%s%s", anchor_dim, anchor_dim)
       )
     )
 
-    par_layout[par_to_free, "est"] <- TRUE
+    layout[par_to_free, "est"] <- TRUE
 
     printLog(
       "constraints",
@@ -336,7 +338,7 @@ applyConstraintsToParLayout <- function(par_layout, d, verbose) {
       verbose
     )
 
-    return(par_layout)
+    return(layout)
 
   }
 
@@ -366,7 +368,7 @@ getRSSS <- function(ipar, theta_grid, is_minscore_0, prior_mu_sigma) {
   dimensions <- detectDimensions(ipar)
   n_cats <- detectNCategories(ipar)
 
-  pp <- getProb(ipar, "grm", theta_grid)
+  pp <- computeResponseProbability(ipar, "grm", theta_grid)
   L  <- LWrecursion(pp, n_cats, theta_grid, is_minscore_0)
   o  <- LtoEAP(L, theta_grid, prior_mu_sigma)
 
@@ -475,18 +477,18 @@ detectParameterization <- function(ipar) {
 
 #' (internal) compute response probability
 #'
-#' \code{\link{getProb}} is an internal function for computing response probability from a set of item parameters.
+#' \code{\link{computeResponseProbability}} is an internal function for computing response probability from a set of item parameters.
 #'
 #' @param ipar a \code{\link{data.frame}} containing item parameters.
 #' @param model the item model to use. Accepts \code{grm} or {gpcm}.
 #' @param theta_grid theta values to compute probability values at.
 #'
-#' @return \code{\link{getProb}} returns an item-wise list of probability matrices.
+#' @return \code{\link{computeResponseProbability}} returns an item-wise list of probability matrices.
 #'
 #' @examples
-#' ipar <- PROsetta:::getAnchorPar(data_asq, FALSE)
+#' ipar <- PROsetta:::extractAnchorParameters(data_asq, FALSE)
 #' theta_q <- seq(-4, 4, .1)
-#' p <- PROsetta:::getProb(ipar, "grm", theta_q)
+#' p <- PROsetta:::computeResponseProbability(ipar, "grm", theta_q)
 #'
 #' plot(
 #'   0, 0, type = "n", xlim = c(-4, 4), ylim = c(0, 1),
@@ -499,7 +501,7 @@ detectParameterization <- function(ipar) {
 #' lines(theta_q, p[[1]][, 5])
 #'
 #' @keywords internal
-getProb <- function(ipar, model, theta_grid) {
+computeResponseProbability <- function(ipar, model, theta_grid) {
 
   if (is.vector(theta_grid)) {
     theta_grid <- matrix(theta_grid)
@@ -620,7 +622,7 @@ getProb <- function(ipar, model, theta_grid) {
 #' @noRd
 getEscoreTheta <- function(ipar, model, theta, is_minscore_0) {
 
-  pp <- getProb(ipar, "grm", theta)
+  pp <- computeResponseProbability(ipar, "grm", theta)
 
   e  <- lapply(pp, function(x) {
     sum(x * 0:(length(x) - 1))

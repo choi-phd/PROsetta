@@ -76,10 +76,10 @@ runCalibration <- function(
     )
 
     bound_cov   <- FALSE
-    par_layout  <- getParLayout(data, dimensions, bound_cov)
-    par_layout  <- applyConstraintsToParLayout(par_layout, data, verbose)
-    model_specs <- getModel(data, dimensions, bound_cov)
-    calibration <- mirt::mirt(resp_data, model_specs, itemtype = "graded", pars = par_layout, ...)
+    layout  <- makeParameterLayout(data, dimensions, bound_cov)
+    layout  <- applyConstraintsToLayout(layout, data, verbose)
+    model_specs <- makeCalibrationModel(data, dimensions, bound_cov)
+    calibration <- mirt::mirt(resp_data, model_specs, itemtype = "graded", pars = layout, ...)
 
   } else if (toupper(fix_method) == "THETA") {
 
@@ -116,20 +116,20 @@ runCalibration <- function(
     )
 
     # Step 2. Constrain anchor dimension using 1D results
-    par_layout <- getParLayout(data, dimensions, bound_cov = FALSE)
+    layout <- makeParameterLayout(data, dimensions, bound_cov = FALSE)
 
     idx_mean <- which(
-      par_layout$class == "GroupPars" &
-      par_layout$name == sprintf("MEAN_%s", anchor_dim)
+      layout$class == "GroupPars" &
+      layout$name == sprintf("MEAN_%s", anchor_dim)
     )
-    par_layout[idx_mean, ]$value <- linked_parameters_1d$mu_sigma$mu
-    par_layout[idx_mean, ]$est   <- FALSE
+    layout[idx_mean, ]$value <- linked_parameters_1d$mu_sigma$mu
+    layout[idx_mean, ]$est   <- FALSE
     idx_var <- which(
-      par_layout$class == "GroupPars" &
-      par_layout$name == sprintf("COV_%s%s", anchor_dim, anchor_dim)
+      layout$class == "GroupPars" &
+      layout$name == sprintf("COV_%s%s", anchor_dim, anchor_dim)
     )
-    par_layout[idx_var, ]$value  <- linked_parameters_1d$mu_sigma$sigma
-    par_layout[idx_var, ]$est    <- FALSE
+    layout[idx_var, ]$value  <- linked_parameters_1d$mu_sigma$sigma
+    layout[idx_var, ]$est    <- FALSE
 
     printLog(
       "CPFIXEDDIM",
@@ -149,8 +149,8 @@ runCalibration <- function(
       ),
       verbose
     )
-    model_specs <- getModel(data, dimensions, bound_cov = FALSE)
-    calibration <- mirt::mirt(resp_data, model_specs, itemtype = "graded", pars = par_layout, ...)
+    model_specs <- makeCalibrationModel(data, dimensions, bound_cov = FALSE)
+    calibration <- mirt::mirt(resp_data, model_specs, itemtype = "graded", pars = layout, ...)
 
   } else if (toupper(fix_method) == "FREE") {
 
@@ -163,9 +163,9 @@ runCalibration <- function(
     # Free calibration uses standardized factors
     # so it makes sense to bound covariance (which is just correlation here) to be below 1
     bound_cov   <- TRUE
-    par_layout  <- getParLayout(data, dimensions, bound_cov)
-    model_specs <- getModel(data, dimensions, bound_cov)
-    calibration <- mirt::mirt(resp_data, model_specs, itemtype = "graded", pars = par_layout, ...)
+    layout      <- makeParameterLayout(data, dimensions, bound_cov)
+    model_specs <- makeCalibrationModel(data, dimensions, bound_cov)
+    calibration <- mirt::mirt(resp_data, model_specs, itemtype = "graded", pars = layout, ...)
   }
 
   if (calibration@OptimInfo$iter == calibration@Options$NCYCLES) {
@@ -252,7 +252,7 @@ runLinking <- function(data, method, verbose = FALSE, ...) {
     ipar      <- fit$items
     ni_all    <- nrow(ipar)
     ni_anchor <- nrow(data@anchor)
-    ipar_anchor     <- getAnchorPar(data, FALSE)
+    ipar_anchor     <- extractAnchorParameters(data, FALSE)
     n_cats_anchor   <- detectNCategories(ipar_anchor)
     max_cats_anchor <- max(n_cats_anchor)
     id_new <- data.frame(New = 1:ni_all   , ID = data@itemmap[[data@item_id]])
@@ -314,7 +314,7 @@ runLinking <- function(data, method, verbose = FALSE, ...) {
     out <- list()
     out$constants   <- NA
     out$ipar_linked <- pars$items
-    out$ipar_anchor <- getAnchorPar(data, as_AD = TRUE)
+    out$ipar_anchor <- extractAnchorParameters(data, as_AD = TRUE)
     out$mu_sigma    <- getMuSigma(calibration)
     out$method      <- method
 
