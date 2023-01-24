@@ -430,7 +430,7 @@ getColumn <- function(d, cn) {
 }
 
 #' @noRd
-genPrior <- function(theta_grid, dist_type, prior_mu_sigma) {
+generatePriorDensity <- function(theta_grid, dist_type, prior_mu_sigma) {
 
   if (dist_type == "normal") {
     prior <- dmvn(theta_grid, prior_mu_sigma$mu, prior_mu_sigma$sigma)
@@ -675,7 +675,7 @@ getEAP <- function(theta_grid, prior, pp, resp_data) {
 }
 
 #' @noRd
-getMuSigma <- function(calib) {
+extractMuSigma <- function(calib) {
 
   pars  <- mirt::coef(calib, simplify = TRUE)
   mu    <- pars$means
@@ -790,7 +790,7 @@ LtoEAP <- function(L, theta_grid, prior_mu_sigma) {
   dimensions <- dim(theta_grid)[2]
   nq         <- dim(theta_grid)[1]
 
-  prior      <- genPrior(theta_grid, "normal", prior_mu_sigma)
+  prior      <- generatePriorDensity(theta_grid, "normal", prior_mu_sigma)
   n_score    <- dim(L)[2]
   o <- LtoEAP_cpp(L, theta_grid, prior)
 
