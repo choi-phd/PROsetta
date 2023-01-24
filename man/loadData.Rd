@@ -13,6 +13,7 @@ loadData(
   item_id = NULL,
   person_id = NULL,
   scale_id = NULL,
+  model_id = NULL,
   input_dir = getwd()
 )
 }
@@ -28,6 +29,8 @@ loadData(
 \item{person_id}{the column name to look for case IDs. Automatically determined if not specified.}
 
 \item{scale_id}{the column name to look for scale IDs. Automatically determined if not specified.}
+
+\item{model_id}{the column name to look for model IDs. Automatically determined if not specified.}
 
 \item{input_dir}{the directory to look for the files.}
 }

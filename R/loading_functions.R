@@ -12,6 +12,7 @@ NULL
 #' @param item_id the column name to look for item IDs. Automatically determined if not specified.
 #' @param person_id the column name to look for case IDs. Automatically determined if not specified.
 #' @param scale_id the column name to look for scale IDs. Automatically determined if not specified.
+#' @param model_id the column name to look for model IDs. Automatically determined if not specified.
 #' @param input_dir the directory to look for the files.
 #'
 #' @return \code{\link{loadData}} returns a \code{\linkS4class{PROsetta_data}} object containing the loaded data.
@@ -27,7 +28,8 @@ setClass("PROsetta_data",
     anchor = "list",
     item_id = "character",
     person_id = "character",
-    scale_id = "character"
+    scale_id = "character",
+    model_id = "character"
   ),
   prototype = list(
     response = NULL,
@@ -35,7 +37,8 @@ setClass("PROsetta_data",
     anchor = NULL,
     item_id = "",
     person_id = "",
-    scale_id = ""
+    scale_id = "",
+    model_id = ""
   ),
   validity = function(object) {
 
@@ -56,6 +59,15 @@ setClass("PROsetta_data",
       msg <- sprintf("@itemmap: cannot find column '%s' from @scale_id", object@scale_id)
       msg_all <- c(msg_all, msg)
     }
+    if (!(object@model_id %in% names(object@itemmap))) {
+      msg <- sprintf("@itemmap: cannot find column '%s' from @model_id", object@model_id)
+      msg_all <- c(msg_all, msg)
+    }
+    if (!(object@model_id %in% names(object@anchor))) {
+      msg <- sprintf("@anchor: cannot find column '%s' from @model_id", object@model_id)
+      msg_all <- c(msg_all, msg)
+    }
+
     if (!is.null(object@itemmap) && !is.null(object@anchor)) {
       if (!all(object@anchor[[object@item_id]] %in% object@itemmap[[object@item_id]])) {
         msg <- sprintf("@anchor: column '%s' contains extra items not in @itemmap", object@item_id)
@@ -74,8 +86,13 @@ setClass("PROsetta_data",
     anchor_items <- rownames(object@itemmap)[anchor_items]
 
     for (i in anchor_items) {
-      if (!(object@itemmap[i, ]$item_model == object@anchor[i, ]$item_model)) {
-        msg <- sprintf("item '%s' has different models between @itemmap and @anchor: must match", i)
+      if (!(object@itemmap[i, ][[object@model_id]] == object@anchor[i, ][[object@model_id]])) {
+        msg <- sprintf(
+          "item '%s' has different models between @itemmap ('%s') and @anchor ('%s'): must match",
+          i,
+          object@itemmap[i, ][[object@model_id]],
+          object@anchor[i, ][[object@model_id]]
+        )
         msg_all <- c(msg_all, msg)
       }
     }
@@ -91,7 +108,7 @@ setClass("PROsetta_data",
 #' @export
 loadData <- function(
   response, itemmap, anchor,
-  item_id = NULL, person_id = NULL, scale_id = NULL,
+  item_id = NULL, person_id = NULL, scale_id = NULL, model_id = NULL,
   input_dir = getwd()
 ) {
 
@@ -136,10 +153,10 @@ loadData <- function(
 
   # Guess IDs
 
-  n_ids <- sum(!is.null(item_id), !is.null(person_id), !is.null(scale_id))
+  n_ids <- sum(!is.null(item_id), !is.null(person_id), !is.null(scale_id), !is.null(model_id))
 
-  if (n_ids < 3 & n_ids > 0) {
-    stop("supply 'item_id', 'person_id', 'scale_id' all three simultaneously to override ID guessing.")
+  if (n_ids < 4 & n_ids > 0) {
+    stop("supply 'item_id', 'person_id', 'scale_id', 'model_id' all simultaneously to override ID guessing.")
   }
 
   if (n_ids == 0) {
@@ -168,6 +185,21 @@ loadData <- function(
     scale_id <- names_itemmap[idx]
     cat(sprintf("scale_id guessed as  : %s\n", scale_id))
 
+    # model ID
+
+    candidates <- intersect(names(itemmap), names(anchor))
+
+    o <- vector()
+    o[candidates] <- 0
+    for (candidate in candidates) {
+      o[candidate] <-
+        length(unique(itemmap[[candidate]])) +
+        length(unique(anchor[[candidate]]))
+    }
+    model_id <- names(which.min(o))
+
+    cat(sprintf("model_id guessed as  : %s\n", model_id))
+
   }
 
   # Use rownames for easier access
@@ -184,6 +216,7 @@ loadData <- function(
   data@item_id   <- item_id
   data@person_id <- person_id
   data@scale_id  <- scale_id
+  data@model_id  <- model_id
 
   for (s in unique(data@itemmap[[scale_id]])) {
     cor_matrix <- cor(getResponse(data, 1), use = "pairwise.complete.obs")
