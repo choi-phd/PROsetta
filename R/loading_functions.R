@@ -158,6 +158,10 @@ loadData <- function(
 
   }
 
+  # Use rownames for easier access
+
+  rownames(itemmap) <- itemmap[[item_id]]
+  rownames(anchor) <- anchor[[item_id]]
 
   # Create PROsetta_data object
 
