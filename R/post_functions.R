@@ -63,7 +63,7 @@ getTheta <- function(
   prior_mu_sigma$mu    <- prior_mean
   prior_mu_sigma$sigma <- prior_sd ** 2
 
-  prior <- genPrior(theta_grid, prior_dist, prior_mu_sigma)
+  prior <- generatePriorDensity(theta_grid, prior_dist, prior_mu_sigma)
   pp    <- computeResponseProbability(ipar, model, theta_grid)
   eap   <- getEAP(theta_grid, prior, pp, resp_data)
   eap   <- cbind(person_id, eap)

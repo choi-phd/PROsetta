@@ -297,12 +297,12 @@ runLinking <- function(data, method, verbose = FALSE, ...) {
     }
 
     if (method == "FIXEDPAR") {
-      
+
       out <- list()
       out$constants <- NA
       out$ipar_linked <- ipar
       out$ipar_anchor <- extractAnchorParameters(data, as_AD = FALSE)
-      out$mu_sigma    <- getMuSigma(calibration)
+      out$mu_sigma    <- extractMuSigma(calibration)
 
     }
 
@@ -324,7 +324,7 @@ runLinking <- function(data, method, verbose = FALSE, ...) {
     out$constants   <- NA
     out$ipar_linked <- pars$items
     out$ipar_anchor <- extractAnchorParameters(data, as_AD = TRUE)
-    out$mu_sigma    <- getMuSigma(calibration)
+    out$mu_sigma    <- extractMuSigma(calibration)
     out$method      <- method
 
     return(out)
@@ -518,7 +518,7 @@ runRSSS <- function(
   } else if (isS4(ipar_linked) && attr(class(ipar_linked), "package") == "mirt") {
 
     item_par    <- mirt::coef(ipar_linked, IRTpars = FALSE, simplify = TRUE)$items
-    mu_sigma    <- getMuSigma(ipar_linked)
+    mu_sigma    <- extractMuSigma(ipar_linked)
     link_method <- "FREE"
 
   }
