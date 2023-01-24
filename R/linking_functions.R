@@ -258,11 +258,9 @@ runLinking <- function(data, method, verbose = FALSE, ...) {
     id_new <- data.frame(New = 1:ni_all   , ID = data@itemmap[[data@item_id]])
     id_old <- data.frame(Old = 1:ni_anchor, ID = data@anchor[[data@item_id]])
     common <- merge(id_new, id_old, by = "ID", sort = FALSE)[c("New", "Old")]
-    pars <- vector("list", 2)
-    pars[[1]] <- ipar
-    pars[[2]] <- data@anchor[c("a", paste0("cb", 1:(max_cats_anchor - 1)))]
-
+    
     if (method %in% c("MM", "MS", "HB", "SL")) {
+
       printLog(
         "metric",
         "applying linear transformation on item parameters to match the metric of anchor data parameters",
@@ -273,28 +271,39 @@ runLinking <- function(data, method, verbose = FALSE, ...) {
         sprintf("linear transformation method is %s", method),
         verbose
       )
+
       pm_all    <- plink::as.poly.mod(ni_all   , "grm", 1:ni_all)
       pm_anchor <- plink::as.poly.mod(ni_anchor, "grm", 1:ni_anchor)
       n_cats <- list(
         getColumn(data@itemmap, "ncat"),
         n_cats_anchor
       )
+
+      pars <- vector("list", 2)
+      pars[[1]] <- ipar
+      pars[[2]] <- data@anchor[c("a", paste0("cb", 1:(max_cats_anchor - 1)))]
+
       plink_pars <- plink::as.irt.pars(
         pars, common, cat = n_cats,
         list(pm_all, pm_anchor),
         grp.names = c("From", "To")
       )
+
       out <- plink::plink(plink_pars, rescale = method, base.grp = 2)
       out$constants <- out$link@constants[[method]]
       out$ipar_linked <- out$pars@pars$From
       out$ipar_anchor <- out$pars@pars$To
+
     }
+
     if (method == "FIXEDPAR") {
+      
       out <- list()
       out$constants <- NA
-      out$ipar_linked <- pars[[1]]
-      out$ipar_anchor <- pars[[2]]
+      out$ipar_linked <- ipar
+      out$ipar_anchor <- extractAnchorParameters(data, as_AD = FALSE)
       out$mu_sigma    <- getMuSigma(calibration)
+
     }
 
     out$method      <- method
