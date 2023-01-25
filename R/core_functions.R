@@ -366,6 +366,10 @@ getRSSS <- function(ipar, theta_grid, is_minscore_0, prior_mu_sigma) {
     theta_grid <- matrix(theta_grid)
   }
 
+  if (any(prior_mu_sigma$mu == 50)) {
+    message("using theta = 50.0 as prior mean.. (this is very extreme)")
+  }
+
   dimensions <- detectDimensions(ipar)
   n_cats <- detectNCategories(ipar)
 
