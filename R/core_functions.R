@@ -351,11 +351,11 @@ applyConstraintsToLayout <- function(layout, d, verbose) {
 #' @param ipar an item parameter matrix for graded response items. Accepts both a/b and a/d format parameters. Accepts multidimensional item parameters.
 #' @param theta_grid the theta grid to use for numerical integration.
 #' @param is_minscore_0 if \code{TRUE}, the scores of each item begins from 0. if \code{FALSE}, the scores of each item begins from 1.
-#' @param prior_mu_sigma a named list containing prior distribution parameters:
+#' @param prior_mu_sigma a named list containing prior distribution parameters. All values must be in the theta metric.
 #' \itemize{
-#'   \item{\code{mu} means}
+#'   \item{\code{mu} the prior means}
 #'   \item{\code{sigma} the covariance matrix}
-#'   \item{\code{sd} standard deviations}
+#'   \item{\code{sd} the prior standard deviations}
 #'   \item{\code{corr} the correlation matrix}
 #' }
 #' @export
