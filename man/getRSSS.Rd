@@ -13,11 +13,11 @@ getRSSS(ipar, theta_grid, is_minscore_0, prior_mu_sigma)
 
 \item{is_minscore_0}{if \code{TRUE}, the scores of each item begins from 0. if \code{FALSE}, the scores of each item begins from 1.}
 
-\item{prior_mu_sigma}{a named list containing prior distribution parameters:
+\item{prior_mu_sigma}{a named list containing prior distribution parameters. All values must be in the theta metric.
 \itemize{
-  \item{\code{mu} means}
+  \item{\code{mu} the prior means}
   \item{\code{sigma} the covariance matrix}
-  \item{\code{sd} standard deviations}
+  \item{\code{sd} the prior standard deviations}
   \item{\code{corr} the correlation matrix}
 }}
 }
