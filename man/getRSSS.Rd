@@ -11,7 +11,8 @@ getRSSS(ipar, theta_grid, is_minscore_0, prior_mu_sigma)
 
 \item{theta_grid}{the theta grid to use for numerical integration.}
 
-\item{is_minscore_0}{if \code{TRUE}, the scores of each item begins from 0. if \code{FALSE}, the scores of each item begins from 1.}
+\item{is_minscore_0}{if \code{TRUE}, the score of each item begins from 0.
+if \code{FALSE}, the score of each item begins from 1.}
 
 \item{prior_mu_sigma}{a named list containing prior distribution parameters. All values must be in the theta metric.
 \itemize{
@@ -22,5 +23,5 @@ getRSSS(ipar, theta_grid, is_minscore_0, prior_mu_sigma)
 }}
 }
 \description{
-\code{\link{getRSSS}} is a function to generate a raw-score to standard-score crosswalk table.
+\code{\link{getRSSS}} is a function for generating a raw-score to standard-score crosswalk table.
 }
