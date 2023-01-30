@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">PROsetta</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.5.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.4.0</span>
       </span>
     </div>
 
@@ -52,9 +52,15 @@
 
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.3.5.9000" id="prosetta-0359000">PROsetta 0.3.5.9000<a class="anchor" aria-label="anchor" href="#prosetta-0359000"></a></h2>
-<ul><li>Deprecated <code>guiPROsetta()</code> is removed. Use <code><a href="../reference/PROsetta.html">PROsetta()</a></code> instead.</li>
+<ul><li>Now requires <code>TestDesign (&gt;= 1.5.1)</code>.</li>
+<li>Response probabilities are now computed faster using cpp functions.</li>
+<li>Deprecated <code>guiPROsetta()</code> is removed. Use <code><a href="../reference/PROsetta.html">PROsetta()</a></code> instead.</li>
 <li>Updated documentation.</li>
 <li>Made minor updates to the Shiny app in <code><a href="../reference/PROsetta.html">PROsetta()</a></code>.</li>
+<li>Removed <code>ncat</code> column in anchor parameters. This is now inferred from the number of parameters.</li>
+<li>Added cpp routine for EAP computation after Lord-Wingersky recursion. This improves the speed of <code><a href="../reference/runRSSS.html">runRSSS()</a></code>.</li>
+<li>
+<code><a href="../reference/getRSSS.html">getRSSS()</a></code> now nudges the user if the prior mean input looks like a T-score, which should be entered in the theta metric.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.3.5" id="prosetta-035">PROsetta 0.3.5<small>2022-01-03</small><a class="anchor" aria-label="anchor" href="#prosetta-035"></a></h2>

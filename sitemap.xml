@@ -28,6 +28,9 @@
     <loc>/reference/compareScores.html</loc>
   </url>
   <url>
+    <loc>/reference/computeResponseProbability.html</loc>
+  </url>
+  <url>
     <loc>/reference/dataset_asq.html</loc>
   </url>
   <url>
@@ -46,12 +49,6 @@
     <loc>/reference/getItemNames.html</loc>
   </url>
   <url>
-    <loc>/reference/getModel.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getProb.html</loc>
-  </url>
-  <url>
     <loc>/reference/getRSSS.html</loc>
   </url>
   <url>
@@ -68,6 +65,9 @@
   </url>
   <url>
     <loc>/reference/loadData.html</loc>
+  </url>
+  <url>
+    <loc>/reference/makeCalibrationModel.html</loc>
   </url>
   <url>
     <loc>/reference/plot-methods.html</loc>
