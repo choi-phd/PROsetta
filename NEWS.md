@@ -7,6 +7,7 @@
 * Made minor updates to the Shiny app in `PROsetta()`.
 * Removed `ncat` column in anchor parameters. This is now inferred from the number of parameters.
 * Added cpp routine for EAP computation after Lord-Wingersky recursion. This improves the speed of `runRSSS()`.
+* `getRSSS()` now nudges the user if the prior mean input looks like a T-score, which should be entered in the theta metric.
 
 # PROsetta 0.3.5
 
