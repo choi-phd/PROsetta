@@ -1,4 +1,4 @@
-# PROsetta 0.3.5.9000
+# PROsetta 0.4.1
 
 * Now requires `TestDesign (>= 1.5.1)`.
 * Response probabilities are now computed faster using cpp functions.

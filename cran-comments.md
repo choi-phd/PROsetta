@@ -1,4 +1,6 @@
-# PROsetta 0.4.0
+# PROsetta 0.4.1
+
+This is a resubmission. The previous version 0.4.0 had CITATION based on citEntry(). This is updated to bibentry() in this submission.
 
 ## Test environments
 
