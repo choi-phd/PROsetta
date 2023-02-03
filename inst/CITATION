@@ -1,6 +1,6 @@
-citHeader("To cite PROsetta in publications use:")
-citEntry(
-  entry = "Article",
+bibentry(
+  bibtype = "Article",
+  header = "To cite PROsetta in publications, use:",
   title = "{PROsetta}: An R Package for Linking Patient-Reported Outcome Measures",
   author = c(
     person("Seung W.", "Choi"),
