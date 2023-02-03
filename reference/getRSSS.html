@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">PROsetta</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.4.1</span>
       </span>
     </div>
 
@@ -83,6 +83,24 @@ if <code>FALSE</code>, the score of each item begins from 1.</p></dd>
 
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># \donttest{</span></span>
+<span><span class="co">## Free calibration without using anchor</span></span>
+<span></span>
+<span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="runCalibration.html">runCalibration</a></span><span class="op">(</span><span class="va">data_asq</span>, technical <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>NCYCLES <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">ipar</span> <span class="op">&lt;-</span> <span class="fu">mirt</span><span class="fu">::</span><span class="fu">coef</span><span class="op">(</span><span class="va">o</span>, IRTpars <span class="op">=</span> <span class="cn">TRUE</span>, simplify <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">items</span></span>
+<span><span class="va">items</span> <span class="op">&lt;-</span> <span class="fu"><a href="getItemNames.html">getItemNames</a></span><span class="op">(</span><span class="va">data_asq</span>, <span class="fl">2</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">getRSSS</span><span class="op">(</span></span>
+<span>  ipar <span class="op">=</span> <span class="va">ipar</span><span class="op">[</span><span class="va">items</span>, <span class="op">]</span>,</span>
+<span>  theta_grid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="fl">4</span>, <span class="fl">.1</span><span class="op">)</span>,</span>
+<span>  is_minscore_0 <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  prior_mu_sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>mu <span class="op">=</span> <span class="fl">0</span>, sigma <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co"># }</span></span></code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
