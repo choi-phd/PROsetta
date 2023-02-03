@@ -25,3 +25,20 @@ if \code{FALSE}, the score of each item begins from 1.}
 \description{
 \code{\link{getRSSS}} is a function for generating a raw-score to standard-score crosswalk table.
 }
+\examples{
+\donttest{
+## Free calibration without using anchor
+
+o <- runCalibration(data_asq, technical = list(NCYCLES = 1000))
+
+ipar <- mirt::coef(o, IRTpars = TRUE, simplify = TRUE)$items
+items <- getItemNames(data_asq, 2)
+
+getRSSS(
+  ipar = ipar[items, ],
+  theta_grid = seq(-4, 4, .1),
+  is_minscore_0 = TRUE,
+  prior_mu_sigma = list(mu = 0, sigma = 1)
+)
+}
+}

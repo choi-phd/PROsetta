@@ -359,6 +359,23 @@ applyConstraintsToLayout <- function(layout, d, verbose) {
 #'   \item{\code{sd} the prior standard deviations}
 #'   \item{\code{corr} the correlation matrix}
 #' }
+#'
+#' @examples
+#' \donttest{
+#' ## Free calibration without using anchor
+#'
+#' o <- runCalibration(data_asq, technical = list(NCYCLES = 1000))
+#'
+#' ipar <- mirt::coef(o, IRTpars = TRUE, simplify = TRUE)$items
+#' items <- getItemNames(data_asq, 2)
+#'
+#' getRSSS(
+#'   ipar = ipar[items, ],
+#'   theta_grid = seq(-4, 4, .1),
+#'   is_minscore_0 = TRUE,
+#'   prior_mu_sigma = list(mu = 0, sigma = 1)
+#' )
+#' }
 #' @export
 getRSSS <- function(ipar, theta_grid, is_minscore_0, prior_mu_sigma) {
 
