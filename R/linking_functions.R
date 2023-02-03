@@ -289,30 +289,30 @@ runLinking <- function(data, method, verbose = FALSE, ...) {
         grp.names = c("From", "To")
       )
 
-      out <- plink::plink(plink_pars, rescale = method, base.grp = 2)
-      out$constants <- out$link@constants[[method]]
-      out$ipar_linked <- out$pars@pars$From
-      out$ipar_anchor <- out$pars@pars$To
+      o <- plink::plink(plink_pars, rescale = method, base.grp = 2)
+      o$constants <- o$link@constants[[method]]
+      o$ipar_linked <- o$pars@pars$From
+      o$ipar_anchor <- o$pars@pars$To
 
     }
 
     if (method == "FIXEDPAR") {
 
-      out <- list()
-      out$constants <- NA
-      out$ipar_linked <- ipar
-      out$ipar_anchor <- extractAnchorParameters(data, as_AD = FALSE)
-      out$mu_sigma    <- extractMuSigma(calibration)
+      o <- list()
+      o$constants <- NA
+      o$ipar_linked <- ipar
+      o$ipar_anchor <- extractAnchorParameters(data, as_AD = FALSE)
+      o$mu_sigma    <- extractMuSigma(calibration)
 
     }
 
-    out$method      <- method
-    rownames(out$ipar_linked) <- id_new$ID
-    rownames(out$ipar_anchor) <- id_old$ID
-    colnames(out$ipar_linked) <- colnames(ipar)[1:dim(out$ipar_linked)[2]]
-    colnames(out$ipar_anchor) <- colnames(ipar)[1:dim(out$ipar_anchor)[2]]
+    o$method <- method
+    rownames(o$ipar_linked) <- id_new$ID
+    rownames(o$ipar_anchor) <- id_old$ID
+    colnames(o$ipar_linked) <- colnames(ipar)[1:dim(o$ipar_linked)[2]]
+    colnames(o$ipar_anchor) <- colnames(ipar)[1:dim(o$ipar_anchor)[2]]
 
-    return(out)
+    return(o)
 
   }
 
@@ -320,14 +320,14 @@ runLinking <- function(data, method, verbose = FALSE, ...) {
 
     pars <- mirt::coef(calibration, IRTpars = FALSE, simplify = TRUE)
 
-    out <- list()
-    out$constants   <- NA
-    out$ipar_linked <- pars$items
-    out$ipar_anchor <- extractAnchorParameters(data, as_AD = TRUE)
-    out$mu_sigma    <- extractMuSigma(calibration)
-    out$method      <- method
+    o <- list()
+    o$constants   <- NA
+    o$ipar_linked <- pars$items
+    o$ipar_anchor <- extractAnchorParameters(data, as_AD = TRUE)
+    o$mu_sigma    <- extractMuSigma(calibration)
+    o$method      <- method
 
-    return(out)
+    return(o)
 
   }
 

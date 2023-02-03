@@ -68,12 +68,12 @@ getTheta <- function(
   eap   <- getEAP(theta_grid, prior, pp, resp_data)
   eap   <- cbind(person_id, eap)
 
-	out <- list()
-	out$theta    <- eap
-	out$item_idx <- item_idx
-	out$ipar     <- ipar
+	o <- list()
+	o$theta    <- eap
+	o$item_idx <- item_idx
+	o$ipar     <- ipar
 
-	return(out)
+	return(o)
 
 }
 
@@ -141,23 +141,23 @@ compareScores <- function(
   left, right, type = c("corr", "mean", "sd", "rmsd", "mad")
 ) {
 
-  out <- list()
+  o <- list()
   if ("corr" %in% type) {
-    out$corr <- cor(left, right)
+    o$corr <- cor(left, right)
   }
   if ("mean" %in% type) {
-    out$mean <- mean(left - right)
+    o$mean <- mean(left - right)
   }
   if ("sd" %in% type) {
-    out$sd <- sqrt(mean((left - right)**2) - mean(left - right)**2)
+    o$sd <- sqrt(mean((left - right)**2) - mean(left - right)**2)
   }
   if ("rmsd" %in% type) {
-    out$rmsd <- sqrt(mean((left - right)**2))
+    o$rmsd <- sqrt(mean((left - right)**2))
   }
   if ("mad" %in% type) {
-    out$mad <- mean(abs(left - right))
+    o$mad <- mean(abs(left - right))
   }
 
-  return(as.data.frame(out))
+  return(as.data.frame(o))
 
 }
