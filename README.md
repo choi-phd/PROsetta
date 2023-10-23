@@ -4,7 +4,7 @@
 <!-- badges: start -->
 
 [![R build
-status](https://github.com/choi-phd/PROsetta/workflows/build/badge.svg)](https://github.com/choi-phd/PROsetta/actions)
+status](https://github.com/choi-phd/PROsetta/actions/workflows/r.yml/badge.svg)](https://github.com/choi-phd/PROsetta/actions)
 [![Number of
 downloads](https://cranlogs.r-pkg.org/badges/grand-total/PROsetta?color=lightgrey)](https://cran.r-project.org/package=PROsetta)
 <!-- badges: end -->
