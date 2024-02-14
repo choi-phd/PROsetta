@@ -83,6 +83,9 @@ runCalibration <- function(
 
   } else if (toupper(fix_method) == "THETA") {
 
+    # used for calibrated projection
+    # not used in 1D cases
+
     anchor_dim <- getAnchorDimension(data)
     printLog(
       "CPFIXEDDIM",
