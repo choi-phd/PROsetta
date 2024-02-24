@@ -261,7 +261,7 @@ runLinking <- function(data, method, verbose = FALSE, ...) {
     id_new <- data.frame(New = 1:ni_all   , ID = data@itemmap[[data@item_id]])
     id_old <- data.frame(Old = 1:ni_anchor, ID = data@anchor[[data@item_id]])
     common <- merge(id_new, id_old, by = "ID", sort = FALSE)[c("New", "Old")]
-    
+
     if (method %in% c("MM", "MS", "HB", "SL")) {
 
       printLog(
