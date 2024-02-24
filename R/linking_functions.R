@@ -295,7 +295,7 @@ runLinking <- function(data, method, verbose = FALSE, ...) {
       o <- plink::plink(plink_pars, rescale = method, base.grp = 2)
       o$constants <- o$link@constants[[method]]
       o$ipar_linked <- o$pars@pars$From
-      o$ipar_anchor <- o$pars@pars$To
+      o$ipar_anchor <- extractAnchorParameters(data, as_AD = FALSE)
 
     }
 
