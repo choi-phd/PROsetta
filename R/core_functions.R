@@ -164,6 +164,82 @@ extractAnchorParameters <- function(d, as_AD) {
 }
 
 #' @noRd
+extractLinkedParameters <- function(x, as, data) {
+
+  if (inherits(x, "list")) {
+
+    # this is an output from plink::plink()
+    # this assumes AB format
+
+    if (as == "AB") {
+      ipar <- x$pars@pars$From
+    }
+    if (as == "AD") {
+      ipar <- x$pars@pars$From
+      ipar <- convertABtoAD(ipar)
+    }
+
+    # plink doesn't assign column names reliably for some reason
+    # fill it in
+    ipar <- data.frame(ipar)
+    if (as == "AB") {
+      colnames(ipar)[1] <- "a"
+      colnames(ipar)[1 + (1:(ncol(ipar) - 1))] <-
+        sprintf("b%s", 1:(ncol(ipar) - 1))
+    }
+    if (as == "AD") {
+      colnames(ipar)[1] <- "a"
+      colnames(ipar)[1 + (1:(ncol(ipar) - 1))] <-
+        sprintf("d%s", 1:(ncol(ipar) - 1))
+    }
+
+    item_ids    <- data.frame(data@itemmap[, data@item_id])
+    item_models <- data.frame(data@itemmap[, data@model_id])
+    names(item_ids)    <- data@item_id
+    names(item_models) <- data@model_id
+
+    ipar <- cbind(
+      item_ids,
+      item_models,
+      ipar
+    )
+
+    return(ipar)
+
+  }
+
+  if (inherits(x, "SingleGroupClass")) {
+
+    # this is an output from mirt::mirt()
+
+    if (as == "AB") {
+      ipar <- mirt::coef(x, IRTpars = TRUE, simplify = TRUE)
+      ipar <- ipar$items
+    }
+    if (as == "AD") {
+      ipar <- mirt::coef(x, IRTpars = FALSE, simplify = TRUE)
+      ipar <- ipar$items
+    }
+
+    item_ids    <- data.frame(data@itemmap[, data@item_id])
+    item_models <- data.frame(data@itemmap[, data@model_id])
+    names(item_ids)    <- data@item_id
+    names(item_models) <- data@model_id
+
+    ipar <- cbind(
+      item_ids,
+      item_models,
+      ipar
+    )
+
+    return(ipar)
+
+  }
+
+}
+
+
+#' @noRd
 convertABtoAD <- function(ipar) {
 
   p_type <- detectParameterization(ipar)
