@@ -1,3 +1,10 @@
+# PROsetta 0.4.1.9000
+
+* Added support for working with GPC models.
+* Added support for when items between instruments have different item models. (e.g., the anchoring instrument uses GR, and the instrument being calibrated uses GPC.)
+* Added support for when items within the anchoring instrument use different item models. (e.g., the anchoring instrument uses GR for some items and GPC for others.)
+* Added support for when items within the instrument being calibrated use different item models. (e.g., the instrument being calibrated uses GR for some items and GPC for others.)
+
 # PROsetta 0.4.1
 
 * Now requires `TestDesign (>= 1.5.1)`.
