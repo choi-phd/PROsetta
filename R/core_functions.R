@@ -153,7 +153,35 @@ sanitizeItemModel <- function(item_models, purpose) {
 
   }
 
+  if (purpose == "plink") {
+
+    for (i in 1:length(item_models)) {
+      if (item_models[i] == "GPC") { item_models[i] <- "gpcm"  ; next }
+      if (item_models[i] == "GR")  { item_models[i] <- "grm"; next }
+    }
+
+  }
+
   return(item_models)
+
+}
+
+#' @noRd
+make_plink_poly_mod <- function(item_models) {
+
+  item_models <- sanitizeItemModel(item_models, "plink")
+
+  n_items <- length(item_models)
+  unique_item_models <- unique(item_models)
+
+  idx_items_by_model <- list()
+  for (item_model in unique_item_models) {
+    idx_items_by_model[[item_model]] <- which(item_models == item_model)
+  }
+
+  poly_mod <- plink::as.poly.mod(n_items, unique_item_models, idx_items_by_model)
+
+  return(poly_mod)
 
 }
 
