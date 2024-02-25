@@ -280,8 +280,8 @@ runLinking <- function(data, method, verbose = FALSE, ...) {
         verbose
       )
 
-      pm_all    <- plink::as.poly.mod(ni_all   , "grm", 1:ni_all)
-      pm_anchor <- plink::as.poly.mod(ni_anchor, "grm", 1:ni_anchor)
+      pm_all    <- make_plink_poly_mod(data@itemmap[, data@model_id])
+      pm_anchor <- make_plink_poly_mod(data@anchor[, data@model_id])
       n_cats <- list(
         getColumn(data@itemmap, "ncat"),
         n_cats_anchor
