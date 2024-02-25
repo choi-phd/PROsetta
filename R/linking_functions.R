@@ -568,20 +568,20 @@ runRSSS <- function(
   # the last item_par_by_scale is the combined scale
 
   if (n_scale == 1) {
-    score_table <- getRSSS(item_par_by_scale[[n_scale + 1]], theta_grid, min_score == 0, prior_mu_sigma)
+    score_table <- getRSSS(item_par_by_scale[[n_scale + 1]], data@model_id, theta_grid, min_score == 0, prior_mu_sigma)
     return(score_table)
   } else if (n_scale > 1) {
     score_table <- vector(mode = "list", length = n_scale + 1)
 
     for (s in 1:(n_scale + 1)) {
-      score_table[[s]] <- getRSSS(item_par_by_scale[[s]], theta_grid, min_score[s] == 0, prior_mu_sigma)
+      score_table[[s]] <- getRSSS(item_par_by_scale[[s]], data@model_id, theta_grid, min_score[s] == 0, prior_mu_sigma)
       colnames(score_table[[s]])[1] <- sprintf("raw_%i", s)
     }
 
     names(score_table) <- names(item_par_by_scale)
 
     if (dimensions == 1 & link_method != "CPLA") {
-      score_table <- appendEscore(score_table, n_scale, item_par_by_scale, min_score)
+      score_table <- appendEscore(score_table, n_scale, item_par_by_scale, data@model_id, min_score)
     }
     if (dimensions == 1 & link_method == "CPLA") {
       score_table <- appendCPLA(score_table, n_scale, ipar_linked$mu_sigma)

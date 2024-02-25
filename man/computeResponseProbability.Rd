@@ -4,12 +4,12 @@
 \alias{computeResponseProbability}
 \title{(internal) compute response probability}
 \usage{
-computeResponseProbability(ipar, model, theta_grid)
+computeResponseProbability(ipar, model_id, theta_grid)
 }
 \arguments{
-\item{ipar}{a \code{\link{data.frame}} containing item parameters.}
+\item{ipar}{a \code{\link{data.frame}} containing item model and item parameters.}
 
-\item{model}{the item model to use. Accepts \code{grm} or {gpcm}.}
+\item{model_id}{the column name for item models.}
 
 \item{theta_grid}{theta values to compute probability values at.}
 }
@@ -22,7 +22,7 @@ computeResponseProbability(ipar, model, theta_grid)
 \examples{
 ipar <- PROsetta:::extractAnchorParameters(data_asq, FALSE)
 theta_q <- seq(-4, 4, .1)
-p <- PROsetta:::computeResponseProbability(ipar, "grm", theta_q)
+p <- PROsetta:::computeResponseProbability(ipar, "item_model", theta_q)
 
 plot(
   0, 0, type = "n", xlim = c(-4, 4), ylim = c(0, 1),
