@@ -9,33 +9,37 @@ test_that("runCalibration() works", {
 
   n_cycles <- 1e5
   tol <- 1e-6
-  test_tol <- 1e-4
+  codetest_tol <- 1e-4
 
   # free calibration, used for diagnostics -------------------------------------
   set.seed(1)
   o <- runCalibration(d, technical = list(NCYCLES = n_cycles), TOL = tol)
   ipar <- mirt::coef(o, simplify = TRUE)$items
-  expect_equal(sum(ipar), -552.6381, tolerance = test_tol)
+  expect_equal(sum(ipar), -552.6381, tolerance = codetest_tol)
 
   # fixed-parameter calibration, used for linking ------------------------------
   set.seed(1)
   o <- runCalibration(d, fix_method = "item", technical = list(NCYCLES = n_cycles), TOL = tol)
   ipar <- mirt::coef(o, IRTpars = TRUE, simplify = TRUE)$items
 
-  # source parameters
-  ipar_anchor_original <- extractAnchorParameters(d, as_AD = FALSE)
+  # anchoring parameters
+  ipar_anchor_original <- extractAnchorParameters(d, as = "AB")
+  use_these <- unique(c(
+    grep("^a$", names(ipar_anchor_original), value = TRUE),
+    grep("^cb[1-9]$", names(ipar_anchor_original), value = TRUE)
+  ))
+  ipar_anchor_original <- ipar_anchor_original[, use_these]
   ipar_diff <- ipar[rownames(ipar_anchor_original), ] - ipar_anchor_original
-  expect_equal(sum(ipar_diff), 0, tolerance = test_tol)
+  expect_equal(sum(ipar_diff), 0, tolerance = codetest_tol)
 
   # new item parameters
-  expect_equal(sum(ipar), 364.7369, tolerance = test_tol)
+  expect_equal(sum(ipar), 364.7369, tolerance = codetest_tol)
 
   # free calibration, used for diagnostics -------------------------------------
-  # use calibrated projection (without anchoring)
   set.seed(1)
   o <- runCalibration(d, dimensions = 2, technical = list(NCYCLES = n_cycles), TOL = tol)
   ipar <- mirt::coef(o, simplify = TRUE)$items
-  expect_equal(sum(ipar), -593.5108, tolerance = test_tol)
+  expect_equal(sum(ipar), -593.5108, tolerance = codetest_tol)
 
   # fixed-parameter calibration, used for linking ------------------------------
   # use calibrated projection (with anchoring)
@@ -44,12 +48,17 @@ test_that("runCalibration() works", {
   ipar <- mirt::coef(o, simplify = TRUE)$items
 
   # source parameters
-  ipar_anchor_original <- extractAnchorParameters(d, as_AD = TRUE)
+  ipar_anchor_original <- extractAnchorParameters(d, as = "AD")
+  use_these <- unique(c(
+    grep("^a[1-9]$", names(ipar_anchor_original), value = TRUE),
+    grep("^cb[1-9]$", names(ipar_anchor_original), value = TRUE)
+  ))
+  ipar_anchor_original <- ipar_anchor_original[, use_these]
   ipar_diff <- ipar[rownames(ipar_anchor_original), -2] - ipar_anchor_original
-  expect_equal(sum(ipar_diff), 0, tolerance = test_tol)
+  expect_equal(sum(ipar_diff), 0, tolerance = codetest_tol)
 
   # new item parameters
-  expect_equal(sum(ipar), -526.6563, tolerance = test_tol)
+  expect_equal(sum(ipar), -526.6563, tolerance = codetest_tol)
 
   # ignore_nonconv works -------------------------------------------------------
   set.seed(1)
