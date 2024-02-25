@@ -158,12 +158,12 @@ sanitizeItemModel <- function(item_models, purpose) {
 }
 
 #' @noRd
-extractAnchorParameters <- function(d, as_AD) {
+extractAnchorParameters <- function(d, as) {
 
   ipar <- d@anchor
   rownames(ipar) <- d@anchor[, d@item_id]
 
-  if (as_AD) {
+  if (as == "AD") {
     ipar <- convertABtoAD(ipar, d@item_id, d@model_id)
   }
 
@@ -280,7 +280,7 @@ applyConstraintsToLayout <- function(layout, d, verbose) {
   )
 
   # this should be always in AD format because mirt uses AD
-  ipar_anchor <- extractAnchorParameters(d, as_AD = TRUE)
+  ipar_anchor <- extractAnchorParameters(d, as = "AD")
   # also only keep the item parameters
   keep_these <- unique(c(
     grep("^a$"      , names(ipar_anchor), value = TRUE),
@@ -558,7 +558,7 @@ detectParameterization <- function(ipar) {
 #' @return \code{\link{computeResponseProbability}} returns an item-wise list of probability matrices.
 #'
 #' @examples
-#' ipar <- PROsetta:::extractAnchorParameters(data_asq, FALSE)
+#' ipar <- PROsetta:::extractAnchorParameters(data_asq, as = "AB")
 #' theta_q <- seq(-4, 4, .1)
 #' p <- PROsetta:::computeResponseProbability(ipar, "item_model", theta_q)
 #'
