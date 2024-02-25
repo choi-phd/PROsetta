@@ -6,7 +6,7 @@
 #' @import plink
 #' @importFrom methods new validObject
 #' @importFrom utils read.csv flush.console
-#' @importFrom stats dnorm sd cor cov2cor
+#' @importFrom stats dnorm sd cor cov2cor na.omit
 #' @importFrom grDevices pdf jpeg png tiff dev.off
 #' @importFrom graphics hist text points box legend grid lines strheight
 #' @importFrom mvnfast dmvn

@@ -23,9 +23,29 @@ validateData <- function(d) {
 
 #' @noRd
 detectNCategories <- function(ipar) {
-  nd <- detectDimensions(ipar)
-  n_cats <- apply(ipar, 1, function(x) sum(!is.na(x)) - nd + 1)
-  return(n_cats)
+
+  p_type <- detectParameterization(ipar)
+
+  if (p_type == "ab") {
+    b_columns <- unique(c(
+      grep("^b$"     , names(ipar), value = TRUE),
+      grep("^b[1-9]$", names(ipar), value = TRUE),
+      grep("^cb$"     , names(ipar), value = TRUE),
+      grep("^cb[1-9]$", names(ipar), value = TRUE)
+    ))
+    n_cats <- apply(ipar, 1, function(x) length(na.omit(x[b_columns])) + 1)
+    return(n_cats)
+  }
+
+  if (p_type == "ad") {
+    d_columns <- unique(c(
+      grep("^d$"     , names(ipar), value = TRUE),
+      grep("^d[1-9]$", names(ipar), value = TRUE)
+    ))
+    n_cats <- apply(ipar, 1, function(x) length(na.omit(x[d_columns])) + 1)
+    return(n_cats)
+  }
+
 }
 
 #' (internal) construct a model
