@@ -174,7 +174,7 @@ extractAnchorParameters <- function(d, as_AD) {
   rownames(ipar) <- d@anchor[, d@item_id]
 
   if (as_AD) {
-    ipar              <- convertABtoAD(ipar)
+    ipar              <- convertABtoAD(ipar, d@item_id, d@model_id)
     anchor_dim        <- getAnchorDimension(d)
     colnames(ipar)[1] <- sprintf("a%s", anchor_dim)
   }
@@ -255,75 +255,6 @@ extractLinkedParameters <- function(x, as, data) {
     return(ipar)
 
   }
-
-}
-
-
-#' @noRd
-convertABtoAD <- function(ipar) {
-
-  p_type <- detectParameterization(ipar)
-
-  if (p_type == "ab") {
-
-    dimensions <- detectDimensions(ipar)
-
-    ipar_a <- ipar[, 1:dimensions, drop = FALSE]
-    ipar_b <- ipar[, (dimensions + 1):dim(ipar)[2], drop = FALSE]
-
-    ipar_d <- ipar_b * NA
-    for (k in 1:dim(ipar_b)[2]) {
-      ipar_d[, k] <- -ipar_a * ipar_b[, k]
-    }
-    colnames(ipar_d) <- sprintf("d%s", 1:dim(ipar_d)[2])
-
-    ipar_ad <- cbind(ipar_a, ipar_d)
-
-    return(ipar_ad)
-
-  }
-
-  stop("unrecognized parameterization: cannot find cb* or b* columns")
-
-}
-
-#' @noRd
-convertADtoAB <- function(ipar) {
-
-  p_type <- detectParameterization(ipar)
-
-  if (p_type == "ad") {
-
-    dimensions <- detectDimensions(ipar)
-    if (dimensions != 1) {
-      stop("conversion from AD to AB requires the input to be in one dimension, but the number of dimension is %s", dimensions)
-    }
-
-    a_columns <- unique(c(
-      grep("^a", names(ipar), value = TRUE),
-      grep("^a[1-9]", names(ipar), value = TRUE)
-    ))
-    d_columns <- unique(c(
-      grep("^d", names(ipar), value = TRUE),
-      grep("^d[1-9]", names(ipar), value = TRUE)
-    ))
-
-    ipar_a <- ipar[, a_columns, drop = FALSE]
-    ipar_d <- ipar[, d_columns, drop = FALSE]
-
-    ipar_b <- ipar_d * NA
-    for (k in 1:dim(ipar_d)[2]) {
-      ipar_b[, k] <- -ipar_d[, k] / ipar_a
-    }
-    colnames(ipar_b) <- sprintf("b%s", 1:dim(ipar_b)[2])
-
-    ipar_ab <- cbind(ipar_a, ipar_b)
-
-    return(ipar_ab)
-
-  }
-
-  stop("unrecognized parameterization: cannot find d* columns")
 
 }
 
