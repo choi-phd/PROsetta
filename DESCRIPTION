@@ -56,6 +56,7 @@ Collate:
     'example.R'
     'helper_functions.R'
     'linking_functions.R'
+    'parameterization_functions.R'
     'plot_functions.R'
     'preanalysis_functions.r'
     'runshiny.R'
