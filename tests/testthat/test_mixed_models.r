@@ -96,9 +96,11 @@ for (test_case in test_cases) {
       # - the discrepancy comes from estimation error in mean(theta) and var(theta)
     ) {
 
-      o <- runLinking(
-        d, method = linking_method,
-        technical = list(keep_vcov_PD = FALSE)
+      suppressWarnings(
+        o <- runLinking(
+          d, method = linking_method,
+          technical = list(keep_vcov_PD = FALSE)
+        )
       )
 
       # collapse dimensions to one for CP methods, for comparison purposes
