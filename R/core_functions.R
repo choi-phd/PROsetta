@@ -158,34 +158,6 @@ sanitizeItemModel <- function(item_models, purpose) {
 }
 
 #' @noRd
-filterItemParameters <- function(ipar) {
-
-  idx <- c()
-
-  for (j in 1:dim(ipar)[2]) {
-    if (inherits(ipar[, j], "numeric")) {
-      if (any(ipar[, j] != round(ipar[, j]), na.rm = TRUE)) {
-        idx <- c(idx, j)
-      }
-    }
-  }
-  ipar <- ipar[, idx]
-
-  idx <- c(
-    grep("^a", names(ipar)),
-    grep("^b", names(ipar)),
-    grep("^c", names(ipar)),
-    grep("^d", names(ipar)),
-    grep("^a[1-9]", names(ipar)),
-    grep("^cb[1-9]", names(ipar))
-  )
-  ipar <- ipar[, unique(idx)]
-
-  return(ipar)
-
-}
-
-#' @noRd
 extractAnchorParameters <- function(d, as_AD) {
 
   ipar <- d@anchor
