@@ -260,7 +260,7 @@ runLinking <- function(data, method, verbose = FALSE, ...) {
     ipar      <- fit$items
     ni_all    <- nrow(ipar)
     ni_anchor <- nrow(data@anchor)
-    ipar_anchor     <- extractAnchorParameters(data, FALSE)
+    ipar_anchor     <- extractAnchorParameters(data, as = "AB")
     n_cats_anchor   <- detectNCategories(ipar_anchor)
     max_cats_anchor <- max(n_cats_anchor)
     id_new <- data.frame(New = 1:ni_all   , ID = data@itemmap[[data@item_id]])
@@ -300,7 +300,7 @@ runLinking <- function(data, method, verbose = FALSE, ...) {
       o <- plink::plink(plink_pars, rescale = method, base.grp = 2)
       o$constants <- o$link@constants[[method]]
       o$ipar_linked <- extractLinkedParameters(o, as = "AB", data)
-      o$ipar_anchor <- extractAnchorParameters(data, as_AD = FALSE)
+      o$ipar_anchor <- extractAnchorParameters(data, as = "AB")
 
     }
 
@@ -309,14 +309,12 @@ runLinking <- function(data, method, verbose = FALSE, ...) {
       o <- list()
       o$constants <- NA
       o$ipar_linked <- extractLinkedParameters(calibration, as = "AB", data)
-      o$ipar_anchor <- extractAnchorParameters(data, as_AD = FALSE)
+      o$ipar_anchor <- extractAnchorParameters(data, as = "AB")
       o$mu_sigma    <- extractMuSigma(calibration)
 
     }
 
     o$method <- method
-    rownames(o$ipar_anchor) <- id_old$ID
-    colnames(o$ipar_anchor) <- colnames(ipar)[1:dim(o$ipar_anchor)[2]]
 
     return(o)
 
@@ -327,7 +325,7 @@ runLinking <- function(data, method, verbose = FALSE, ...) {
     o <- list()
     o$constants   <- NA
     o$ipar_linked <- extractLinkedParameters(calibration, as = "AD", data)
-    o$ipar_anchor <- extractAnchorParameters(data, as_AD = TRUE)
+    o$ipar_anchor <- extractAnchorParameters(data, as = "AD")
     o$mu_sigma    <- extractMuSigma(calibration)
     o$method      <- method
 

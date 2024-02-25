@@ -20,7 +20,7 @@ computeResponseProbability(ipar, model_id, theta_grid)
 \code{\link{computeResponseProbability}} is an internal function for computing response probability from a set of item parameters.
 }
 \examples{
-ipar <- PROsetta:::extractAnchorParameters(data_asq, FALSE)
+ipar <- PROsetta:::extractAnchorParameters(data_asq, as = "AB")
 theta_q <- seq(-4, 4, .1)
 p <- PROsetta:::computeResponseProbability(ipar, "item_model", theta_q)
 
