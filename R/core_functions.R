@@ -131,11 +131,29 @@ makeCalibrationModel <- function(d, dimensions, bound_cov) {
 #' @noRd
 makeParameterLayout <- function(d, dimensions, bound_cov) {
 
-  resp_data <- getResponse(d)
-  m         <- makeCalibrationModel(d, dimensions, bound_cov)
-  layout    <- mirt(resp_data, m, itemtype = "graded", pars = "values")
+  resp_data   <- getResponse(d)
+  m           <- makeCalibrationModel(d, dimensions, bound_cov)
+  item_models <- d@itemmap[, d@model_id]
+  item_models <- sanitizeItemModel(item_models, "mirt")
+  layout      <- mirt(resp_data, m, itemtype = item_models, pars = "values")
 
   return(layout)
+
+}
+
+#' @noRd
+sanitizeItemModel <- function(item_models, purpose) {
+
+  if (purpose == "mirt") {
+
+    for (i in 1:length(item_models)) {
+      if (item_models[i] == "GPC") { item_models[i] <- "gpcm"  ; next }
+      if (item_models[i] == "GR")  { item_models[i] <- "graded"; next }
+    }
+
+  }
+
+  return(item_models)
 
 }
 
@@ -170,13 +188,11 @@ filterItemParameters <- function(ipar) {
 #' @noRd
 extractAnchorParameters <- function(d, as_AD) {
 
-  ipar <- filterItemParameters(d@anchor)
+  ipar <- d@anchor
   rownames(ipar) <- d@anchor[, d@item_id]
 
   if (as_AD) {
-    ipar              <- convertABtoAD(ipar, d@item_id, d@model_id)
-    anchor_dim        <- getAnchorDimension(d)
-    colnames(ipar)[1] <- sprintf("a%s", anchor_dim)
+    ipar <- convertABtoAD(ipar, d@item_id, d@model_id)
   }
 
   return(ipar)
@@ -291,7 +307,27 @@ applyConstraintsToLayout <- function(layout, d, verbose) {
     verbose
   )
 
+  # this should be always in AD format because mirt uses AD
   ipar_anchor <- extractAnchorParameters(d, as_AD = TRUE)
+  # also only keep the item parameters
+  keep_these <- unique(c(
+    grep("^a$"      , names(ipar_anchor), value = TRUE),
+    grep("^a[1-9]$" , names(ipar_anchor), value = TRUE),
+    grep("^b$"      , names(ipar_anchor), value = TRUE),
+    grep("^b[1-9]$" , names(ipar_anchor), value = TRUE),
+    grep("^cb$"     , names(ipar_anchor), value = TRUE),
+    grep("^cb[1-9]$", names(ipar_anchor), value = TRUE),
+    grep("^d$"      , names(ipar_anchor), value = TRUE),
+    grep("^d[1-9]$" , names(ipar_anchor), value = TRUE)
+  ))
+  ipar_anchor <- ipar_anchor[keep_these]
+
+  # mark anchor dimension
+  replace_this <- unique(c(
+    grep("^a$"      , names(ipar_anchor)),
+    grep("^a[1-9]$" , names(ipar_anchor))
+  ))
+  names(ipar_anchor)[replace_this] <- sprintf("a%s", anchor_dim)
 
   printLog(
     "constraints",
@@ -309,6 +345,7 @@ applyConstraintsToLayout <- function(layout, d, verbose) {
     a_par_idx  <- which(names(ipar_anchor) == a_par_name)
     names(ipar_anchor)[a_par_idx] <- "a1"
   }
+
   par_to_fix     <- which(layout$item %in% rownames(ipar_anchor))
   n_items_to_fix <- length(unique(layout$item[par_to_fix]))
   layout$est[par_to_fix] <- FALSE

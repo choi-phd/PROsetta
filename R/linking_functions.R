@@ -79,7 +79,9 @@ runCalibration <- function(
     layout      <- makeParameterLayout(data, dimensions, bound_cov)
     layout      <- applyConstraintsToLayout(layout, data, verbose)
     model_specs <- makeCalibrationModel(data, dimensions, bound_cov)
-    calibration <- mirt::mirt(resp_data, model_specs, itemtype = "graded", pars = layout, ...)
+    item_models <- data@itemmap[, data@model_id]
+    item_models <- sanitizeItemModel(item_models, "mirt")
+    calibration <- mirt::mirt(resp_data, model_specs, itemtype = item_models, pars = layout, ...)
 
   } else if (toupper(fix_method) == "THETA") {
 
@@ -168,7 +170,10 @@ runCalibration <- function(
     bound_cov   <- TRUE
     layout      <- makeParameterLayout(data, dimensions, bound_cov)
     model_specs <- makeCalibrationModel(data, dimensions, bound_cov)
-    calibration <- mirt::mirt(resp_data, model_specs, itemtype = "graded", pars = layout, ...)
+    item_models <- data@itemmap[, data@model_id]
+    item_models <- sanitizeItemModel(item_models, "mirt")
+    calibration <- mirt::mirt(resp_data, model_specs, itemtype = item_models, pars = layout, ...)
+
   }
 
   if (calibration@OptimInfo$iter == calibration@Options$NCYCLES) {
