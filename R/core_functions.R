@@ -455,6 +455,7 @@ applyConstraintsToLayout <- function(layout, d, verbose) {
 #' \code{\link{getRSSS}} is a function for generating a raw-score to standard-score crosswalk table.
 #'
 #' @param ipar an item parameter matrix for graded response items. Accepts both a/b and a/d format parameters. Accepts multidimensional item parameters.
+#' @param model_id the column name for item models.
 #' @param theta_grid the theta grid to use for numerical integration.
 #' @param is_minscore_0 if \code{TRUE}, the score of each item begins from 0.
 #' if \code{FALSE}, the score of each item begins from 1.
@@ -473,17 +474,20 @@ applyConstraintsToLayout <- function(layout, d, verbose) {
 #' o <- runCalibration(data_asq, technical = list(NCYCLES = 1000))
 #'
 #' ipar <- mirt::coef(o, IRTpars = TRUE, simplify = TRUE)$items
+#' ipar <- as.data.frame(ipar)
+#' ipar[, data_asq@model_id] <- data_asq@itemmap[, data_asq@model_id]
 #' items <- getItemNames(data_asq, 2)
 #'
 #' getRSSS(
 #'   ipar = ipar[items, ],
+#'   model_id = data_asq@model_id,
 #'   theta_grid = seq(-4, 4, .1),
 #'   is_minscore_0 = TRUE,
 #'   prior_mu_sigma = list(mu = 0, sigma = 1)
 #' )
 #' }
 #' @export
-getRSSS <- function(ipar, theta_grid, is_minscore_0, prior_mu_sigma) {
+getRSSS <- function(ipar, model_id, theta_grid, is_minscore_0, prior_mu_sigma) {
 
   if (is.vector(theta_grid)) {
     theta_grid <- matrix(theta_grid)
@@ -496,7 +500,7 @@ getRSSS <- function(ipar, theta_grid, is_minscore_0, prior_mu_sigma) {
   dimensions <- detectDimensions(ipar)
   n_cats <- detectNCategories(ipar)
 
-  pp <- computeResponseProbability(ipar, "grm", theta_grid)
+  pp <- computeResponseProbability(ipar, model_id, theta_grid)
   L  <- LWrecursion(pp, n_cats, theta_grid, is_minscore_0)
   o  <- LtoEAP(L, theta_grid, prior_mu_sigma)
 
@@ -533,14 +537,14 @@ getRSSS <- function(ipar, theta_grid, is_minscore_0, prior_mu_sigma) {
 }
 
 #' @noRd
-appendEscore <- function(score_table, n_scale, item_par_by_scale, min_score) {
+appendEscore <- function(score_table, n_scale, item_par_by_scale, model_id, min_score) {
 
   for (s in 1:(n_scale + 1)) {
     for (d in 1:(n_scale + 1)) {
       n_theta <- length(score_table[[s]]$eap)
       e_theta <- rep(NA, n_theta)
       for (i in 1:n_theta) {
-        e_theta[i] <- getEscoreTheta(item_par_by_scale[[d]], "grm", score_table[[s]]$eap[i], min_score[d] == 0)
+        e_theta[i] <- getEscoreTheta(item_par_by_scale[[d]], model_id, score_table[[s]]$eap[i], min_score[d] == 0)
       }
       e_name <- sprintf("escore_%s", names(score_table)[d])
       score_table[[s]][[e_name]] <- e_theta
@@ -607,8 +611,8 @@ detectParameterization <- function(ipar) {
 #'
 #' \code{\link{computeResponseProbability}} is an internal function for computing response probability from a set of item parameters.
 #'
-#' @param ipar a \code{\link{data.frame}} containing item parameters.
-#' @param model the item model to use. Accepts \code{grm} or {gpcm}.
+#' @param ipar a \code{\link{data.frame}} containing item model and item parameters.
+#' @param model_id the column name for item models.
 #' @param theta_grid theta values to compute probability values at.
 #'
 #' @return \code{\link{computeResponseProbability}} returns an item-wise list of probability matrices.
@@ -616,7 +620,7 @@ detectParameterization <- function(ipar) {
 #' @examples
 #' ipar <- PROsetta:::extractAnchorParameters(data_asq, FALSE)
 #' theta_q <- seq(-4, 4, .1)
-#' p <- PROsetta:::computeResponseProbability(ipar, "grm", theta_q)
+#' p <- PROsetta:::computeResponseProbability(ipar, "item_model", theta_q)
 #'
 #' plot(
 #'   0, 0, type = "n", xlim = c(-4, 4), ylim = c(0, 1),
@@ -629,7 +633,7 @@ detectParameterization <- function(ipar) {
 #' lines(theta_q, p[[1]][, 5])
 #'
 #' @keywords internal
-computeResponseProbability <- function(ipar, model, theta_grid) {
+computeResponseProbability <- function(ipar, model_id, theta_grid) {
 
   if (is.vector(theta_grid)) {
     theta_grid <- matrix(theta_grid)
@@ -649,108 +653,112 @@ computeResponseProbability <- function(ipar, model, theta_grid) {
 
     # a/b parameterization
     if (p_type == "ab") {
-      par_a <- ipar[, 1:dimensions]
-      par_b <- ipar[, dimensions + 1:(max_cats - 1), drop = FALSE]
-      par_b <- as.matrix(par_b)
+      a_columns <- unique(c(
+        grep("^a$"     , names(ipar), value = TRUE),
+        grep("^a[1-9]$", names(ipar), value = TRUE)
+      ))
+      b_columns <- unique(c(
+        grep("^b$"      , names(ipar), value = TRUE),
+        grep("^b[1-9]$" , names(ipar), value = TRUE),
+        grep("^cb$"     , names(ipar), value = TRUE),
+        grep("^cb[1-9]$", names(ipar), value = TRUE)
+      ))
+      par_a <- ipar[, a_columns, drop = FALSE]
+      par_b <- ipar[, b_columns, drop = FALSE]
     }
+
+    # convert to matrix because TestDesign's cpp functions need it
+    par_a <- as.matrix(par_a)
+    par_b <- as.matrix(par_b)
 
     pp <- list()
     for (i in 1:ni) {
       pp[[i]] <- matrix(NA, nq, n_cats[i])
     }
 
-    if (model == "grm") {
+    for (i in 1:ni) {
 
-      for (i in 1:ni) {
-
+      if (ipar[i, model_id] == "GR") {
         pp[[i]] <- array_p_gr(
           theta_grid,
           par_a[i],
           par_b[i, 1:(n_cats[i] - 1)]
         )
-
+        next
       }
 
-      return(pp)
-    }
-
-    if (model == "gpcm") {
-
-      for (i in 1:ni) {
-
+      if (ipar[i, model_id] == "GPC") {
         pp[[i]] <- array_p_gpc(
           theta_grid,
           par_a[i],
           par_b[i, 1:(n_cats[i] - 1)]
         )
-
+        next
       }
 
-      return(pp)
-
     }
+
+    return(pp)
 
   }
 
   if (dimensions == 2) {
 
     # a/d parameterization
+    if (p_type == "ad") {
+      a_columns <- unique(c(
+        grep("^a$"     , names(ipar), value = TRUE),
+        grep("^a[1-9]$", names(ipar), value = TRUE)
+      ))
+      d_columns <- unique(c(
+        grep("^d$"      , names(ipar), value = TRUE),
+        grep("^d[1-9]$" , names(ipar), value = TRUE)
+      ))
+      par_a <- ipar[, a_columns, drop = FALSE]
+      par_d <- ipar[, d_columns, drop = FALSE]
+    }
 
-    par_a <- ipar[, 1:dimensions, drop = FALSE]
-    par_d <- ipar[, dimensions + 1:(max_cats - 1), drop = FALSE]
+    # convert to matrix because TestDesign's cpp functions need it
     par_a <- as.matrix(par_a)
     par_d <- as.matrix(par_d)
-
-    n_cats <- apply(par_d, 1, function(x) {
-      sum(!is.na(x)) + 1
-    })
-    max_cats <- max(n_cats)
 
     pp <- list()
     for (i in 1:ni) {
       pp[[i]] <- matrix(NA, nq, max_cats)
     }
 
-    if (model == "grm") {
+    for (i in 1:ni) {
 
-      for (i in 1:ni) {
-
+      if (ipar[i, model_id] == "GR") {
         pp[[i]] <- array_p_m_gr(
           theta_grid,
           par_a[i, , drop = FALSE],
-          par_d[i, 1:(n_cats[i] - 1), drop = FALSE]
+          par_d[i, , drop = FALSE]
         )
-
+        next
       }
 
-      return(pp)
-
-    }
-
-    if (model == "gpcm") {
-
-      for (i in 1:ni) {
-
+      if (ipar[i, model_id] == "GPC") {
         pp[[i]] <- array_p_m_gpc(
           theta_grid,
           par_a[i, , drop = FALSE],
-          par_d[i, 1:(n_cats[i] - 1), drop = FALSE]
+          par_d[i, , drop = FALSE]
         )
-
+        next
       }
 
     }
 
-  }
+    return(pp)
 
-  stop(sprintf("argument 'model': unrecognized value '%s'", model))
+  }
 
 }
 
 #' @noRd
-getEscoreTheta <- function(ipar, model, theta, is_minscore_0) {
+getEscoreTheta <- function(ipar, model_id, theta, is_minscore_0) {
 
-  pp <- computeResponseProbability(ipar, "grm", theta)
+  pp <- computeResponseProbability(ipar, model_id, theta)
 
   e  <- lapply(pp, function(x) {
     sum(x * 0:(length(x) - 1))

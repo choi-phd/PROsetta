@@ -4,10 +4,12 @@
 \alias{getRSSS}
 \title{Compute a Crosswalk Table}
 \usage{
-getRSSS(ipar, theta_grid, is_minscore_0, prior_mu_sigma)
+getRSSS(ipar, model_id, theta_grid, is_minscore_0, prior_mu_sigma)
 }
 \arguments{
 \item{ipar}{an item parameter matrix for graded response items. Accepts both a/b and a/d format parameters. Accepts multidimensional item parameters.}
+
+\item{model_id}{the column name for item models.}
 
 \item{theta_grid}{the theta grid to use for numerical integration.}
 
@@ -32,10 +34,13 @@ if \code{FALSE}, the score of each item begins from 1.}
 o <- runCalibration(data_asq, technical = list(NCYCLES = 1000))
 
 ipar <- mirt::coef(o, IRTpars = TRUE, simplify = TRUE)$items
+ipar <- as.data.frame(ipar)
+ipar[, data_asq@model_id] <- data_asq@itemmap[, data_asq@model_id]
 items <- getItemNames(data_asq, 2)
 
 getRSSS(
   ipar = ipar[items, ],
+  model_id = data_asq@model_id,
   theta_grid = seq(-4, 4, .1),
   is_minscore_0 = TRUE,
   prior_mu_sigma = list(mu = 0, sigma = 1)

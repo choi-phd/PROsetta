@@ -9,7 +9,6 @@ NULL
 #' @param data a \code{\linkS4class{PROsetta_data}} object.
 #' @param ipar a \code{\link{data.frame}} containing item parameters.
 #' @param scale the index of the scale to use. \code{combined} refers to the combined scale. (default = \code{combined})
-#' @param model the item model to use. Accepts \code{grm} or \code{gpcm}. (default = \code{grm})
 #' @param theta_grid the theta grid to use for numerical integration. (default = \code{seq(-4, 4, .1)})
 #' @param prior_dist the type of prior distribution. Accepts \code{normal} or \code{logistic}. (default = \code{normal})
 #' @param prior_mean mean of the prior distribution. (default = \code{0.0})
@@ -34,7 +33,7 @@ NULL
 #'
 #' @export
 getTheta <- function(
-  data, ipar, scale = "combined", model = "grm",
+  data, ipar, scale = "combined",
   theta_grid = seq(-4, 4, .1),
   prior_dist = "normal",
   prior_mean = 0.0,
@@ -64,7 +63,7 @@ getTheta <- function(
   prior_mu_sigma$sigma <- prior_sd ** 2
 
   prior <- generatePriorDensity(theta_grid, prior_dist, prior_mu_sigma)
-  pp    <- computeResponseProbability(ipar, model, theta_grid)
+  pp    <- computeResponseProbability(ipar, data@model_id, theta_grid)
   eap   <- getEAP(theta_grid, prior, pp, resp_data)
   eap   <- cbind(person_id, eap)
 

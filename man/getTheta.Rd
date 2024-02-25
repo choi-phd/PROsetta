@@ -8,7 +8,6 @@ getTheta(
   data,
   ipar,
   scale = "combined",
-  model = "grm",
   theta_grid = seq(-4, 4, 0.1),
   prior_dist = "normal",
   prior_mean = 0,
@@ -21,8 +20,6 @@ getTheta(
 \item{ipar}{a \code{\link{data.frame}} containing item parameters.}
 
 \item{scale}{the index of the scale to use. \code{combined} refers to the combined scale. (default = \code{combined})}
-
-\item{model}{the item model to use. Accepts \code{grm} or \code{gpcm}. (default = \code{grm})}
 
 \item{theta_grid}{the theta grid to use for numerical integration. (default = \code{seq(-4, 4, .1)})}
 
