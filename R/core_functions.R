@@ -275,9 +275,21 @@ convertADtoAB <- function(ipar) {
   if (p_type == "ad") {
 
     dimensions <- detectDimensions(ipar)
+    if (dimensions != 1) {
+      stop("conversion from AD to AB requires the input to be in one dimension, but the number of dimension is %s", dimensions)
+    }
 
-    ipar_a <- ipar[, 1:dimensions, drop = FALSE]
-    ipar_d <- ipar[, (dimensions + 1):dim(ipar)[2], drop = FALSE]
+    a_columns <- unique(c(
+      grep("^a", names(ipar), value = TRUE),
+      grep("^a[1-9]", names(ipar), value = TRUE)
+    ))
+    d_columns <- unique(c(
+      grep("^d", names(ipar), value = TRUE),
+      grep("^d[1-9]", names(ipar), value = TRUE)
+    ))
+
+    ipar_a <- ipar[, a_columns, drop = FALSE]
+    ipar_d <- ipar[, d_columns, drop = FALSE]
 
     ipar_b <- ipar_d * NA
     for (k in 1:dim(ipar_d)[2]) {
