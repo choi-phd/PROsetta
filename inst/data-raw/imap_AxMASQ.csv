@@ -1,4 +1,4 @@
-instrument,item_id,item_model,ncat
+scale_id,item_id,item_model,ncat
 1,EDANX01,GR,5
 1,EDANX02,GR,5
 1,EDANX03,GR,5
