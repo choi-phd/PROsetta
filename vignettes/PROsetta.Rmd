@@ -6,6 +6,7 @@ output:
     toc: true
     toc_float:
       smooth_scroll: false
+    toc_depth: 1
     css: styles.css
 vignette: >
   %\VignetteIndexEntry{Scale linking with PROsetta package}
@@ -17,92 +18,90 @@ editor_options:
 
 # Introduction
 
-This vignette explains how to perform scale linking with the *PROsetta* package. By way of illustration, we replicate the linking of the Center for Epidemiologic Studies Depression Scale (CES-D) to the PROMIS Depression metric as described in Choi, Schalet, Cook, and Cella (2014).
+This vignette explains how to perform scale linking with the **PROsetta** package. For the purpose of illustration, we replicate the linking between two scales as was studied by Choi, Schalet, Cook, and Cella (2014):
 
-```{r, echo = FALSE, message = FALSE, output = 'hide'}
+- **Scale to be linked**: The Center for Epidemiologic Studies Depression scale (CES-D); 20 items, 1-4 points each, raw score range = 20-80.
+- **Anchoring scale**: The PROMIS Depression scale; 28 items, 1-5 points each, raw score range = 28-140.
+
+```{r, echo = FALSE, message = FALSE, output = "hide"}
 library(knitr)
 library(kableExtra)
 library(PROsetta)
 library(dplyr)
 ```
 
-<br>
-
 # Load datasets
 
-First step is to load the input datasets comprised of three tables with `loadData()`. The PROMIS Depression – CES-D linking data are included in the *PROsetta* package directory under the folder labeled `data-raw`.
-
-```{r loadData, echo = FALSE}
-d <- data_dep
-```
-
-```{r cfg, results = "hide", message = FALSE, eval = FALSE}
-fp <- system.file("data-raw", package = "PROsetta")
+The first step is to load the input dataset using `loadData()`. Scale linking requires three input parts: (1) response data, (2) item map, and (3) anchor data. In this vignette, we use example datasets `response_dep`, `itemmap_dep`, `anchor_dep`. These are included in the **PROsetta** package.
+ 
+```{r}
 d <- loadData(
-  response  = "dat_DeCESD_v2.csv",
-  itemmap   = "imap_DeCESD.csv",
-  anchor    = "anchor_DeCESD.csv",
-  input_dir = fp)
+  response  = response_dep,
+  itemmap   = itemmap_dep,
+  anchor    = anchor_dep
+)
 ```
 
-* `response`: Contains item response data from both instruments. You can supply a .csv filename or a data frame. In this example, we supply a .csv filename `dat_DeCESD_v2.csv`.
-* `itemmap`: Specifies which items belong to which instruments. Can be a .csv filename or a data frame.
-* `anchor`: Contains tem parameters for anchor items (e.g., PROMIS Depression). Can be a .csv filename or a data frame.
-* `input_dir`: (Optional) The path of the directory to look for the input .csv files.
-
-<br>
+The `loadData()` function requires three arguments. These are described in detail below.
 
 ## Response data
 
-The response data contains individual item responses on both instruments (i.e., 28 PROMIS Depression items followed by 20 CES-D items). The data table should include the following columns.
+The response data contains individual item responses on both scales. The data must include the following columns.
 
-* `prosettaid`: The person ID of the respondents (N = 747). This column does not have to be named `prosettaid` but should not conflict with other data tables (item map and anchor).
-* Other columns should include the item response fields with their unique item IDs as column names. The item names should match the `item_id` column in both the item map and anchor files.
+* **Person ID column.** The response data must have a column for unique IDs of participants.
+* * The example data `response_dep` uses `prosettaid` as the column name, but it can be named differently as long as the same column name does not appear in other data parts. For example, see how item map `itemmap_dep` and anchor data `anchor_dep` do not have a column named `prosettaid`.
+* **Item response columns.** The response data must include item response columns
+* * The item response columns must be named using their item IDs.
+* * The item IDs must match item IDs appearing in item map and anchor data. For example, see how the item IDs appearing in `response_dep` exactly matches item IDs appearing in `itemmap_dep`. Also, see how the item IDs appearing in `anchor_dep` are a subset of item IDs appearing in `response_dep`.
 
-Run the following code, for example, to open the response data in edit mode.
+Below is an example of response data.
 
-```{r, eval = FALSE}
-file.edit(system.file("data-raw", "dat_DeCESD_v2.csv", package = "PROsetta"))
+```{r}
+head(response_dep)
 ```
-
-<br>
 
 ## Item map data
 
-The item map data requires the following columns.
+The item map data contains information on which items belong to which scale. The following columns are required.
 
-* `item_id`: Contains the unique ID of the items. The name of this column does not have to be `item_id` but should be consistent with the item ID column in the anchor table. The IDs in this column should match the column names in the response data.
-* `instrument`: Numerals (1 or 2) indicating to which of the two instruments the items belong (e.g., 1 = PROMIS Depression; 2 = CES-D)
-* `item_order`: The sequential position of the items in the combined table (e.g., 1, 2, 3, ..., 28, ..., 48)
-* `item_name`: Secondary labels for the items
-* `ncat`: The number of response categories by item
+* **Scale ID column.** The item map data must have a scale ID column indicating which scale each item belongs to.
+* * The example data `itemmap_dep` uses `scale_id` as the column name, but it can be named differently as long as the same column name does not appear in other data parts.
+* * Also, the example data `itemmap_dep` codes the anchor scale as Scale 1 and the scale to be linked as Scale 2, but these can be flipped if the user wants to do so.
+* **Item ID column.** The item map data must have an item ID column.
+* * The item IDs must match item IDs appearing in other data parts. For example, see how the item IDs appearing in `itemmap_dep` exactly matches item IDs appearing in `response_dep`. Also, see how the item IDs appearing in `anchor_dep` are a subset of item IDs appearing in `itemmap_dep`.
+* * The example data `itemmap_dep` uses `item_id` as the column name, but it can be named differently as long as item ID columns use the same name across data parts. For example, see how `itemmap_dep` and `anchor_dep` both use `item_id`.
+* **Item model column.** The item map data must have an item model column.
+* * Accepted values are `GR` for graded response model, and `GPC` for generalized partial credit model.
+* * The example data `itemmap_dep` uses `item_model` as the column name, but it can be named differently as long as item model columns use the same name across data parts. For example, see how `itemmap_dep` and `anchor_dep` both use `item_model`.
+* `ncat`: The item map data must have a column named `ncat` containing the number of response categories of each item.
 
-Run the following code to open the item map data in edit mode.
+Below is an example of item map data.
 
-```{r, eval = FALSE}
-file.edit(system.file("data-raw", "imap_DeCESD.csv", package = "PROsetta"))
+```{r}
+head(itemmap_dep)
 ```
-
-<br>
 
 ## Anchor data
 
-The anchor data contains the item parameters for the anchor scale (e.g., PROMIS Depression) and requires the following columns.
+The anchor data contains item parameters for the anchoring scale. The following columns are required:
 
-* `item_order`: The sequential position of the items in the anchor scale (e.g., 1, 2, 3, ..., 28)
-* `item_id`: The unique ID of the anchor items. The name of this column does not have to be `item_id` but should be consistent with the item ID column in the item map table The IDs in this column should refer to the specific column names in the response data.
-* `a`: The slope parameter value for each anchor item
-* `cb1`, `cb2`, ...: The category boundary parameter values for each anchor item
+* **Item ID column.** The anchor data must have an item ID column.
+* * The item IDs must match item IDs appearing in other data parts. For example, see how the item IDs appearing in `anchor_dep` are a subset of item IDs appearing in `itemmap_dep`.
+* * The example data `anchor_dep` uses `item_id` as the column name, but it can be named differently as long as item ID columns use the same name across data parts. For example, see how `itemmap_dep` and `anchor_dep` both use `item_id`.
+* **Item model column.** The anchor data must have an item model column.
+* * Accepted values are `GR` for graded response model, and `GPC` for generalized partial credit model.
+* * The example data `anchor_dep` uses `item_model` as the column name, but it can be named differently as long as item model columns use the same name across data parts. For example, see how `itemmap_dep` and `anchor_dep` both use `item_model`.
+* **Item parameter columns.** The anchor data must have item parameter columns named `a`, `cb1`, `cb2`, and so on. These must be in the A/B parameterization (i.e., traditional IRT parameterization for unidimensional models) so that item probabilities are calculated based on $a(\theta - b)$.
 
-Run the following code to open the anchor data in edit mode.
+Below is an example of anchor data.
 
-```{r, eval = FALSE}
-file.edit(system.file("data-raw", "anchor_DeCESD.csv", package = "PROsetta"))
+```{r}
+head(anchor_dep)
 ```
 
-<br>
+# Preliminary analysis
 
-# Descriptive analysis
+Preliminary analyses are commonly conducted before the main scale linking to check for various statistical aspects of the data. The **PROsetta** package offers a set of helper functions for preliminary analyses.
 
 ## Basic descriptive statistics
 
@@ -113,9 +112,7 @@ freq_table <- runFrequency(d)
 head(freq_table)
 ```
 
-<br>
-
-The frequency distribution of the summed scores for the combined scale can be plotted as a histogram with `plot()`. The required argument is a `PROsetta_data` object created with `loadData()`. The optional `scale` argument specifies for which scale the summed score should be created. Setting `scale = 'combined'` plots the summed score distribution for the combined scale.
+The frequency distribution of the summed scores for the combined scale can be plotted as a histogram with `plot()`. The required argument is a `PROsetta_data` object created with `loadData()`. The optional `scale` argument specifies for which scale the summed score should be created. Setting `scale = "combined"` plots the summed score distribution for the combined scale.
 
 ```{r, fig.align = "center", fig.width = 7, fig.height = 7}
 plot(d, scale = "combined", title = "Combined scale")
@@ -128,8 +125,6 @@ plot(d, scale = 1, title = "Scale 1") # not run
 plot(d, scale = 2, title = "Scale 2") # not run
 ```
 
-<br>
-
 Basic descriptive statistics are obtained for each item by `runDescriptive()`.
 
 ```{r desc}
@@ -137,29 +132,29 @@ desc_table <- runDescriptive(d)
 head(desc_table)
 ```
 
-<br>
-
 ## Classical reliability analysis
 
 Classical reliability statistics can be obtained by `runClassical()`. By default, the analysis is performed for the combined scale.
 
-```{r alpha, cache = TRUE}
+```{r alpha}
 classical_table <- runClassical(d)
 summary(classical_table$alpha$combined)
 ```
 
+From the above summary, we see that the combined scale (48 items) has a good reliability (alpha = 0.98).
+
 The user can set `scalewise = TRUE` to request an analysis for each scale separately in addition to the combined scale.
 
-```{r alpha2, cache = TRUE, eval = FALSE}
+```{r alpha2}
 classical_table <- runClassical(d, scalewise = TRUE)
-classical_table$alpha$combined # alpha values for combined scale
-classical_table$alpha$`1`      # alpha values for each scale, created when scalewise = TRUE
-classical_table$alpha$`2`      # alpha values for each scale, created when scalewise = TRUE
+summary(classical_table$alpha$`2`)
 ```
+
+From the above summary, we see that the scale to be linked (Scale 2; CES-D) has a good reliability (alpha = 0.93).
 
 Specifying `omega = TRUE` returns the McDonald's $\omega$ coefficients as well.
 
-```{r omega, cache = TRUE, eval = FALSE}
+```{r omega, eval = FALSE}
 classical_table <- runClassical(d, scalewise = TRUE, omega = TRUE)
 classical_table$omega$combined # omega values for combined scale
 classical_table$omega$`1`      # omega values for each scale, created when scalewise = TRUE
@@ -172,13 +167,11 @@ Additional arguments can be supplied to `runClassical()` to pass onto `psych::om
 classical_table <- runClassical(d, scalewise = TRUE, omega = TRUE, nfactors = 5) # not run
 ```
 
-<br>
-
 ## Dimensionality analysis
 
-Dimensionality analysis is performed with CFA by `runCFA()`. Setting `scalewise = TRUE` performs the dimensionality analysis for each scale separately in addition to the combined scale.
+A key assumption in item response theory is the unidimensionality assumption. Dimensionality analysis is performed with confirmatory factor analysis by `runCFA()`, which fits a one-factor model to the data. Setting `scalewise = TRUE` performs the dimensionality analysis for each scale separately in addition to the combined scale.
 
-```{r cfa, cache = FALSE, results = 'hide'}
+```{r cfa, results = "hide"}
 out_cfa <- runCFA(d, scalewise = TRUE)
 ```
 
@@ -188,8 +181,6 @@ out_cfa <- runCFA(d, scalewise = TRUE)
 out_cfa <- runCFA(d, scalewise = TRUE, std.lv = TRUE) # not run
 ```
 
-<br>
-
 The CFA result for the combined scale is stored in the `combined` slot, and if `scalewise = TRUE`, the analysis for each scale is also stored in each numbered slot.
 
 ```{r}
@@ -197,8 +188,6 @@ out_cfa$combined
 out_cfa$`1`
 out_cfa$`2`
 ```
-
-<br>
 
 CFA fit indices can be obtained by using `summary()` from the *lavaan* package. For the combined scale:
 
@@ -213,203 +202,238 @@ lavaan::summary(out_cfa$`1`, fit.measures = TRUE, standardized = TRUE, estimates
 lavaan::summary(out_cfa$`2`, fit.measures = TRUE, standardized = TRUE, estimates = FALSE) # not run
 ```
 
-<br>
-
 ## Item parameter calibration
 
-`runCalibration()` performs IRT calibration without anchoring.  `runCalibration()` calls `mirt::mirt()` internally. Additional arguments can be passed onto `mirt`, e.g., to increase the number of EM cycles to 1000, as follows:
+`runCalibration()` can be used to perform free IRT calibration for diagnostic purposes. `runCalibration()` calls `mirt::mirt()` internally, and additional arguments can be supplied to be passed onto `mirt`, e.g., to increase the number of EM cycles to 1000, as follows:
 
-```{r calib, cache = TRUE, results = 'hide', error = TRUE, message = FALSE}
+```{r calib, results = "hide", error = TRUE, message = FALSE}
 out_calib <- runCalibration(d, technical = list(NCYCLES = 1000))
 ```
 
-<br>
+As a safeguard, if the model fit process does not converge, `runCalibration()` explicitly raises an error and does not return its results.
 
-In case of nonconvergence, `runCalibration()` explicitly raises an error and does not return its results.
-
-```{r calib2, cache = TRUE, results = 'hide', error = TRUE, message = FALSE}
+```{r calib2, results = "hide", error = TRUE, message = FALSE}
 out_calib <- runCalibration(d, technical = list(NCYCLES = 10))
 ```
 
-<br>
+The output object from `runCalibration()` can be used to generate diagnostic output with functions from the *mirt* package:
 
-Also, specify `fixedpar = TRUE` to perform fixed parameter calibration using the anchor data.
-
-```{r calib3, cache = TRUE, results = 'hide', error = TRUE, message = FALSE}
-out_calib <- runCalibration(d, fixedpar = TRUE)
-```
-
-<br>
-
-The output object from `runCalibration()` can be used to generate additional output with functions from the *mirt* package.
-
-Use `coef()` to extract item parameters:
-
-```{r mirt_coef, cache = TRUE}
-mirt::coef(out_calib, IRTpars = TRUE, simplify = TRUE)
-```
-
-and also other commonly used functions:
-
-```{r mirt_plot, cache = TRUE, eval = FALSE, results = 'hide'}
+```{r mirt_plot, eval = FALSE, results = "hide"}
 mirt::itemfit(out_calib, empirical.plot = 1)
 mirt::itemplot(out_calib, item = 1, type = "info")
 mirt::itemfit(out_calib, "S_X2", na.rm = TRUE)
 ```
 
-<br>
-
 Scale information functions can be plotted with `plotInfo`. The two required arguments are an output object from `runCalibration()` and a `PROsetta` object from `loadData()`. The additional arguments specify the labels, colors, and line types for each scale and the combined scale. The last values in arguments `scale_label`, `color`, `lty` represent the values for the combined scale.
 
-```{r, fig.align = 'center', fig.width = 7, fig.height = 7}
+```{r, fig.align = "center", fig.width = 7, fig.height = 7}
 plotInfo(
   out_calib, d,
   scale_label = c("PROMIS Depression", "CES-D", "Combined"),
   color = c("blue", "red", "black"),
-  lty = c(1, 2, 3))
+  lty = c(1, 2, 3)
+)
 ```
 
-<br>
+# Scale linking: IRT-based
 
-# Scale aligning
+Scale linking can be performed in multiple ways. This section describes the workflow for performing an IRT-based linking.
 
-`runLinking()` performs item parameter linking based on the anchor item parameters supplied in the `anchor` table. Two linking, or more specifically scaling aligning, methods currently available are fixed-parameter calibration and linear transformation. Fixed-parameter calibration estimates the item parameters for the non-anchor items on the metric defined by the anchor items, while fixing the item parameters for the anchor items to their supplied anchor values. The linear transformation methods determine linear transformation constants, i.e., a slope and an intercept, to transform freely estimated item parameters to the metric defined by the anchor items.
+## Obtain linked item parameters
 
-<br>
+The first step of IRT-based linking is to obtain linked item parameters. This is done by `runLinking()`, which performs scale linking based on supplied anchor item parameters. A variety of scale linking methods are available in the **PROsetta** package.
 
-## Fixed parameter calibration method
+### Fixed parameter calibration method
 
-Scale aligning through fixed parameter calibration is performed by setting `method = "FIXEDPAR"`. The linked parameters are stored in the `$ipar_linked` slot.
+A fixed-parameter calibration is performed by constraining item parameters of anchor items to anchor data values, and freely estimating item parameters for non-anchor items. The mean and the variance of $\theta$ is freely estimated to capture the difference between the current participant group relative to the anchor participant group, assuming the anchor group follows $\theta \sim N(0, 1)$.
 
-```{r fixedpar, cache = TRUE, results = 'hide', message = FALSE}
-out_link_fixedpar <- runLinking(d, method = "FIXEDPAR")
+Scale linking through fixed parameter calibration is performed by setting `method = "FIXEDPAR"`.
+
+```{r fixedpar, results = "hide", message = FALSE}
+link_fixedpar <- runLinking(d, method = "FIXEDPAR")
 ```
+
+From the output, the linked parameters are stored in the `$ipar_linked` slot.
 
 ```{r}
-out_link_fixedpar$ipar_linked
+head(link_fixedpar$ipar_linked)
 ```
 
-<br>
+The group characteristics are stored in the `$mu_sigma` slot.
 
-## Linear transformation methods
+```{r}
+link_fixedpar$mu_sigma
+```
 
-Scale aligning through linear transformation is performed by setting the `method` argument to one of the following options:
+From the above output, we see that the participant group in `response_dep` had a slightly lower $\theta$ of `-0.060` compared to the anchor group, and a slightly smaller variance of `0.950` compared to the anchor group.
+
+### Linear transformation methods
+
+Linear transformation methods determine linear transformation constants, i.e., a slope and an intercept, to transform freely estimated item parameters to the metric defined by the anchor items. Linear transformation methods include Mean-Mean, Mean-Sigma, Haebara, and Stocking-Lord methods.
+
+Scale linking through linear transformation is performed by setting the `method` argument to one of the following options:
 
 * `MM` (Mean-Mean)
 * `MS` (Mean-Sigma)
 * `HB` (Haebara)
 * `SL` (Stocking-Lord)
 
-Arguments supplied to `runLinking` are passed onto `mirt::mirt()` internally. In case of nonconvergence in the free calibration step, `runLinking()` explicitly raises an error and does not return its results.
-
-```{r sl, cache = TRUE, results = 'hide', error = TRUE, message = FALSE}
-out_link_sl <- runLinking(d, method = "SL", technical = list(NCYCLES = 1000))
-out_link_sl
+```{r sl, results = "hide", error = TRUE, message = FALSE}
+link_sl <- runLinking(d, method = "SL", technical = list(NCYCLES = 1000))
+link_sl
 ```
-
-<br>
 
 The item parameter estimates linked to the anchor metric are stored in the `$ipar_linked` slot.
 
 ```{r}
-out_link_sl$ipar_linked
+head(link_sl$ipar_linked)
 ```
-
-<br>
 
 Transformation constants (A = slope; B = intercept) for the specified linear transformation method are stored in the `$constants` slot.
 
 ```{r}
-out_link_sl$constants
+link_sl$constants
 ```
 
-<br>
+### Calibrated projection (using fixed-parameter calibration)
 
-## Obtaining scaled scores
+Calibrated projection is an IRT-based multidimensional scale linking method. Calibrated projection is performed through a multidimensional model where the items in one scale measures its own $\theta$ dimension, and items in another scale measures another $\theta$ dimension.
 
-From the item parameter estimates transformed to the anchor metric, raw-score-to-scale-score (rsss) crosswalk tables can be generated by `runRSSS()`.
+In this vignette, the anchor scale (PROMIS Depression) was coded as Scale 1, and the scale to be linked (CES-D) was coded as Scale 2. This leads to Scale 1 items having non-zero $a$-parameters in dimension 1, and Scale 2 items having non-zero $a$-parameters in dimensions 2.
 
-The output from `runRSSS()` includes three crosswalk tables (labeled as `1`, `2`, and `combined`), one for each scale and the third one for the combined scale. Each table contains raw summed scores and corresponding scaled scores, including summed score EAP estimate, T-scores corresponding to the EAP estimates, as well as expected summed scores (i.e., true scores) for each scale from the EAP estimates.
+For the purpose of scale linking, calibrated projection can be performed in conjunction with the fixed-parameter calibration technique. The anchor item parameters are constrained to their anchor data values, and item parameters in the non-anchor items are freely estimated. The mean/variance of $\theta$ in the anchor dimension are freely estimated to capture the difference between the current participant group relative to the anchor participant group, assuming the anchor group follows $\theta \sim N(0, 1)$. The mean/variance of $\theta$ in the scale-to-be-linked dimension are constrained to be 0/1.
+
+In this vignette, this means that the mean/variance of dimension 1 (the anchor dimension) are freely estimated, and the mean/variance of dimension 2 are constrained to be 0/1.
+
+Scale linking through calibrated projection (with fixed parameter calibration) is performed by setting `method = "CP"`.
+
+```{r, results = "hide", message = FALSE}
+link_cp <- runLinking(d, method = "CP")
+```
+
+From the output, the linked parameters are stored in the `$ipar_linked` slot. See how there are two $a$-parameters, with items in the anchor scale (PROMIS Depression) loaded onto dimension 1.
 
 ```{r}
-rsss_fixedpar <- runRSSS(d, out_link_fixedpar)
-rsss_sl       <- runRSSS(d, out_link_sl)
-round(rsss_fixedpar$`2`, 3)
+head(link_cp$ipar_linked)
 ```
 
-<br>
+The group characteristics are stored in the `$mu_sigma` slot.
+
+```{r}
+link_cp$mu_sigma
+```
+
+From the above output, we see that the participant group in `response_dep` had a slightly lower $\theta$ of `-0.070` compared to the anchor group, and a slightly smaller variance of `0.971` compared to the anchor group. Also, we see that the constructs represented by the two scales had a correlation of `0.919`.
+
+## Making crosswalk tables
+
+The second step of IRT-based scale linking is to generate raw-score-to-scale-score (RSSS) crosswalk tables. This is done by `runRSSS()`. The `runRSSS()` function requires the dataset object created by `loadData()`, and the output object from `runLinking()`.
+
+```{r}
+rsss_fixedpar <- runRSSS(d, link_fixedpar)
+```
+
+The output from `runRSSS()` includes three crosswalk tables (labeled as `1`, `2`, and `combined`), one for each scale and the third one for the combined scale. In this vignette, the anchor scale (PROMIS Depression) was coded as Scale 1 and the scale to be linked (CES-D) was coded as Scale 2.
+
+The crosswalk table for the scale to be linked (CES-D; Scale 2) is shown here as an example.
+
+```{r}
+head(round(rsss_fixedpar$`2`, 3))
+```
 
 The columns in the crosswalk tables include:
 
-* `raw_1`: raw summed score in Scale 1 (also `raw_2` for Scale 2 and `raw_3` for the combined)
-* `tscore`: T-score corresponding to each summed score
-* `tscore_se`: standard error associated with each T-score
-* `eap`: summed score EAP equivalent for each raw summed score
-* `eap_se`: standard error associated with each EAP estimate
-* `escore_1`: expected summed score (true score) for Scale 1 given the EAP estimate
-* `escore_2`: expected summed score (true score) for Scale 2 given the EAP estimate
-* `escore_combined`: expected summed score (true score) for the combined scale given the EAP estimate
+* `raw_2`: a raw score level in Scale 2 (CES-D; 20 items, 1-4 points each, raw score range = 20-80).
+* `tscore`: the corresponding T-score in the anchor group metric.
+* `tscore_se`: the standard error associated with the T-score.
+* `eap`: the corresponding $\theta$ in the anchor group metric.
+* `eap_se`: the standard error associated with the $\theta$ value.
+* `escore_1`: the expected Scale 1 (PROMIS Depression) raw score derived from $\theta$.
+* `escore_2`: the expected Scale 2 (CES-D) raw score derived from $\theta$.
+* `escore_combined`: the expected Combined Scale raw score derived from $\theta$.
 
-<br>
+For example, row 6 in the above table shows:
 
-## Equipercentile method: raw-raw
+- A raw score 25 points in CES-D corresponds to a T-score of 46.2 in the anchor group.
+- A raw score 25 points in CES-D corresponds to $\theta = -0.382$ in the anchor group, assuming the anchor group metric is $\theta \sim N(0, 1)$.
+- A raw score 25 points in CES-D corresponds to an expected raw score of 35.853 in the PROMIS Depression scale (raw score range = 28-140).
+- A raw score 25 points in CES-D corresponds to an expected raw score of 60.630 in the combined scale (raw score range = 48-220).
 
-Equipercentile linking of observed summed scores is performed by `runEquateObserved()`.
+# Scale linking: score-based
 
-Cases with missing responses are removed to be able to generate correct summed scores in concordance tables.
+This section describes the workflow for performing a score-based scale linking. This is done by `runEquateObserved()`, which performs equipercentile linking using observed raw sum-scores. The function removes cases with missing responses to be able to generate correct sum-scores in concordance tables.
 
 This function requires four arguments:
 
-* `scale_from`: numeric index of the scale (as specified in the item map) to be linked
-* `scale_to`: numeric index of the scale (as specified in the item map) to serve as the anchor
+* `scale_from`: the scale ID of the scale to be linked.
+* `scale_to`: the scale ID of the anchor scale.
 * `eq_type`: the type of equating to be performed, `equipercentile` for this example. See `?equate::equate` for details.
 * `smooth`: the type of presmoothing to perform
 
-By default, `runEquateObserved()` performs raw-raw equipercentile linking. In this example, each raw summed score in Scale 2 (CES-D, ranging from 20 to 80) is linked to a raw summed score equivalent in Scale 1 (PROMIS Depression, rangeing from 28 to 140) with loglinear presmoothing.
+## Equipercentile linking: raw to raw
 
-```{r eqp_raw, cache = TRUE, results = 'hide', message = FALSE}
-out_equate <- runEquateObserved(
-  d, scale_from = 2, scale_to = 1,
-  eq_type = "equipercentile", smooth = "loglinear")
+By default, `runEquateObserved()` performs raw-raw equipercentile linking. In this example, each raw sum-score in the scale-to-be-linked (Scale 2; CES-D, raw score range 20-80) is linked to a corresponding raw sum-score in the anchor scale (Scale 1; PROMIS Depression, raw score range 28-140) with loglinear presmoothing.
+
+```{r eqp_raw, results = "hide", message = FALSE}
+rsss_equate_raw <- runEquateObserved(
+  d,
+  scale_from = 2, # CES-D (scale to be linked)
+  scale_to = 1,   # PROMIS Depression (anchor scale)
+  eq_type = "equipercentile", smooth = "loglinear"
+)
 ```
 
 The crosswalk table can be obtained from the `concordance` slot:
 
 ```{r}
-out_equate$concordance
+head(rsss_equate_raw$concordance)
 ```
 
-<br>
+From row 6 in the above output, we see that:
 
-## Equipercentile method: raw-tscore
+- A raw score 25 points in CES-D corresponds to an expected raw score of 36.882 in the PROMIS Depression scale (raw score range = 28-140).
 
-Raw summed scores can be linked to scaled scores (e.g., T-scores) directly by specifying `type_to = 'tscore'` in `runEquateObserved()`. In the following example, we map the raw summed scores from Scale 2 (CES-D, ranging from 20 to 80) onto the T-score equivalents in Scale 1 (PROMIS Depression, mean = 50 and SD = 10).
+## Equipercentile method: raw to T-score
 
-```{r eqp_dir, cache = TRUE, results = 'hide', message = FALSE}
-out_equate_tscore <- runEquateObserved(
-  d, scale_from = 2, scale_to = 1,
-  type_to = "tscore", rsss = rsss_fixedpar,
-  eq_type = "equipercentile", smooth = "loglinear")
+Alternatively, raw sum-scores can be linked to T-scores by specifying `type_to = "tscore"` in `runEquateObserved()`. In the following example, the raw sum-scores from the scale-to-be-linked (Scale 2; CES-D, raw score range 20-80) are linked to T-score equivalents in the anchor scale (Scale 1; PROMIS Depression, mean = 50 and SD = 10).
+
+This requires a separate RSSS table to be supplied for the purpose of converting anchor scale raw scores to T-scores.
+
+```{r eqp_dir, results = "hide", message = FALSE}
+rsss_equate_tscore <- runEquateObserved(
+  d,
+  scale_from = 2, # CES-D (scale to be linked)
+  scale_to = 1,   # PROMIS Depression (anchor scale)
+  type_to = "tscore",
+  rsss = rsss_fixedpar, # used to convert PROMIS Depression (anchor scale) raw to T
+  eq_type = "equipercentile", smooth = "loglinear"
+)
 ```
 
 Again, the crosswalk table can be retrieved from the `concordance` slot:
 
 ```{r}
-out_equate_tscore$concordance
+head(rsss_equate_tscore$concordance)
 ```
 
-In what follows we display the linking relation obtained from the equipercentile method and compare it to that from the fixed-parameter calibration method.
+From row 6 in the above output, we see that:
 
-```{r, fig.align = 'center', fig.width = 7, fig.height = 7}
+- A raw score 25 points in CES-D corresponds to a T-score of 46.961 in the PROMIS Depression scale.
+
+# Comparison between linking methods
+
+The plot below shows the scale link produced by the equipercentile method (red dotted line) and the link produced by the fixed-parameter calibration method (blue solid line).
+
+```{r, fig.align = "center", fig.width = 7, fig.height = 7}
 plot(
   rsss_fixedpar$`2`$raw_2,
   rsss_fixedpar$`2`$tscore,
-  xlab = "CES-D Summed Score",
-  ylab = "PROMIS Depression T-score",
+  xlab = "CES-D (Scale to be linked), raw score",
+  ylab = "PROMIS Depression (Anchor scale), T-score",
   type = "l", col = "blue")
 lines(
-  out_equate_tscore$concordance$raw_2,
-  out_equate_tscore$concordance$tscore_1,
+  rsss_equate_tscore$concordance$raw_2,
+  rsss_equate_tscore$concordance$tscore_1,
   lty = 2, col = "red")
 grid()
 legend(
@@ -419,13 +443,7 @@ legend(
 )
 ```
 
-<br>
-
-# Evaluation of linking results
-
-The linking results produced so far are now evaluated. More specifically, we assess how closely the CES-D summed scores linked to the PROMIS Depression T-scores match the actual PROMIS Depression T-scores observed in the present linking sample. Should we have set aside a validation sample, we would have performed this evaluation on that sample.
-
-<br>
+To better understand the performance of the two methods, we add a best-case method where pattern-scoring is used on the response data to obtain $\theta$ estimates.
 
 ## Raw scores from Scale 2
 
@@ -436,104 +454,85 @@ scores <- getScaleSum(d, 2)
 head(scores)
 ```
 
-<br>
+## PROMIS T-scores based on item response patterns
 
-## EAP estimates based on item responses patterns on Scale 1
+To establish an ideal case scenario, we obtain $\theta$ estimates on the anchor scale (Scale 1; PROMIS Depression) based on item response patterns using the `getTheta()` function.
 
-We obtain EAP estimates of theta on Scale 1 (i.e., PROMIS Depression) based on item response patterns using the `getTheta()` function. The first argument of the function is a data object of `PROsetta` class, which we created earlier with `loadData()`. The second argument specifies the item parameter estimates to be used for the EAP estimation. Here, we use the item parameter estimates previously obtained from the fixed-parameter calibration, `out_link_fixedpar$ipar_linked`. The third argument `scale = 1` specifies the scale to be scored (i.e., PROMIS Depression). These EAP estimates are based on the item responses actually observed on PROMIS Depression and will serve as the reference when we assess the CES-D scores liked to PROMIS Depression derived from various methods.
+The `getTheta()` function requires three arguments:
+
+- The `data` argument requires a data object from `loadData()`. In this example, we use the object we created earlier.
+- The `ipar` argument requires item parameter estimates for all items. Here, we use the item parameter estimates that were previously obtained from fixed-parameter calibration, `out_link_fixedpar$ipar_linked`.
+- The `scale` argument requires a scale ID to perform $\theta$ estimation on. Here, we use Scale 1 (the anchor scale; PROMIS Depression).
+
+The function returns participant-wise EAP $\theta$ estimates and their associated standard errors:
 
 ```{r, message = FALSE}
-eap_promis <- getTheta(d, out_link_fixedpar$ipar_linked, scale = 1)$theta
-head(eap_promis)
+theta_promis <- getTheta(data = d, ipar = link_fixedpar$ipar_linked, scale = 1)$theta
+head(theta_promis)
 ```
 
-The EAP estimates for PROMIS Depression will be converted to T-scores using a linear transformation.
+The $\theta$ estimates for PROMIS Depression are then converted to T-scores.
 
 ```{r}
-t_promis <- data.frame(
-  prosettaid = eap_promis$prosettaid,
-  t_promis = round(eap_promis$theta_eap * 10 + 50, 1)
+t_promis_pattern <- data.frame(
+  prosettaid = theta_promis$prosettaid,
+  t_promis_pattern = round(theta_promis$theta_eap * 10 + 50, 1)
 )
-head(t_promis)
+head(t_promis_pattern)
 ```
 
-We then merge the PROMIS Depression T-scores with the raw summed scores for CES-D calculated in the previous step.
+These T-scores will be used as best-case scenario values in a later stage for comparing different RSSS tables from different methods.
+
+We then merge the PROMIS Depression T-scores with CES-D raw scores.
 
 ```{r}
-scores <- merge(scores, t_promis, by = "prosettaid")
+scores <- merge(scores, t_promis_pattern, by = "prosettaid")
 head(scores)
 ```
 
-Now we are going to generate T-scores linked to PROMIS Depression using only item responses on Scale 2 (CES-D). These T-scores linked to PROMIS Depression can be generated in different ways as:
+From the above output, we see that participant `100048` (row 1) had scored a raw-score of 21 on CES-D, and their PROMIS Depression T-score was 45.8. See how participants with the same raw score of 21 have different T-scores in the above output, from the usage of pattern scoring.
 
-* EAP estimates based on item response patterns on Scale 2
-* EAP estimates based on summed scores on Scale 2
-* Equipercentile equivalents based on summed scores on Scale 2
+## PROMIS T-scores based on RSSS table from fixed-parameter calibration
 
-The first two ways are based on the CES-D item parameters linked to the PROMIS Depression metric.
-
-<br>
-
-## EAP estimates based on item responses patterns on Scale 2
-
-First, we get EAP estimates based on item response patterns on Scale 2 using the CES-D item parameters linked to the PROMIS Depression metric (via fixed-parameter calibration). We then linearly transform the EAP estimates to T-scores and add the T-scores (`t_cesd_pattern`) to the data frame object `scores`.
+Second, we use the raw-score-to-scale-score (RSSS) crosswalk table obtained above to map raw scores in the scale to be linked (Scale 2; CES-D) onto T-scores on the anchor scale (Scale 1; PROMIS Depression).
 
 ```{r, message = FALSE}
-eap_cesd <- getTheta(d, out_link_fixedpar$ipar_linked, scale = 2)$theta
-t_cesd_pattern <- data.frame(
-  prosettaid = eap_cesd$prosettaid,
-  t_cesd_pattern = round(eap_cesd$theta_eap * 10 + 50, 1)
+rsss_fixedpar <- data.frame(
+  raw_2 = rsss_fixedpar[["2"]]$raw_2,
+  t_promis_rsss_fixedpar = round(rsss_fixedpar[["2"]]$tscore, 1)
 )
-scores <- merge(scores, t_cesd_pattern, by = "prosettaid")
+scores <- merge(scores, rsss_fixedpar, by = "raw_2")
 head(scores)
 ```
 
-<br>
+From the above output, we see that CES-D raw scores of 20 were mapped to T-scores of 34.5 using the RSSS table.
 
-## EAP estimates based on summed scores on Scale 2
+## PROMIS T-scores based on RSSS table from equipercentile linking
 
-Second, we use the raw-score-to-scale-score (RSSS) crosswalk table obtained above using summed score EAP estimation to map each raw summed score on Scale 2 onto a T-score on the PROMIS Depression metric, `t_cesd_rsss`.
-
-```{r, message = FALSE}
-rsss_eap <- data.frame(
-  raw_2 = rsss_fixedpar$`2`$raw_2,
-  t_cesd_rsss = round(rsss_fixedpar$`2`$tscore, 1)
-)
-scores <- merge(scores, rsss_eap, by = "raw_2")
-head(scores)
-```
-
-<br>
-
-## Equipercentile linking of summed scores on Scale 2
-
-Third, we use the concordance table from equipercentile linking to map each raw summed score on Scale 2 onto a T-score on the PROMIS Depression metric, `t_cesd_eqp`.
+Next, we use the concordance table from equipercentile linking to map each raw summed score on Scale 2 onto a T-score on the PROMIS Depression metric, `t_cesd_eqp`.
 
 ```{r, message = FALSE}
 rsss_eqp <- data.frame(
-  raw_2 = out_equate_tscore$concordance$raw_2,
-  t_cesd_eqp = round(out_equate_tscore$concordance$tscore_1, 1)
+  raw_2 = rsss_equate_tscore$concordance$raw_2,
+  t_promis_rsss_eqp = round(rsss_equate_tscore$concordance$tscore_1, 1)
 )
 scores <- merge(scores, rsss_eqp, by = "raw_2")
 head(scores)
 ```
 
-<br>
+From the above output, we see that CES-D raw scores of 20 were mapped to T-scores of 33.6 using the RSSS table.
 
-## Comparison of equated and observed T-scores
+## Comparison of RSSS tables
 
-Finally, use `compareScores()` to compare the obtained T-scores.
+Finally, use `compareScores()` to compare which RSSS table gives closer results to pattern-scoring.
 
 ```{r}
-# Reference score: IRT pattern scoring of Scale 1
-c_pattern <- compareScores(
-  scores$t_promis, scores$t_cesd_pattern) ## IRT response pattern EAP to T-score
-c_rsss <- compareScores(
-  scores$t_promis, scores$t_cesd_rsss)    ## IRT summed score EAP to T-score
+c_fixedpar <- compareScores(
+  scores$t_promis_pattern, scores$t_promis_rsss_fixedpar)
 c_eqp <- compareScores(
-  scores$t_promis, scores$t_cesd_eqp)     ## Equipercentile summed score to T-score
+  scores$t_promis_pattern, scores$t_promis_rsss_eqp)
 
-stats           <- rbind(c_pattern, c_rsss, c_eqp)
-rownames(stats) <- c("IRT Pattern", "IRT RSSS", "Equipercentile")
+stats           <- rbind(c_fixedpar, c_eqp)
+rownames(stats) <- c("Fixed-parameter calibration", "Equipercentile")
 stats
 ```
