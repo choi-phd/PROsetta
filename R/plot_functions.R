@@ -175,10 +175,15 @@ setMethod(
   definition = function(object, data, theta = seq(-4, 4, .1), t_score = FALSE, scale_label = c(1, 2, "Combined"), color = c("red", "blue", "black"), lty = c(3, 2, 1)) {
 
     info  <- list()
-    for (scale_id in c(unique(data@itemmap[[data@scale_id]]), 0)) {
+    scale_ids <- c(
+      unique(data@itemmap[[data@scale_id]]),
+      0
+    )
+    for (scale_id in scale_ids) {
 
       if (scale_id != 0) {
-        item_names <- subset(data@itemmap, data@itemmap[[data@scale_id]] == scale_id)[[data@item_id]]
+        use_these <- data@itemmap[[data@scale_id]] == scale_id
+        item_names <- data@itemmap[use_these, data@item_id]
       } else {
         item_names <- data@itemmap[[data@item_id]]
       }
