@@ -151,7 +151,8 @@ runClassical <- function(data, omega = FALSE, scalewise = TRUE, ...) {
 
   if (scalewise) {
     for (scale_id in unique(data@itemmap[[data@scale_id]])) {
-      itemmap <- subset(data@itemmap, data@itemmap[[data@scale_id]] == scale_id)
+      use_these <- data@itemmap[[data@scale_id]] == scale_id
+      itemmap <- data@itemmap[use_these, ]
       items <- itemmap[[data@item_id]]
       out_alpha[[as.character(scale_id)]] <- psych::alpha(data@response[items])
       if (omega) {
