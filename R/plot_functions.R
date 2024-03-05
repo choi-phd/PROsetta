@@ -45,7 +45,8 @@ setMethod(
     resp         <- resp[idx_complete, ]
 
     if (scale_id != "combined") {
-      item_names <- subset(x@itemmap, x@itemmap[[x@scale_id]] == scale_id)[[x@item_id]]
+      use_these <- x@itemmap[[x@scale_id]] == scale_id
+      item_names <- x@itemmap[[x@item_id]][use_these]
       if (length(item_names) == 0) {
         stop(sprintf("argument 'scale_id': unrecognized value '%s'", scale_id))
       }
