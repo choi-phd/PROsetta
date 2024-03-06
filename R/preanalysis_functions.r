@@ -205,7 +205,8 @@ runCFA <- function(data, estimator = "WLSMV", std.lv = TRUE, scalewise = FALSE, 
 
   if (scalewise) {
     for (scale_id in unique(data@itemmap[[data@scale_id]])) {
-      itemmap <- subset(data@itemmap, data@itemmap[[data@scale_id]] == scale_id)
+      use_these <- data@itemmap[[data@scale_id]] == scale_id
+      itemmap <- data@itemmap[use_these, ]
       items <- itemmap[[data@item_id]]
       model <- paste("Factor =~ ", paste0(items, collapse = " + "))
       model_fit <- lavaan::cfa(model, data@response, estimator = estimator, ordered = items, std.lv = std.lv, ...)
