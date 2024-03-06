@@ -8,7 +8,7 @@ test_that("loadData() works", {
 
   expect_true(d@item_id   == "item_id")
   expect_true(d@person_id == "prosettaid")
-  expect_true(d@scale_id  == "instrument")
+  expect_true(d@scale_id  == "scale_id")
 
 })
 

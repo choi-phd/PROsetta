@@ -7,7 +7,7 @@ test_that("getAnchorDimension", {
   anchor_dim <- PROsetta:::getAnchorDimension(d)
   expect_equal(anchor_dim, 1)
 
-  d@itemmap$instrument <- 3 - d@itemmap$instrument
+  d@itemmap$scale_id <- 3 - d@itemmap$scale_id
   anchor_dim <- PROsetta:::getAnchorDimension(d)
   expect_equal(anchor_dim, 2)
 
