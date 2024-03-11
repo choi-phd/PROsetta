@@ -1,9 +1,15 @@
 # PROsetta 0.4.1.9000
 
+## New features
+
 * Added support for working with GPC models.
 * Added support for when items between instruments have different item models. (e.g., the anchoring instrument uses GR, and the instrument being calibrated uses GPC.)
 * Added support for when items within the anchoring instrument use different item models. (e.g., the anchoring instrument uses GR for some items and GPC for others.)
 * Added support for when items within the instrument being calibrated use different item models. (e.g., the instrument being calibrated uses GR for some items and GPC for others.)
+
+## Bug fixes
+
+* Fixed where `loadData()` would not warn about items that may need reverse coding for scale IDs other than 1.
 
 # PROsetta 0.4.1
 
