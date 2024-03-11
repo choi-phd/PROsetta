@@ -52,11 +52,18 @@
 
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.4.1.9000" id="prosetta-0419000">PROsetta 0.4.1.9000<a class="anchor" aria-label="anchor" href="#prosetta-0419000"></a></h2>
+<div class="section level3">
+<h3 id="new-features-0-4-1-9000">New features<a class="anchor" aria-label="anchor" href="#new-features-0-4-1-9000"></a></h3>
 <ul><li>Added support for working with GPC models.</li>
 <li>Added support for when items between instruments have different item models. (e.g., the anchoring instrument uses GR, and the instrument being calibrated uses GPC.)</li>
 <li>Added support for when items within the anchoring instrument use different item models. (e.g., the anchoring instrument uses GR for some items and GPC for others.)</li>
 <li>Added support for when items within the instrument being calibrated use different item models. (e.g., the instrument being calibrated uses GR for some items and GPC for others.)</li>
 </ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-4-1-9000">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-4-1-9000"></a></h3>
+<ul><li>Fixed where <code><a href="../reference/loadData.html">loadData()</a></code> would not warn about items that may need reverse coding for scale IDs other than 1.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.4.1" id="prosetta-041">PROsetta 0.4.1<small>2023-02-03</small><a class="anchor" aria-label="anchor" href="#prosetta-041"></a></h2>
 <ul><li>Now requires <code>TestDesign (&gt;= 1.5.1)</code>.</li>
