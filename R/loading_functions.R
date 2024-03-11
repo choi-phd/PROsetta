@@ -218,8 +218,8 @@ loadData <- function(
   data@scale_id  <- scale_id
   data@model_id  <- model_id
 
-  for (s in unique(data@itemmap[[scale_id]])) {
-    cor_matrix <- cor(getResponse(data, 1), use = "pairwise.complete.obs")
+  for (this_scale in unique(data@itemmap[[scale_id]])) {
+    cor_matrix <- cor(getResponse(data, this_scale), use = "pairwise.complete.obs")
     reverse_code_check <- apply(cor_matrix, 1, sum) < 0
     if (any(reverse_code_check)) {
       potentially_not_reverse_coded_items <- names(which(reverse_code_check))
