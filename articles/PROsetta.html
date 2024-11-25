@@ -12,22 +12,20 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Scale linking with PROsetta package">
-<meta property="og:description" content="PROsetta">
-<meta property="og:image" content="/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -61,7 +59,7 @@
 <li>
   <a href="https://github.com/choi-phd/PROsetta/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -72,7 +70,7 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="col-md-9 contents">
@@ -80,7 +78,7 @@
       <h1 data-toc-skip>Scale linking with PROsetta package</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/choi-phd/PROsetta/blob/HEAD/vignettes/PROsetta.Rmd" class="external-link"><code>vignettes/PROsetta.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/choi-phd/PROsetta/blob/main/vignettes/PROsetta.Rmd" class="external-link"><code>vignettes/PROsetta.Rmd</code></a></small>
       <div class="hidden name"><code>PROsetta.Rmd</code></div>
 
     </div>
@@ -302,7 +300,8 @@ parts. For example, see how <code>itemmap_dep</code> and
 item parameter columns named <code>a</code>, <code>cb1</code>,
 <code>cb2</code>, and so on. These must be in the A/B parameterization
 (i.e., traditional IRT parameterization for unidimensional models) so
-that item probabilities are calculated based on <span class="math inline">\(a(\theta - b)\)</span>.</li>
+that item probabilities are calculated based on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo>−</mo><mi>b</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">a(\theta - b)</annotation></semantics></math>.</li>
 </ul>
 <p>Below is an example of anchor data.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
@@ -393,7 +392,9 @@ for each scale separately in addition to the combined scale.</p>
 <span><span class="co">##       0.93      0.94    0.95      0.42  15 0.0035  1.5 0.56     0.42</span></span></code></pre>
 <p>From the above summary, we see that the scale to be linked (Scale 2;
 CES-D) has a good reliability (alpha = 0.93).</p>
-<p>Specifying <code>omega = TRUE</code> returns the McDonald’s <span class="math inline">\(\omega\)</span> coefficients as well.</p>
+<p>Specifying <code>omega = TRUE</code> returns the McDonald’s
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ω</mi><annotation encoding="application/x-tex">\omega</annotation></semantics></math>
+coefficients as well.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">classical_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runClassical.html">runClassical</a></span><span class="op">(</span><span class="va">d</span>, scalewise <span class="op">=</span> <span class="cn">TRUE</span>, omega <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">classical_table</span><span class="op">$</span><span class="va">omega</span><span class="op">$</span><span class="va">combined</span> <span class="co"># omega values for combined scale</span></span>
@@ -424,7 +425,7 @@ and can pass additional arguments onto it.</p>
 analysis for each scale is also stored in each numbered slot.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out_cfa</span><span class="op">$</span><span class="va">combined</span></span></code></pre></div>
-<pre><code><span><span class="co">## lavaan 0.6.17 ended normally after 23 iterations</span></span>
+<pre><code><span><span class="co">## lavaan 0.6-19 ended normally after 23 iterations</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##   Estimator                                       DWLS</span></span>
 <span><span class="co">##   Optimization method                           NLMINB</span></span>
@@ -435,7 +436,7 @@ analysis for each scale is also stored in each numbered slot.</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## Model Test User Model:</span></span>
 <span><span class="co">##                                               Standard      Scaled</span></span>
-<span><span class="co">##   Test Statistic                              4227.611    4700.780</span></span>
+<span><span class="co">##   Test Statistic                              4227.611    4700.781</span></span>
 <span><span class="co">##   Degrees of freedom                              1080        1080</span></span>
 <span><span class="co">##   P-value (Chi-square)                           0.000       0.000</span></span>
 <span><span class="co">##   Scaling correction factor                                  1.046</span></span>
@@ -443,7 +444,7 @@ analysis for each scale is also stored in each numbered slot.</p>
 <span><span class="co">##     simple second-order correction</span></span></code></pre>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out_cfa</span><span class="op">$</span><span class="va">`1`</span></span></code></pre></div>
-<pre><code><span><span class="co">## lavaan 0.6.17 ended normally after 16 iterations</span></span>
+<pre><code><span><span class="co">## lavaan 0.6-19 ended normally after 16 iterations</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##   Estimator                                       DWLS</span></span>
 <span><span class="co">##   Optimization method                           NLMINB</span></span>
@@ -462,7 +463,7 @@ analysis for each scale is also stored in each numbered slot.</p>
 <span><span class="co">##     simple second-order correction</span></span></code></pre>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out_cfa</span><span class="op">$</span><span class="va">`2`</span></span></code></pre></div>
-<pre><code><span><span class="co">## lavaan 0.6.17 ended normally after 20 iterations</span></span>
+<pre><code><span><span class="co">## lavaan 0.6-19 ended normally after 20 iterations</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##   Estimator                                       DWLS</span></span>
 <span><span class="co">##   Optimization method                           NLMINB</span></span>
@@ -483,7 +484,7 @@ analysis for each scale is also stored in each numbered slot.</p>
 the <em>lavaan</em> package. For the combined scale:</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">lavaan</span><span class="fu">::</span><span class="fu">summary</span><span class="op">(</span><span class="va">out_cfa</span><span class="op">$</span><span class="va">combined</span>, fit.measures <span class="op">=</span> <span class="cn">TRUE</span>, standardized <span class="op">=</span> <span class="cn">TRUE</span>, estimates <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## lavaan 0.6.17 ended normally after 23 iterations</span></span>
+<pre><code><span><span class="co">## lavaan 0.6-19 ended normally after 23 iterations</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##   Estimator                                       DWLS</span></span>
 <span><span class="co">##   Optimization method                           NLMINB</span></span>
@@ -494,7 +495,7 @@ the <em>lavaan</em> package. For the combined scale:</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## Model Test User Model:</span></span>
 <span><span class="co">##                                               Standard      Scaled</span></span>
-<span><span class="co">##   Test Statistic                              4227.611    4700.780</span></span>
+<span><span class="co">##   Test Statistic                              4227.611    4700.781</span></span>
 <span><span class="co">##   Degrees of freedom                              1080        1080</span></span>
 <span><span class="co">##   P-value (Chi-square)                           0.000       0.000</span></span>
 <span><span class="co">##   Scaling correction factor                                  1.046</span></span>
@@ -503,7 +504,7 @@ the <em>lavaan</em> package. For the combined scale:</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## Model Test Baseline Model:</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">##   Test statistic                            793198.133   91564.632</span></span>
+<span><span class="co">##   Test statistic                            793198.138   91564.633</span></span>
 <span><span class="co">##   Degrees of freedom                              1128        1128</span></span>
 <span><span class="co">##   P-value                                        0.000       0.000</span></span>
 <span><span class="co">##   Scaling correction factor                                  8.758</span></span>
@@ -543,7 +544,7 @@ the <em>lavaan</em> package. For the combined scale:</p>
 </h3>
 <p><code><a href="../reference/runCalibration.html">runCalibration()</a></code> can be used to perform free IRT
 calibration for diagnostic purposes. <code><a href="../reference/runCalibration.html">runCalibration()</a></code> calls
-<code><a href="https://rdrr.io/pkg/mirt/man/mirt.html" class="external-link">mirt::mirt()</a></code> internally, and additional arguments can be
+<code><a href="https://philchalmers.github.io/mirt/reference/mirt.html" class="external-link">mirt::mirt()</a></code> internally, and additional arguments can be
 supplied to be passed onto <code>mirt</code>, e.g., to increase the
 number of EM cycles to 1000, as follows:</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
@@ -553,14 +554,15 @@ number of EM cycles to 1000, as follows:</p>
 return its results.</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out_calib</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runCalibration.html">runCalibration</a></span><span class="op">(</span><span class="va">d</span>, technical <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>NCYCLES <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning: EM cycles terminated after 10 iterations.</span></span></code></pre>
 <pre><code><span><span class="co">## Error in runCalibration(d, technical = list(NCYCLES = 10)): calibration did not converge: increase iteration limit by adjusting the 'technical' argument, e.g., technical = list(NCYCLES = 510)</span></span></code></pre>
 <p>The output object from <code><a href="../reference/runCalibration.html">runCalibration()</a></code> can be used to
 generate diagnostic output with functions from the <em>mirt</em>
 package:</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">mirt</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mirt/man/itemfit.html" class="external-link">itemfit</a></span><span class="op">(</span><span class="va">out_calib</span>, empirical.plot <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="fu">mirt</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mirt/man/itemplot.html" class="external-link">itemplot</a></span><span class="op">(</span><span class="va">out_calib</span>, item <span class="op">=</span> <span class="fl">1</span>, type <span class="op">=</span> <span class="st">"info"</span><span class="op">)</span></span>
-<span><span class="fu">mirt</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mirt/man/itemfit.html" class="external-link">itemfit</a></span><span class="op">(</span><span class="va">out_calib</span>, <span class="st">"S_X2"</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">mirt</span><span class="fu">::</span><span class="fu"><a href="https://philchalmers.github.io/mirt/reference/itemfit.html" class="external-link">itemfit</a></span><span class="op">(</span><span class="va">out_calib</span>, empirical.plot <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="fu">mirt</span><span class="fu">::</span><span class="fu"><a href="https://philchalmers.github.io/mirt/reference/itemplot.html" class="external-link">itemplot</a></span><span class="op">(</span><span class="va">out_calib</span>, item <span class="op">=</span> <span class="fl">1</span>, type <span class="op">=</span> <span class="st">"info"</span><span class="op">)</span></span>
+<span><span class="fu">mirt</span><span class="fu">::</span><span class="fu"><a href="https://philchalmers.github.io/mirt/reference/itemfit.html" class="external-link">itemfit</a></span><span class="op">(</span><span class="va">out_calib</span>, <span class="st">"S_X2"</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>Scale information functions can be plotted with
 <code>plotInfo</code>. The two required arguments are an output object
 from <code><a href="../reference/runCalibration.html">runCalibration()</a></code> and a <code>PROsetta</code> object
@@ -569,7 +571,7 @@ labels, colors, and line types for each scale and the combined scale.
 The last values in arguments <code>scale_label</code>,
 <code>color</code>, <code>lty</code> represent the values for the
 combined scale.</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotInfo-methods.html">plotInfo</a></span><span class="op">(</span></span>
 <span>  <span class="va">out_calib</span>, <span class="va">d</span>,</span>
 <span>  scale_label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PROMIS Depression"</span>, <span class="st">"CES-D"</span>, <span class="st">"Combined"</span><span class="op">)</span>,</span>
@@ -597,16 +599,19 @@ package.</p>
 </h4>
 <p>A fixed-parameter calibration is performed by constraining item
 parameters of anchor items to anchor data values, and freely estimating
-item parameters for non-anchor items. The mean and the variance of <span class="math inline">\(\theta\)</span> is freely estimated to capture the
-difference between the current participant group relative to the anchor
-participant group, assuming the anchor group follows <span class="math inline">\(\theta \sim N(0, 1)\)</span>.</p>
+item parameters for non-anchor items. The mean and the variance of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+is freely estimated to capture the difference between the current
+participant group relative to the anchor participant group, assuming the
+anchor group follows
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi><mo>∼</mo><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta \sim N(0, 1)</annotation></semantics></math>.</p>
 <p>Scale linking through fixed parameter calibration is performed by
 setting <code>method = "FIXEDPAR"</code>.</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">link_fixedpar</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runLinking.html">runLinking</a></span><span class="op">(</span><span class="va">d</span>, method <span class="op">=</span> <span class="st">"FIXEDPAR"</span><span class="op">)</span></span></code></pre></div>
 <p>From the output, the linked parameters are stored in the
 <code>$ipar_linked</code> slot.</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">link_fixedpar</span><span class="op">$</span><span class="va">ipar_linked</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##         item_id item_model        a        b1        b2       b3       b4</span></span>
 <span><span class="co">## EDDEP04 EDDEP04         GR 4.261422 0.4010694 0.9756732 1.696300 2.444072</span></span>
@@ -617,27 +622,28 @@ setting <code>method = "FIXEDPAR"</code>.</p>
 <span><span class="co">## EDDEP14 EDDEP14         GR 2.333381 0.1859934 0.9473173 1.728770 2.632643</span></span></code></pre>
 <p>The group characteristics are stored in the <code>$mu_sigma</code>
 slot.</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">link_fixedpar</span><span class="op">$</span><span class="va">mu_sigma</span></span></code></pre></div>
 <pre><code><span><span class="co">## $mu</span></span>
 <span><span class="co">##          F1 </span></span>
-<span><span class="co">## -0.05974478 </span></span>
+<span><span class="co">## -0.05974137 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $sigma</span></span>
-<span><span class="co">##           F1</span></span>
-<span><span class="co">## F1 0.9504143</span></span>
+<span><span class="co">##          F1</span></span>
+<span><span class="co">## F1 0.950464</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $sd</span></span>
 <span><span class="co">##        F1 </span></span>
-<span><span class="co">## 0.9748919 </span></span>
+<span><span class="co">## 0.9749174 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $corr</span></span>
 <span><span class="co">##    F1</span></span>
 <span><span class="co">## F1  1</span></span></code></pre>
 <p>From the above output, we see that the participant group in
-<code>response_dep</code> had a slightly lower <span class="math inline">\(\theta\)</span> of <code>-0.060</code> compared to
-the anchor group, and a slightly smaller variance of <code>0.950</code>
-compared to the anchor group.</p>
+<code>response_dep</code> had a slightly lower
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+of <code>-0.060</code> compared to the anchor group, and a slightly
+smaller variance of <code>0.950</code> compared to the anchor group.</p>
 </div>
 <div class="section level4">
 <h4 id="linear-transformation-methods">Linear transformation methods<a class="anchor" aria-label="anchor" href="#linear-transformation-methods"></a>
@@ -659,62 +665,71 @@ the <code>method</code> argument to one of the following options:</p>
 <li>
 <code>SL</code> (Stocking-Lord)</li>
 </ul>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">link_sl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runLinking.html">runLinking</a></span><span class="op">(</span><span class="va">d</span>, method <span class="op">=</span> <span class="st">"SL"</span>, technical <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>NCYCLES <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">link_sl</span></span></code></pre></div>
 <p>The item parameter estimates linked to the anchor metric are stored
 in the <code>$ipar_linked</code> slot.</p>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">link_sl</span><span class="op">$</span><span class="va">ipar_linked</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   item_id item_model        a         b1        b2       b3       b4</span></span>
-<span><span class="co">## 1 EDDEP04         GR 3.793161 0.46953055 1.0795350 1.723900 2.349080</span></span>
-<span><span class="co">## 2 EDDEP05         GR 3.320380 0.33290328 0.8987342 1.652724 2.495485</span></span>
-<span><span class="co">## 3 EDDEP06         GR 3.425968 0.38780295 1.0150063 1.791367 2.554685</span></span>
-<span><span class="co">## 4 EDDEP07         GR 2.515490 0.07923511 0.8041320 1.613013 2.489921</span></span>
-<span><span class="co">## 5 EDDEP09         GR 3.473136 0.33392535 1.0061928 1.872557 2.581161</span></span>
-<span><span class="co">## 6 EDDEP14         GR 2.593311 0.16625956 0.8908913 1.766003 2.578983</span></span></code></pre>
+<span><span class="co">## 1 EDDEP04         GR 3.793029 0.46953342 1.0795406 1.723902 2.349076</span></span>
+<span><span class="co">## 2 EDDEP05         GR 3.320320 0.33290477 0.8987386 1.652727 2.495477</span></span>
+<span><span class="co">## 3 EDDEP06         GR 3.425877 0.38780569 1.0150119 1.791368 2.554674</span></span>
+<span><span class="co">## 4 EDDEP07         GR 2.515474 0.07923606 0.8041343 1.613014 2.489916</span></span>
+<span><span class="co">## 5 EDDEP09         GR 3.473048 0.33392750 1.0061990 1.872558 2.581146</span></span>
+<span><span class="co">## 6 EDDEP14         GR 2.593291 0.16626048 0.8908936 1.766002 2.578976</span></span></code></pre>
 <p>Transformation constants (A = slope; B = intercept) for the specified
 linear transformation method are stored in the <code>$constants</code>
 slot.</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">link_sl</span><span class="op">$</span><span class="va">constants</span></span></code></pre></div>
 <pre><code><span><span class="co">##         A         B </span></span>
-<span><span class="co">##  0.982306 -0.064442</span></span></code></pre>
+<span><span class="co">##  0.982324 -0.064233</span></span></code></pre>
 </div>
 <div class="section level4">
 <h4 id="calibrated-projection-using-fixed-parameter-calibration">Calibrated projection (using fixed-parameter calibration)<a class="anchor" aria-label="anchor" href="#calibrated-projection-using-fixed-parameter-calibration"></a>
 </h4>
 <p>Calibrated projection is an IRT-based multidimensional scale linking
 method. Calibrated projection is performed through a multidimensional
-model where the items in one scale measures its own <span class="math inline">\(\theta\)</span> dimension, and items in another
-scale measures another <span class="math inline">\(\theta\)</span>
+model where the items in one scale measures its own
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+dimension, and items in another scale measures another
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
 dimension.</p>
 <p>In this vignette, the anchor scale (PROMIS Depression) was coded as
 Scale 1, and the scale to be linked (CES-D) was coded as Scale 2. This
-leads to Scale 1 items having non-zero <span class="math inline">\(a\)</span>-parameters in dimension 1, and Scale 2
-items having non-zero <span class="math inline">\(a\)</span>-parameters
+leads to Scale 1 items having non-zero
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>-parameters
+in dimension 1, and Scale 2 items having non-zero
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>-parameters
 in dimensions 2.</p>
 <p>For the purpose of scale linking, calibrated projection can be
 performed in conjunction with the fixed-parameter calibration technique.
 The anchor item parameters are constrained to their anchor data values,
 and item parameters in the non-anchor items are freely estimated. The
-mean/variance of <span class="math inline">\(\theta\)</span> in the
-anchor dimension are freely estimated to capture the difference between
-the current participant group relative to the anchor participant group,
-assuming the anchor group follows <span class="math inline">\(\theta
-\sim N(0, 1)\)</span>. The mean/variance of <span class="math inline">\(\theta\)</span> in the scale-to-be-linked
-dimension are constrained to be 0/1.</p>
+mean/variance of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+in the anchor dimension are freely estimated to capture the difference
+between the current participant group relative to the anchor participant
+group, assuming the anchor group follows
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi><mo>∼</mo><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta \sim N(0, 1)</annotation></semantics></math>.
+The mean/variance of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+in the scale-to-be-linked dimension are constrained to be 0/1.</p>
 <p>In this vignette, this means that the mean/variance of dimension 1
 (the anchor dimension) are freely estimated, and the mean/variance of
 dimension 2 are constrained to be 0/1.</p>
 <p>Scale linking through calibrated projection (with fixed parameter
 calibration) is performed by setting <code>method = "CP"</code>.</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">link_cp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runLinking.html">runLinking</a></span><span class="op">(</span><span class="va">d</span>, method <span class="op">=</span> <span class="st">"CP"</span><span class="op">)</span></span></code></pre></div>
 <p>From the output, the linked parameters are stored in the
-<code>$ipar_linked</code> slot. See how there are two <span class="math inline">\(a\)</span>-parameters, with items in the anchor
-scale (PROMIS Depression) loaded onto dimension 1.</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<code>$ipar_linked</code> slot. See how there are two
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>-parameters,
+with items in the anchor scale (PROMIS Depression) loaded onto dimension
+1.</p>
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">link_cp</span><span class="op">$</span><span class="va">ipar_linked</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##         item_id item_model       a1 a2         d1        d2        d3</span></span>
 <span><span class="co">## EDDEP04 EDDEP04         GR 4.261422  0 -1.7091263 -4.157755 -7.228651</span></span>
@@ -732,31 +747,32 @@ scale (PROMIS Depression) loaded onto dimension 1.</p>
 <span><span class="co">## EDDEP14  -6.142961</span></span></code></pre>
 <p>The group characteristics are stored in the <code>$mu_sigma</code>
 slot.</p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">link_cp</span><span class="op">$</span><span class="va">mu_sigma</span></span></code></pre></div>
 <pre><code><span><span class="co">## $mu</span></span>
 <span><span class="co">##          F1          F2 </span></span>
-<span><span class="co">## -0.07015423  0.00000000 </span></span>
+<span><span class="co">## -0.07033119  0.00000000 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $sigma</span></span>
 <span><span class="co">##           F1        F2</span></span>
-<span><span class="co">## F1 0.9714336 0.9060644</span></span>
-<span><span class="co">## F2 0.9060644 1.0000000</span></span>
+<span><span class="co">## F1 0.9721365 0.9064387</span></span>
+<span><span class="co">## F2 0.9064387 1.0000000</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $sd</span></span>
 <span><span class="co">##        F1        F2 </span></span>
-<span><span class="co">## 0.9856133 1.0000000 </span></span>
+<span><span class="co">## 0.9859698 1.0000000 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $corr</span></span>
 <span><span class="co">##           F1        F2</span></span>
-<span><span class="co">## F1 1.0000000 0.9192899</span></span>
-<span><span class="co">## F2 0.9192899 1.0000000</span></span></code></pre>
+<span><span class="co">## F1 1.0000000 0.9193372</span></span>
+<span><span class="co">## F2 0.9193372 1.0000000</span></span></code></pre>
 <p>From the above output, we see that the participant group in
-<code>response_dep</code> had a slightly lower <span class="math inline">\(\theta\)</span> of <code>-0.070</code> compared to
-the anchor group, and a slightly smaller variance of <code>0.971</code>
-compared to the anchor group. Also, we see that the constructs
-represented by the two scales had a correlation of
-<code>0.919</code>.</p>
+<code>response_dep</code> had a slightly lower
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+of <code>-0.070</code> compared to the anchor group, and a slightly
+smaller variance of <code>0.971</code> compared to the anchor group.
+Also, we see that the constructs represented by the two scales had a
+correlation of <code>0.919</code>.</p>
 </div>
 </div>
 <div class="section level3">
@@ -767,7 +783,7 @@ raw-score-to-scale-score (RSSS) crosswalk tables. This is done by
 <code><a href="../reference/runRSSS.html">runRSSS()</a></code>. The <code><a href="../reference/runRSSS.html">runRSSS()</a></code> function requires the
 dataset object created by <code><a href="../reference/loadData.html">loadData()</a></code>, and the output object
 from <code><a href="../reference/runLinking.html">runLinking()</a></code>.</p>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rsss_fixedpar</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runRSSS.html">runRSSS</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">link_fixedpar</span><span class="op">)</span></span></code></pre></div>
 <p>The output from <code><a href="../reference/runRSSS.html">runRSSS()</a></code> includes three crosswalk
 tables (labeled as <code>1</code>, <code>2</code>, and
@@ -777,7 +793,7 @@ was coded as Scale 1 and the scale to be linked (CES-D) was coded as
 Scale 2.</p>
 <p>The crosswalk table for the scale to be linked (CES-D; Scale 2) is
 shown here as an example.</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">rsss_fixedpar</span><span class="op">$</span><span class="va">`2`</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   raw_2 tscore tscore_se    eap eap_se escore_1 escore_2 escore_combined</span></span>
 <span><span class="co">## 1    20   34.5       6.0 -1.554  0.599   28.455   21.105          49.560</span></span>
@@ -798,26 +814,34 @@ metric.</li>
 <code>tscore_se</code>: the standard error associated with the
 T-score.</li>
 <li>
-<code>eap</code>: the corresponding <span class="math inline">\(\theta\)</span> in the anchor group metric.</li>
+<code>eap</code>: the corresponding
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+in the anchor group metric.</li>
 <li>
-<code>eap_se</code>: the standard error associated with the <span class="math inline">\(\theta\)</span> value.</li>
+<code>eap_se</code>: the standard error associated with the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+value.</li>
 <li>
 <code>escore_1</code>: the expected Scale 1 (PROMIS Depression) raw
-score derived from <span class="math inline">\(\theta\)</span>.</li>
+score derived from
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>.</li>
 <li>
 <code>escore_2</code>: the expected Scale 2 (CES-D) raw score
-derived from <span class="math inline">\(\theta\)</span>.</li>
+derived from
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>.</li>
 <li>
 <code>escore_combined</code>: the expected Combined Scale raw score
-derived from <span class="math inline">\(\theta\)</span>.</li>
+derived from
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>.</li>
 </ul>
 <p>For example, row 6 in the above table shows:</p>
 <ul>
 <li>A raw score 25 points in CES-D corresponds to a T-score of 46.2 in
 the anchor group.</li>
-<li>A raw score 25 points in CES-D corresponds to <span class="math inline">\(\theta = -0.382\)</span> in the anchor group,
-assuming the anchor group metric is <span class="math inline">\(\theta
-\sim N(0, 1)\)</span>.</li>
+<li>A raw score 25 points in CES-D corresponds to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi><mo>=</mo><mo>−</mo><mn>0.382</mn></mrow><annotation encoding="application/x-tex">\theta = -0.382</annotation></semantics></math>
+in the anchor group, assuming the anchor group metric is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi><mo>∼</mo><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta \sim N(0, 1)</annotation></semantics></math>.</li>
 <li>A raw score 25 points in CES-D corresponds to an expected raw score
 of 35.853 in the PROMIS Depression scale (raw score range =
 28-140).</li>
@@ -856,7 +880,7 @@ equipercentile linking. In this example, each raw sum-score in the
 scale-to-be-linked (Scale 2; CES-D, raw score range 20-80) is linked to
 a corresponding raw sum-score in the anchor scale (Scale 1; PROMIS
 Depression, raw score range 28-140) with loglinear presmoothing.</p>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rsss_equate_raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runEquateObserved.html">runEquateObserved</a></span><span class="op">(</span></span>
 <span>  <span class="va">d</span>,</span>
 <span>  scale_from <span class="op">=</span> <span class="fl">2</span>, <span class="co"># CES-D (scale to be linked)</span></span>
@@ -865,15 +889,15 @@ Depression, raw score range 28-140) with loglinear presmoothing.</p>
 <span><span class="op">)</span></span></code></pre></div>
 <p>The crosswalk table can be obtained from the <code>concordance</code>
 slot:</p>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">rsss_equate_raw</span><span class="op">$</span><span class="va">concordance</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   raw_2    raw_1  raw_1_se raw_1_se_boot</span></span>
-<span><span class="co">## 1    20 28.26881 0.1620936     0.1369462</span></span>
-<span><span class="co">## 2    21 29.88299 0.3370778     0.2968928</span></span>
-<span><span class="co">## 3    22 31.53492 0.5039397     0.4427263</span></span>
-<span><span class="co">## 4    23 33.26052 0.6025077     0.5973953</span></span>
-<span><span class="co">## 5    24 35.04116 0.7605541     0.7210170</span></span>
-<span><span class="co">## 6    25 36.88206 0.9289581     0.8395647</span></span></code></pre>
+<span><span class="co">## 1    20 28.26881 0.1620936     0.1305916</span></span>
+<span><span class="co">## 2    21 29.88299 0.3370778     0.2738646</span></span>
+<span><span class="co">## 3    22 31.53492 0.5039397     0.4021354</span></span>
+<span><span class="co">## 4    23 33.26052 0.6025077     0.5288394</span></span>
+<span><span class="co">## 5    24 35.04116 0.7605541     0.6391904</span></span>
+<span><span class="co">## 6    25 36.88206 0.9289581     0.8576881</span></span></code></pre>
 <p>From row 6 in the above output, we see that:</p>
 <ul>
 <li>A raw score 25 points in CES-D corresponds to an expected raw score
@@ -892,7 +916,7 @@ equivalents in the anchor scale (Scale 1; PROMIS Depression, mean = 50
 and SD = 10).</p>
 <p>This requires a separate RSSS table to be supplied for the purpose of
 converting anchor scale raw scores to T-scores.</p>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rsss_equate_tscore</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runEquateObserved.html">runEquateObserved</a></span><span class="op">(</span></span>
 <span>  <span class="va">d</span>,</span>
 <span>  scale_from <span class="op">=</span> <span class="fl">2</span>, <span class="co"># CES-D (scale to be linked)</span></span>
@@ -903,15 +927,15 @@ converting anchor scale raw scores to T-scores.</p>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Again, the crosswalk table can be retrieved from the
 <code>concordance</code> slot:</p>
-<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">rsss_equate_tscore</span><span class="op">$</span><span class="va">concordance</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   raw_2 tscore_1 tscore_1_se tscore_1_se_boot</span></span>
-<span><span class="co">## 1    20 33.60138   0.1015887        0.3726552</span></span>
-<span><span class="co">## 2    21 38.46567   0.2970127        1.0936836</span></span>
-<span><span class="co">## 3    22 41.72102   0.5244657        0.6012764</span></span>
-<span><span class="co">## 4    23 43.93269   0.7283759        0.6383347</span></span>
-<span><span class="co">## 5    24 45.56073   0.9008862        0.5862935</span></span>
-<span><span class="co">## 6    25 46.96056   1.0676547        0.5713136</span></span></code></pre>
+<span><span class="co">## 1    20 33.60138   0.1015887        0.3741251</span></span>
+<span><span class="co">## 2    21 38.46567   0.2970127        1.1185746</span></span>
+<span><span class="co">## 3    22 41.72102   0.5244657        0.5600030</span></span>
+<span><span class="co">## 4    23 43.93269   0.7283759        0.5983501</span></span>
+<span><span class="co">## 5    24 45.56073   0.9008862        0.5708281</span></span>
+<span><span class="co">## 6    25 46.96056   1.0676547        0.5935811</span></span></code></pre>
 <p>From row 6 in the above output, we see that:</p>
 <ul>
 <li>A raw score 25 points in CES-D corresponds to a T-score of 46.961 in
@@ -925,7 +949,7 @@ the PROMIS Depression scale.</li>
 <p>The plot below shows the scale link produced by the equipercentile
 method (red dotted line) and the link produced by the fixed-parameter
 calibration method (blue solid line).</p>
-<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">rsss_fixedpar</span><span class="op">$</span><span class="va">`2`</span><span class="op">$</span><span class="va">raw_2</span>,</span>
 <span>  <span class="va">rsss_fixedpar</span><span class="op">$</span><span class="va">`2`</span><span class="op">$</span><span class="va">tscore</span>,</span>
@@ -945,7 +969,9 @@ calibration method (blue solid line).</p>
 <p><img src="PROsetta_files/figure-html/unnamed-chunk-25-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>To better understand the performance of the two methods, we add a
 best-case method where pattern-scoring is used on the response data to
-obtain <span class="math inline">\(\theta\)</span> estimates.</p>
+obtain
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+estimates.</p>
 <div class="section level3">
 <h3 id="raw-scores-from-scale-2">Raw scores from Scale 2<a class="anchor" aria-label="anchor" href="#raw-scores-from-scale-2"></a>
 </h3>
@@ -955,7 +981,7 @@ obtain <span class="math inline">\(\theta\)</span> estimates.</p>
 or more missing responses on Scale 2. We could also create a summed
 score variable for Scale 1 using the same function, e.g.,
 <code>getScaleSum(d, 1)</code>.</p>
-<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getScaleSum.html">getScaleSum</a></span><span class="op">(</span><span class="va">d</span>, <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">scores</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   prosettaid raw_2</span></span>
@@ -969,9 +995,10 @@ score variable for Scale 1 using the same function, e.g.,
 <div class="section level3">
 <h3 id="promis-t-scores-based-on-item-response-patterns">PROMIS T-scores based on item response patterns<a class="anchor" aria-label="anchor" href="#promis-t-scores-based-on-item-response-patterns"></a>
 </h3>
-<p>To establish an ideal case scenario, we obtain <span class="math inline">\(\theta\)</span> estimates on the anchor scale
-(Scale 1; PROMIS Depression) based on item response patterns using the
-<code><a href="../reference/getTheta.html">getTheta()</a></code> function.</p>
+<p>To establish an ideal case scenario, we obtain
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+estimates on the anchor scale (Scale 1; PROMIS Depression) based on item
+response patterns using the <code><a href="../reference/getTheta.html">getTheta()</a></code> function.</p>
 <p>The <code><a href="../reference/getTheta.html">getTheta()</a></code> function requires three arguments:</p>
 <ul>
 <li>The <code>data</code> argument requires a data object from
@@ -981,12 +1008,15 @@ earlier.</li>
 all items. Here, we use the item parameter estimates that were
 previously obtained from fixed-parameter calibration,
 <code>out_link_fixedpar$ipar_linked</code>.</li>
-<li>The <code>scale</code> argument requires a scale ID to perform <span class="math inline">\(\theta\)</span> estimation on. Here, we use Scale
-1 (the anchor scale; PROMIS Depression).</li>
+<li>The <code>scale</code> argument requires a scale ID to perform
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+estimation on. Here, we use Scale 1 (the anchor scale; PROMIS
+Depression).</li>
 </ul>
-<p>The function returns participant-wise EAP <span class="math inline">\(\theta\)</span> estimates and their associated
-standard errors:</p>
-<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
+<p>The function returns participant-wise EAP
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+estimates and their associated standard errors:</p>
+<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">theta_promis</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getTheta.html">getTheta</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">d</span>, ipar <span class="op">=</span> <span class="va">link_fixedpar</span><span class="op">$</span><span class="va">ipar_linked</span>, scale <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">$</span><span class="va">theta</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">theta_promis</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   prosettaid   theta_eap  theta_se</span></span>
@@ -996,9 +1026,10 @@ standard errors:</p>
 <span><span class="co">## 4     100051 -0.04622278 0.1238298</span></span>
 <span><span class="co">## 5     100052 -1.65063866 0.5049212</span></span>
 <span><span class="co">## 6     100053 -0.55824065 0.1812502</span></span></code></pre>
-<p>The <span class="math inline">\(\theta\)</span> estimates for PROMIS
-Depression are then converted to T-scores.</p>
-<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
+<p>The
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+estimates for PROMIS Depression are then converted to T-scores.</p>
+<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">t_promis_pattern</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  prosettaid <span class="op">=</span> <span class="va">theta_promis</span><span class="op">$</span><span class="va">prosettaid</span>,</span>
 <span>  t_promis_pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">theta_promis</span><span class="op">$</span><span class="va">theta_eap</span> <span class="op">*</span> <span class="fl">10</span> <span class="op">+</span> <span class="fl">50</span>, <span class="fl">1</span><span class="op">)</span></span>
@@ -1015,7 +1046,7 @@ Depression are then converted to T-scores.</p>
 stage for comparing different RSSS tables from different methods.</p>
 <p>We then merge the PROMIS Depression T-scores with CES-D raw
 scores.</p>
-<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">scores</span>, <span class="va">t_promis_pattern</span>, by <span class="op">=</span> <span class="st">"prosettaid"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">scores</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   prosettaid raw_2 t_promis_pattern</span></span>
@@ -1039,7 +1070,7 @@ calibration<a class="anchor" aria-label="anchor" href="#promis-t-scores-based-on
 obtained above to map raw scores in the scale to be linked (Scale 2;
 CES-D) onto T-scores on the anchor scale (Scale 1; PROMIS
 Depression).</p>
-<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rsss_fixedpar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  raw_2 <span class="op">=</span> <span class="va">rsss_fixedpar</span><span class="op">[[</span><span class="st">"2"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">raw_2</span>,</span>
 <span>  t_promis_rsss_fixedpar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">rsss_fixedpar</span><span class="op">[[</span><span class="st">"2"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">tscore</span>, <span class="fl">1</span><span class="op">)</span></span>
@@ -1062,7 +1093,7 @@ to T-scores of 34.5 using the RSSS table.</p>
 <p>Next, we use the concordance table from equipercentile linking to map
 each raw summed score on Scale 2 onto a T-score on the PROMIS Depression
 metric, <code>t_cesd_eqp</code>.</p>
-<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rsss_eqp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  raw_2 <span class="op">=</span> <span class="va">rsss_equate_tscore</span><span class="op">$</span><span class="va">concordance</span><span class="op">$</span><span class="va">raw_2</span>,</span>
 <span>  t_promis_rsss_eqp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">rsss_equate_tscore</span><span class="op">$</span><span class="va">concordance</span><span class="op">$</span><span class="va">tscore_1</span>, <span class="fl">1</span><span class="op">)</span></span>
@@ -1084,7 +1115,7 @@ to T-scores of 33.6 using the RSSS table.</p>
 </h3>
 <p>Finally, use <code><a href="../reference/compareScores.html">compareScores()</a></code> to compare which RSSS table
 gives closer results to pattern-scoring.</p>
-<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">c_fixedpar</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compareScores.html">compareScores</a></span><span class="op">(</span></span>
 <span>  <span class="va">scores</span><span class="op">$</span><span class="va">t_promis_pattern</span>, <span class="va">scores</span><span class="op">$</span><span class="va">t_promis_rsss_fixedpar</span><span class="op">)</span></span>
 <span><span class="va">c_eqp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compareScores.html">compareScores</a></span><span class="op">(</span></span>
@@ -1102,9 +1133,7 @@ gives closer results to pattern-scoring.</p>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
-</div>
+      </div>
 
 </div>
 
@@ -1117,16 +1146,16 @@ gives closer results to pattern-scoring.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
       </footer>
 </div>
 
-  
 
 
-  
+
+
 
   </body>
 </html>

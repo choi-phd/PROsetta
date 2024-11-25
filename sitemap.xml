@@ -1,102 +1,36 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/articles/PROsetta.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/PROsetta.html</loc>
-  </url>
-  <url>
-    <loc>/reference/checkFrequency.html</loc>
-  </url>
-  <url>
-    <loc>/reference/compareScores.html</loc>
-  </url>
-  <url>
-    <loc>/reference/computeResponseProbability.html</loc>
-  </url>
-  <url>
-    <loc>/reference/dataset_asq.html</loc>
-  </url>
-  <url>
-    <loc>/reference/dataset_dep.html</loc>
-  </url>
-  <url>
-    <loc>/reference/detectParameterization.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getCompleteData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getEscore.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getItemNames.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getRSSS.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getResponse.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getScaleSum.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getTheta.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/loadData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/makeCalibrationModel.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plot-methods.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plotInfo-methods.html</loc>
-  </url>
-  <url>
-    <loc>/reference/runCFA.html</loc>
-  </url>
-  <url>
-    <loc>/reference/runCalibration.html</loc>
-  </url>
-  <url>
-    <loc>/reference/runClassical.html</loc>
-  </url>
-  <url>
-    <loc>/reference/runDescriptive.html</loc>
-  </url>
-  <url>
-    <loc>/reference/runEquateObserved.html</loc>
-  </url>
-  <url>
-    <loc>/reference/runFrequency.html</loc>
-  </url>
-  <url>
-    <loc>/reference/runLinking.html</loc>
-  </url>
-  <url>
-    <loc>/reference/runRSSS.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/articles/PROsetta.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/news/index.html</loc></url>
+<url><loc>/reference/PROsetta.html</loc></url>
+<url><loc>/reference/checkFrequency.html</loc></url>
+<url><loc>/reference/compareScores.html</loc></url>
+<url><loc>/reference/computeResponseProbability.html</loc></url>
+<url><loc>/reference/dataset_asq.html</loc></url>
+<url><loc>/reference/dataset_dep.html</loc></url>
+<url><loc>/reference/detectParameterization.html</loc></url>
+<url><loc>/reference/getCompleteData.html</loc></url>
+<url><loc>/reference/getEscore.html</loc></url>
+<url><loc>/reference/getItemNames.html</loc></url>
+<url><loc>/reference/getRSSS.html</loc></url>
+<url><loc>/reference/getResponse.html</loc></url>
+<url><loc>/reference/getScaleSum.html</loc></url>
+<url><loc>/reference/getTheta.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/loadData.html</loc></url>
+<url><loc>/reference/makeCalibrationModel.html</loc></url>
+<url><loc>/reference/plot-methods.html</loc></url>
+<url><loc>/reference/plotInfo-methods.html</loc></url>
+<url><loc>/reference/runCFA.html</loc></url>
+<url><loc>/reference/runCalibration.html</loc></url>
+<url><loc>/reference/runClassical.html</loc></url>
+<url><loc>/reference/runDescriptive.html</loc></url>
+<url><loc>/reference/runEquateObserved.html</loc></url>
+<url><loc>/reference/runFrequency.html</loc></url>
+<url><loc>/reference/runLinking.html</loc></url>
+<url><loc>/reference/runRSSS.html</loc></url>
 </urlset>
+
