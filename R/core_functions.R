@@ -339,7 +339,7 @@ applyConstraintsToLayout <- function(layout, d, verbose) {
     verbose
   )
 
-  if (dimensions == 1 & (!"a1" %in% names(ipar_anchor))) {
+  if (dimensions == 1 && (!"a1" %in% names(ipar_anchor))) {
     # if using a 1D model and the anchor dimension is not 1
     a_par_name <- sprintf("a%s", getAnchorDimension(d))
     a_par_idx  <- which(names(ipar_anchor) == a_par_name)
@@ -352,7 +352,7 @@ applyConstraintsToLayout <- function(layout, d, verbose) {
 
   for (i in 1:dim(ipar_anchor)[1]) {
     item_name <- rownames(ipar_anchor)[i]
-    for (j in 1:dim(ipar_anchor)[2]) {
+    for (j in 1:sum(!is.na(ipar_anchor[i, ]))) {
       par_name <- colnames(ipar_anchor)[j]
       idx <-
         layout$item == item_name &
