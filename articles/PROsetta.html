@@ -6,12 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Scale linking with PROsetta package • PROsetta</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="48x48" href="../favicon-48x48.png">
+<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" sizes="any" href="../favicon.ico">
+<link rel="manifest" href="../site.webmanifest">
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
@@ -39,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">PROsetta</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.4.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.4.2.9000</span>
       </span>
     </div>
 
@@ -504,7 +503,7 @@ the <em>lavaan</em> package. For the combined scale:</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## Model Test Baseline Model:</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">##   Test statistic                            793198.138   91564.633</span></span>
+<span><span class="co">##   Test statistic                            793198.136   91564.633</span></span>
 <span><span class="co">##   Degrees of freedom                              1128        1128</span></span>
 <span><span class="co">##   P-value                                        0.000       0.000</span></span>
 <span><span class="co">##   Scaling correction factor                                  8.758</span></span>
@@ -618,7 +617,7 @@ setting <code>method = "FIXEDPAR"</code>.</p>
 <span><span class="co">## EDDEP05 EDDEP05         GR 3.931743 0.3049418 0.9130961 1.593476 2.411682</span></span>
 <span><span class="co">## EDDEP06 EDDEP06         GR 4.144759 0.3501130 0.9153482 1.678203 2.470526</span></span>
 <span><span class="co">## EDDEP07 EDDEP07         GR 2.801804 0.1477485 0.7723478 1.602715 2.538057</span></span>
-<span><span class="co">## EDDEP09 EDDEP09         GR 3.657433 0.3119582 0.9818088 1.782108 2.571127</span></span>
+<span><span class="co">## EDDEP09 EDDEP09         GR 3.657433 0.3119582 0.9818087 1.782108 2.571127</span></span>
 <span><span class="co">## EDDEP14 EDDEP14         GR 2.333381 0.1859934 0.9473173 1.728770 2.632643</span></span></code></pre>
 <p>The group characteristics are stored in the <code>$mu_sigma</code>
 slot.</p>
@@ -626,15 +625,15 @@ slot.</p>
 <code class="sourceCode R"><span><span class="va">link_fixedpar</span><span class="op">$</span><span class="va">mu_sigma</span></span></code></pre></div>
 <pre><code><span><span class="co">## $mu</span></span>
 <span><span class="co">##          F1 </span></span>
-<span><span class="co">## -0.05974137 </span></span>
+<span><span class="co">## -0.05973848 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $sigma</span></span>
-<span><span class="co">##          F1</span></span>
-<span><span class="co">## F1 0.950464</span></span>
+<span><span class="co">##           F1</span></span>
+<span><span class="co">## F1 0.9504672</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $sd</span></span>
 <span><span class="co">##        F1 </span></span>
-<span><span class="co">## 0.9749174 </span></span>
+<span><span class="co">## 0.9749191 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $corr</span></span>
 <span><span class="co">##    F1</span></span>
@@ -673,19 +672,19 @@ in the <code>$ipar_linked</code> slot.</p>
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">link_sl</span><span class="op">$</span><span class="va">ipar_linked</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   item_id item_model        a         b1        b2       b3       b4</span></span>
-<span><span class="co">## 1 EDDEP04         GR 3.793029 0.46953342 1.0795406 1.723902 2.349076</span></span>
-<span><span class="co">## 2 EDDEP05         GR 3.320320 0.33290477 0.8987386 1.652727 2.495477</span></span>
-<span><span class="co">## 3 EDDEP06         GR 3.425877 0.38780569 1.0150119 1.791368 2.554674</span></span>
-<span><span class="co">## 4 EDDEP07         GR 2.515474 0.07923606 0.8041343 1.613014 2.489916</span></span>
-<span><span class="co">## 5 EDDEP09         GR 3.473048 0.33392750 1.0061990 1.872558 2.581146</span></span>
-<span><span class="co">## 6 EDDEP14         GR 2.593291 0.16626048 0.8908936 1.766002 2.578976</span></span></code></pre>
+<span><span class="co">## 1 EDDEP04         GR 3.793002 0.46953419 1.0795418 1.723903 2.349075</span></span>
+<span><span class="co">## 2 EDDEP05         GR 3.320310 0.33290529 0.8987395 1.652728 2.495476</span></span>
+<span><span class="co">## 3 EDDEP06         GR 3.425860 0.38780643 1.0150131 1.791368 2.554672</span></span>
+<span><span class="co">## 4 EDDEP07         GR 2.515472 0.07923658 0.8041348 1.613014 2.489915</span></span>
+<span><span class="co">## 5 EDDEP09         GR 3.473033 0.33392813 1.0062002 1.872558 2.581144</span></span>
+<span><span class="co">## 6 EDDEP14         GR 2.593288 0.16626096 0.8908941 1.766002 2.578975</span></span></code></pre>
 <p>Transformation constants (A = slope; B = intercept) for the specified
 linear transformation method are stored in the <code>$constants</code>
 slot.</p>
 <div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">link_sl</span><span class="op">$</span><span class="va">constants</span></span></code></pre></div>
 <pre><code><span><span class="co">##         A         B </span></span>
-<span><span class="co">##  0.982324 -0.064233</span></span></code></pre>
+<span><span class="co">##  0.982325 -0.064199</span></span></code></pre>
 </div>
 <div class="section level4">
 <h4 id="calibrated-projection-using-fixed-parameter-calibration">Calibrated projection (using fixed-parameter calibration)<a class="anchor" aria-label="anchor" href="#calibrated-projection-using-fixed-parameter-calibration"></a>
@@ -751,21 +750,21 @@ slot.</p>
 <code class="sourceCode R"><span><span class="va">link_cp</span><span class="op">$</span><span class="va">mu_sigma</span></span></code></pre></div>
 <pre><code><span><span class="co">## $mu</span></span>
 <span><span class="co">##          F1          F2 </span></span>
-<span><span class="co">## -0.07033119  0.00000000 </span></span>
+<span><span class="co">## -0.07022144  0.00000000 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $sigma</span></span>
 <span><span class="co">##           F1        F2</span></span>
-<span><span class="co">## F1 0.9721365 0.9064387</span></span>
-<span><span class="co">## F2 0.9064387 1.0000000</span></span>
+<span><span class="co">## F1 0.9721914 0.9064684</span></span>
+<span><span class="co">## F2 0.9064684 1.0000000</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $sd</span></span>
 <span><span class="co">##        F1        F2 </span></span>
-<span><span class="co">## 0.9859698 1.0000000 </span></span>
+<span><span class="co">## 0.9859977 1.0000000 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $corr</span></span>
 <span><span class="co">##           F1        F2</span></span>
-<span><span class="co">## F1 1.0000000 0.9193372</span></span>
-<span><span class="co">## F2 0.9193372 1.0000000</span></span></code></pre>
+<span><span class="co">## F1 1.0000000 0.9193413</span></span>
+<span><span class="co">## F2 0.9193413 1.0000000</span></span></code></pre>
 <p>From the above output, we see that the participant group in
 <code>response_dep</code> had a slightly lower
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
@@ -892,12 +891,12 @@ slot:</p>
 <div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">rsss_equate_raw</span><span class="op">$</span><span class="va">concordance</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   raw_2    raw_1  raw_1_se raw_1_se_boot</span></span>
-<span><span class="co">## 1    20 28.26881 0.1620936     0.1305916</span></span>
-<span><span class="co">## 2    21 29.88299 0.3370778     0.2738646</span></span>
-<span><span class="co">## 3    22 31.53492 0.5039397     0.4021354</span></span>
-<span><span class="co">## 4    23 33.26052 0.6025077     0.5288394</span></span>
-<span><span class="co">## 5    24 35.04116 0.7605541     0.6391904</span></span>
-<span><span class="co">## 6    25 36.88206 0.9289581     0.8576881</span></span></code></pre>
+<span><span class="co">## 1    20 28.26881 0.1620936     0.1306003</span></span>
+<span><span class="co">## 2    21 29.88299 0.3370778     0.2766580</span></span>
+<span><span class="co">## 3    22 31.53492 0.5039397     0.4049033</span></span>
+<span><span class="co">## 4    23 33.26052 0.6025077     0.5322490</span></span>
+<span><span class="co">## 5    24 35.04116 0.7605541     0.6408486</span></span>
+<span><span class="co">## 6    25 36.88206 0.9289581     0.8532468</span></span></code></pre>
 <p>From row 6 in the above output, we see that:</p>
 <ul>
 <li>A raw score 25 points in CES-D corresponds to an expected raw score
@@ -930,12 +929,12 @@ converting anchor scale raw scores to T-scores.</p>
 <div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">rsss_equate_tscore</span><span class="op">$</span><span class="va">concordance</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   raw_2 tscore_1 tscore_1_se tscore_1_se_boot</span></span>
-<span><span class="co">## 1    20 33.60138   0.1015887        0.3741251</span></span>
-<span><span class="co">## 2    21 38.46567   0.2970127        1.1185746</span></span>
-<span><span class="co">## 3    22 41.72102   0.5244657        0.5600030</span></span>
-<span><span class="co">## 4    23 43.93269   0.7283759        0.5983501</span></span>
-<span><span class="co">## 5    24 45.56073   0.9008862        0.5708281</span></span>
-<span><span class="co">## 6    25 46.96056   1.0676547        0.5935811</span></span></code></pre>
+<span><span class="co">## 1    20 33.60138   0.1015887        0.3746375</span></span>
+<span><span class="co">## 2    21 38.46567   0.2970127        1.1223435</span></span>
+<span><span class="co">## 3    22 41.72102   0.5244657        0.5540163</span></span>
+<span><span class="co">## 4    23 43.93269   0.7283759        0.5895563</span></span>
+<span><span class="co">## 5    24 45.56073   0.9008862        0.5659313</span></span>
+<span><span class="co">## 6    25 46.96056   1.0676547        0.5908014</span></span></code></pre>
 <p>From row 6 in the above output, we see that:</p>
 <ul>
 <li>A raw score 25 points in CES-D corresponds to a T-score of 46.961 in
@@ -1146,7 +1145,7 @@ gives closer results to pattern-scoring.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
       </footer>
