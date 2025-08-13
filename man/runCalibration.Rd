@@ -37,7 +37,7 @@ If 2, use each dimension separately for the anchor instrument and the developing
 \item{...}{additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{'mirt'} package.}
 }
 \value{
-\code{\link{runCalibration}} returns a \code{\linkS4class{SingleGroupClass}} object containing item calibration results.
+\code{\link{runCalibration}} returns a \code{\link[mirt:SingleGroupClass-class]{SingleGroupClass}} object containing item calibration results.
 
 This object can be used in \code{\link[mirt:coef-method]{coef}}, \code{\link[mirt]{itemfit}}, \code{\link[mirt]{itemplot}} in \href{https://CRAN.R-project.org/package=mirt}{'mirt'} package to extract wanted information.
 }

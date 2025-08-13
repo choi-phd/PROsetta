@@ -45,7 +45,7 @@ runEquateObserved(
 \item{...}{other arguments to pass onto \code{\link[equate]{equate}}.}
 }
 \value{
-\code{\link{runEquateObserved}} returns an \code{\link{equate}} object containing the test equating result.
+\code{\link{runEquateObserved}} returns an \code{\link[equate]{equate}} object containing the test equating result.
 
 The printed summary statistics indicate the distributional properties of the two supplied scales and the equated scale.
 \itemize{

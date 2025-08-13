@@ -27,7 +27,7 @@ plotInfo(
 )
 }
 \arguments{
-\item{object}{a \code{\linkS4class{SingleGroupClass}} object from \code{\link{runCalibration}}.}
+\item{object}{a \code{\link[mirt:SingleGroupClass-class]{SingleGroupClass}} object from \code{\link{runCalibration}}.}
 
 \item{data}{a \code{\linkS4class{PROsetta_data}} object.}
 

@@ -143,7 +143,7 @@ setMethod(
 #'
 #' \code{\link{plotInfo}} is a plotting function to visualize scale-level information.
 #'
-#' @param object a \code{\linkS4class{SingleGroupClass}} object from \code{\link{runCalibration}}.
+#' @param object a \code{\link[mirt:SingleGroupClass-class]{SingleGroupClass}} object from \code{\link{runCalibration}}.
 #' @param data a \code{\linkS4class{PROsetta_data}} object.
 #' @param theta (optional) theta values to plot on the x-axis. (default = \code{seq(-4, 4, .1)})
 #' @param t_score (optional) set to \code{TRUE} to plot T-scores on the x-axis instead of thetas. (default = \code{FALSE})

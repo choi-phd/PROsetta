@@ -20,7 +20,7 @@ NULL
 #' @param verbose if \code{TRUE}, print status messages. (default = \code{FALSE})
 #' @param ... additional arguments to pass onto \code{\link[mirt]{mirt}} in \href{https://CRAN.R-project.org/package=mirt}{'mirt'} package.
 #'
-#' @return \code{\link{runCalibration}} returns a \code{\linkS4class{SingleGroupClass}} object containing item calibration results.
+#' @return \code{\link{runCalibration}} returns a \code{\link[mirt:SingleGroupClass-class]{SingleGroupClass}} object containing item calibration results.
 #'
 #' This object can be used in \code{\link[mirt:coef-method]{coef}}, \code{\link[mirt]{itemfit}}, \code{\link[mirt]{itemplot}} in \href{https://CRAN.R-project.org/package=mirt}{'mirt'} package to extract wanted information.
 #'
@@ -353,7 +353,7 @@ runLinking <- function(data, method, verbose = FALSE, ...) {
 #' @param verbose if \code{TRUE}, print status messages. (default = \code{FALSE})
 #' @param ... other arguments to pass onto \code{\link[equate]{equate}}.
 #'
-#' @return \code{\link{runEquateObserved}} returns an \code{\link{equate}} object containing the test equating result.
+#' @return \code{\link{runEquateObserved}} returns an \code{\link[equate]{equate}} object containing the test equating result.
 #'
 #' The printed summary statistics indicate the distributional properties of the two supplied scales and the equated scale.
 #' \itemize{
