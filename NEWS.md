@@ -1,12 +1,8 @@
-# PROsetta 0.4.2.9000
+# PROsetta 0.4.2
 
-## Bug Fixes
+## Bug fixes
 - Fixed Rd cross-reference NOTE by adding package anchors to `\link{}` and `\linkS4class{}` targets.
 - Updated documentation for `runEquateObserved()` and `SingleGroupClass` to ensure proper linking to external packages.
-
-## Improvements
-- Improved clarity in help files by specifying external package sources.
-- Enhanced compatibility with CRAN checks.
 
 ## Other
 - Minor formatting updates to `.Rd` files.
